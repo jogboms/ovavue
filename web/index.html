@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A tidy budget overview planner.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="ovavue">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+
+  <!--  Google Sign-in-->
+  <meta name="google-signin-client_id" content="719782367161-cldhpp1f15ll6tskgvc5ifrjsl5j6pq5.apps.googleusercontent.com">
+
+  <!-- Social media -->
+  <meta name="description" content="A tidy budget overview planner." />
+  <meta name="twitter:image:src" content="https://raw.githubusercontent.com/jogboms/ovavue/master/assets/ic_launcher.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:domain" content="https://ovavue.vercel.app" />
+  <meta name="twitter:title" content="Ovavue" />
+  <meta name="twitter:description" content="A tidy budget overview planner." />
+  <meta name="og:title" content="Ovavue">
+  <meta name="og:type" content="website" />
+  <meta name="og:site_name" content="Ovavue" />
+  <meta name="og:image" content="https://raw.githubusercontent.com/jogboms/ovavue/master/assets/ic_launcher.png" />
+  <meta name="og:image:alt" content="A tidy budget overview planner." />
+  <meta name="og:url" content="https://ovavue.vercel.app" />
+  <meta name="og:description" content="A tidy budget overview planner." />
+
+  <title>Ovavue</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+  @media (prefers-color-scheme: dark) {
+    body { background-color: #100F1E; }
+  }
+  </style>
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = null;
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
+</head>
+<body>
+<script>
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
