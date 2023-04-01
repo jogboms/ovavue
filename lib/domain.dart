@@ -1,2 +1,12 @@
 export 'domain/analytics/analytics.dart';
 export 'domain/analytics/analytics_event.dart';
+export 'domain/entities/account_entity.dart';
+export 'domain/entities/budget_allocation_entity.dart';
+export 'domain/entities/budget_category_entity.dart';
+export 'domain/entities/budget_entity.dart';
+export 'domain/entities/budget_item_entity.dart';
+export 'domain/entities/create_budget_allocation_data.dart';
+export 'domain/entities/create_budget_category_data.dart';
+export 'domain/entities/create_budget_data.dart';
+export 'domain/entities/create_budget_item_data.dart';
+export 'domain/entities/reference_entity.dart';
