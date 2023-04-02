@@ -87,7 +87,7 @@ ProviderContainer createProviderContainer({
     parent: parent,
     overrides: <Override>[
       registryProvider.overrideWithValue(
-        registry ?? createRegistry(),
+        registry ?? createRegistry().withMockedUseCases(),
       ),
       ...?overrides,
     ],
