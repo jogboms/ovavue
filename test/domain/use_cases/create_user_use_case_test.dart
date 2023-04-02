@@ -8,7 +8,8 @@ import '../../utils.dart';
 void main() {
   group('CreateUserUseCase', () {
     final UsersRepository usersRepository = mockRepositories.users;
-    final CreateUserUseCase useCase = CreateUserUseCase(users: usersRepository, analytics: const NoopAnalytics());
+    final LogAnalytics analytics = LogAnalytics();
+    final CreateUserUseCase useCase = CreateUserUseCase(users: usersRepository, analytics: analytics);
 
     final AccountEntity dummyAccountModel = AuthMockImpl.generateAccount();
 
@@ -16,12 +17,16 @@ void main() {
       registerFallbackValue(dummyAccountModel);
     });
 
-    tearDown(() => reset(usersRepository));
+    tearDown(() {
+      reset(usersRepository);
+      analytics.reset();
+    });
 
-    test('should create a user', () {
+    test('should create a user', () async {
       when(() => usersRepository.create(any())).thenAnswer((_) async => dummyAccountModel.id);
 
-      expect(useCase(dummyAccountModel), completion(dummyAccountModel.id));
+      await expectLater(useCase(dummyAccountModel), completion(dummyAccountModel.id));
+      expect(analytics.events, <AnalyticsEvent>[AnalyticsEvent.createUser(dummyAccountModel.id)]);
     });
 
     test('should bubble create errors', () {

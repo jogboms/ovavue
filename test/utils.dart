@@ -127,6 +127,25 @@ class ProviderListener<T> {
   void reset() => log.clear();
 }
 
+class LogAnalytics extends NoopAnalytics {
+  final List<AnalyticsEvent> events = <AnalyticsEvent>[];
+  String? userId;
+
+  @override
+  Future<void> log(AnalyticsEvent event) async => events.add(event);
+
+  @override
+  Future<void> setUserId(String id) async => userId = id;
+
+  @override
+  Future<void> removeUserId() async => userId = null;
+
+  void reset() {
+    events.clear();
+    removeUserId();
+  }
+}
+
 extension MockUseCasesExtensions on Registry {
   Registry withMockedUseCases() => this
     ..replace<CreateBudgetAllocationUseCase>(mockUseCases.createBudgetAllocationUseCase)

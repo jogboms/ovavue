@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-class AnalyticsEvent {
+class AnalyticsEvent with EquatableMixin {
   @visibleForTesting
   factory AnalyticsEvent(String name, [Map<String, dynamic>? parameters]) = AnalyticsEvent._;
 
@@ -36,6 +37,9 @@ class AnalyticsEvent {
 
   final String name;
   final Map<String, dynamic>? parameters;
+
+  @override
+  List<Object?> get props => <Object?>[name, parameters];
 
   @override
   String toString() => name + (parameters?.isNotEmpty == true ? ': ${parameters?.toString()}' : '');

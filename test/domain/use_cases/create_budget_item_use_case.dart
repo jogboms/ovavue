@@ -1,9 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ovavue/domain.dart';
 
+import '../../utils.dart';
+
 void main() {
   group('CreateBudgetItemUseCase', () {
-    const CreateBudgetItemUseCase useCase = CreateBudgetItemUseCase(analytics: NoopAnalytics());
+    final LogAnalytics analytics = LogAnalytics();
+    final CreateBudgetItemUseCase useCase = CreateBudgetItemUseCase(analytics: analytics);
     final CreateBudgetItemData dummyData = CreateBudgetItemData(
       title: 'title',
       description: 'description',
@@ -12,8 +15,11 @@ void main() {
       endedAt: null,
     );
 
+    tearDown(analytics.reset);
+
     test('should create a budget item', () {
       expect(() => useCase(userId: '1', item: dummyData), throwsUnimplementedError);
+      // TODO(Jogboms): test analytics event
     });
 
     test('should bubble create errors', () {

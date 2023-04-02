@@ -7,15 +7,23 @@ import '../../utils.dart';
 void main() {
   group('SignOutUseCase', () {
     final AuthRepository authRepository = mockRepositories.auth;
-    final SignOutUseCase useCase = SignOutUseCase(auth: authRepository, analytics: const NoopAnalytics());
+    final LogAnalytics analytics = LogAnalytics();
+    final SignOutUseCase useCase = SignOutUseCase(auth: authRepository, analytics: analytics);
 
-    tearDown(() => reset(authRepository));
+    tearDown(() {
+      reset(authRepository);
+      analytics.reset();
+    });
 
-    test('should sign out when auth state changes to null', () {
+    test('should sign out when auth state changes to null', () async {
+      await analytics.setUserId('1');
+
       when(authRepository.signOut).thenAnswer((_) async {});
       when(() => mockRepositories.auth.onAuthStateChanged).thenAnswer((_) => Stream<String?>.value(null));
 
-      expect(useCase(), completes);
+      await expectLater(useCase(), completes);
+      expect(analytics.userId, null);
+      expect(analytics.events, <AnalyticsEvent>[AnalyticsEvent.logout]);
     });
 
     test('should not complete until auth state change to null', () {
