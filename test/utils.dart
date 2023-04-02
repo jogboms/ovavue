@@ -7,11 +7,74 @@ import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 import 'package:registry/registry.dart';
 
+import 'mocks.dart';
+
+class MockRepositories {
+  final AuthRepository auth = MockAuthRepository();
+  final UsersRepository users = MockUsersRepository();
+
+  void reset() => <Object>[auth, users].forEach(mt.reset);
+}
+
+final MockRepositories mockRepositories = MockRepositories();
+
+class MockUseCases {
+  final CreateBudgetAllocationUseCase createBudgetAllocationUseCase = MockCreateBudgetAllocationUseCase();
+  final CreateBudgetCategoryUseCase createBudgetCategoryUseCase = MockCreateBudgetCategoryUseCase();
+  final CreateBudgetItemUseCase createBudgetItemUseCase = MockCreateBudgetItemUseCase();
+  final CreateBudgetUseCase createBudgetUseCase = MockCreateBudgetUseCase();
+  final CreateUserUseCase createUserUseCase = MockCreateUserUseCase();
+  final FetchAccountUseCase fetchAccountUseCase = MockFetchAccountUseCase();
+  final FetchBudgetAllocationsUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
+  final FetchBudgetItemsUseCase fetchBudgetItemsUseCase = MockFetchBudgetItemsUseCase();
+  final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
+  final FetchCurrentBudgetUseCase fetchCurrentBudgetUseCase = MockFetchCurrentBudgetUseCase();
+  final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
+  final SignInUseCase signInUseCase = MockSignInUseCase();
+  final SignOutUseCase signOutUseCase = MockSignOutUseCase();
+  final UpdateUserUseCase updateUserUseCase = MockUpdateUserUseCase();
+
+  void reset() => <Object>[
+        createBudgetAllocationUseCase,
+        createBudgetCategoryUseCase,
+        createBudgetItemUseCase,
+        createBudgetUseCase,
+        createUserUseCase,
+        fetchAccountUseCase,
+        fetchBudgetAllocationsUseCase,
+        fetchBudgetItemsUseCase,
+        fetchBudgetsUseCase,
+        fetchCurrentBudgetUseCase,
+        fetchUserUseCase,
+        signInUseCase,
+        signOutUseCase,
+        updateUserUseCase,
+      ].forEach(mt.reset);
+}
+
+final MockUseCases mockUseCases = MockUseCases();
+
 Registry createRegistry({
   Environment environment = Environment.testing,
 }) =>
     Registry()
       ..set<Analytics>(const NoopAnalytics())
+      ..set(mockRepositories.auth)
+      ..set(mockRepositories.users)
+      ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(analytics: di()))
+      ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(analytics: di()))
+      ..factory((RegistryFactory di) => CreateBudgetItemUseCase(analytics: di()))
+      ..factory((RegistryFactory di) => CreateBudgetUseCase(analytics: di()))
+      ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
+      ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
+      ..factory((RegistryFactory di) => const FetchBudgetAllocationsUseCase())
+      ..factory((RegistryFactory di) => const FetchBudgetItemsUseCase())
+      ..factory((RegistryFactory di) => const FetchBudgetsUseCase())
+      ..factory((RegistryFactory di) => const FetchCurrentBudgetUseCase())
+      ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
+      ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
+      ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateUserUseCase(users: di()))
       ..set(environment);
 
 ProviderContainer createProviderContainer({
@@ -24,7 +87,7 @@ ProviderContainer createProviderContainer({
     parent: parent,
     overrides: <Override>[
       registryProvider.overrideWithValue(
-        registry ?? createRegistry(),
+        registry ?? createRegistry().withMockedUseCases(),
       ),
       ...?overrides,
     ],
@@ -62,6 +125,43 @@ class ProviderListener<T> {
   void call(T? previous, T next) => log.add(next);
 
   void reset() => log.clear();
+}
+
+class LogAnalytics extends NoopAnalytics {
+  final List<AnalyticsEvent> events = <AnalyticsEvent>[];
+  String? userId;
+
+  @override
+  Future<void> log(AnalyticsEvent event) async => events.add(event);
+
+  @override
+  Future<void> setUserId(String id) async => userId = id;
+
+  @override
+  Future<void> removeUserId() async => userId = null;
+
+  void reset() {
+    events.clear();
+    removeUserId();
+  }
+}
+
+extension MockUseCasesExtensions on Registry {
+  Registry withMockedUseCases() => this
+    ..replace<CreateBudgetAllocationUseCase>(mockUseCases.createBudgetAllocationUseCase)
+    ..replace<CreateBudgetCategoryUseCase>(mockUseCases.createBudgetCategoryUseCase)
+    ..replace<CreateBudgetItemUseCase>(mockUseCases.createBudgetItemUseCase)
+    ..replace<CreateBudgetUseCase>(mockUseCases.createBudgetUseCase)
+    ..replace<CreateUserUseCase>(mockUseCases.createUserUseCase)
+    ..replace<FetchAccountUseCase>(mockUseCases.fetchAccountUseCase)
+    ..replace<FetchBudgetAllocationsUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
+    ..replace<FetchBudgetItemsUseCase>(mockUseCases.fetchBudgetItemsUseCase)
+    ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
+    ..replace<FetchCurrentBudgetUseCase>(mockUseCases.fetchCurrentBudgetUseCase)
+    ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
+    ..replace<SignInUseCase>(mockUseCases.signInUseCase)
+    ..replace<SignOutUseCase>(mockUseCases.signOutUseCase)
+    ..replace<UpdateUserUseCase>(mockUseCases.updateUserUseCase);
 }
 
 extension FinderExtensions on Finder {

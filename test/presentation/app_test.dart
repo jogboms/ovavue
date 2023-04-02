@@ -8,7 +8,7 @@ void main() {
     testWidgets('smoke test', (WidgetTester tester) async {
       await tester.pumpWidget(
         createApp(
-          registry: createRegistry(),
+          registry: createRegistry().withMockedUseCases(),
           includeMaterial: false,
         ),
       );
