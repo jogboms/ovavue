@@ -11,6 +11,18 @@ class AnalyticsEvent {
 
   static const AnalyticsEvent logout = AnalyticsEvent._('logout');
 
+  static AnalyticsEvent createBudget(String userId) =>
+      AnalyticsEvent._('create_budget', <String, dynamic>{'user_id': userId});
+
+  static AnalyticsEvent createBudgetCategory(String userId) =>
+      AnalyticsEvent._('create_budget_category', <String, dynamic>{'user_id': userId});
+
+  static AnalyticsEvent createBudgetItem(String userId) =>
+      AnalyticsEvent._('create_budget_item', <String, dynamic>{'user_id': userId});
+
+  static AnalyticsEvent createBudgetAllocation(String userId) =>
+      AnalyticsEvent._('create_budget_allocation', <String, dynamic>{'user_id': userId});
+
   static const String _eventNamePrefix = 'app';
 
   final String name;
