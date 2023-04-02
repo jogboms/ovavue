@@ -11,6 +11,15 @@ class AnalyticsEvent {
 
   static const AnalyticsEvent logout = AnalyticsEvent._('logout');
 
+  static AnalyticsEvent tooManyRequests(String? email) =>
+      AnalyticsEvent._('too_many_requests', <String, dynamic>{'email': email});
+
+  static AnalyticsEvent userDisabled(String? email) =>
+      AnalyticsEvent._('user_disabled', <String, dynamic>{'email': email});
+
+  static AnalyticsEvent createUser(String userId) =>
+      AnalyticsEvent._('create_user', <String, dynamic>{'user_id': userId});
+
   static AnalyticsEvent createBudget(String userId) =>
       AnalyticsEvent._('create_budget', <String, dynamic>{'user_id': userId});
 
