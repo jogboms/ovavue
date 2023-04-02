@@ -1,8 +1,8 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_info_plus_platform_interface/device_info_plus_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ovavue/core.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:ovavue/core.dart';
 import 'package:package_info_plus_platform_interface/package_info_data.dart';
 import 'package:package_info_plus_platform_interface/package_info_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';

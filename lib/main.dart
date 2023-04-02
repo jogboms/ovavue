@@ -9,6 +9,7 @@ import 'package:sentry/sentry.dart';
 import 'package:universal_io/io.dart' as io;
 
 import 'core.dart';
+import 'data.dart';
 import 'domain.dart';
 import 'presentation.dart';
 
@@ -19,6 +20,7 @@ void main() async {
 
   await findSystemLocale();
 
+  final _Repository repository = _Repository.mock();
   final ReporterClient reporterClient;
   final NavigatorObserver navigationObserver = NavigatorObserver();
   const Analytics analytics = _PrintAnalytics();
@@ -58,6 +60,29 @@ void main() async {
     /// Analytics.
     ..set(analytics)
 
+    /// Repositories.
+    /// Do not use directly within the app.
+    /// Added to Registry only for convenience with the UseCase factories.
+    ..set(repository.auth)
+    ..set(repository.users)
+
+    /// UseCases.
+    /// Callable classes that may contain logic or else route directly to repositories.
+    ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetItemUseCase(analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetUseCase(analytics: di()))
+    ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
+    ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
+    ..factory((RegistryFactory di) => const FetchBudgetAllocationsUseCase())
+    ..factory((RegistryFactory di) => const FetchBudgetItemsUseCase())
+    ..factory((RegistryFactory di) => const FetchBudgetsUseCase())
+    ..factory((RegistryFactory di) => const FetchCurrentBudgetUseCase())
+    ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
+    ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
+    ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
+    ..factory((RegistryFactory di) => UpdateUserUseCase(users: di()))
+
     /// Environment.
     ..set(environment);
 
@@ -78,6 +103,15 @@ void main() async {
       ),
     ),
   );
+}
+
+class _Repository {
+  _Repository.mock()
+      : auth = AuthMockImpl(),
+        users = UsersMockImpl();
+
+  final AuthRepository auth;
+  final UsersRepository users;
 }
 
 class _ReporterClient implements ReporterClient {
