@@ -24,8 +24,13 @@ class MockUseCases {
   final CreateBudgetPlanUseCase createBudgetPlanUseCase = MockCreateBudgetPlanUseCase();
   final CreateBudgetUseCase createBudgetUseCase = MockCreateBudgetUseCase();
   final CreateUserUseCase createUserUseCase = MockCreateUserUseCase();
+  final DeleteBudgetAllocationUseCase deleteBudgetAllocationUseCase = MockDeleteBudgetAllocationUseCase();
+  final DeleteBudgetCategoryUseCase deleteBudgetCategoryUseCase = MockDeleteBudgetCategoryUseCase();
+  final DeleteBudgetPlanUseCase deleteBudgetPlanUseCase = MockDeleteBudgetPlanUseCase();
+  final DeleteBudgetUseCase deleteBudgetUseCase = MockDeleteBudgetUseCase();
   final FetchAccountUseCase fetchAccountUseCase = MockFetchAccountUseCase();
   final FetchBudgetAllocationsUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
+  final FetchBudgetCategoriesUseCase fetchBudgetCategoriesUseCase = MockFetchBudgetCategoriesUseCase();
   final FetchBudgetPlansUseCase fetchBudgetPlansUseCase = MockFetchBudgetPlansUseCase();
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
@@ -40,8 +45,13 @@ class MockUseCases {
         createBudgetPlanUseCase,
         createBudgetUseCase,
         createUserUseCase,
+        deleteBudgetAllocationUseCase,
+        deleteBudgetCategoryUseCase,
+        deleteBudgetPlanUseCase,
+        deleteBudgetUseCase,
         fetchAccountUseCase,
         fetchBudgetAllocationsUseCase,
+        fetchBudgetCategoriesUseCase,
         fetchBudgetPlansUseCase,
         fetchBudgetsUseCase,
         fetchActiveBudgetUseCase,
@@ -66,8 +76,13 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetUseCase(analytics: di()))
       ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
+      ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(analytics: di()))
+      ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(analytics: di()))
+      ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(analytics: di()))
+      ..factory((RegistryFactory di) => DeleteBudgetUseCase(analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
       ..factory((RegistryFactory di) => const FetchBudgetAllocationsUseCase())
+      ..factory((RegistryFactory di) => const FetchBudgetCategoriesUseCase())
       ..factory((RegistryFactory di) => const FetchBudgetPlansUseCase())
       ..factory((RegistryFactory di) => const FetchBudgetsUseCase())
       ..factory((RegistryFactory di) => const FetchActiveBudgetUseCase())

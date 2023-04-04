@@ -17,9 +17,19 @@ class MockCreateBudgetUseCase extends Mock implements CreateBudgetUseCase {}
 
 class MockCreateUserUseCase extends Mock implements CreateUserUseCase {}
 
+class MockDeleteBudgetAllocationUseCase extends Mock implements DeleteBudgetAllocationUseCase {}
+
+class MockDeleteBudgetCategoryUseCase extends Mock implements DeleteBudgetCategoryUseCase {}
+
+class MockDeleteBudgetPlanUseCase extends Mock implements DeleteBudgetPlanUseCase {}
+
+class MockDeleteBudgetUseCase extends Mock implements DeleteBudgetUseCase {}
+
 class MockFetchAccountUseCase extends Mock implements FetchAccountUseCase {}
 
 class MockFetchBudgetAllocationsUseCase extends Mock implements FetchBudgetAllocationsUseCase {}
+
+class MockFetchBudgetCategoriesUseCase extends Mock implements FetchBudgetCategoriesUseCase {}
 
 class MockFetchBudgetPlansUseCase extends Mock implements FetchBudgetPlansUseCase {}
 
