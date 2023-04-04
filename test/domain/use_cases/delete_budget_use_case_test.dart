@@ -15,13 +15,22 @@ void main() {
       reset(budgetsRepository);
     });
 
-    test('should delete a budget', () {
-      expect(() => useCase('path'), throwsUnimplementedError);
-      // TODO(Jogboms): test analytics event
+    test('should delete a budget', () async {
+      when(() => budgetsRepository.delete(any())).thenAnswer((_) async => true);
+
+      await expectLater(useCase('path'), completion(true));
+      expect(
+        analytics.events,
+        <AnalyticsEvent>[
+          AnalyticsEvent.deleteBudget('path'),
+        ],
+      );
     });
 
     test('should bubble delete errors', () {
-      expect(() => useCase('path'), throwsUnimplementedError);
+      when(() => budgetsRepository.delete(any())).thenThrow(Exception('an error'));
+
+      expect(() => useCase('path'), throwsException);
     });
   });
 }

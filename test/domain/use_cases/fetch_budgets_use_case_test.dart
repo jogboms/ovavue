@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 
 import '../../utils.dart';
@@ -19,15 +20,35 @@ void main() {
     });
 
     test('should fetch budgets', () {
-      expect(() => useCase('1'), throwsUnimplementedError);
+      final BudgetPlanEntityList plans = <BudgetPlanEntity>[BudgetPlansMockImpl.generatePlan()];
+      final NormalizedBudgetEntityList expectedBudgets = <NormalizedBudgetEntity>[
+        BudgetsMockImpl.generateNormalizedBudget(plans: plans)
+      ];
+
+      when(() => budgetsRepository.fetch(any()))
+          .thenAnswer((_) => Stream<BudgetEntityList>.value(expectedBudgets.asBudgetEntityList));
+      when(() => budgetPlansRepository.fetch(any())).thenAnswer((_) => Stream<BudgetPlanEntityList>.value(plans));
+
+      expectLater(useCase('1'), emits(expectedBudgets));
     });
 
-    test('should bubble create errors', () {
-      expect(() => useCase('1'), throwsUnimplementedError);
+    test('should bubble fetch errors', () {
+      when(() => budgetsRepository.fetch('1')).thenThrow(Exception('an error'));
+
+      expect(() => useCase('1'), throwsException);
     });
 
     test('should bubble stream errors', () {
-      expect(() => useCase('1'), throwsUnimplementedError);
+      final Exception expectedError = Exception('an error');
+
+      when(() => budgetsRepository.fetch(any())).thenAnswer(
+        (_) => Stream<BudgetEntityList>.error(expectedError),
+      );
+      when(() => budgetPlansRepository.fetch(any())).thenAnswer(
+        (_) => Stream<BudgetPlanEntityList>.error(expectedError),
+      );
+
+      expect(useCase('1'), emitsError(expectedError));
     });
   });
 }

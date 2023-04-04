@@ -20,6 +20,6 @@ class CreateBudgetUseCase {
     required CreateBudgetData budget,
   }) {
     unawaited(_analytics.log(AnalyticsEvent.createBudget(userId)));
-    throw UnimplementedError();
+    return _budgets.create(userId, budget);
   }
 }

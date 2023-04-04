@@ -20,6 +20,6 @@ class CreateBudgetAllocationUseCase {
     required CreateBudgetAllocationData allocation,
   }) {
     unawaited(_analytics.log(AnalyticsEvent.createBudgetAllocation(userId)));
-    throw UnimplementedError();
+    return _allocations.create(userId, allocation);
   }
 }

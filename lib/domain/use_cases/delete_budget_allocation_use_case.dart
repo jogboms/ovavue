@@ -16,6 +16,6 @@ class DeleteBudgetAllocationUseCase {
 
   Future<bool> call(String path) {
     unawaited(_analytics.log(AnalyticsEvent.deleteBudgetAllocation(path)));
-    throw UnimplementedError();
+    return _allocations.delete(path);
   }
 }

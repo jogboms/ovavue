@@ -16,6 +16,6 @@ class DeleteBudgetCategoryUseCase {
 
   Future<bool> call(String path) {
     unawaited(_analytics.log(AnalyticsEvent.deleteBudgetCategory(path)));
-    throw UnimplementedError();
+    return _categories.delete(path);
   }
 }

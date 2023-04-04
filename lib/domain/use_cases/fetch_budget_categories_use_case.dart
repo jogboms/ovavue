@@ -8,7 +8,5 @@ class FetchBudgetCategoriesUseCase {
 
   final BudgetCategoriesRepository _categories;
 
-  Stream<BudgetCategoryEntityList> call(String userId) {
-    throw UnimplementedError();
-  }
+  Stream<BudgetCategoryEntityList> call(String userId) => _categories.fetch(userId);
 }

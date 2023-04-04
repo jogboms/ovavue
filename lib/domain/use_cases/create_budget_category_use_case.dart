@@ -20,6 +20,6 @@ class CreateBudgetCategoryUseCase {
     required CreateBudgetCategoryData category,
   }) {
     unawaited(_analytics.log(AnalyticsEvent.createBudgetCategory(userId)));
-    throw UnimplementedError();
+    return _categories.create(userId, category);
   }
 }

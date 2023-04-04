@@ -214,3 +214,53 @@ extension WidgetTesterExtensions on WidgetTester {
     mt.verify(() => observer.didPop(mt.any(), mt.any()));
   }
 }
+
+extension NormalizedBudgetEntityExtensions on NormalizedBudgetEntity {
+  BudgetEntity get asBudgetEntity => BudgetEntity(
+        id: id,
+        path: path,
+        title: title,
+        description: description,
+        amount: amount,
+        startedAt: startedAt,
+        endedAt: endedAt,
+        plans: plans.map((BudgetPlanEntity element) => element.reference).toList(growable: false),
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
+}
+
+extension NormalizedBudgetEntityListExtensions on NormalizedBudgetEntityList {
+  BudgetEntityList get asBudgetEntityList =>
+      map((NormalizedBudgetEntity e) => e.asBudgetEntity).toList(growable: false);
+}
+
+extension NormalizedBudgetPlanEntityListExtensions on NormalizedBudgetPlanEntityList {
+  BudgetPlanEntityList get asBudgetPlanEntityList => map(
+        (NormalizedBudgetPlanEntity e) => BudgetPlanEntity(
+          id: e.id,
+          path: e.path,
+          title: e.title,
+          description: e.description,
+          category: e.category.reference,
+          createdAt: e.createdAt,
+          updatedAt: e.updatedAt,
+        ),
+      ).toList(growable: false);
+}
+
+extension NormalizedBudgetAllocationEntityListExtensions on NormalizedBudgetAllocationEntityList {
+  BudgetAllocationEntityList get asBudgetAllocationEntityList => map(
+        (NormalizedBudgetAllocationEntity e) => BudgetAllocationEntity(
+          id: e.id,
+          path: e.path,
+          amount: e.amount,
+          startedAt: e.startedAt,
+          endedAt: e.endedAt,
+          budget: e.budget.reference,
+          plan: e.plan.reference,
+          createdAt: e.createdAt,
+          updatedAt: e.updatedAt,
+        ),
+      ).toList(growable: false);
+}

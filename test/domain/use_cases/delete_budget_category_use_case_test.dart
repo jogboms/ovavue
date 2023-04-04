@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/domain.dart';
 
 import '../../utils.dart';
@@ -14,13 +15,22 @@ void main() {
 
     tearDown(analytics.reset);
 
-    test('should delete a budget category', () {
-      expect(() => useCase('path'), throwsUnimplementedError);
-      // TODO(Jogboms): test analytics event
+    test('should delete a budget category', () async {
+      when(() => budgetCategoriesRepository.delete(any())).thenAnswer((_) async => true);
+
+      await expectLater(useCase('path'), completion(true));
+      expect(
+        analytics.events,
+        <AnalyticsEvent>[
+          AnalyticsEvent.deleteBudgetCategory('path'),
+        ],
+      );
     });
 
     test('should bubble delete errors', () {
-      expect(() => useCase('path'), throwsUnimplementedError);
+      when(() => budgetCategoriesRepository.delete(any())).thenThrow(Exception('an error'));
+
+      expect(() => useCase('path'), throwsException);
     });
   });
 }

@@ -16,6 +16,6 @@ class DeleteBudgetPlanUseCase {
 
   Future<bool> call(String path) {
     unawaited(_analytics.log(AnalyticsEvent.deleteBudgetPlan(path)));
-    throw UnimplementedError();
+    return _plans.delete(path);
   }
 }

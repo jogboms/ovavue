@@ -18,13 +18,22 @@ void main() {
       reset(budgetAllocationsRepository);
     });
 
-    test('should delete a budget allocation', () {
-      expect(() => useCase('path'), throwsUnimplementedError);
-      // TODO(Jogboms): test analytics event
+    test('should delete a budget allocation', () async {
+      when(() => budgetAllocationsRepository.delete(any())).thenAnswer((_) async => true);
+
+      await expectLater(useCase('path'), completion(true));
+      expect(
+        analytics.events,
+        <AnalyticsEvent>[
+          AnalyticsEvent.deleteBudgetAllocation('path'),
+        ],
+      );
     });
 
     test('should bubble delete errors', () {
-      expect(() => useCase('path'), throwsUnimplementedError);
+      when(() => budgetAllocationsRepository.delete(any())).thenThrow(Exception('an error'));
+
+      expect(() => useCase('path'), throwsException);
     });
   });
 }
