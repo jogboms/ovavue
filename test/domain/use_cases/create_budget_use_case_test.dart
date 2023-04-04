@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/domain.dart';
 
 import '../../utils.dart';
@@ -6,7 +7,8 @@ import '../../utils.dart';
 void main() {
   group('CreateBudgetUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final CreateBudgetUseCase useCase = CreateBudgetUseCase(analytics: analytics);
+    final BudgetsRepository budgetsRepository = mockRepositories.budgets;
+    final CreateBudgetUseCase useCase = CreateBudgetUseCase(budgets: budgetsRepository, analytics: analytics);
     final CreateBudgetData dummyData = CreateBudgetData(
       title: 'title',
       amount: 1,
@@ -16,7 +18,10 @@ void main() {
       endedAt: null,
     );
 
-    tearDown(analytics.reset);
+    tearDown(() {
+      analytics.reset();
+      reset(budgetsRepository);
+    });
 
     test('should create a budget', () {
       expect(() => useCase(userId: '1', budget: dummyData), throwsUnimplementedError);

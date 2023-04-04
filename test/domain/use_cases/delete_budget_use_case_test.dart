@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/domain.dart';
 
 import '../../utils.dart';
@@ -6,9 +7,13 @@ import '../../utils.dart';
 void main() {
   group('DeleteBudgetUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final DeleteBudgetUseCase useCase = DeleteBudgetUseCase(analytics: analytics);
+    final BudgetsRepository budgetsRepository = mockRepositories.budgets;
+    final DeleteBudgetUseCase useCase = DeleteBudgetUseCase(budgets: budgetsRepository, analytics: analytics);
 
-    tearDown(analytics.reset);
+    tearDown(() {
+      analytics.reset();
+      reset(budgetsRepository);
+    });
 
     test('should delete a budget', () {
       expect(() => useCase('path'), throwsUnimplementedError);

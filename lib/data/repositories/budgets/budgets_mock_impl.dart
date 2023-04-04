@@ -8,11 +8,17 @@ import '../budget_plans/budget_plans_mock_impl.dart';
 import '../extensions.dart';
 
 class BudgetsMockImpl implements BudgetsRepository {
-  static BudgetEntity generateBudget({String? id, List<BudgetPlanEntity>? plans, DateTime? startedAt}) =>
-      generateNormalizedBudget(id: id, plans: plans, startedAt: startedAt).denormalize;
+  static BudgetEntity generateBudget({
+    String? id,
+    String? userId,
+    List<BudgetPlanEntity>? plans,
+    DateTime? startedAt,
+  }) =>
+      generateNormalizedBudget(id: id, userId: userId, plans: plans, startedAt: startedAt).denormalize;
 
   static NormalizedBudgetEntity generateNormalizedBudget({
     String? id,
+    String? userId,
     List<BudgetPlanEntity>? plans,
     DateTime? startedAt,
   }) {
@@ -20,7 +26,7 @@ class BudgetsMockImpl implements BudgetsRepository {
     startedAt ??= faker.randomGenerator.dateTime;
     return NormalizedBudgetEntity(
       id: id,
-      path: '/budgets/${AuthMockImpl.id}/$id',
+      path: '/budgets/${userId ?? AuthMockImpl.id}/$id',
       title: faker.lorem.words(2).join(' '),
       description: faker.lorem.sentence(),
       amount: faker.randomGenerator.integer(1000000),

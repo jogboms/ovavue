@@ -1,9 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/domain.dart';
+
+import '../../utils.dart';
 
 void main() {
   group('FetchBudgetCategoriesUseCase', () {
-    const FetchBudgetCategoriesUseCase useCase = FetchBudgetCategoriesUseCase();
+    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
+    final FetchBudgetCategoriesUseCase useCase = FetchBudgetCategoriesUseCase(
+      categories: budgetCategoriesRepository,
+    );
+
+    tearDown(() => reset(budgetCategoriesRepository));
 
     test('should fetch budget categories', () {
       expect(() => useCase('1'), throwsUnimplementedError);

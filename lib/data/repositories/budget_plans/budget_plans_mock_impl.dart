@@ -8,14 +8,18 @@ import '../budget_categories/budget_categories_mock_impl.dart';
 import '../extensions.dart';
 
 class BudgetPlansMockImpl implements BudgetPlansRepository {
-  static BudgetPlanEntity generatePlan({String? id, BudgetCategoryEntity? category, DateTime? date}) =>
-      generateNormalizedPlan(id: id, category: category).denormalize;
+  static BudgetPlanEntity generatePlan({String? id, String? userId, BudgetCategoryEntity? category, DateTime? date}) =>
+      generateNormalizedPlan(id: id, userId: userId, category: category).denormalize;
 
-  static NormalizedBudgetPlanEntity generateNormalizedPlan({String? id, BudgetCategoryEntity? category}) {
+  static NormalizedBudgetPlanEntity generateNormalizedPlan({
+    String? id,
+    String? userId,
+    BudgetCategoryEntity? category,
+  }) {
     id ??= faker.guid.guid();
     return NormalizedBudgetPlanEntity(
       id: id,
-      path: '/plans/${AuthMockImpl.id}/$id',
+      path: '/plans/${userId ?? AuthMockImpl.id}/$id',
       title: faker.lorem.words(2).join(' '),
       description: faker.lorem.sentence(),
       category: category ?? BudgetCategoriesMockImpl.categories.values.random(),
@@ -30,6 +34,7 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
 
   final BehaviorSubject<Map<String, BudgetPlanEntity>> _plans$ =
       BehaviorSubject<Map<String, BudgetPlanEntity>>.seeded(plans);
+
   @override
   Future<String> create(String userId, CreateBudgetPlanData plan) async {
     final String id = faker.guid.guid();

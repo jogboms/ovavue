@@ -1,9 +1,14 @@
-import '../entities/budget_allocation_entity.dart';
+import '../entities/budget_category_entity.dart';
+import '../repositories/budget_categories.dart';
 
 class FetchBudgetCategoriesUseCase {
-  const FetchBudgetCategoriesUseCase();
+  const FetchBudgetCategoriesUseCase({
+    required BudgetCategoriesRepository categories,
+  }) : _categories = categories;
 
-  Stream<BudgetAllocationEntityList> call(String userId) {
+  final BudgetCategoriesRepository _categories;
+
+  Stream<BudgetCategoryEntityList> call(String userId) {
     throw UnimplementedError();
   }
 }

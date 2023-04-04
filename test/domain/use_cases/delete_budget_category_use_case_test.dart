@@ -6,7 +6,11 @@ import '../../utils.dart';
 void main() {
   group('DeleteBudgetCategoryUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final DeleteBudgetCategoryUseCase useCase = DeleteBudgetCategoryUseCase(analytics: analytics);
+    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
+    final DeleteBudgetCategoryUseCase useCase = DeleteBudgetCategoryUseCase(
+      categories: budgetCategoriesRepository,
+      analytics: analytics,
+    );
 
     tearDown(analytics.reset);
 
