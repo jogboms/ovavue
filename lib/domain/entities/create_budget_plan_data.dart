@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import 'reference_entity.dart';
 
-class CreateBudgetItemData with EquatableMixin {
-  const CreateBudgetItemData({
+class CreateBudgetPlanData with EquatableMixin {
+  const CreateBudgetPlanData({
     required this.title,
     required this.description,
     required this.category,

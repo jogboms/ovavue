@@ -11,7 +11,7 @@ void main() {
       title: 'title',
       amount: 1,
       description: 'description',
-      items: <ReferenceEntity>[],
+      plans: <ReferenceEntity>[],
       startedAt: DateTime(0),
       endedAt: null,
     );

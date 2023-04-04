@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ovavue/domain.dart';
 
 void main() {
-  group('FetchBudgetItemsUseCase', () {
-    const FetchBudgetItemsUseCase useCase = FetchBudgetItemsUseCase();
+  group('FetchBudgetPlansUseCase', () {
+    const FetchBudgetPlansUseCase useCase = FetchBudgetPlansUseCase();
 
-    test('should fetch budget items', () {
+    test('should fetch budget plans', () {
       expect(() => useCase('1'), throwsUnimplementedError);
     });
 

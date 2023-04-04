@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'budget_category_entity.dart';
 import 'reference_entity.dart';
 
-class BaseBudgetItemEntity<T> with EquatableMixin {
-  const BaseBudgetItemEntity({
+class BaseBudgetPlanEntity<T> with EquatableMixin {
+  const BaseBudgetPlanEntity({
     required this.id,
     required this.path,
     required this.title,
@@ -29,8 +29,8 @@ class BaseBudgetItemEntity<T> with EquatableMixin {
   bool? get stringify => true;
 }
 
-typedef BudgetItemEntity = BaseBudgetItemEntity<ReferenceEntity>;
-typedef NormalizedBudgetItemEntity = BaseBudgetItemEntity<BudgetCategoryEntity>;
+typedef BudgetPlanEntity = BaseBudgetPlanEntity<ReferenceEntity>;
+typedef NormalizedBudgetPlanEntity = BaseBudgetPlanEntity<BudgetCategoryEntity>;
 
-typedef BudgetItemEntityList = List<BudgetItemEntity>;
-typedef NormalizedBudgetItemEntityList = List<NormalizedBudgetItemEntity>;
+typedef BudgetPlanEntityList = List<BudgetPlanEntity>;
+typedef NormalizedBudgetPlanEntityList = List<NormalizedBudgetPlanEntity>;

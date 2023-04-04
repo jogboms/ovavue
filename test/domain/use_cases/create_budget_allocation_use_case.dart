@@ -10,7 +10,7 @@ void main() {
     final CreateBudgetAllocationData dummyData = CreateBudgetAllocationData(
       amount: 1,
       budget: const ReferenceEntity(id: '1', path: 'path'),
-      item: const ReferenceEntity(id: '1', path: 'path'),
+      plan: const ReferenceEntity(id: '1', path: 'path'),
       startedAt: DateTime(0),
       endedAt: null,
     );

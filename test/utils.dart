@@ -21,12 +21,12 @@ final MockRepositories mockRepositories = MockRepositories();
 class MockUseCases {
   final CreateBudgetAllocationUseCase createBudgetAllocationUseCase = MockCreateBudgetAllocationUseCase();
   final CreateBudgetCategoryUseCase createBudgetCategoryUseCase = MockCreateBudgetCategoryUseCase();
-  final CreateBudgetItemUseCase createBudgetItemUseCase = MockCreateBudgetItemUseCase();
+  final CreateBudgetPlanUseCase createBudgetPlanUseCase = MockCreateBudgetPlanUseCase();
   final CreateBudgetUseCase createBudgetUseCase = MockCreateBudgetUseCase();
   final CreateUserUseCase createUserUseCase = MockCreateUserUseCase();
   final FetchAccountUseCase fetchAccountUseCase = MockFetchAccountUseCase();
   final FetchBudgetAllocationsUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
-  final FetchBudgetItemsUseCase fetchBudgetItemsUseCase = MockFetchBudgetItemsUseCase();
+  final FetchBudgetPlansUseCase fetchBudgetPlansUseCase = MockFetchBudgetPlansUseCase();
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchCurrentBudgetUseCase fetchCurrentBudgetUseCase = MockFetchCurrentBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
@@ -37,12 +37,12 @@ class MockUseCases {
   void reset() => <Object>[
         createBudgetAllocationUseCase,
         createBudgetCategoryUseCase,
-        createBudgetItemUseCase,
+        createBudgetPlanUseCase,
         createBudgetUseCase,
         createUserUseCase,
         fetchAccountUseCase,
         fetchBudgetAllocationsUseCase,
-        fetchBudgetItemsUseCase,
+        fetchBudgetPlansUseCase,
         fetchBudgetsUseCase,
         fetchCurrentBudgetUseCase,
         fetchUserUseCase,
@@ -63,12 +63,12 @@ Registry createRegistry({
       ..set(mockRepositories.users)
       ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(analytics: di()))
-      ..factory((RegistryFactory di) => CreateBudgetItemUseCase(analytics: di()))
+      ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetUseCase(analytics: di()))
       ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
       ..factory((RegistryFactory di) => const FetchBudgetAllocationsUseCase())
-      ..factory((RegistryFactory di) => const FetchBudgetItemsUseCase())
+      ..factory((RegistryFactory di) => const FetchBudgetPlansUseCase())
       ..factory((RegistryFactory di) => const FetchBudgetsUseCase())
       ..factory((RegistryFactory di) => const FetchCurrentBudgetUseCase())
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
@@ -150,12 +150,12 @@ extension MockUseCasesExtensions on Registry {
   Registry withMockedUseCases() => this
     ..replace<CreateBudgetAllocationUseCase>(mockUseCases.createBudgetAllocationUseCase)
     ..replace<CreateBudgetCategoryUseCase>(mockUseCases.createBudgetCategoryUseCase)
-    ..replace<CreateBudgetItemUseCase>(mockUseCases.createBudgetItemUseCase)
+    ..replace<CreateBudgetPlanUseCase>(mockUseCases.createBudgetPlanUseCase)
     ..replace<CreateBudgetUseCase>(mockUseCases.createBudgetUseCase)
     ..replace<CreateUserUseCase>(mockUseCases.createUserUseCase)
     ..replace<FetchAccountUseCase>(mockUseCases.fetchAccountUseCase)
     ..replace<FetchBudgetAllocationsUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
-    ..replace<FetchBudgetItemsUseCase>(mockUseCases.fetchBudgetItemsUseCase)
+    ..replace<FetchBudgetPlansUseCase>(mockUseCases.fetchBudgetPlansUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchCurrentBudgetUseCase>(mockUseCases.fetchCurrentBudgetUseCase)
     ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)

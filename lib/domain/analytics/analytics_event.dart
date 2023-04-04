@@ -27,8 +27,8 @@ class AnalyticsEvent with EquatableMixin {
   static AnalyticsEvent createBudgetCategory(String userId) =>
       AnalyticsEvent._('create_budget_category', <String, dynamic>{'user_id': userId});
 
-  static AnalyticsEvent createBudgetItem(String userId) =>
-      AnalyticsEvent._('create_budget_item', <String, dynamic>{'user_id': userId});
+  static AnalyticsEvent createBudgetPlan(String userId) =>
+      AnalyticsEvent._('create_budget_plan', <String, dynamic>{'user_id': userId});
 
   static AnalyticsEvent createBudgetAllocation(String userId) =>
       AnalyticsEvent._('create_budget_allocation', <String, dynamic>{'user_id': userId});

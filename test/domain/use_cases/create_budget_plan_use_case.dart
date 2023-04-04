@@ -4,10 +4,10 @@ import 'package:ovavue/domain.dart';
 import '../../utils.dart';
 
 void main() {
-  group('CreateBudgetItemUseCase', () {
+  group('CreateBudgetPlanUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final CreateBudgetItemUseCase useCase = CreateBudgetItemUseCase(analytics: analytics);
-    final CreateBudgetItemData dummyData = CreateBudgetItemData(
+    final CreateBudgetPlanUseCase useCase = CreateBudgetPlanUseCase(analytics: analytics);
+    final CreateBudgetPlanData dummyData = CreateBudgetPlanData(
       title: 'title',
       description: 'description',
       category: const ReferenceEntity(id: '1', path: 'path'),
@@ -17,13 +17,13 @@ void main() {
 
     tearDown(analytics.reset);
 
-    test('should create a budget item', () {
-      expect(() => useCase(userId: '1', item: dummyData), throwsUnimplementedError);
+    test('should create a budget plan', () {
+      expect(() => useCase(userId: '1', plan: dummyData), throwsUnimplementedError);
       // TODO(Jogboms): test analytics event
     });
 
     test('should bubble create errors', () {
-      expect(() => useCase(userId: '1', item: dummyData), throwsUnimplementedError);
+      expect(() => useCase(userId: '1', plan: dummyData), throwsUnimplementedError);
     });
   });
 }

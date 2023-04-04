@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'budget_item_entity.dart';
+import 'budget_plan_entity.dart';
 import 'reference_entity.dart';
 
 class BaseBudgetEntity<T> with EquatableMixin {
@@ -10,7 +10,7 @@ class BaseBudgetEntity<T> with EquatableMixin {
     required this.title,
     required this.amount,
     required this.description,
-    required this.items,
+    required this.plans,
     required this.startedAt,
     required this.endedAt,
     required this.createdAt,
@@ -22,7 +22,7 @@ class BaseBudgetEntity<T> with EquatableMixin {
   final String title;
   final int amount;
   final String description;
-  final List<T> items;
+  final List<T> plans;
   final DateTime startedAt;
   final DateTime? endedAt;
   final DateTime createdAt;
@@ -30,14 +30,14 @@ class BaseBudgetEntity<T> with EquatableMixin {
 
   @override
   List<Object?> get props =>
-      <Object?>[id, path, title, amount, description, items, startedAt, endedAt, createdAt, updatedAt];
+      <Object?>[id, path, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
 
   @override
   bool? get stringify => true;
 }
 
 typedef BudgetEntity = BaseBudgetEntity<ReferenceEntity>;
-typedef NormalizedBudgetEntity = BaseBudgetEntity<BudgetItemEntity>;
+typedef NormalizedBudgetEntity = BaseBudgetEntity<BudgetPlanEntity>;
 
 typedef BudgetEntityList = List<BudgetEntity>;
 typedef NormalizedBudgetEntityList = List<NormalizedBudgetEntity>;
