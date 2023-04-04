@@ -2,11 +2,10 @@ import 'dart:async';
 
 import '../analytics/analytics.dart';
 import '../analytics/analytics_event.dart';
-import '../entities/create_budget_category_data.dart';
 import '../repositories/budget_categories.dart';
 
-class CreateBudgetCategoryUseCase {
-  const CreateBudgetCategoryUseCase({
+class DeleteBudgetCategoryUseCase {
+  const DeleteBudgetCategoryUseCase({
     required BudgetCategoriesRepository categories,
     required Analytics analytics,
   })  : _categories = categories,
@@ -15,11 +14,8 @@ class CreateBudgetCategoryUseCase {
   final BudgetCategoriesRepository _categories;
   final Analytics _analytics;
 
-  Future<String> call({
-    required String userId,
-    required CreateBudgetCategoryData category,
-  }) {
-    unawaited(_analytics.log(AnalyticsEvent.createBudgetCategory(userId)));
-    return _categories.create(userId, category);
+  Future<bool> call(String path) {
+    unawaited(_analytics.log(AnalyticsEvent.deleteBudgetCategory(path)));
+    return _categories.delete(path);
   }
 }

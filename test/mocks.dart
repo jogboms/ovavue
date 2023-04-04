@@ -7,25 +7,43 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockUsersRepository extends Mock implements UsersRepository {}
 
+class MockBudgetsRepository extends Mock implements BudgetsRepository {}
+
+class MockBudgetPlansRepository extends Mock implements BudgetPlansRepository {}
+
+class MockBudgetCategoriesRepository extends Mock implements BudgetCategoriesRepository {}
+
+class MockBudgetAllocationsRepository extends Mock implements BudgetAllocationsRepository {}
+
 class MockCreateBudgetAllocationUseCase extends Mock implements CreateBudgetAllocationUseCase {}
 
 class MockCreateBudgetCategoryUseCase extends Mock implements CreateBudgetCategoryUseCase {}
 
-class MockCreateBudgetItemUseCase extends Mock implements CreateBudgetItemUseCase {}
+class MockCreateBudgetPlanUseCase extends Mock implements CreateBudgetPlanUseCase {}
 
 class MockCreateBudgetUseCase extends Mock implements CreateBudgetUseCase {}
 
 class MockCreateUserUseCase extends Mock implements CreateUserUseCase {}
 
+class MockDeleteBudgetAllocationUseCase extends Mock implements DeleteBudgetAllocationUseCase {}
+
+class MockDeleteBudgetCategoryUseCase extends Mock implements DeleteBudgetCategoryUseCase {}
+
+class MockDeleteBudgetPlanUseCase extends Mock implements DeleteBudgetPlanUseCase {}
+
+class MockDeleteBudgetUseCase extends Mock implements DeleteBudgetUseCase {}
+
 class MockFetchAccountUseCase extends Mock implements FetchAccountUseCase {}
 
 class MockFetchBudgetAllocationsUseCase extends Mock implements FetchBudgetAllocationsUseCase {}
 
-class MockFetchBudgetItemsUseCase extends Mock implements FetchBudgetItemsUseCase {}
+class MockFetchBudgetCategoriesUseCase extends Mock implements FetchBudgetCategoriesUseCase {}
+
+class MockFetchBudgetPlansUseCase extends Mock implements FetchBudgetPlansUseCase {}
 
 class MockFetchBudgetsUseCase extends Mock implements FetchBudgetsUseCase {}
 
-class MockFetchCurrentBudgetUseCase extends Mock implements FetchCurrentBudgetUseCase {}
+class MockFetchActiveBudgetUseCase extends Mock implements FetchActiveBudgetUseCase {}
 
 class MockFetchUserUseCase extends Mock implements FetchUserUseCase {}
 

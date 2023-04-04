@@ -2,11 +2,10 @@ import 'dart:async';
 
 import '../analytics/analytics.dart';
 import '../analytics/analytics_event.dart';
-import '../entities/create_budget_allocation_data.dart';
 import '../repositories/budget_allocations.dart';
 
-class CreateBudgetAllocationUseCase {
-  const CreateBudgetAllocationUseCase({
+class DeleteBudgetAllocationUseCase {
+  const DeleteBudgetAllocationUseCase({
     required BudgetAllocationsRepository allocations,
     required Analytics analytics,
   })  : _allocations = allocations,
@@ -15,11 +14,8 @@ class CreateBudgetAllocationUseCase {
   final BudgetAllocationsRepository _allocations;
   final Analytics _analytics;
 
-  Future<String> call({
-    required String userId,
-    required CreateBudgetAllocationData allocation,
-  }) {
-    unawaited(_analytics.log(AnalyticsEvent.createBudgetAllocation(userId)));
-    return _allocations.create(userId, allocation);
+  Future<bool> call(String path) {
+    unawaited(_analytics.log(AnalyticsEvent.deleteBudgetAllocation(path)));
+    return _allocations.delete(path);
   }
 }

@@ -65,19 +65,28 @@ void main() async {
     /// Added to Registry only for convenience with the UseCase factories.
     ..set(repository.auth)
     ..set(repository.users)
+    ..set(repository.budgets)
+    ..set(repository.budgetPlans)
+    ..set(repository.budgetCategories)
+    ..set(repository.budgetAllocations)
 
     /// UseCases.
     /// Callable classes that may contain logic or else route directly to repositories.
-    ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(analytics: di()))
-    ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(analytics: di()))
-    ..factory((RegistryFactory di) => CreateBudgetItemUseCase(analytics: di()))
-    ..factory((RegistryFactory di) => CreateBudgetUseCase(analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
+    ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
+    ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
+    ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), analytics: di()))
+    ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
     ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
-    ..factory((RegistryFactory di) => const FetchBudgetAllocationsUseCase())
-    ..factory((RegistryFactory di) => const FetchBudgetItemsUseCase())
-    ..factory((RegistryFactory di) => const FetchBudgetsUseCase())
-    ..factory((RegistryFactory di) => const FetchCurrentBudgetUseCase())
+    ..factory((RegistryFactory di) => FetchBudgetAllocationsUseCase(allocations: di(), budgets: di(), plans: di()))
+    ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
+    ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di(), categories: di()))
+    ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di(), plans: di()))
+    ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di(), plans: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
     ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
     ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
@@ -108,10 +117,18 @@ void main() async {
 class _Repository {
   _Repository.mock()
       : auth = AuthMockImpl(),
-        users = UsersMockImpl();
+        users = UsersMockImpl(),
+        budgets = BudgetsMockImpl(),
+        budgetPlans = BudgetPlansMockImpl(),
+        budgetCategories = BudgetCategoriesMockImpl(),
+        budgetAllocations = BudgetAllocationsMockImpl();
 
   final AuthRepository auth;
   final UsersRepository users;
+  final BudgetsRepository budgets;
+  final BudgetPlansRepository budgetPlans;
+  final BudgetCategoriesRepository budgetCategories;
+  final BudgetAllocationsRepository budgetAllocations;
 }
 
 class _ReporterClient implements ReporterClient {

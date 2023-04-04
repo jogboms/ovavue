@@ -8,7 +8,7 @@ import 'registry_provider.dart';
 
 part 'user_provider.g.dart';
 
-@riverpod
+@Riverpod(dependencies: <Object>[registry, account])
 Future<UserEntity> user(UserRef ref) async {
   final Registry registry = ref.read(registryProvider);
   final AccountEntity account = await ref.watch(accountProvider.future);
