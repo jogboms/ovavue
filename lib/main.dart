@@ -65,6 +65,10 @@ void main() async {
     /// Added to Registry only for convenience with the UseCase factories.
     ..set(repository.auth)
     ..set(repository.users)
+    ..set(repository.budgets)
+    ..set(repository.budgetPlans)
+    ..set(repository.budgetCategories)
+    ..set(repository.budgetAllocations)
 
     /// UseCases.
     /// Callable classes that may contain logic or else route directly to repositories.
@@ -113,10 +117,18 @@ void main() async {
 class _Repository {
   _Repository.mock()
       : auth = AuthMockImpl(),
-        users = UsersMockImpl();
+        users = UsersMockImpl(),
+        budgets = BudgetsMockImpl(),
+        budgetPlans = BudgetPlansMockImpl(),
+        budgetCategories = BudgetCategoriesMockImpl(),
+        budgetAllocations = BudgetAllocationsMockImpl();
 
   final AuthRepository auth;
   final UsersRepository users;
+  final BudgetsRepository budgets;
+  final BudgetPlansRepository budgetPlans;
+  final BudgetCategoriesRepository budgetCategories;
+  final BudgetAllocationsRepository budgetAllocations;
 }
 
 class _ReporterClient implements ReporterClient {

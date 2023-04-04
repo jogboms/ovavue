@@ -12,6 +12,10 @@ import 'mocks.dart';
 class MockRepositories {
   final AuthRepository auth = MockAuthRepository();
   final UsersRepository users = MockUsersRepository();
+  final BudgetsRepository budgets = MockBudgetsRepository();
+  final BudgetPlansRepository budgetPlans = MockBudgetPlansRepository();
+  final BudgetCategoriesRepository budgetCategories = MockBudgetCategoriesRepository();
+  final BudgetAllocationsRepository budgetAllocations = MockBudgetAllocationsRepository();
 
   void reset() => <Object>[auth, users].forEach(mt.reset);
 }
@@ -71,6 +75,10 @@ Registry createRegistry({
       ..set<Analytics>(const NoopAnalytics())
       ..set(mockRepositories.auth)
       ..set(mockRepositories.users)
+      ..set(mockRepositories.budgets)
+      ..set(mockRepositories.budgetPlans)
+      ..set(mockRepositories.budgetCategories)
+      ..set(mockRepositories.budgetAllocations)
       ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(analytics: di()))
@@ -168,8 +176,13 @@ extension MockUseCasesExtensions on Registry {
     ..replace<CreateBudgetPlanUseCase>(mockUseCases.createBudgetPlanUseCase)
     ..replace<CreateBudgetUseCase>(mockUseCases.createBudgetUseCase)
     ..replace<CreateUserUseCase>(mockUseCases.createUserUseCase)
+    ..replace<DeleteBudgetAllocationUseCase>(mockUseCases.deleteBudgetAllocationUseCase)
+    ..replace<DeleteBudgetCategoryUseCase>(mockUseCases.deleteBudgetCategoryUseCase)
+    ..replace<DeleteBudgetPlanUseCase>(mockUseCases.deleteBudgetPlanUseCase)
+    ..replace<DeleteBudgetUseCase>(mockUseCases.deleteBudgetUseCase)
     ..replace<FetchAccountUseCase>(mockUseCases.fetchAccountUseCase)
     ..replace<FetchBudgetAllocationsUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
+    ..replace<FetchBudgetCategoriesUseCase>(mockUseCases.fetchBudgetCategoriesUseCase)
     ..replace<FetchBudgetPlansUseCase>(mockUseCases.fetchBudgetPlansUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)

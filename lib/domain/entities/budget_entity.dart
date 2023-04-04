@@ -41,3 +41,7 @@ typedef NormalizedBudgetEntity = BaseBudgetEntity<BudgetPlanEntity>;
 
 typedef BudgetEntityList = List<BudgetEntity>;
 typedef NormalizedBudgetEntityList = List<NormalizedBudgetEntity>;
+
+extension BudgetReferenceEntityExtension on BudgetEntity {
+  ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
+}

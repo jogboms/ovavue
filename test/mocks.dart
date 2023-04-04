@@ -7,6 +7,14 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockUsersRepository extends Mock implements UsersRepository {}
 
+class MockBudgetsRepository extends Mock implements BudgetsRepository {}
+
+class MockBudgetPlansRepository extends Mock implements BudgetPlansRepository {}
+
+class MockBudgetCategoriesRepository extends Mock implements BudgetCategoriesRepository {}
+
+class MockBudgetAllocationsRepository extends Mock implements BudgetAllocationsRepository {}
+
 class MockCreateBudgetAllocationUseCase extends Mock implements CreateBudgetAllocationUseCase {}
 
 class MockCreateBudgetCategoryUseCase extends Mock implements CreateBudgetCategoryUseCase {}

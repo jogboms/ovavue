@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'reference_entity.dart';
+
 class BudgetCategoryEntity with EquatableMixin {
   const BudgetCategoryEntity({
     required this.id,
@@ -24,6 +26,10 @@ class BudgetCategoryEntity with EquatableMixin {
 
   @override
   bool? get stringify => true;
+}
+
+extension BudgetCategoryReferenceEntityExtension on BudgetCategoryEntity {
+  ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
 }
 
 typedef BudgetCategoryEntityList = List<BudgetCategoryEntity>;
