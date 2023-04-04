@@ -77,7 +77,7 @@ void main() async {
     ..factory((RegistryFactory di) => const FetchBudgetAllocationsUseCase())
     ..factory((RegistryFactory di) => const FetchBudgetPlansUseCase())
     ..factory((RegistryFactory di) => const FetchBudgetsUseCase())
-    ..factory((RegistryFactory di) => const FetchCurrentBudgetUseCase())
+    ..factory((RegistryFactory di) => const FetchActiveBudgetUseCase())
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
     ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
     ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))

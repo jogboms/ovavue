@@ -25,7 +25,7 @@ class MockFetchBudgetPlansUseCase extends Mock implements FetchBudgetPlansUseCas
 
 class MockFetchBudgetsUseCase extends Mock implements FetchBudgetsUseCase {}
 
-class MockFetchCurrentBudgetUseCase extends Mock implements FetchCurrentBudgetUseCase {}
+class MockFetchActiveBudgetUseCase extends Mock implements FetchActiveBudgetUseCase {}
 
 class MockFetchUserUseCase extends Mock implements FetchUserUseCase {}
 

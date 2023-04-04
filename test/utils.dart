@@ -28,7 +28,7 @@ class MockUseCases {
   final FetchBudgetAllocationsUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
   final FetchBudgetPlansUseCase fetchBudgetPlansUseCase = MockFetchBudgetPlansUseCase();
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
-  final FetchCurrentBudgetUseCase fetchCurrentBudgetUseCase = MockFetchCurrentBudgetUseCase();
+  final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
   final SignInUseCase signInUseCase = MockSignInUseCase();
   final SignOutUseCase signOutUseCase = MockSignOutUseCase();
@@ -44,7 +44,7 @@ class MockUseCases {
         fetchBudgetAllocationsUseCase,
         fetchBudgetPlansUseCase,
         fetchBudgetsUseCase,
-        fetchCurrentBudgetUseCase,
+        fetchActiveBudgetUseCase,
         fetchUserUseCase,
         signInUseCase,
         signOutUseCase,
@@ -70,7 +70,7 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => const FetchBudgetAllocationsUseCase())
       ..factory((RegistryFactory di) => const FetchBudgetPlansUseCase())
       ..factory((RegistryFactory di) => const FetchBudgetsUseCase())
-      ..factory((RegistryFactory di) => const FetchCurrentBudgetUseCase())
+      ..factory((RegistryFactory di) => const FetchActiveBudgetUseCase())
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
       ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
       ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
@@ -157,7 +157,7 @@ extension MockUseCasesExtensions on Registry {
     ..replace<FetchBudgetAllocationsUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
     ..replace<FetchBudgetPlansUseCase>(mockUseCases.fetchBudgetPlansUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
-    ..replace<FetchCurrentBudgetUseCase>(mockUseCases.fetchCurrentBudgetUseCase)
+    ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)
     ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
     ..replace<SignInUseCase>(mockUseCases.signInUseCase)
     ..replace<SignOutUseCase>(mockUseCases.signOutUseCase)
