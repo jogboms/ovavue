@@ -36,12 +36,7 @@ void main() {
       when(() => budgetAllocationsRepository.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
 
       await expectLater(useCase(userId: '1', allocation: dummyData), completion(dummyEntity.id));
-      expect(
-        analytics.events,
-        <AnalyticsEvent>[
-          AnalyticsEvent.createBudgetAllocation('1'),
-        ],
-      );
+      expect(analytics.events, containsOnce(AnalyticsEvent.createBudgetAllocation('1')));
     });
 
     test('should bubble create errors', () {

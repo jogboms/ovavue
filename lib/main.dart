@@ -36,6 +36,7 @@ void main() async {
       break;
     case Environment.testing:
     case Environment.mock:
+      seedMockData();
       reporterClient = const _NoopReporterClient();
       break;
   }

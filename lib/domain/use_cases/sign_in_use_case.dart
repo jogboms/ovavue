@@ -38,9 +38,9 @@ class SignInUseCase {
       await _auth.signIn();
     } on AuthException catch (error, stackTrace) {
       if (error is AuthExceptionTooManyRequests) {
-        unawaited(_analytics.log(AnalyticsEvent.tooManyRequests(error.email)));
+        _analytics.log(AnalyticsEvent.tooManyRequests(error.email)).ignore();
       } else if (error is AuthExceptionUserDisabled) {
-        unawaited(_analytics.log(AnalyticsEvent.userDisabled(error.email)));
+        _analytics.log(AnalyticsEvent.userDisabled(error.email)).ignore();
       } else if (error is AuthExceptionFailed) {
         AppLog.e(error, stackTrace);
       }
@@ -48,8 +48,8 @@ class SignInUseCase {
     }
 
     return completer.future.then((AccountEntity account) {
-      unawaited(_analytics.setUserId(account.id));
-      unawaited(_analytics.log(AnalyticsEvent.login(account.email, account.id)));
+      _analytics.setUserId(account.id).ignore();
+      _analytics.log(AnalyticsEvent.login(account.email, account.id)).ignore();
 
       return account;
     });

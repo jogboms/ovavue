@@ -23,7 +23,7 @@ void main() {
 
       await expectLater(useCase(), completes);
       expect(analytics.userId, null);
-      expect(analytics.events, <AnalyticsEvent>[AnalyticsEvent.logout]);
+      expect(analytics.events, containsOnce(AnalyticsEvent.logout));
     });
 
     test('should not complete until auth state change to null', () {

@@ -7,16 +7,12 @@ class CreateBudgetPlanData with EquatableMixin {
     required this.title,
     required this.description,
     required this.category,
-    required this.startedAt,
-    required this.endedAt,
   });
 
   final String title;
   final String description;
   final ReferenceEntity category;
-  final DateTime startedAt;
-  final DateTime? endedAt;
 
   @override
-  List<Object?> get props => <Object?>[title, description, category, startedAt, endedAt];
+  List<Object?> get props => <Object?>[title, description, category];
 }

@@ -17,23 +17,35 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
     BudgetCategoryEntity? category,
   }) {
     id ??= faker.guid.guid();
+    userId ??= AuthMockImpl.id;
     return NormalizedBudgetPlanEntity(
       id: id,
-      path: '/plans/${userId ?? AuthMockImpl.id}/$id',
+      path: '/plans/$userId/$id',
       title: faker.lorem.words(2).join(' '),
       description: faker.lorem.sentence(),
-      category: category ?? BudgetCategoriesMockImpl.categories.values.random(),
+      category: category ?? BudgetCategoriesMockImpl.generateCategory(userId: userId),
       createdAt: faker.randomGenerator.dateTime,
       updatedAt: clock.now(),
     );
   }
 
-  static final Map<String, BudgetPlanEntity> plans = (faker.randomGenerator.amount((_) => generatePlan(), 5, min: 3)
-        ..sort((BudgetPlanEntity a, BudgetPlanEntity b) => b.createdAt.compareTo(a.createdAt)))
-      .foldToMap((BudgetPlanEntity element) => element.id);
+  static final Map<String, BudgetPlanEntity> _plans = <String, BudgetPlanEntity>{};
 
   final BehaviorSubject<Map<String, BudgetPlanEntity>> _plans$ =
-      BehaviorSubject<Map<String, BudgetPlanEntity>>.seeded(plans);
+      BehaviorSubject<Map<String, BudgetPlanEntity>>.seeded(_plans);
+
+  NormalizedBudgetPlanEntityList seed(int count, NormalizedBudgetPlanEntity Function(int) builder) {
+    final NormalizedBudgetPlanEntityList items = NormalizedBudgetPlanEntityList.generate(count, builder);
+    _plans$.add(
+      _plans
+        ..addAll(
+          items
+              .map((NormalizedBudgetPlanEntity element) => element.denormalize)
+              .foldToMap((BudgetPlanEntity element) => element.id),
+        ),
+    );
+    return items;
+  }
 
   @override
   Future<String> create(String userId, CreateBudgetPlanData plan) async {
@@ -47,14 +59,14 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
       createdAt: clock.now(),
       updatedAt: null,
     );
-    _plans$.add(plans..putIfAbsent(id, () => newItem));
+    _plans$.add(_plans..putIfAbsent(id, () => newItem));
     return id;
   }
 
   @override
   Future<bool> delete(String path) async {
-    final String id = plans.values.firstWhere((BudgetPlanEntity element) => element.path == path).id;
-    _plans$.add(plans..remove(id));
+    final String id = _plans.values.firstWhere((BudgetPlanEntity element) => element.path == path).id;
+    _plans$.add(_plans..remove(id));
     return true;
   }
 

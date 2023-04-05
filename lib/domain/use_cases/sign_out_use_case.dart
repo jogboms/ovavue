@@ -32,8 +32,8 @@ class SignOutUseCase {
     await _auth.signOut();
 
     return completer.future.then((_) {
-      unawaited(_analytics.log(AnalyticsEvent.logout));
-      unawaited(_analytics.removeUserId());
+      _analytics.log(AnalyticsEvent.logout).ignore();
+      _analytics.removeUserId().ignore();
     });
   }
 }

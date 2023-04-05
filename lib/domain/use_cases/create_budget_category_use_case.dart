@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import '../analytics/analytics.dart';
 import '../analytics/analytics_event.dart';
 import '../entities/create_budget_category_data.dart';
@@ -19,7 +17,7 @@ class CreateBudgetCategoryUseCase {
     required String userId,
     required CreateBudgetCategoryData category,
   }) {
-    unawaited(_analytics.log(AnalyticsEvent.createBudgetCategory(userId)));
+    _analytics.log(AnalyticsEvent.createBudgetCategory(userId)).ignore();
     return _categories.create(userId, category);
   }
 }

@@ -50,7 +50,7 @@ extension NormalizeBudgetPlanEntityExtension on BudgetPlanEntity {
         path: path,
         title: title,
         description: description,
-        category: categories.firstWhere((BudgetCategoryEntity category) => category.id == category.id),
+        category: categories.firstWhere((BudgetCategoryEntity category) => this.category.id == category.id),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );

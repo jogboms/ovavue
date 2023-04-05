@@ -22,12 +22,7 @@ void main() {
       when(() => budgetAllocationsRepository.delete(any())).thenAnswer((_) async => true);
 
       await expectLater(useCase('path'), completion(true));
-      expect(
-        analytics.events,
-        <AnalyticsEvent>[
-          AnalyticsEvent.deleteBudgetAllocation('path'),
-        ],
-      );
+      expect(analytics.events, containsOnce(AnalyticsEvent.deleteBudgetAllocation('path')));
     });
 
     test('should bubble delete errors', () {

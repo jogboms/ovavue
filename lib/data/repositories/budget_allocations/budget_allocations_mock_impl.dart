@@ -47,12 +47,23 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
     );
   }
 
-  static final Map<String, BudgetAllocationEntity> allocations = faker.randomGenerator
-      .amount((_) => generateAllocation(), 10, min: 5)
-      .foldToMap((BudgetAllocationEntity element) => element.id);
+  static final Map<String, BudgetAllocationEntity> allocations = <String, BudgetAllocationEntity>{};
 
   final BehaviorSubject<Map<String, BudgetAllocationEntity>> _allocations$ =
       BehaviorSubject<Map<String, BudgetAllocationEntity>>.seeded(allocations);
+
+  NormalizedBudgetAllocationEntityList seed(int count, NormalizedBudgetAllocationEntity Function(int) builder) {
+    final NormalizedBudgetAllocationEntityList items = NormalizedBudgetAllocationEntityList.generate(count, builder);
+    _allocations$.add(
+      allocations
+        ..addAll(
+          items
+              .map((NormalizedBudgetAllocationEntity element) => element.denormalize)
+              .foldToMap((BudgetAllocationEntity element) => element.id),
+        ),
+    );
+    return items;
+  }
 
   @override
   Future<String> create(String userId, CreateBudgetAllocationData allocation) async {
@@ -83,8 +94,13 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   Stream<BudgetAllocationEntityList> fetch({
     required String userId,
     required String budgetId,
+    required String planId,
   }) =>
-      _allocations$.stream.map((Map<String, BudgetAllocationEntity> event) => event.values.toList());
+      _allocations$.stream.map(
+        (Map<String, BudgetAllocationEntity> event) => event.values
+            .where((BudgetAllocationEntity element) => element.budget.id == budgetId && element.plan.id == planId)
+            .toList(),
+      );
 }
 
 extension on NormalizedBudgetAllocationEntity {

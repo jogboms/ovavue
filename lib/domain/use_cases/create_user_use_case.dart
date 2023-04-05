@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import '../analytics/analytics.dart';
 import '../analytics/analytics_event.dart';
 import '../entities/account_entity.dart';
@@ -16,7 +14,7 @@ class CreateUserUseCase {
   final Analytics _analytics;
 
   Future<String> call(AccountEntity account) {
-    unawaited(_analytics.log(AnalyticsEvent.createUser(account.id)));
+    _analytics.log(AnalyticsEvent.createUser(account.id)).ignore();
     return _users.create(account);
   }
 }

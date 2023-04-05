@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import '../analytics/analytics.dart';
 import '../analytics/analytics_event.dart';
 import '../entities/create_budget_data.dart';
@@ -19,7 +17,7 @@ class CreateBudgetUseCase {
     required String userId,
     required CreateBudgetData budget,
   }) {
-    unawaited(_analytics.log(AnalyticsEvent.createBudget(userId)));
+    _analytics.log(AnalyticsEvent.createBudget(userId)).ignore();
     return _budgets.create(userId, budget);
   }
 }

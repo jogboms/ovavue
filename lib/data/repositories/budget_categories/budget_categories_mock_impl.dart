@@ -20,13 +20,22 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
     );
   }
 
-  static final Map<String, BudgetCategoryEntity> categories =
-      (faker.randomGenerator.amount((_) => generateCategory(), 10, min: 5)
-            ..sort((BudgetCategoryEntity a, BudgetCategoryEntity b) => b.createdAt.compareTo(a.createdAt)))
-          .foldToMap((BudgetCategoryEntity element) => element.id);
+  static final Map<String, BudgetCategoryEntity> _categories = <String, BudgetCategoryEntity>{};
 
   final BehaviorSubject<Map<String, BudgetCategoryEntity>> _categories$ =
-      BehaviorSubject<Map<String, BudgetCategoryEntity>>.seeded(categories);
+      BehaviorSubject<Map<String, BudgetCategoryEntity>>.seeded(_categories);
+
+  BudgetCategoryEntityList seed(
+    int count, {
+    String? userId,
+  }) {
+    final BudgetCategoryEntityList items = BudgetCategoryEntityList.generate(
+      count,
+      (_) => BudgetCategoriesMockImpl.generateCategory(userId: userId),
+    );
+    _categories$.add(_categories..addAll(items.foldToMap((BudgetCategoryEntity element) => element.id)));
+    return items;
+  }
 
   @override
   Future<String> create(String userId, CreateBudgetCategoryData category) async {
@@ -40,14 +49,14 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
       createdAt: clock.now(),
       updatedAt: null,
     );
-    _categories$.add(categories..putIfAbsent(id, () => newTag));
+    _categories$.add(_categories..putIfAbsent(id, () => newTag));
     return id;
   }
 
   @override
   Future<bool> delete(String path) async {
-    final String id = categories.values.firstWhere((BudgetCategoryEntity element) => element.path == path).id;
-    _categories$.add(categories..remove(id));
+    final String id = _categories.values.firstWhere((BudgetCategoryEntity element) => element.path == path).id;
+    _categories$.add(_categories..remove(id));
     return true;
   }
 

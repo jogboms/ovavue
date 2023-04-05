@@ -28,22 +28,20 @@ class FetchBudgetAllocationsUseCase {
   Stream<NormalizedBudgetAllocationEntityList> call({
     required String userId,
     required String budgetId,
+    required String planId,
   }) =>
-      CombineLatestStream.combine4<BudgetAllocationEntityList, BudgetEntityList, BudgetPlanEntityList,
+      CombineLatestStream.combine4<BudgetAllocationEntityList, BudgetEntity, BudgetPlanEntityList,
           BudgetCategoryEntityList, NormalizedBudgetAllocationEntityList>(
-        _allocations.fetch(userId: userId, budgetId: budgetId),
-        _budgets.fetch(userId),
+        _allocations.fetch(userId: userId, budgetId: budgetId, planId: planId),
+        _budgets.fetchOne(userId: userId, budgetId: budgetId),
         _plans.fetch(userId),
         _categories.fetch(userId),
         (
           BudgetAllocationEntityList allocations,
-          BudgetEntityList budgets,
+          BudgetEntity budget,
           BudgetPlanEntityList plans,
           BudgetCategoryEntityList categories,
-        ) {
-          final NormalizedBudgetPlanEntityList normalizedPlans = plans.normalize(categories);
-
-          return allocations.normalize(budgets: budgets.normalize(normalizedPlans), plans: normalizedPlans);
-        },
+        ) =>
+            allocations.normalize(budget.normalize(plans.normalize(categories))),
       );
 }

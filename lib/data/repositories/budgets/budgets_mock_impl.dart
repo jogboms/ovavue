@@ -40,12 +40,30 @@ class BudgetsMockImpl implements BudgetsRepository {
     );
   }
 
-  static final Map<String, BudgetEntity> budgets = (faker.randomGenerator.amount((_) => generateBudget(), 5, min: 2)
-        ..sort(_sortFn))
-      .foldToMap((BudgetEntity element) => element.id);
+  static final Map<String, BudgetEntity> _budgets = <String, BudgetEntity>{};
 
   final BehaviorSubject<Map<String, BudgetEntity>> _budgets$ =
-      BehaviorSubject<Map<String, BudgetEntity>>.seeded(budgets);
+      BehaviorSubject<Map<String, BudgetEntity>>.seeded(_budgets);
+
+  NormalizedBudgetEntityList seed(
+    int count, {
+    String? userId,
+    NormalizedBudgetPlanEntityList? plans,
+  }) {
+    final NormalizedBudgetEntityList items = NormalizedBudgetEntityList.generate(
+      count,
+      (_) => BudgetsMockImpl.generateNormalizedBudget(userId: userId, plans: plans),
+    );
+    _budgets$.add(
+      _budgets
+        ..addAll(
+          items
+              .map((NormalizedBudgetEntity element) => element.denormalize)
+              .foldToMap((BudgetEntity element) => element.id),
+        ),
+    );
+    return items;
+  }
 
   @override
   Future<String> create(String userId, CreateBudgetData budget) async {
@@ -62,14 +80,14 @@ class BudgetsMockImpl implements BudgetsRepository {
       createdAt: clock.now(),
       updatedAt: null,
     );
-    _budgets$.add(budgets..putIfAbsent(id, () => newItem));
+    _budgets$.add(_budgets..putIfAbsent(id, () => newItem));
     return id;
   }
 
   @override
   Future<bool> delete(String path) async {
-    final String id = budgets.values.firstWhere((BudgetEntity element) => element.path == path).id;
-    _budgets$.add(budgets..remove(id));
+    final String id = _budgets.values.firstWhere((BudgetEntity element) => element.path == path).id;
+    _budgets$.add(_budgets..remove(id));
     return true;
   }
 
@@ -81,6 +99,10 @@ class BudgetsMockImpl implements BudgetsRepository {
   Stream<BudgetEntity> fetchActiveBudget(String userId) => _budgets$.stream.map(
         (Map<String, BudgetEntity> event) => (event.values.toList(growable: false)..sort(_sortFn)).first,
       );
+
+  @override
+  Stream<BudgetEntity> fetchOne({required String userId, required String budgetId}) =>
+      _budgets$.stream.map((Map<String, BudgetEntity> event) => event[budgetId]!);
 }
 
 int _sortFn(BudgetEntity a, BudgetEntity b) => b.startedAt.compareTo(a.startedAt);

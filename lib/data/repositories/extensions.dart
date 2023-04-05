@@ -26,5 +26,10 @@ extension RandomGeneratorExtensions on RandomGenerator {
 }
 
 extension RandomEnum<T extends Object> on Iterable<T> {
-  T random() => elementAt(Random().nextInt(length - 1));
+  T random() {
+    if (isEmpty) {
+      throw StateError('No element');
+    }
+    return elementAt(Random().nextInt(length - 1));
+  }
 }

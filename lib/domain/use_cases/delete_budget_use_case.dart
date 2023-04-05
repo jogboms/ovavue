@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import '../analytics/analytics.dart';
 import '../analytics/analytics_event.dart';
 import '../repositories/budgets.dart';
@@ -15,7 +13,7 @@ class DeleteBudgetUseCase {
   final Analytics _analytics;
 
   Future<bool> call(String path) {
-    unawaited(_analytics.log(AnalyticsEvent.deleteBudget(path)));
+    _analytics.log(AnalyticsEvent.deleteBudget(path)).ignore();
     return _budgets.delete(path);
   }
 }
