@@ -35,7 +35,41 @@ class BaseBudgetAllocationEntity<U, V> with EquatableMixin {
 }
 
 typedef BudgetAllocationEntity = BaseBudgetAllocationEntity<ReferenceEntity, ReferenceEntity>;
-typedef NormalizedBudgetAllocationEntity = BaseBudgetAllocationEntity<BudgetEntity, BudgetPlanEntity>;
+typedef NormalizedBudgetAllocationEntity
+    = BaseBudgetAllocationEntity<NormalizedBudgetEntity, NormalizedBudgetPlanEntity>;
 
 typedef BudgetAllocationEntityList = List<BudgetAllocationEntity>;
 typedef NormalizedBudgetAllocationEntityList = List<NormalizedBudgetAllocationEntity>;
+
+extension NormalizeBudgetAllocationEntityListExtension on BudgetAllocationEntityList {
+  NormalizedBudgetAllocationEntityList normalize({
+    required NormalizedBudgetEntityList budgets,
+    required NormalizedBudgetPlanEntityList plans,
+  }) {
+    return map(
+      (BudgetAllocationEntity allocation) => allocation.normalize(
+        budgets: budgets,
+        plans: plans,
+      ),
+    ).toList(growable: false);
+  }
+}
+
+extension NormalizeBudgetAllocationEntityExtension on BudgetAllocationEntity {
+  NormalizedBudgetAllocationEntity normalize({
+    required NormalizedBudgetEntityList budgets,
+    required NormalizedBudgetPlanEntityList plans,
+  }) {
+    return NormalizedBudgetAllocationEntity(
+      id: id,
+      path: path,
+      amount: amount,
+      startedAt: startedAt,
+      endedAt: endedAt,
+      budget: budgets.firstWhere((NormalizedBudgetEntity budget) => budget.id == budget.id),
+      plan: plans.firstWhere((NormalizedBudgetPlanEntity plan) => plan.id == plan.id),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}

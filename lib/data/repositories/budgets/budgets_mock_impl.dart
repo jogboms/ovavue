@@ -11,7 +11,7 @@ class BudgetsMockImpl implements BudgetsRepository {
   static BudgetEntity generateBudget({
     String? id,
     String? userId,
-    List<BudgetPlanEntity>? plans,
+    NormalizedBudgetPlanEntityList? plans,
     DateTime? startedAt,
   }) =>
       generateNormalizedBudget(id: id, userId: userId, plans: plans, startedAt: startedAt).denormalize;
@@ -19,26 +19,28 @@ class BudgetsMockImpl implements BudgetsRepository {
   static NormalizedBudgetEntity generateNormalizedBudget({
     String? id,
     String? userId,
-    List<BudgetPlanEntity>? plans,
+    NormalizedBudgetPlanEntityList? plans,
     DateTime? startedAt,
   }) {
     id ??= faker.guid.guid();
+    userId ??= AuthMockImpl.id;
     startedAt ??= faker.randomGenerator.dateTime;
     return NormalizedBudgetEntity(
       id: id,
-      path: '/budgets/${userId ?? AuthMockImpl.id}/$id',
+      path: '/budgets/$userId/$id',
       title: faker.lorem.words(2).join(' '),
       description: faker.lorem.sentence(),
       amount: faker.randomGenerator.integer(1000000),
       startedAt: startedAt,
       endedAt: startedAt.add(const Duration(minutes: 10000)),
-      plans: plans ?? BudgetPlansMockImpl.plans.values.toList(growable: false),
+      plans: plans ??
+          NormalizedBudgetPlanEntityList.generate(3, (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId)),
       createdAt: faker.randomGenerator.dateTime,
       updatedAt: clock.now(),
     );
   }
 
-  static final Map<String, BudgetEntity> budgets = (faker.randomGenerator.amount((_) => generateBudget(), 250, min: 50)
+  static final Map<String, BudgetEntity> budgets = (faker.randomGenerator.amount((_) => generateBudget(), 5, min: 2)
         ..sort(_sortFn))
       .foldToMap((BudgetEntity element) => element.id);
 
@@ -92,7 +94,7 @@ extension on NormalizedBudgetEntity {
         amount: amount,
         startedAt: startedAt,
         endedAt: endedAt,
-        plans: plans.map((BudgetPlanEntity element) => element.reference).toList(growable: false),
+        plans: plans.map((NormalizedBudgetPlanEntity element) => element.reference).toList(growable: false),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );

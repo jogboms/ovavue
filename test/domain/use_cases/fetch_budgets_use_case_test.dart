@@ -9,25 +9,34 @@ void main() {
   group('FetchBudgetsUseCase', () {
     final BudgetsRepository budgetsRepository = mockRepositories.budgets;
     final BudgetPlansRepository budgetPlansRepository = mockRepositories.budgetPlans;
+    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
     final FetchBudgetsUseCase useCase = FetchBudgetsUseCase(
       budgets: budgetsRepository,
       plans: budgetPlansRepository,
+      categories: budgetCategoriesRepository,
     );
 
     tearDown(() {
       reset(budgetsRepository);
       reset(budgetPlansRepository);
+      reset(budgetCategoriesRepository);
     });
 
     test('should fetch budgets', () {
-      final BudgetPlanEntityList plans = <BudgetPlanEntity>[BudgetPlansMockImpl.generatePlan()];
+      final BudgetCategoryEntityList categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
+      final NormalizedBudgetPlanEntityList plans = <NormalizedBudgetPlanEntity>[
+        BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first),
+      ];
       final NormalizedBudgetEntityList expectedBudgets = <NormalizedBudgetEntity>[
         BudgetsMockImpl.generateNormalizedBudget(plans: plans)
       ];
 
       when(() => budgetsRepository.fetch(any()))
           .thenAnswer((_) => Stream<BudgetEntityList>.value(expectedBudgets.asBudgetEntityList));
-      when(() => budgetPlansRepository.fetch(any())).thenAnswer((_) => Stream<BudgetPlanEntityList>.value(plans));
+      when(() => budgetPlansRepository.fetch(any()))
+          .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(plans.asBudgetPlanEntityList));
+      when(() => budgetCategoriesRepository.fetch(any()))
+          .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
       expectLater(useCase('1'), emits(expectedBudgets));
     });
@@ -46,6 +55,9 @@ void main() {
       );
       when(() => budgetPlansRepository.fetch(any())).thenAnswer(
         (_) => Stream<BudgetPlanEntityList>.error(expectedError),
+      );
+      when(() => budgetCategoriesRepository.fetch(any())).thenAnswer(
+        (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 
       expect(useCase('1'), emitsError(expectedError));

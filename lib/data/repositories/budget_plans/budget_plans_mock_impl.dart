@@ -28,7 +28,7 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
     );
   }
 
-  static final Map<String, BudgetPlanEntity> plans = (faker.randomGenerator.amount((_) => generatePlan(), 250, min: 50)
+  static final Map<String, BudgetPlanEntity> plans = (faker.randomGenerator.amount((_) => generatePlan(), 5, min: 3)
         ..sort((BudgetPlanEntity a, BudgetPlanEntity b) => b.createdAt.compareTo(a.createdAt)))
       .foldToMap((BudgetPlanEntity element) => element.id);
 

@@ -35,6 +35,23 @@ typedef NormalizedBudgetPlanEntity = BaseBudgetPlanEntity<BudgetCategoryEntity>;
 typedef BudgetPlanEntityList = List<BudgetPlanEntity>;
 typedef NormalizedBudgetPlanEntityList = List<NormalizedBudgetPlanEntity>;
 
-extension BudgetPlanReferenceEntityExtension on BudgetPlanEntity {
+extension NormalizedBudgetPlanReferenceEntityExtension on NormalizedBudgetPlanEntity {
   ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
+}
+
+extension NormalizeBudgetPlanEntityListExtension on BudgetPlanEntityList {
+  NormalizedBudgetPlanEntityList normalize(BudgetCategoryEntityList categories) =>
+      map((BudgetPlanEntity plan) => plan.normalize(categories)).toList(growable: false);
+}
+
+extension NormalizeBudgetPlanEntityExtension on BudgetPlanEntity {
+  NormalizedBudgetPlanEntity normalize(BudgetCategoryEntityList categories) => NormalizedBudgetPlanEntity(
+        id: id,
+        path: path,
+        title: title,
+        description: description,
+        category: categories.firstWhere((BudgetCategoryEntity category) => category.id == category.id),
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
 }
