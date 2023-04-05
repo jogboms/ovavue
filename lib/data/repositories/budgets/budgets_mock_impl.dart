@@ -88,6 +88,10 @@ class BudgetsMockImpl implements BudgetsRepository {
   Stream<BudgetEntity> fetchActiveBudget(String userId) => _budgets$.stream.map(
         (Map<String, BudgetEntity> event) => (event.values.toList(growable: false)..sort(_sortFn)).first,
       );
+
+  @override
+  Stream<BudgetEntity> fetchOne({required String userId, required String budgetId}) =>
+      _budgets$.stream.map((Map<String, BudgetEntity> event) => event[budgetId]!);
 }
 
 int _sortFn(BudgetEntity a, BudgetEntity b) => b.startedAt.compareTo(a.startedAt);

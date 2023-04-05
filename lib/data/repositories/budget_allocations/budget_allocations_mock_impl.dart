@@ -90,8 +90,13 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   Stream<BudgetAllocationEntityList> fetch({
     required String userId,
     required String budgetId,
+    required String planId,
   }) =>
-      _allocations$.stream.map((Map<String, BudgetAllocationEntity> event) => event.values.toList());
+      _allocations$.stream.map(
+        (Map<String, BudgetAllocationEntity> event) => event.values
+            .where((BudgetAllocationEntity element) => element.budget.id == budgetId && element.plan.id == planId)
+            .toList(),
+      );
 }
 
 extension on NormalizedBudgetAllocationEntity {

@@ -12,12 +12,10 @@ void main() {
     final CreateBudgetPlanUseCase useCase = CreateBudgetPlanUseCase(plans: budgetPlansRepository, analytics: analytics);
 
     final BudgetPlanEntity dummyEntity = BudgetPlansMockImpl.generatePlan(userId: '1');
-    final CreateBudgetPlanData dummyData = CreateBudgetPlanData(
+    const CreateBudgetPlanData dummyData = CreateBudgetPlanData(
       title: 'title',
       description: 'description',
-      category: const ReferenceEntity(id: '1', path: 'path'),
-      startedAt: DateTime(0),
-      endedAt: null,
+      category: ReferenceEntity(id: '1', path: 'path'),
     );
 
     setUpAll(() {

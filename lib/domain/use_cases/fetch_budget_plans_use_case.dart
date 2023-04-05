@@ -19,18 +19,6 @@ class FetchBudgetPlansUseCase {
       CombineLatestStream.combine2<BudgetPlanEntityList, BudgetCategoryEntityList, NormalizedBudgetPlanEntityList>(
         _plans.fetch(userId),
         _categories.fetch(userId),
-        (BudgetPlanEntityList plans, BudgetCategoryEntityList categories) => plans
-            .map(
-              (BudgetPlanEntity plan) => NormalizedBudgetPlanEntity(
-                id: plan.id,
-                path: plan.path,
-                title: plan.title,
-                description: plan.description,
-                category: categories.firstWhere((BudgetCategoryEntity category) => category.id == plan.category.id),
-                createdAt: plan.createdAt,
-                updatedAt: plan.updatedAt,
-              ),
-            )
-            .toList(),
+        (BudgetPlanEntityList plans, BudgetCategoryEntityList categories) => plans.normalize(categories),
       );
 }

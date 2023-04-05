@@ -9,4 +9,9 @@ abstract class BudgetsRepository {
   Stream<BudgetEntityList> fetch(String userId);
 
   Stream<BudgetEntity> fetchActiveBudget(String userId);
+
+  Stream<BudgetEntity> fetchOne({
+    required String userId,
+    required String budgetId,
+  });
 }
