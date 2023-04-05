@@ -20,13 +20,17 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
     );
   }
 
-  static final Map<String, BudgetCategoryEntity> categories =
-      (faker.randomGenerator.amount((_) => generateCategory(), 10, min: 5)
-            ..sort((BudgetCategoryEntity a, BudgetCategoryEntity b) => b.createdAt.compareTo(a.createdAt)))
-          .foldToMap((BudgetCategoryEntity element) => element.id);
+  static final Map<String, BudgetCategoryEntity> categories = <String, BudgetCategoryEntity>{};
 
   final BehaviorSubject<Map<String, BudgetCategoryEntity>> _categories$ =
       BehaviorSubject<Map<String, BudgetCategoryEntity>>.seeded(categories);
+
+  void seed(BudgetCategoryEntityList items) => _categories$.add(
+        categories
+          ..addAll(
+            items.foldToMap((BudgetCategoryEntity element) => element.id),
+          ),
+      );
 
   @override
   Future<String> create(String userId, CreateBudgetCategoryData category) async {

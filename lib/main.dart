@@ -10,6 +10,7 @@ import 'package:universal_io/io.dart' as io;
 
 import 'core.dart';
 import 'data.dart';
+import 'data/repositories/extensions.dart';
 import 'domain.dart';
 import 'presentation.dart';
 
@@ -36,6 +37,7 @@ void main() async {
       break;
     case Environment.testing:
     case Environment.mock:
+      seedMockData();
       reporterClient = const _NoopReporterClient();
       break;
   }

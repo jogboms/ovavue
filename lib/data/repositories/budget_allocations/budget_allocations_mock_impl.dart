@@ -47,12 +47,19 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
     );
   }
 
-  static final Map<String, BudgetAllocationEntity> allocations = faker.randomGenerator
-      .amount((_) => generateAllocation(), 10, min: 5)
-      .foldToMap((BudgetAllocationEntity element) => element.id);
+  static final Map<String, BudgetAllocationEntity> allocations = <String, BudgetAllocationEntity>{};
 
   final BehaviorSubject<Map<String, BudgetAllocationEntity>> _allocations$ =
       BehaviorSubject<Map<String, BudgetAllocationEntity>>.seeded(allocations);
+
+  void seed(NormalizedBudgetAllocationEntityList items) => _allocations$.add(
+        allocations
+          ..addAll(
+            items
+                .map((NormalizedBudgetAllocationEntity element) => element.denormalize)
+                .foldToMap((BudgetAllocationEntity element) => element.id),
+          ),
+      );
 
   @override
   Future<String> create(String userId, CreateBudgetAllocationData allocation) async {

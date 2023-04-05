@@ -28,12 +28,19 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
     );
   }
 
-  static final Map<String, BudgetPlanEntity> plans = (faker.randomGenerator.amount((_) => generatePlan(), 5, min: 3)
-        ..sort((BudgetPlanEntity a, BudgetPlanEntity b) => b.createdAt.compareTo(a.createdAt)))
-      .foldToMap((BudgetPlanEntity element) => element.id);
+  static final Map<String, BudgetPlanEntity> plans = <String, BudgetPlanEntity>{};
 
   final BehaviorSubject<Map<String, BudgetPlanEntity>> _plans$ =
       BehaviorSubject<Map<String, BudgetPlanEntity>>.seeded(plans);
+
+  void seed(NormalizedBudgetPlanEntityList items) => _plans$.add(
+        plans
+          ..addAll(
+            items
+                .map((NormalizedBudgetPlanEntity element) => element.denormalize)
+                .foldToMap((BudgetPlanEntity element) => element.id),
+          ),
+      );
 
   @override
   Future<String> create(String userId, CreateBudgetPlanData plan) async {
