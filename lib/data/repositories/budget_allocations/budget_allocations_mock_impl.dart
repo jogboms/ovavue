@@ -12,8 +12,8 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   static BudgetAllocationEntity generateAllocation({
     String? id,
     String? userId,
-    BudgetEntity? budget,
-    BudgetPlanEntity? plan,
+    NormalizedBudgetEntity? budget,
+    NormalizedBudgetPlanEntity? plan,
     DateTime? startedAt,
   }) =>
       generateNormalizedAllocation(
@@ -27,20 +27,21 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   static NormalizedBudgetAllocationEntity generateNormalizedAllocation({
     String? id,
     String? userId,
-    BudgetEntity? budget,
-    BudgetPlanEntity? plan,
+    NormalizedBudgetEntity? budget,
+    NormalizedBudgetPlanEntity? plan,
     DateTime? startedAt,
   }) {
     id ??= faker.guid.guid();
+    userId ??= AuthMockImpl.id;
     startedAt ??= faker.randomGenerator.dateTime;
     return NormalizedBudgetAllocationEntity(
       id: id,
-      path: '/allocations/${userId ?? AuthMockImpl.id}/$id',
+      path: '/allocations/$userId/$id',
       amount: faker.randomGenerator.integer(1000000),
       startedAt: startedAt,
       endedAt: startedAt.add(const Duration(minutes: 10000)),
-      budget: budget ?? BudgetsMockImpl.budgets.values.first,
-      plan: plan ?? BudgetPlansMockImpl.plans.values.random(),
+      budget: budget ?? BudgetsMockImpl.generateNormalizedBudget(userId: userId),
+      plan: plan ?? BudgetPlansMockImpl.generateNormalizedPlan(userId: userId),
       createdAt: faker.randomGenerator.dateTime,
       updatedAt: clock.now(),
     );

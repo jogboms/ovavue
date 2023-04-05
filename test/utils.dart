@@ -89,11 +89,30 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
-      ..factory((RegistryFactory di) => FetchBudgetAllocationsUseCase(allocations: di(), budgets: di(), plans: di()))
+      ..factory(
+        (RegistryFactory di) => FetchBudgetAllocationsUseCase(
+          allocations: di(),
+          budgets: di(),
+          plans: di(),
+          categories: di(),
+        ),
+      )
       ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
       ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di(), categories: di()))
-      ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di(), plans: di()))
-      ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di(), plans: di()))
+      ..factory(
+        (RegistryFactory di) => FetchBudgetsUseCase(
+          budgets: di(),
+          plans: di(),
+          categories: di(),
+        ),
+      )
+      ..factory(
+        (RegistryFactory di) => FetchActiveBudgetUseCase(
+          budgets: di(),
+          plans: di(),
+          categories: di(),
+        ),
+      )
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
       ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
       ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
@@ -224,7 +243,7 @@ extension NormalizedBudgetEntityExtensions on NormalizedBudgetEntity {
         amount: amount,
         startedAt: startedAt,
         endedAt: endedAt,
-        plans: plans.map((BudgetPlanEntity element) => element.reference).toList(growable: false),
+        plans: plans.map((NormalizedBudgetPlanEntity element) => element.reference).toList(growable: false),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );
@@ -235,18 +254,21 @@ extension NormalizedBudgetEntityListExtensions on NormalizedBudgetEntityList {
       map((NormalizedBudgetEntity e) => e.asBudgetEntity).toList(growable: false);
 }
 
+extension NormalizedBudgetPlanEntityExtensions on NormalizedBudgetPlanEntity {
+  BudgetPlanEntity get asBudgetPlanEntity => BudgetPlanEntity(
+        id: id,
+        path: path,
+        title: title,
+        description: description,
+        category: category.reference,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
+}
+
 extension NormalizedBudgetPlanEntityListExtensions on NormalizedBudgetPlanEntityList {
-  BudgetPlanEntityList get asBudgetPlanEntityList => map(
-        (NormalizedBudgetPlanEntity e) => BudgetPlanEntity(
-          id: e.id,
-          path: e.path,
-          title: e.title,
-          description: e.description,
-          category: e.category.reference,
-          createdAt: e.createdAt,
-          updatedAt: e.updatedAt,
-        ),
-      ).toList(growable: false);
+  BudgetPlanEntityList get asBudgetPlanEntityList =>
+      map((NormalizedBudgetPlanEntity e) => e.asBudgetPlanEntity).toList(growable: false);
 }
 
 extension NormalizedBudgetAllocationEntityListExtensions on NormalizedBudgetAllocationEntityList {

@@ -10,21 +10,27 @@ void main() {
     final BudgetAllocationsRepository budgetAllocationsRepository = mockRepositories.budgetAllocations;
     final BudgetsRepository budgetsRepository = mockRepositories.budgets;
     final BudgetPlansRepository budgetPlansRepository = mockRepositories.budgetPlans;
+    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
     final FetchBudgetAllocationsUseCase useCase = FetchBudgetAllocationsUseCase(
       allocations: budgetAllocationsRepository,
       budgets: budgetsRepository,
       plans: budgetPlansRepository,
+      categories: budgetCategoriesRepository,
     );
 
     tearDown(() {
       reset(budgetAllocationsRepository);
       reset(budgetsRepository);
       reset(budgetPlansRepository);
+      reset(budgetCategoriesRepository);
     });
 
     test('should fetch budget allocations', () {
-      final BudgetEntity budget = BudgetsMockImpl.generateBudget();
-      final BudgetPlanEntity plan = BudgetPlansMockImpl.generatePlan();
+      final BudgetCategoryEntityList categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
+      final NormalizedBudgetPlanEntity plan = BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first);
+      final NormalizedBudgetEntity budget = BudgetsMockImpl.generateNormalizedBudget(
+        plans: <NormalizedBudgetPlanEntity>[plan],
+      );
       final NormalizedBudgetAllocationEntityList expectedAllocations = <NormalizedBudgetAllocationEntity>[
         BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget, plan: plan)
       ];
@@ -33,9 +39,11 @@ void main() {
         (_) => Stream<BudgetAllocationEntityList>.value(expectedAllocations.asBudgetAllocationEntityList),
       );
       when(() => budgetsRepository.fetch(any()))
-          .thenAnswer((_) => Stream<BudgetEntityList>.value(<BudgetEntity>[budget]));
+          .thenAnswer((_) => Stream<BudgetEntityList>.value(<BudgetEntity>[budget.asBudgetEntity]));
       when(() => budgetPlansRepository.fetch(any()))
-          .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[plan]));
+          .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[plan.asBudgetPlanEntity]));
+      when(() => budgetCategoriesRepository.fetch(any()))
+          .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
       expectLater(useCase(userId: '1', budgetId: '1'), emits(expectedAllocations));
     });
@@ -57,6 +65,9 @@ void main() {
       );
       when(() => budgetPlansRepository.fetch(any())).thenAnswer(
         (_) => Stream<BudgetPlanEntityList>.error(expectedError),
+      );
+      when(() => budgetCategoriesRepository.fetch(any())).thenAnswer(
+        (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 
       expect(useCase(userId: '1', budgetId: '1'), emitsError(expectedError));

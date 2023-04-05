@@ -37,11 +37,33 @@ class BaseBudgetEntity<T> with EquatableMixin {
 }
 
 typedef BudgetEntity = BaseBudgetEntity<ReferenceEntity>;
-typedef NormalizedBudgetEntity = BaseBudgetEntity<BudgetPlanEntity>;
+typedef NormalizedBudgetEntity = BaseBudgetEntity<NormalizedBudgetPlanEntity>;
 
 typedef BudgetEntityList = List<BudgetEntity>;
 typedef NormalizedBudgetEntityList = List<NormalizedBudgetEntity>;
 
-extension BudgetReferenceEntityExtension on BudgetEntity {
+extension NormalizedBudgetReferenceEntityExtension on NormalizedBudgetEntity {
   ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
+}
+
+extension NormalizeBudgetEntityListExtension on BudgetEntityList {
+  NormalizedBudgetEntityList normalize(NormalizedBudgetPlanEntityList plans) =>
+      map((BudgetEntity budget) => budget.normalize(plans)).toList(growable: false);
+}
+
+extension NormalizeBudgetEntityExtension on BudgetEntity {
+  NormalizedBudgetEntity normalize(NormalizedBudgetPlanEntityList plans) => NormalizedBudgetEntity(
+        id: id,
+        path: path,
+        title: title,
+        description: description,
+        amount: amount,
+        startedAt: startedAt,
+        endedAt: endedAt,
+        plans: plans
+            .where((NormalizedBudgetPlanEntity plan) => plans.map((_) => _.id).contains(plan.id))
+            .toList(growable: false),
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
 }
