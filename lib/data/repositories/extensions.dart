@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:clock/clock.dart';
 import 'package:faker/faker.dart';
-import 'package:ovavue/data.dart';
-import 'package:ovavue/domain.dart';
 
 extension ListExtensions<T> on Iterable<T> {
   Map<String, T> foldToMap(String Function(T) keyBuilder) => fold(
@@ -28,37 +26,10 @@ extension RandomGeneratorExtensions on RandomGenerator {
 }
 
 extension RandomEnum<T extends Object> on Iterable<T> {
-  T random() => elementAt(Random().nextInt(length - 1));
-}
-
-void seedMockData() {
-  final String userId = AuthMockImpl.id;
-  final BudgetCategoryEntityList categories = BudgetCategoryEntityList.generate(
-    10,
-    (_) => BudgetCategoriesMockImpl.generateCategory(userId: userId),
-  );
-  final NormalizedBudgetPlanEntityList plans = NormalizedBudgetPlanEntityList.generate(
-    25,
-    (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId, category: categories.random()),
-  );
-  final NormalizedBudgetEntityList budgets = NormalizedBudgetEntityList.generate(
-    5,
-    (_) => BudgetsMockImpl.generateNormalizedBudget(userId: userId, plans: plans),
-  );
-  final NormalizedBudgetAllocationEntityList allocations = NormalizedBudgetAllocationEntityList.generate(
-    250,
-    (_) {
-      final NormalizedBudgetPlanEntity plan = plans.random();
-      return BudgetAllocationsMockImpl.generateNormalizedAllocation(
-        userId: userId,
-        budget: budgets.where((NormalizedBudgetEntity element) => element.plans.contains(plan)).random(),
-        plan: plan,
-      );
-    },
-  );
-
-  BudgetCategoriesMockImpl().seed(categories);
-  BudgetPlansMockImpl().seed(plans);
-  BudgetsMockImpl().seed(budgets);
-  BudgetAllocationsMockImpl().seed(allocations);
+  T random() {
+    if (isEmpty) {
+      throw StateError('No element');
+    }
+    return elementAt(Random().nextInt(length - 1));
+  }
 }

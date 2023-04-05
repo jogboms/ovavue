@@ -52,14 +52,18 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   final BehaviorSubject<Map<String, BudgetAllocationEntity>> _allocations$ =
       BehaviorSubject<Map<String, BudgetAllocationEntity>>.seeded(allocations);
 
-  void seed(NormalizedBudgetAllocationEntityList items) => _allocations$.add(
-        allocations
-          ..addAll(
-            items
-                .map((NormalizedBudgetAllocationEntity element) => element.denormalize)
-                .foldToMap((BudgetAllocationEntity element) => element.id),
-          ),
-      );
+  NormalizedBudgetAllocationEntityList seed(int count, NormalizedBudgetAllocationEntity Function(int) builder) {
+    final NormalizedBudgetAllocationEntityList items = NormalizedBudgetAllocationEntityList.generate(count, builder);
+    _allocations$.add(
+      allocations
+        ..addAll(
+          items
+              .map((NormalizedBudgetAllocationEntity element) => element.denormalize)
+              .foldToMap((BudgetAllocationEntity element) => element.id),
+        ),
+    );
+    return items;
+  }
 
   @override
   Future<String> create(String userId, CreateBudgetAllocationData allocation) async {
