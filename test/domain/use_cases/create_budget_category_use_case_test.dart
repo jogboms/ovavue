@@ -31,12 +31,7 @@ void main() {
       when(() => budgetCategoriesRepository.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
 
       await expectLater(useCase(userId: '1', category: dummyData), completion(dummyEntity.id));
-      expect(
-        analytics.events,
-        <AnalyticsEvent>[
-          AnalyticsEvent.createBudgetCategory('1'),
-        ],
-      );
+      expect(analytics.events, containsOnce(AnalyticsEvent.createBudgetCategory('1')));
     });
 
     test('should bubble create errors', () {

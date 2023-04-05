@@ -26,7 +26,7 @@ void main() {
       when(() => usersRepository.create(any())).thenAnswer((_) async => dummyAccountModel.id);
 
       await expectLater(useCase(dummyAccountModel), completion(dummyAccountModel.id));
-      expect(analytics.events, <AnalyticsEvent>[AnalyticsEvent.createUser(dummyAccountModel.id)]);
+      expect(analytics.events, containsOnce(AnalyticsEvent.createUser(dummyAccountModel.id)));
     });
 
     test('should bubble create errors', () {

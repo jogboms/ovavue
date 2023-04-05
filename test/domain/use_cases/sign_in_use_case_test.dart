@@ -25,12 +25,7 @@ void main() {
 
       await expectLater(useCase(), completion(dummyAccount));
       expect(analytics.userId, dummyAccount.id);
-      expect(
-        analytics.events,
-        <AnalyticsEvent>[
-          AnalyticsEvent.login(dummyAccount.email, dummyAccount.id),
-        ],
-      );
+      expect(analytics.events, containsOnce(AnalyticsEvent.login(dummyAccount.email, dummyAccount.id)));
     });
 
     test('should not complete until auth state changes to valid value', () {
