@@ -28,7 +28,7 @@ class FetchBudgetAllocationsUseCase {
   Stream<NormalizedBudgetAllocationEntityList> call({
     required String userId,
     required String budgetId,
-    required String planId,
+    String? planId,
   }) =>
       CombineLatestStream.combine4<BudgetAllocationEntityList, BudgetEntity, BudgetPlanEntityList,
           BudgetCategoryEntityList, NormalizedBudgetAllocationEntityList>(

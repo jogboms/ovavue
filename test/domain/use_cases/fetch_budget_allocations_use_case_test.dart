@@ -35,6 +35,9 @@ void main() {
         BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget, plan: plan)
       ];
 
+      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1')).thenAnswer(
+        (_) => Stream<BudgetAllocationEntityList>.value(expectedAllocations.asBudgetAllocationEntityList.sublist(1)),
+      );
       when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntityList>.value(expectedAllocations.asBudgetAllocationEntityList),
       );
@@ -46,6 +49,7 @@ void main() {
           .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
       expectLater(useCase(userId: '1', budgetId: '1', planId: '1'), emits(expectedAllocations));
+      expectLater(useCase(userId: '1', budgetId: '1'), emits(expectedAllocations.sublist(1)));
     });
 
     test('should bubble fetch errors', () {
