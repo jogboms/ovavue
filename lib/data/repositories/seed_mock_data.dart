@@ -9,14 +9,14 @@ import 'extensions.dart';
 
 void seedMockData() {
   final String userId = AuthMockImpl.id;
-  final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(10, userId: userId);
+  final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(5, userId: userId);
   final NormalizedBudgetPlanEntityList plans = BudgetPlansMockImpl().seed(
-    25,
+    10,
     (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId, category: categories.random()),
   );
-  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(5, userId: userId, plans: plans);
+  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(1, userId: userId, plans: plans);
   BudgetAllocationsMockImpl().seed(
-    2500,
+    25,
     (_) {
       final NormalizedBudgetPlanEntity plan = plans.random();
       return BudgetAllocationsMockImpl.generateNormalizedAllocation(
