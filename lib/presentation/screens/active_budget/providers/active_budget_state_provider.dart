@@ -41,8 +41,8 @@ class ActiveBudgetState with EquatableMixin {
     required this.categories,
   });
 
-  final BudgetViewModel budget;
-  final List<BudgetCategoryViewModel> categories;
+  final ActiveBudgetViewModel budget;
+  final List<ActiveBudgetCategoryViewModel> categories;
 
   @override
   List<Object> get props => <Object>[budget, categories];
@@ -57,9 +57,9 @@ ActiveBudgetState _deriveState(
     (_) => _.category.id,
     (int? previous, NormalizedBudgetPlanEntity plan) => (previous ?? 0) + (allocationByPlan[plan.id]?.amount ?? 0),
   );
-  final Iterable<BudgetCategoryViewModel> categories =
+  final Iterable<ActiveBudgetCategoryViewModel> categories =
       budget.plans.uniqueBy((_) => _.category.id).map((_) => _.category).map(
-            (BudgetCategoryEntity category) => BudgetCategoryViewModel(
+            (BudgetCategoryEntity category) => ActiveBudgetCategoryViewModel(
               id: category.id,
               path: category.path,
               title: category.title,
@@ -70,11 +70,11 @@ ActiveBudgetState _deriveState(
               updatedAt: category.updatedAt,
             ),
           );
-  final Map<String, BudgetCategoryViewModel> categoriesById = categories.foldToMap((_) => _.id);
-  final Iterable<BudgetPlanViewModel> plans = budget.plans.map(
+  final Map<String, ActiveBudgetCategoryViewModel> categoriesById = categories.foldToMap((_) => _.id);
+  final Iterable<ActiveBudgetPlanViewModel> plans = budget.plans.map(
     (NormalizedBudgetPlanEntity plan) {
       final NormalizedBudgetAllocationEntity? allocation = allocationByPlan[plan.id];
-      return BudgetPlanViewModel(
+      return ActiveBudgetPlanViewModel(
         id: plan.id,
         path: plan.path,
         title: plan.title,
@@ -88,14 +88,14 @@ ActiveBudgetState _deriveState(
   );
 
   return ActiveBudgetState(
-    budget: BudgetViewModel(
+    budget: ActiveBudgetViewModel(
       id: budget.id,
       path: budget.path,
       title: budget.title,
       amount: Money(budget.amount),
       allocation: Money(allocationByCategory.values.reduce((int value, int current) => value + current)),
       description: budget.description,
-      plans: plans.sorted((BudgetPlanViewModel a, BudgetPlanViewModel b) {
+      plans: plans.sorted((ActiveBudgetPlanViewModel a, ActiveBudgetPlanViewModel b) {
         final Money? moneyA = a.allocation?.amount;
         final Money? moneyB = b.allocation?.amount;
         if (moneyA != null && moneyB != null) {

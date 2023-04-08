@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 import '../utils.dart';
-import 'budget_plan_view_model.dart';
+import 'active_budget_plan_view_model.dart';
 
-class BudgetViewModel with EquatableMixin {
-  const BudgetViewModel({
+class ActiveBudgetViewModel with EquatableMixin {
+  const ActiveBudgetViewModel({
     required this.id,
     required this.title,
     required this.path,
@@ -24,7 +24,7 @@ class BudgetViewModel with EquatableMixin {
   final Money amount;
   final Money allocation;
   final String description;
-  final List<BudgetPlanViewModel> plans;
+  final List<ActiveBudgetPlanViewModel> plans;
   final DateTime startedAt;
   final DateTime? endedAt;
   final DateTime createdAt;
