@@ -9,8 +9,8 @@ import '../repositories/budget_categories.dart';
 import '../repositories/budget_plans.dart';
 import '../repositories/budgets.dart';
 
-class FetchBudgetAllocationsUseCase {
-  const FetchBudgetAllocationsUseCase({
+class FetchBudgetAllocationUseCase {
+  const FetchBudgetAllocationUseCase({
     required BudgetAllocationsRepository allocations,
     required BudgetsRepository budgets,
     required BudgetPlansRepository plans,
@@ -25,22 +25,23 @@ class FetchBudgetAllocationsUseCase {
   final BudgetPlansRepository _plans;
   final BudgetCategoriesRepository _categories;
 
-  Stream<NormalizedBudgetAllocationEntityList> call({
+  Stream<NormalizedBudgetAllocationEntity?> call({
     required String userId,
     required String budgetId,
+    required String planId,
   }) =>
-      CombineLatestStream.combine4<BudgetAllocationEntityList, BudgetEntity, BudgetPlanEntityList,
-          BudgetCategoryEntityList, NormalizedBudgetAllocationEntityList>(
-        _allocations.fetch(userId: userId, budgetId: budgetId),
+      CombineLatestStream.combine4<BudgetAllocationEntity?, BudgetEntity, BudgetPlanEntityList,
+          BudgetCategoryEntityList, NormalizedBudgetAllocationEntity?>(
+        _allocations.fetchOne(userId: userId, budgetId: budgetId, planId: planId),
         _budgets.fetchOne(userId: userId, budgetId: budgetId),
         _plans.fetch(userId),
         _categories.fetch(userId),
         (
-          BudgetAllocationEntityList allocations,
+          BudgetAllocationEntity? allocation,
           BudgetEntity budget,
           BudgetPlanEntityList plans,
           BudgetCategoryEntityList categories,
         ) =>
-            allocations.normalize(budget.normalize(plans.normalize(categories))),
+            allocation?.normalize(budget.normalize(plans.normalize(categories))),
       );
 }

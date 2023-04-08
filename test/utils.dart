@@ -271,18 +271,21 @@ extension NormalizedBudgetPlanEntityListExtensions on NormalizedBudgetPlanEntity
       map((NormalizedBudgetPlanEntity e) => e.asBudgetPlanEntity).toList(growable: false);
 }
 
+extension NormalizedBudgetAllocationEntityExtensions on NormalizedBudgetAllocationEntity {
+  BudgetAllocationEntity get asBudgetAllocationEntity => BudgetAllocationEntity(
+        id: id,
+        path: path,
+        amount: amount,
+        startedAt: startedAt,
+        endedAt: endedAt,
+        budget: budget.reference,
+        plan: plan.reference,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
+}
+
 extension NormalizedBudgetAllocationEntityListExtensions on NormalizedBudgetAllocationEntityList {
-  BudgetAllocationEntityList get asBudgetAllocationEntityList => map(
-        (NormalizedBudgetAllocationEntity e) => BudgetAllocationEntity(
-          id: e.id,
-          path: e.path,
-          amount: e.amount,
-          startedAt: e.startedAt,
-          endedAt: e.endedAt,
-          budget: e.budget.reference,
-          plan: e.plan.reference,
-          createdAt: e.createdAt,
-          updatedAt: e.updatedAt,
-        ),
-      ).toList(growable: false);
+  BudgetAllocationEntityList get asBudgetAllocationEntityList =>
+      map((NormalizedBudgetAllocationEntity e) => e.asBudgetAllocationEntity).toList(growable: false);
 }

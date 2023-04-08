@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:collection/collection.dart';
 import 'package:faker/faker.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
@@ -96,15 +97,22 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   Stream<BudgetAllocationEntityList> fetch({
     required String userId,
     required String budgetId,
-    String? planId,
   }) =>
       _allocations$.stream.map(
-        (Map<String, BudgetAllocationEntity> event) => event.values
-            .where(
-              (BudgetAllocationEntity element) =>
-                  element.budget.id == budgetId && (planId == null ? true : element.plan.id == planId),
-            )
-            .toList(),
+        (Map<String, BudgetAllocationEntity> event) =>
+            event.values.where((BudgetAllocationEntity element) => element.budget.id == budgetId).toList(),
+      );
+
+  @override
+  Stream<BudgetAllocationEntity?> fetchOne({
+    required String userId,
+    required String budgetId,
+    required String planId,
+  }) =>
+      _allocations$.stream.map(
+        (Map<String, BudgetAllocationEntity> event) => event.values.singleWhereOrNull(
+          (BudgetAllocationEntity element) => element.budget.id == budgetId && element.plan.id == planId,
+        ),
       );
 }
 
