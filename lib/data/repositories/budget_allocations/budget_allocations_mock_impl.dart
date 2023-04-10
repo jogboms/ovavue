@@ -29,6 +29,7 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   static NormalizedBudgetAllocationEntity generateNormalizedAllocation({
     String? id,
     String? userId,
+    int? amount,
     NormalizedBudgetEntity? budget,
     NormalizedBudgetPlanEntity? plan,
     DateTime? startedAt,
@@ -39,7 +40,7 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
     return NormalizedBudgetAllocationEntity(
       id: id,
       path: '/allocations/$userId/$id',
-      amount: faker.randomGenerator.integer(1000000),
+      amount: amount ?? faker.randomGenerator.integer(1000000),
       budget: budget ?? BudgetsMockImpl.generateNormalizedBudget(userId: userId),
       plan: plan ?? BudgetPlansMockImpl.generateNormalizedPlan(userId: userId),
       createdAt: faker.randomGenerator.dateTime,
