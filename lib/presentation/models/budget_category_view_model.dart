@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
+import 'package:ovavue/domain.dart';
 
 class BudgetCategoryViewModel with EquatableMixin {
   const BudgetCategoryViewModel({
@@ -12,6 +13,18 @@ class BudgetCategoryViewModel with EquatableMixin {
     required this.createdAt,
     required this.updatedAt,
   });
+
+  static BudgetCategoryViewModel fromEntity(BudgetCategoryEntity entity) {
+    return BudgetCategoryViewModel(
+      id: entity.id,
+      path: entity.path,
+      title: entity.title,
+      description: entity.description,
+      color: Color(entity.color),
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+    );
+  }
 
   final String id;
   final String path;
