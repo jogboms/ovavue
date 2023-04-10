@@ -110,20 +110,9 @@ void main() async {
     ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
     ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di(), categories: di()))
     ..factory((RegistryFactory di) => FetchBudgetPlansByCategoryUseCase(plans: di(), categories: di()))
-    ..factory(
-      (RegistryFactory di) => FetchBudgetsUseCase(
-        budgets: di(),
-        plans: di(),
-        categories: di(),
-      ),
-    )
-    ..factory(
-      (RegistryFactory di) => FetchActiveBudgetUseCase(
-        budgets: di(),
-        plans: di(),
-        categories: di(),
-      ),
-    )
+    ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di(), plans: di(), categories: di()))
+    ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di(), plans: di(), categories: di()))
+    ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di(), plans: di(), categories: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
     ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
     ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))

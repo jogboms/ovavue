@@ -40,6 +40,7 @@ class MockUseCases {
   final FetchBudgetCategoriesUseCase fetchBudgetCategoriesUseCase = MockFetchBudgetCategoriesUseCase();
   final FetchBudgetPlansUseCase fetchBudgetPlansUseCase = MockFetchBudgetPlansUseCase();
   final FetchBudgetPlansByCategoryUseCase fetchBudgetPlansByCategoryUseCase = MockFetchBudgetPlansByCategoryUseCase();
+  final FetchBudgetUseCase fetchBudgetUseCase = MockFetchBudgetUseCase();
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
@@ -64,6 +65,7 @@ class MockUseCases {
         fetchBudgetCategoriesUseCase,
         fetchBudgetPlansUseCase,
         fetchBudgetPlansByCategoryUseCase,
+        fetchBudgetUseCase,
         fetchBudgetsUseCase,
         fetchActiveBudgetUseCase,
         fetchUserUseCase,
@@ -123,20 +125,9 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
       ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di(), categories: di()))
       ..factory((RegistryFactory di) => FetchBudgetPlansByCategoryUseCase(plans: di(), categories: di()))
-      ..factory(
-        (RegistryFactory di) => FetchBudgetsUseCase(
-          budgets: di(),
-          plans: di(),
-          categories: di(),
-        ),
-      )
-      ..factory(
-        (RegistryFactory di) => FetchActiveBudgetUseCase(
-          budgets: di(),
-          plans: di(),
-          categories: di(),
-        ),
-      )
+      ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di(), plans: di(), categories: di()))
+      ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di(), plans: di(), categories: di()))
+      ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di(), plans: di(), categories: di()))
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
       ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
       ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
@@ -230,6 +221,7 @@ extension MockUseCasesExtensions on Registry {
     ..replace<FetchBudgetCategoriesUseCase>(mockUseCases.fetchBudgetCategoriesUseCase)
     ..replace<FetchBudgetPlansUseCase>(mockUseCases.fetchBudgetPlansUseCase)
     ..replace<FetchBudgetPlansByCategoryUseCase>(mockUseCases.fetchBudgetPlansByCategoryUseCase)
+    ..replace<FetchBudgetUseCase>(mockUseCases.fetchBudgetUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)
     ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
