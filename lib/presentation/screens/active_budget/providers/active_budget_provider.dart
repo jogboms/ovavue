@@ -82,7 +82,7 @@ ActiveBudgetState _deriveState(
         return 0;
       }),
     ),
-    allocation: allocationByCategory.values.map((_) => _.asMoney).sum(),
+    allocation: allocationByCategory.values.sum.asMoney,
     categories: categories.toList(growable: false),
   );
 }

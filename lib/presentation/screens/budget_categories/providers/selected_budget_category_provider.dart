@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
@@ -22,8 +23,7 @@ Stream<BudgetCategoryState> selectedBudgetCategory(
   final UserEntity user = await ref.watch(userProvider.future);
 
   final List<BudgetCategoryViewModel> budgetCategories = await ref.watch(budgetCategoriesProvider.future);
-  final BudgetCategoryViewModel category =
-      budgetCategories.firstWhere((BudgetCategoryViewModel element) => element.id == id);
+  final BudgetCategoryViewModel category = budgetCategories.firstWhere((_) => _.id == id);
 
   yield* CombineLatestStream.combine3(
     registry.get<FetchBudgetUseCase>().call(userId: user.id, budgetId: budgetId),
@@ -45,12 +45,10 @@ Stream<BudgetCategoryState> selectedBudgetCategory(
             ),
           )
           .toList(growable: false);
-      final Money allocation =
-          plans.map((_) => _.allocation ?? Money.zero).reduce((Money value, Money current) => value + current);
 
       return BudgetCategoryState(
         category: category,
-        allocation: allocation == Money.zero ? null : allocation,
+        allocation: plans.map((_) => _.allocation).whereNotNull().sum(),
         budget: BudgetCategoryBudgetViewModel(
           id: budget.id,
           path: budget.path,
@@ -71,7 +69,7 @@ class BudgetCategoryState with EquatableMixin {
   });
 
   final BudgetCategoryViewModel category;
-  final Money? allocation;
+  final Money allocation;
   final BudgetCategoryBudgetViewModel budget;
   final List<BudgetCategoryPlanViewModel> plans;
 
