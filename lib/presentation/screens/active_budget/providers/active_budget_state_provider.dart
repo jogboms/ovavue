@@ -109,13 +109,3 @@ ActiveBudgetState _deriveState(
     categories: categories.toList(growable: false),
   );
 }
-
-extension on NormalizedBudgetAllocationEntity {
-  BudgetAllocationViewModel toViewModel() => BudgetAllocationViewModel(
-        id: id,
-        path: path,
-        amount: Money(amount),
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
-}

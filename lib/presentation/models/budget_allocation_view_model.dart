@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:ovavue/domain.dart';
 
 import '../utils.dart';
 
@@ -19,4 +20,14 @@ class BudgetAllocationViewModel with EquatableMixin {
 
   @override
   List<Object?> get props => <Object?>[id, path, amount, createdAt, updatedAt];
+}
+
+extension BudgetAllocationViewModelExtension on NormalizedBudgetAllocationEntity {
+  BudgetAllocationViewModel toViewModel() => BudgetAllocationViewModel(
+        id: id,
+        path: path,
+        amount: Money(amount),
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
 }

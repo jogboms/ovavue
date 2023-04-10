@@ -4,7 +4,7 @@ import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../models.dart';
+import '../../../models.dart' hide BudgetAllocationViewModelExtension;
 import '../../../state.dart';
 import '../../../utils.dart';
 
@@ -23,13 +23,17 @@ Stream<BudgetPlanState> selectedBudgetPlan(
   final List<BudgetPlanViewModel> plans = await ref.watch(budgetPlansProvider.future);
   final BudgetPlanViewModel plan = plans.firstWhere((BudgetPlanViewModel element) => element.id == id);
 
-  yield* registry.get<FetchBudgetAllocationsByPlanUseCase>().call(userId: user.id, planId: id).map(
+  yield* registry
+      .get<FetchBudgetAllocationsByPlanUseCase>()
+      .call(userId: user.id, planId: id)
+      .map(
         (NormalizedBudgetAllocationEntityList allocations) => BudgetPlanState(
           plan: plan,
           allocation: allocations.singleWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
           previousAllocations: allocations.where((_) => _.budget.id != budgetId).map((_) => _.toViewModel()).toList(),
         ),
-      );
+      )
+      .distinct();
 }
 
 class BudgetPlanState with EquatableMixin {
