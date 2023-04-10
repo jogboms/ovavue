@@ -39,3 +39,12 @@ class Money with EquatableMixin implements Comparable<Money> {
 extension MoneyIntExtension on int {
   Money get asMoney => Money(this);
 }
+
+extension MoneyIterableSumExtension on Iterable<Money> {
+  Money sum() {
+    if (isEmpty) {
+      return Money.zero;
+    }
+    return reduce((Money value, Money current) => value + current);
+  }
+}

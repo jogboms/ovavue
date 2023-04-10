@@ -22,10 +22,12 @@ class BudgetsMockImpl implements BudgetsRepository {
     String? userId,
     NormalizedBudgetPlanEntityList? plans,
     DateTime? startedAt,
+    DateTime? endedAt,
   }) {
     id ??= faker.guid.guid();
     userId ??= AuthMockImpl.id;
     startedAt ??= faker.randomGenerator.dateTime;
+    endedAt ??= startedAt.add(const Duration(minutes: 10000));
     return NormalizedBudgetEntity(
       id: id,
       path: '/budgets/$userId/$id',
@@ -33,7 +35,7 @@ class BudgetsMockImpl implements BudgetsRepository {
       description: faker.lorem.sentence(),
       amount: faker.randomGenerator.integer(1000000),
       startedAt: startedAt,
-      endedAt: startedAt.add(const Duration(minutes: 10000)),
+      endedAt: endedAt,
       plans: plans ??
           NormalizedBudgetPlanEntityList.generate(3, (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId)),
       createdAt: faker.randomGenerator.dateTime,

@@ -12,7 +12,7 @@ import '../../../models.dart';
 import '../../../state.dart';
 import '../../../utils.dart';
 
-part 'active_budget_state_provider.g.dart';
+part 'active_budget_provider.g.dart';
 part 'models.dart';
 
 @Riverpod(dependencies: <Object>[registry, user])
@@ -35,14 +35,16 @@ Stream<ActiveBudgetState> activeBudget(ActiveBudgetRef ref) async* {
 class ActiveBudgetState with EquatableMixin {
   const ActiveBudgetState({
     required this.budget,
+    required this.allocation,
     required this.categories,
   });
 
   final ActiveBudgetViewModel budget;
+  final Money allocation;
   final List<ActiveBudgetCategoryViewModel> categories;
 
   @override
-  List<Object> get props => <Object>[budget, categories];
+  List<Object> get props => <Object>[budget, allocation, categories];
 }
 
 ActiveBudgetState _deriveState(
@@ -50,49 +52,27 @@ ActiveBudgetState _deriveState(
   NormalizedBudgetAllocationEntityList allocations,
 ) {
   final Map<String, NormalizedBudgetAllocationEntity> allocationByPlan = allocations.foldToMap((_) => _.plan.id);
-  final Map<String, int> allocationByCategory = budget.plans.groupFoldBy<String, int>(
+  final Map<String, int> allocationByCategory = budget.plans.groupFoldBy(
     (_) => _.category.id,
     (int? previous, NormalizedBudgetPlanEntity plan) => (previous ?? 0) + (allocationByPlan[plan.id]?.amount ?? 0),
   );
   final Iterable<ActiveBudgetCategoryViewModel> categories =
       budget.plans.uniqueBy((_) => _.category.id).map((_) => _.category).map(
-            (BudgetCategoryEntity category) => ActiveBudgetCategoryViewModel(
-              id: category.id,
-              path: category.path,
-              title: category.title,
-              allocation: Money(allocationByCategory[category.id] ?? 0),
-              description: category.description,
-              color: Color(category.color),
-              createdAt: category.createdAt,
-              updatedAt: category.updatedAt,
+            (BudgetCategoryEntity category) => category.toViewModel(
+              allocationByCategory[category.id]?.asMoney ?? Money.zero,
             ),
           );
   final Map<String, ActiveBudgetCategoryViewModel> categoriesById = categories.foldToMap((_) => _.id);
   final Iterable<ActiveBudgetPlanViewModel> plans = budget.plans.map(
-    (NormalizedBudgetPlanEntity plan) {
-      final NormalizedBudgetAllocationEntity? allocation = allocationByPlan[plan.id];
-      return ActiveBudgetPlanViewModel(
-        id: plan.id,
-        path: plan.path,
-        title: plan.title,
-        allocation: allocation?.toViewModel(),
-        description: plan.description,
-        category: categoriesById[plan.category.id]!,
-        createdAt: plan.createdAt,
-        updatedAt: plan.updatedAt,
-      );
-    },
+    (NormalizedBudgetPlanEntity plan) => plan.toViewModel(
+      allocation: allocationByPlan[plan.id]?.toViewModel(),
+      category: categoriesById[plan.category.id]!,
+    ),
   );
 
   return ActiveBudgetState(
-    budget: ActiveBudgetViewModel(
-      id: budget.id,
-      path: budget.path,
-      title: budget.title,
-      amount: Money(budget.amount),
-      allocation: Money(allocationByCategory.values.reduce((int value, int current) => value + current)),
-      description: budget.description,
-      plans: plans.sorted((ActiveBudgetPlanViewModel a, ActiveBudgetPlanViewModel b) {
+    budget: budget.toViewModel(
+      plans.sorted((ActiveBudgetPlanViewModel a, ActiveBudgetPlanViewModel b) {
         final Money? moneyA = a.allocation?.amount;
         final Money? moneyB = b.allocation?.amount;
         if (moneyA != null && moneyB != null) {
@@ -101,11 +81,8 @@ ActiveBudgetState _deriveState(
 
         return 0;
       }),
-      startedAt: budget.startedAt,
-      endedAt: budget.endedAt,
-      createdAt: budget.createdAt,
-      updatedAt: budget.updatedAt,
     ),
+    allocation: allocationByCategory.values.map((_) => _.asMoney).sum(),
     categories: categories.toList(growable: false),
   );
 }

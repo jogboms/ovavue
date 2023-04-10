@@ -1,4 +1,4 @@
-part of 'active_budget_state_provider.dart';
+part of 'active_budget_provider.dart';
 
 class ActiveBudgetCategoryViewModel with EquatableMixin {
   const ActiveBudgetCategoryViewModel({
@@ -56,7 +56,6 @@ class ActiveBudgetViewModel with EquatableMixin {
     required this.title,
     required this.path,
     required this.amount,
-    required this.allocation,
     required this.description,
     required this.plans,
     required this.startedAt,
@@ -69,7 +68,6 @@ class ActiveBudgetViewModel with EquatableMixin {
   final String path;
   final String title;
   final Money amount;
-  final Money allocation;
   final String description;
   final List<ActiveBudgetPlanViewModel> plans;
   final DateTime startedAt;
@@ -79,5 +77,55 @@ class ActiveBudgetViewModel with EquatableMixin {
 
   @override
   List<Object?> get props =>
-      <Object?>[id, path, title, amount, allocation, description, plans, startedAt, endedAt, createdAt, updatedAt];
+      <Object?>[id, path, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
+}
+
+extension NormalizedBudgetEntityViewModelExtension on NormalizedBudgetEntity {
+  ActiveBudgetViewModel toViewModel(List<ActiveBudgetPlanViewModel> plans) {
+    return ActiveBudgetViewModel(
+      id: id,
+      path: path,
+      title: title,
+      amount: Money(amount),
+      description: description,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      startedAt: startedAt,
+      endedAt: endedAt,
+      plans: plans,
+    );
+  }
+}
+
+extension NormalizedBudgetPlanEntityViewModelExtension on NormalizedBudgetPlanEntity {
+  ActiveBudgetPlanViewModel toViewModel({
+    required BudgetAllocationViewModel? allocation,
+    required ActiveBudgetCategoryViewModel category,
+  }) {
+    return ActiveBudgetPlanViewModel(
+      id: id,
+      path: path,
+      title: title,
+      allocation: allocation,
+      description: description,
+      category: category,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+extension BudgetCategoryEntityViewModelExtension on BudgetCategoryEntity {
+  ActiveBudgetCategoryViewModel toViewModel(Money allocation) {
+    return ActiveBudgetCategoryViewModel(
+      id: id,
+      path: path,
+      title: title,
+      allocation: allocation,
+      description: description,
+      color: Color(color),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
 }
