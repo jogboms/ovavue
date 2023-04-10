@@ -109,6 +109,7 @@ void main() async {
     )
     ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
     ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di(), categories: di()))
+    ..factory((RegistryFactory di) => FetchBudgetPlansByCategoryUseCase(plans: di(), categories: di()))
     ..factory(
       (RegistryFactory di) => FetchBudgetsUseCase(
         budgets: di(),

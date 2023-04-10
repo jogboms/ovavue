@@ -7,4 +7,9 @@ abstract class BudgetPlansRepository {
   Future<bool> delete(String path);
 
   Stream<BudgetPlanEntityList> fetch(String userId);
+
+  Stream<BudgetPlanEntityList> fetchByCategory({
+    required String userId,
+    required String categoryId,
+  });
 }
