@@ -41,8 +41,6 @@ class FetchBudgetAllocationsByPlanUseCase {
           BudgetPlanEntityList plans,
           BudgetCategoryEntityList categories,
         ) =>
-            allocations.normalizeToMany(
-          budgets.normalize(plans.normalize(categories)).foldToMap((NormalizedBudgetEntity element) => element.id),
-        ),
+            allocations.normalizeToMany(budgets.normalize(plans.normalize(categories)).foldToMap((_) => _.id)),
       );
 }
