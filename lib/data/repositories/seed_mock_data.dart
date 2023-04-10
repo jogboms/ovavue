@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 
 import 'auth/auth_mock_impl.dart';
@@ -9,19 +12,31 @@ import 'extensions.dart';
 
 void seedMockData() {
   final String userId = AuthMockImpl.id;
-  final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(10, userId: userId);
+  final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(5, userId: userId);
   final NormalizedBudgetPlanEntityList plans = BudgetPlansMockImpl().seed(
-    25,
+    3,
     (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId, category: categories.random()),
   );
   final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(5, userId: userId, plans: plans);
+  final Map<String, NormalizedBudgetEntity> budgetById = budgets.foldToMap((_) => _.id);
+  final Map<String, int> budgetToAmount = budgetById.map(
+    (String key, NormalizedBudgetEntity value) => MapEntry<String, int>(key, value.amount),
+  );
   BudgetAllocationsMockImpl().seed(
-    2500,
+    budgets.length * plans.length * 10,
     (_) {
       final NormalizedBudgetPlanEntity plan = plans.random();
+      final String budgetId = budgetById.keys.random();
+
+      final int budget = budgetToAmount[budgetId] ?? 0;
+      final int amount = Random().nextInt(budget ~/ 2);
+
+      budgetToAmount[budgetId] = budget - amount;
+
       return BudgetAllocationsMockImpl.generateNormalizedAllocation(
         userId: userId,
-        budget: budgets.where((NormalizedBudgetEntity element) => element.plans.contains(plan)).random(),
+        amount: amount,
+        budget: budgetById[budgetId],
         plan: plan,
       );
     },

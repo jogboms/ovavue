@@ -15,8 +15,7 @@ class FetchBudgetPlansUseCase {
   final BudgetPlansRepository _plans;
   final BudgetCategoriesRepository _categories;
 
-  Stream<NormalizedBudgetPlanEntityList> call(String userId) =>
-      CombineLatestStream.combine2<BudgetPlanEntityList, BudgetCategoryEntityList, NormalizedBudgetPlanEntityList>(
+  Stream<NormalizedBudgetPlanEntityList> call(String userId) => CombineLatestStream.combine2(
         _plans.fetch(userId),
         _categories.fetch(userId),
         (BudgetPlanEntityList plans, BudgetCategoryEntityList categories) => plans.normalize(categories),

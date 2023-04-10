@@ -20,8 +20,7 @@ class FetchActiveBudgetUseCase {
   final BudgetPlansRepository _plans;
   final BudgetCategoriesRepository _categories;
 
-  Stream<NormalizedBudgetEntity> call(String userId) => CombineLatestStream.combine3<BudgetEntity, BudgetPlanEntityList,
-          BudgetCategoryEntityList, NormalizedBudgetEntity>(
+  Stream<NormalizedBudgetEntity> call(String userId) => CombineLatestStream.combine3(
         _budgets.fetchActiveBudget(userId),
         _plans.fetch(userId),
         _categories.fetch(userId),

@@ -33,9 +33,14 @@ class MockUseCases {
   final DeleteBudgetPlanUseCase deleteBudgetPlanUseCase = MockDeleteBudgetPlanUseCase();
   final DeleteBudgetUseCase deleteBudgetUseCase = MockDeleteBudgetUseCase();
   final FetchAccountUseCase fetchAccountUseCase = MockFetchAccountUseCase();
+  final FetchBudgetAllocationUseCase fetchBudgetAllocationUseCase = MockFetchBudgetAllocationUseCase();
   final FetchBudgetAllocationsUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
+  final FetchBudgetAllocationsByPlanUseCase fetchBudgetAllocationsByPlanUseCase =
+      MockFetchBudgetAllocationsByPlanUseCase();
   final FetchBudgetCategoriesUseCase fetchBudgetCategoriesUseCase = MockFetchBudgetCategoriesUseCase();
   final FetchBudgetPlansUseCase fetchBudgetPlansUseCase = MockFetchBudgetPlansUseCase();
+  final FetchBudgetPlansByCategoryUseCase fetchBudgetPlansByCategoryUseCase = MockFetchBudgetPlansByCategoryUseCase();
+  final FetchBudgetUseCase fetchBudgetUseCase = MockFetchBudgetUseCase();
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
@@ -54,9 +59,13 @@ class MockUseCases {
         deleteBudgetPlanUseCase,
         deleteBudgetUseCase,
         fetchAccountUseCase,
+        fetchBudgetAllocationUseCase,
         fetchBudgetAllocationsUseCase,
+        fetchBudgetAllocationsByPlanUseCase,
         fetchBudgetCategoriesUseCase,
         fetchBudgetPlansUseCase,
+        fetchBudgetPlansByCategoryUseCase,
+        fetchBudgetUseCase,
         fetchBudgetsUseCase,
         fetchActiveBudgetUseCase,
         fetchUserUseCase,
@@ -90,7 +99,23 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
       ..factory(
+        (RegistryFactory di) => FetchBudgetAllocationUseCase(
+          allocations: di(),
+          budgets: di(),
+          plans: di(),
+          categories: di(),
+        ),
+      )
+      ..factory(
         (RegistryFactory di) => FetchBudgetAllocationsUseCase(
+          allocations: di(),
+          budgets: di(),
+          plans: di(),
+          categories: di(),
+        ),
+      )
+      ..factory(
+        (RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(
           allocations: di(),
           budgets: di(),
           plans: di(),
@@ -99,20 +124,10 @@ Registry createRegistry({
       )
       ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
       ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di(), categories: di()))
-      ..factory(
-        (RegistryFactory di) => FetchBudgetsUseCase(
-          budgets: di(),
-          plans: di(),
-          categories: di(),
-        ),
-      )
-      ..factory(
-        (RegistryFactory di) => FetchActiveBudgetUseCase(
-          budgets: di(),
-          plans: di(),
-          categories: di(),
-        ),
-      )
+      ..factory((RegistryFactory di) => FetchBudgetPlansByCategoryUseCase(plans: di(), categories: di()))
+      ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di(), plans: di(), categories: di()))
+      ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di(), plans: di(), categories: di()))
+      ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di(), plans: di(), categories: di()))
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
       ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
       ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
@@ -200,9 +215,13 @@ extension MockUseCasesExtensions on Registry {
     ..replace<DeleteBudgetPlanUseCase>(mockUseCases.deleteBudgetPlanUseCase)
     ..replace<DeleteBudgetUseCase>(mockUseCases.deleteBudgetUseCase)
     ..replace<FetchAccountUseCase>(mockUseCases.fetchAccountUseCase)
+    ..replace<FetchBudgetAllocationUseCase>(mockUseCases.fetchBudgetAllocationUseCase)
     ..replace<FetchBudgetAllocationsUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
+    ..replace<FetchBudgetAllocationsByPlanUseCase>(mockUseCases.fetchBudgetAllocationsByPlanUseCase)
     ..replace<FetchBudgetCategoriesUseCase>(mockUseCases.fetchBudgetCategoriesUseCase)
     ..replace<FetchBudgetPlansUseCase>(mockUseCases.fetchBudgetPlansUseCase)
+    ..replace<FetchBudgetPlansByCategoryUseCase>(mockUseCases.fetchBudgetPlansByCategoryUseCase)
+    ..replace<FetchBudgetUseCase>(mockUseCases.fetchBudgetUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)
     ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
@@ -271,18 +290,19 @@ extension NormalizedBudgetPlanEntityListExtensions on NormalizedBudgetPlanEntity
       map((NormalizedBudgetPlanEntity e) => e.asBudgetPlanEntity).toList(growable: false);
 }
 
+extension NormalizedBudgetAllocationEntityExtensions on NormalizedBudgetAllocationEntity {
+  BudgetAllocationEntity get asBudgetAllocationEntity => BudgetAllocationEntity(
+        id: id,
+        path: path,
+        amount: amount,
+        budget: budget.reference,
+        plan: plan.reference,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
+}
+
 extension NormalizedBudgetAllocationEntityListExtensions on NormalizedBudgetAllocationEntityList {
-  BudgetAllocationEntityList get asBudgetAllocationEntityList => map(
-        (NormalizedBudgetAllocationEntity e) => BudgetAllocationEntity(
-          id: e.id,
-          path: e.path,
-          amount: e.amount,
-          startedAt: e.startedAt,
-          endedAt: e.endedAt,
-          budget: e.budget.reference,
-          plan: e.plan.reference,
-          createdAt: e.createdAt,
-          updatedAt: e.updatedAt,
-        ),
-      ).toList(growable: false);
+  BudgetAllocationEntityList get asBudgetAllocationEntityList =>
+      map((NormalizedBudgetAllocationEntity e) => e.asBudgetAllocationEntity).toList(growable: false);
 }

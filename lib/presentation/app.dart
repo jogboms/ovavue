@@ -3,6 +3,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ovavue/core.dart';
 import 'package:registry/registry.dart';
 
+import 'screens/active_budget/active_budget_page.dart';
 import 'theme.dart';
 import 'utils.dart';
 import 'widgets.dart';
@@ -47,7 +48,7 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
         ],
         supportedLocales: L10n.supportedLocales,
         builder: (_, Widget? child) => SnackBarProvider(navigatorKey: navigatorKey, child: child!),
-        home: widget.home ?? const Placeholder(),
+        home: widget.home ?? const ActiveBudgetPage(),
         navigatorObservers: widget.navigatorObservers ?? <NavigatorObserver>[],
       ),
     );

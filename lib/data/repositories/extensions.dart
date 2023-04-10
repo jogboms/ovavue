@@ -3,13 +3,6 @@ import 'dart:math';
 import 'package:clock/clock.dart';
 import 'package:faker/faker.dart';
 
-extension ListExtensions<T> on Iterable<T> {
-  Map<String, T> foldToMap(String Function(T) keyBuilder) => fold(
-        <String, T>{},
-        (Map<String, T> previousValue, T element) => <String, T>{...previousValue, keyBuilder(element): element},
-      );
-}
-
 extension RandomGeneratorExtensions on RandomGenerator {
   DateTime get dateTime {
     final DateTime now = clock.now();
@@ -30,6 +23,9 @@ extension RandomEnum<T extends Object> on Iterable<T> {
     if (isEmpty) {
       throw StateError('No element');
     }
-    return elementAt(Random().nextInt(length - 1));
+    if (length == 1) {
+      return elementAt(0);
+    }
+    return elementAt(Random().nextInt(length));
   }
 }

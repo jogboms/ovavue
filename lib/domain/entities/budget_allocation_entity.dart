@@ -11,8 +11,6 @@ class BaseBudgetAllocationEntity<U, V> with EquatableMixin {
     required this.amount,
     required this.budget,
     required this.plan,
-    required this.startedAt,
-    required this.endedAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -22,13 +20,11 @@ class BaseBudgetAllocationEntity<U, V> with EquatableMixin {
   final int amount;
   final U budget;
   final V plan;
-  final DateTime startedAt;
-  final DateTime? endedAt;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
   @override
-  List<Object?> get props => <Object?>[id, path, amount, budget, plan, startedAt, createdAt, updatedAt];
+  List<Object?> get props => <Object?>[id, path, amount, budget, plan, createdAt, updatedAt];
 
   @override
   bool? get stringify => true;
@@ -44,6 +40,10 @@ typedef NormalizedBudgetAllocationEntityList = List<NormalizedBudgetAllocationEn
 extension NormalizeBudgetAllocationEntityListExtension on BudgetAllocationEntityList {
   NormalizedBudgetAllocationEntityList normalize(NormalizedBudgetEntity budget) =>
       map((BudgetAllocationEntity allocation) => allocation.normalize(budget)).toList(growable: false);
+
+  NormalizedBudgetAllocationEntityList normalizeToMany(Map<String, NormalizedBudgetEntity> budgetIdToBudgets) =>
+      map((BudgetAllocationEntity allocation) => allocation.normalize(budgetIdToBudgets[allocation.budget.id]!))
+          .toList(growable: false);
 }
 
 extension NormalizeBudgetAllocationEntityExtension on BudgetAllocationEntity {
@@ -51,8 +51,6 @@ extension NormalizeBudgetAllocationEntityExtension on BudgetAllocationEntity {
         id: id,
         path: path,
         amount: amount,
-        startedAt: startedAt,
-        endedAt: endedAt,
         budget: budget,
         plan: budget.plans.firstWhere((NormalizedBudgetPlanEntity plan) => this.plan.id == plan.id),
         createdAt: createdAt,

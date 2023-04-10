@@ -1,5 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:faker/faker.dart';
+import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -73,6 +74,16 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
   @override
   Stream<BudgetPlanEntityList> fetch(String userId) =>
       _plans$.stream.map((Map<String, BudgetPlanEntity> event) => event.values.toList());
+
+  @override
+  Stream<BudgetPlanEntityList> fetchByCategory({
+    required String userId,
+    required String categoryId,
+  }) =>
+      _plans$.stream.map(
+        (Map<String, BudgetPlanEntity> event) =>
+            event.values.where((BudgetPlanEntity element) => element.category.id == categoryId).toList(),
+      );
 }
 
 extension on NormalizedBudgetPlanEntity {

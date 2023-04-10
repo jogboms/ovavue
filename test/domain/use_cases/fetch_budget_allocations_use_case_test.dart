@@ -35,8 +35,8 @@ void main() {
         BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget, plan: plan)
       ];
 
-      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
-        (_) => Stream<BudgetAllocationEntityList>.value(expectedAllocations.asBudgetAllocationEntityList),
+      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1')).thenAnswer(
+        (_) => Stream<BudgetAllocationEntityList>.value(expectedAllocations.asBudgetAllocationEntityList.sublist(1)),
       );
       when(() => budgetsRepository.fetchOne(userId: '1', budgetId: '1'))
           .thenAnswer((_) => Stream<BudgetEntity>.value(budget.asBudgetEntity));
@@ -45,20 +45,19 @@ void main() {
       when(() => budgetCategoriesRepository.fetch(any()))
           .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
-      expectLater(useCase(userId: '1', budgetId: '1', planId: '1'), emits(expectedAllocations));
+      expectLater(useCase(userId: '1', budgetId: '1'), emits(expectedAllocations.sublist(1)));
     });
 
     test('should bubble fetch errors', () {
-      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1', planId: '1'))
-          .thenThrow(Exception('an error'));
+      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1')).thenThrow(Exception('an error'));
 
-      expect(() => useCase(userId: '1', budgetId: '1', planId: '1'), throwsException);
+      expect(() => useCase(userId: '1', budgetId: '1'), throwsException);
     });
 
     test('should bubble stream errors', () {
       final Exception expectedError = Exception('an error');
 
-      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
+      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntityList>.error(expectedError),
       );
       when(() => budgetsRepository.fetchOne(userId: '1', budgetId: '1')).thenAnswer(
@@ -71,7 +70,7 @@ void main() {
         (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 
-      expect(useCase(userId: '1', budgetId: '1', planId: '1'), emitsError(expectedError));
+      expect(useCase(userId: '1', budgetId: '1'), emitsError(expectedError));
     });
   });
 }
