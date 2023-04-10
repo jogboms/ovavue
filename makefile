@@ -14,7 +14,7 @@ analyze:
 	fvm flutter analyze lib
 
 test_coverage:
-	fvm flutter test --no-pub --coverage --test-randomize-ordering-seed random
+	fvm flutter test --no-pub --coverage --test-randomize-ordering-seed random --enable-experiment=records
 
 clean_coverage:
 	lcov --remove coverage/lcov.info 'lib/**/*.g.dart' 'lib/**/*_mock_impl.dart' 'lib/presentation/theme/*' 'lib/presentation/constants/*' -o coverage/lcov.info
@@ -29,10 +29,10 @@ generate_intl:
 	fvm flutter gen-l10n
 
 build_runner_build:
-	fvm flutter packages pub run build_runner build --delete-conflicting-outputs
+	fvm flutter packages pub run build_runner build --delete-conflicting-outputs --enable-experiment=records
 
 build_runner_watch:
-	fvm flutter packages pub run build_runner watch --delete-conflicting-outputs
+	fvm flutter packages pub run build_runner watch --delete-conflicting-outputs --enable-experiment=records
 
 # iOS
 mock_ios:
