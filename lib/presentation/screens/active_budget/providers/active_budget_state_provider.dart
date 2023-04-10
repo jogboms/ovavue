@@ -6,7 +6,6 @@ import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/streams.dart';
 import 'package:rxdart/transformers.dart';
 
 import '../../../models.dart';
@@ -14,23 +13,21 @@ import '../../../state.dart';
 import '../../../utils.dart';
 
 part 'active_budget_state_provider.g.dart';
+part 'models.dart';
 
 @Riverpod(dependencies: <Object>[registry, user])
 Stream<ActiveBudgetState> activeBudget(ActiveBudgetRef ref) async* {
   final Registry registry = ref.read(registryProvider);
   final UserEntity user = await ref.watch(userProvider.future);
 
-  final FetchBudgetAllocationsUseCase fetchBudgetAllocationsUseCase = registry.get();
-
   yield* registry
       .get<FetchActiveBudgetUseCase>()
       .call(user.id)
       .switchMap(
-        (NormalizedBudgetEntity budget) => CombineLatestStream.combine2(
-          Stream<NormalizedBudgetEntity>.value(budget),
-          fetchBudgetAllocationsUseCase.call(userId: user.id, budgetId: budget.id),
-          _deriveState,
-        ),
+        (NormalizedBudgetEntity budget) => registry
+            .get<FetchBudgetAllocationsUseCase>()
+            .call(userId: user.id, budgetId: budget.id)
+            .map((NormalizedBudgetAllocationEntityList allocations) => _deriveState(budget, allocations)),
       )
       .distinct();
 }

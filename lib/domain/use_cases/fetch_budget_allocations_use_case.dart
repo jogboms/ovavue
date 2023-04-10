@@ -29,8 +29,7 @@ class FetchBudgetAllocationsUseCase {
     required String userId,
     required String budgetId,
   }) =>
-      CombineLatestStream.combine4<BudgetAllocationEntityList, BudgetEntity, BudgetPlanEntityList,
-          BudgetCategoryEntityList, NormalizedBudgetAllocationEntityList>(
+      CombineLatestStream.combine4(
         _allocations.fetch(userId: userId, budgetId: budgetId),
         _budgets.fetchOne(userId: userId, budgetId: budgetId),
         _plans.fetch(userId),
