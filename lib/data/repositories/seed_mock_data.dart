@@ -11,12 +11,12 @@ void seedMockData() {
   final String userId = AuthMockImpl.id;
   final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(5, userId: userId);
   final NormalizedBudgetPlanEntityList plans = BudgetPlansMockImpl().seed(
-    10,
+    3,
     (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId, category: categories.random()),
   );
-  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(1, userId: userId, plans: plans);
+  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(5, userId: userId, plans: plans);
   BudgetAllocationsMockImpl().seed(
-    25,
+    budgets.length * plans.length * 10,
     (_) {
       final NormalizedBudgetPlanEntity plan = plans.random();
       return BudgetAllocationsMockImpl.generateNormalizedAllocation(

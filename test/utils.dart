@@ -33,7 +33,10 @@ class MockUseCases {
   final DeleteBudgetPlanUseCase deleteBudgetPlanUseCase = MockDeleteBudgetPlanUseCase();
   final DeleteBudgetUseCase deleteBudgetUseCase = MockDeleteBudgetUseCase();
   final FetchAccountUseCase fetchAccountUseCase = MockFetchAccountUseCase();
+  final FetchBudgetAllocationUseCase fetchBudgetAllocationUseCase = MockFetchBudgetAllocationUseCase();
   final FetchBudgetAllocationsUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
+  final FetchBudgetAllocationsByPlanUseCase fetchBudgetAllocationsByPlanUseCase =
+      MockFetchBudgetAllocationsByPlanUseCase();
   final FetchBudgetCategoriesUseCase fetchBudgetCategoriesUseCase = MockFetchBudgetCategoriesUseCase();
   final FetchBudgetPlansUseCase fetchBudgetPlansUseCase = MockFetchBudgetPlansUseCase();
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
@@ -90,7 +93,23 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
       ..factory(
+        (RegistryFactory di) => FetchBudgetAllocationUseCase(
+          allocations: di(),
+          budgets: di(),
+          plans: di(),
+          categories: di(),
+        ),
+      )
+      ..factory(
         (RegistryFactory di) => FetchBudgetAllocationsUseCase(
+          allocations: di(),
+          budgets: di(),
+          plans: di(),
+          categories: di(),
+        ),
+      )
+      ..factory(
+        (RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(
           allocations: di(),
           budgets: di(),
           plans: di(),
@@ -200,7 +219,9 @@ extension MockUseCasesExtensions on Registry {
     ..replace<DeleteBudgetPlanUseCase>(mockUseCases.deleteBudgetPlanUseCase)
     ..replace<DeleteBudgetUseCase>(mockUseCases.deleteBudgetUseCase)
     ..replace<FetchAccountUseCase>(mockUseCases.fetchAccountUseCase)
+    ..replace<FetchBudgetAllocationUseCase>(mockUseCases.fetchBudgetAllocationUseCase)
     ..replace<FetchBudgetAllocationsUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
+    ..replace<FetchBudgetAllocationsByPlanUseCase>(mockUseCases.fetchBudgetAllocationsByPlanUseCase)
     ..replace<FetchBudgetCategoriesUseCase>(mockUseCases.fetchBudgetCategoriesUseCase)
     ..replace<FetchBudgetPlansUseCase>(mockUseCases.fetchBudgetPlansUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
@@ -276,8 +297,6 @@ extension NormalizedBudgetAllocationEntityExtensions on NormalizedBudgetAllocati
         id: id,
         path: path,
         amount: amount,
-        startedAt: startedAt,
-        endedAt: endedAt,
         budget: budget.reference,
         plan: plan.reference,
         createdAt: createdAt,

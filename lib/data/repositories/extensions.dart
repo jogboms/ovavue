@@ -26,6 +26,6 @@ extension RandomEnum<T extends Object> on Iterable<T> {
     if (length == 1) {
       return elementAt(0);
     }
-    return elementAt(Random().nextInt(length - 1));
+    return elementAt(Random().nextInt(length));
   }
 }

@@ -40,8 +40,6 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
       id: id,
       path: '/allocations/$userId/$id',
       amount: faker.randomGenerator.integer(1000000),
-      startedAt: startedAt,
-      endedAt: startedAt.add(const Duration(minutes: 10000)),
       budget: budget ?? BudgetsMockImpl.generateNormalizedBudget(userId: userId),
       plan: plan ?? BudgetPlansMockImpl.generateNormalizedPlan(userId: userId),
       createdAt: faker.randomGenerator.dateTime,
@@ -75,8 +73,6 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
       id: id,
       path: '/allocations/$userId/$id',
       amount: allocation.amount,
-      startedAt: allocation.startedAt,
-      endedAt: allocation.endedAt,
       budget: allocation.budget,
       plan: allocation.plan,
       createdAt: clock.now(),
@@ -114,6 +110,16 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
           (BudgetAllocationEntity element) => element.budget.id == budgetId && element.plan.id == planId,
         ),
       );
+
+  @override
+  Stream<BudgetAllocationEntityList> fetchByPlan({
+    required String userId,
+    required String planId,
+  }) =>
+      _allocations$.stream.map(
+        (Map<String, BudgetAllocationEntity> event) =>
+            event.values.where((BudgetAllocationEntity element) => element.plan.id == planId).toList(),
+      );
 }
 
 extension on NormalizedBudgetAllocationEntity {
@@ -121,8 +127,6 @@ extension on NormalizedBudgetAllocationEntity {
         id: id,
         path: path,
         amount: amount,
-        startedAt: startedAt,
-        endedAt: endedAt,
         budget: budget.reference,
         plan: plan.reference,
         createdAt: createdAt,

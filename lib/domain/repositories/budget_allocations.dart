@@ -11,6 +11,11 @@ abstract class BudgetAllocationsRepository {
     required String budgetId,
   });
 
+  Stream<BudgetAllocationEntityList> fetchByPlan({
+    required String userId,
+    required String planId,
+  });
+
   Stream<BudgetAllocationEntity?> fetchOne({
     required String userId,
     required String budgetId,
