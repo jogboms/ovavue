@@ -7,6 +7,7 @@ class ActiveBudgetCategoryViewModel with EquatableMixin {
     required this.title,
     required this.allocation,
     required this.description,
+    required this.icon,
     required this.color,
     required this.createdAt,
     required this.updatedAt,
@@ -17,12 +18,13 @@ class ActiveBudgetCategoryViewModel with EquatableMixin {
   final String title;
   final Money allocation;
   final String description;
+  final IconData icon;
   final Color color;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
   @override
-  List<Object?> get props => <Object?>[id, path, title, allocation, description, color, createdAt, updatedAt];
+  List<Object?> get props => <Object?>[id, path, title, allocation, description, icon, color, createdAt, updatedAt];
 }
 
 class ActiveBudgetPlanViewModel with EquatableMixin {
@@ -117,15 +119,17 @@ extension NormalizedBudgetPlanEntityViewModelExtension on NormalizedBudgetPlanEn
 
 extension BudgetCategoryEntityViewModelExtension on BudgetCategoryEntity {
   ActiveBudgetCategoryViewModel toViewModel(Money allocation) {
+    final BudgetCategoryViewModel category = BudgetCategoryViewModel.fromEntity(this);
     return ActiveBudgetCategoryViewModel(
-      id: id,
-      path: path,
-      title: title,
+      id: category.id,
+      path: category.path,
+      title: category.title,
       allocation: allocation,
-      description: description,
-      color: Color(color),
-      createdAt: createdAt,
-      updatedAt: updatedAt,
+      description: category.description,
+      icon: category.icon,
+      color: category.color,
+      createdAt: category.createdAt,
+      updatedAt: category.updatedAt,
     );
   }
 }

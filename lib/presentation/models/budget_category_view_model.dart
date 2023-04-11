@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:ovavue/domain.dart';
 
 class BudgetCategoryViewModel with EquatableMixin {
@@ -9,6 +8,7 @@ class BudgetCategoryViewModel with EquatableMixin {
     required this.path,
     required this.title,
     required this.description,
+    required this.icon,
     required this.color,
     required this.createdAt,
     required this.updatedAt,
@@ -20,6 +20,7 @@ class BudgetCategoryViewModel with EquatableMixin {
       path: entity.path,
       title: entity.title,
       description: entity.description,
+      icon: Icons.category_outlined, // TODO(Jogboms): Implement icons picker.
       color: Color(entity.color),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -30,10 +31,11 @@ class BudgetCategoryViewModel with EquatableMixin {
   final String path;
   final String title;
   final String description;
+  final IconData icon;
   final Color color;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
   @override
-  List<Object?> get props => <Object?>[id, path, title, description, color, createdAt, updatedAt];
+  List<Object?> get props => <Object?>[id, path, title, description, icon, color, createdAt, updatedAt];
 }
