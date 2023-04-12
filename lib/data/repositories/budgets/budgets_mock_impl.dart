@@ -19,6 +19,7 @@ class BudgetsMockImpl implements BudgetsRepository {
 
   static NormalizedBudgetEntity generateNormalizedBudget({
     String? id,
+    String? title,
     String? userId,
     NormalizedBudgetPlanEntityList? plans,
     DateTime? startedAt,
@@ -31,7 +32,7 @@ class BudgetsMockImpl implements BudgetsRepository {
     return NormalizedBudgetEntity(
       id: id,
       path: '/budgets/$userId/$id',
-      title: faker.lorem.words(2).join(' '),
+      title: title ?? faker.lorem.words(2).join(' '),
       description: faker.lorem.sentence(),
       amount: faker.randomGenerator.integer(1000000),
       startedAt: startedAt,
@@ -55,7 +56,11 @@ class BudgetsMockImpl implements BudgetsRepository {
   }) {
     final NormalizedBudgetEntityList items = NormalizedBudgetEntityList.generate(
       count,
-      (_) => BudgetsMockImpl.generateNormalizedBudget(userId: userId, plans: plans),
+      (int index) => BudgetsMockImpl.generateNormalizedBudget(
+        title: '${clock.now().year}.${index + 1}',
+        userId: userId,
+        plans: plans,
+      ),
     );
     _budgets$.add(
       _budgets

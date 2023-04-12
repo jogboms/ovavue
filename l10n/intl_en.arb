@@ -9,5 +9,6 @@
   "successfulMessage": "Successful",
   "genericErrorMessage": "An error occurred",
   "loadingMessage": "Loading...",
-  "tryAgainMessage": "Do try again after some time"
+  "tryAgainMessage": "Do try again after some time",
+  "excessLabel": "Excess Amount"
 }

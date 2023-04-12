@@ -8,6 +8,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     required this.title,
     this.actions = const <Widget>[],
     this.asSliver = false,
+    this.backgroundColor,
     this.centerTitle,
   });
 
@@ -16,12 +17,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final Widget title;
   final List<Widget> actions;
   final bool asSliver;
+  final Color? backgroundColor;
   final bool? centerTitle;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = context.theme;
-    final Color backgroundColor = theme.colorScheme.surface;
+    final Color backgroundColor = this.backgroundColor ?? theme.colorScheme.surface;
     final Widget? leading =
         ModalRoute.of(context)?.canPop == true ? BackButton(color: theme.colorScheme.onSurface) : null;
     final DefaultTextStyle title = DefaultTextStyle(
@@ -39,6 +41,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         backgroundColor: backgroundColor,
         leading: leading,
         centerTitle: centerTitle ?? false,
+        surfaceTintColor: Colors.transparent,
         title: title,
         actions: actions,
       );

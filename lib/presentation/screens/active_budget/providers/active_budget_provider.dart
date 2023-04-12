@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
@@ -82,6 +84,8 @@ ActiveBudgetState _deriveState(
       }),
     ),
     allocation: allocationByCategory.values.sum.asMoney,
-    categories: categories.toList(growable: false),
+    categories: categories.sorted(
+      (ActiveBudgetCategoryViewModel a, ActiveBudgetCategoryViewModel b) => b.allocation.compareTo(a.allocation),
+    ),
   );
 }
