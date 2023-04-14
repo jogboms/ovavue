@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ovavue/presentation.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import '../../constants/app_routes.dart';
+import '../../models.dart';
+import '../../theme.dart';
+import '../../utils.dart';
+import '../../widgets.dart';
+import '../budget_categories/budget_category_detail_for_budget_page.dart';
+import '../budget_categories/budget_category_detail_page.dart';
+import 'providers/selected_budget_plan_provider.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
   const BudgetPlanDetailPage({super.key, required this.id, this.budgetId});
@@ -97,12 +103,18 @@ class _ContentDataView extends StatelessWidget {
                             key: Key(state.plan.category.id),
                             category: state.plan.category,
                             onPressed: () {
-                              // TODO(Jogboms): category detail page should still be accessible regardless of budgetId
+                              final String? budgetId = this.budgetId;
                               if (budgetId != null) {
+                                Navigator.of(context).push(
+                                  BudgetCategoryDetailForBudgetPage.route(
+                                    id: state.plan.category.id,
+                                    budgetId: budgetId,
+                                  ),
+                                );
+                              } else {
                                 Navigator.of(context).push(
                                   BudgetCategoryDetailPage.route(
                                     id: state.plan.category.id,
-                                    budgetId: budgetId!,
                                   ),
                                 );
                               }
