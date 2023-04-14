@@ -197,30 +197,15 @@ class _AppBarText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
-
-    final DateTime? endedAt = budget.endedAt;
+    final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Column(
       children: <Widget>[
         Text(budget.title, style: textTheme.labelLarge),
         const SizedBox(height: 4),
-        Text.rich(
-          TextSpan(
-            children: <TextSpan>[
-              TextSpan(text: budget.startedAt.format(DateTimeFormat.dottedInt)),
-              if (endedAt != null) ...<TextSpan>[
-                const TextSpan(text: ' — '),
-                TextSpan(text: endedAt.format(DateTimeFormat.dottedInt)),
-              ]
-            ],
-          ),
-          style: textTheme.bodySmall?.copyWith(
-            wordSpacing: 8,
-            color: colorScheme.outline,
-          ),
+        BudgetDurationText(
+          startedAt: budget.startedAt,
+          endedAt: budget.endedAt,
         ),
       ],
     );
@@ -569,20 +554,9 @@ class _PlanTile extends StatelessWidget {
                 ),
               ),
               if (allocation != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      '${allocation.amount}',
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    Text(
-                      allocation.amount.percentage(budgetAmount),
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: theme.appTheme.color.hintColor,
-                      ),
-                    ),
-                  ],
+                AmountRatioItem(
+                  allocationAmount: allocation.amount,
+                  budgetAmount: budgetAmount,
                 )
             ],
           ),

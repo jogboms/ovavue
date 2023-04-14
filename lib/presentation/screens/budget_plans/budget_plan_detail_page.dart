@@ -123,7 +123,11 @@ class _ContentDataView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (allocation != null) _AllocationAmount.large(allocation: allocation)
+                    if (allocation != null)
+                      AmountRatioItem.large(
+                        allocationAmount: allocation.amount,
+                        budgetAmount: allocation.budget.amount,
+                      )
                   ],
                 ),
               ),
@@ -152,30 +156,20 @@ class _ContentDataView extends StatelessWidget {
               (BuildContext context, int index) {
                 final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
 
-                final DateTime? endedAt = allocation.budget.endedAt;
-
                 return ListTile(
                   key: Key(allocation.id),
                   title: Text(
                     allocation.budget.title,
                     style: textTheme.titleMedium,
                   ),
-                  subtitle: Text.rich(
-                    TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(text: allocation.budget.startedAt.format(DateTimeFormat.dottedInt)),
-                        if (endedAt != null) ...<TextSpan>[
-                          const TextSpan(text: ' — '),
-                          TextSpan(text: endedAt.format(DateTimeFormat.dottedInt)),
-                        ]
-                      ],
-                    ),
-                    style: textTheme.titleMedium?.copyWith(
-                      wordSpacing: 2,
-                      color: colorScheme.outline,
-                    ),
+                  subtitle: BudgetDurationText(
+                    startedAt: allocation.budget.startedAt,
+                    endedAt: allocation.budget.endedAt,
                   ),
-                  trailing: _AllocationAmount(allocation: allocation),
+                  trailing: AmountRatioItem(
+                    allocationAmount: allocation.amount,
+                    budgetAmount: allocation.budget.amount,
+                  ),
                 );
               },
               childCount: state.previousAllocations.length,
@@ -206,43 +200,6 @@ class _CategoryChip extends StatelessWidget {
         color: category.foregroundColor,
       ),
       onPressed: onPressed,
-    );
-  }
-}
-
-class _AllocationAmount extends StatelessWidget {
-  const _AllocationAmount({required this.allocation}) : isLarge = false;
-
-  const _AllocationAmount.large({required this.allocation}) : isLarge = true;
-
-  final BudgetPlanAllocationViewModel allocation;
-  final bool isLarge;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          '${allocation.amount}',
-          style: (isLarge ? textTheme.headlineSmall : textTheme.titleMedium)?.copyWith(
-            fontWeight: AppFontWeight.bold,
-          ),
-        ),
-        SizedBox(height: isLarge ? 2 : 0),
-        Text(
-          allocation.amount.percentage(allocation.budget.amount),
-          style: (isLarge ? textTheme.titleLarge : textTheme.titleMedium)?.copyWith(
-            fontWeight: AppFontWeight.semibold,
-            color: colorScheme.outline,
-          ),
-        ),
-      ],
     );
   }
 }
