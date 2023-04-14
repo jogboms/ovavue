@@ -1,4 +1,6 @@
-part of 'selected_budget_category_provider.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../../utils.dart';
 
 class BudgetCategoryPlanViewModel with EquatableMixin {
   const BudgetCategoryPlanViewModel({
