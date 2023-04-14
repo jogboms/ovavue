@@ -512,56 +512,41 @@ class _PlanTile extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
 
     final BudgetAllocationViewModel? allocation = plan.allocation;
-    final double gradientRatio = allocation?.amount.ratio(budgetAmount) ?? 0.0;
-    final Color categoryColor = plan.category.backgroundColor;
 
-    return GestureDetector(
-      onTap: onPressed,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: categoryColor.withOpacity(.015),
-          border: Border.all(color: categoryColor.withOpacity(.15)),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: <Color>[categoryColor, categoryColor, Colors.transparent],
-              stops: <double>[0, gradientRatio, gradientRatio],
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Row(
+    return AmountRatioDecoratedBox(
+      color: plan.category.backgroundColor,
+      ratio: allocation?.amount.ratio(budgetAmount) ?? 0.0,
+      onPressed: onPressed,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Row(
+              children: <Widget>[
+                Icon(plan.category.icon),
+                const SizedBox(width: 6.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Icon(plan.category.icon),
-                    const SizedBox(width: 6.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          plan.title.sentence(),
-                          style: theme.textTheme.titleSmall,
-                        ),
-                        const SizedBox(height: 4.0),
-                        Text(
-                          plan.category.title.sentence(),
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ],
+                    Text(
+                      plan.title.sentence(),
+                      style: theme.textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 4.0),
+                    Text(
+                      plan.category.title.sentence(),
+                      style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ),
-              ),
-              if (allocation != null)
-                AmountRatioItem(
-                  allocationAmount: allocation.amount,
-                  budgetAmount: budgetAmount,
-                )
-            ],
+              ],
+            ),
           ),
-        ),
+          if (allocation != null)
+            AmountRatioItem(
+              allocationAmount: allocation.amount,
+              baseAmount: budgetAmount,
+            )
+        ],
       ),
     );
   }
