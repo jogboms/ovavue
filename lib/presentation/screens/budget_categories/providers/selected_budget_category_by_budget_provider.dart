@@ -46,6 +46,13 @@ Stream<BudgetCategoryByBudgetState> selectedBudgetCategoryByBudget(
               allocation: allocationsByPlan[element.id]?.amount.asMoney,
             ),
           )
+          .sorted(
+            (
+              BudgetCategoryPlanViewModel a,
+              BudgetCategoryPlanViewModel b,
+            ) =>
+                b.allocation?.compareTo(a.allocation ?? Money.zero) ?? 1,
+          )
           .toList(growable: false);
 
       return BudgetCategoryByBudgetState(

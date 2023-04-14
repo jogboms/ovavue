@@ -25,10 +25,11 @@ class BudgetPlanDetailPage extends StatefulWidget {
   }
 
   @override
-  State<BudgetPlanDetailPage> createState() => _BudgetPlanDetailPageState();
+  State<BudgetPlanDetailPage> createState() => BudgetPlanDetailPageState();
 }
 
-class _BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
+@visibleForTesting
+class BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
   @visibleForTesting
   static const Key dataViewKey = Key('dataViewKey');
 
@@ -47,10 +48,6 @@ class _BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
                   loading: () => child!,
                 ),
         child: const LoadingView(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.edit),
-        onPressed: () {},
       ),
     );
   }
@@ -81,12 +78,11 @@ class _ContentDataView extends StatelessWidget {
         SliverList(
           delegate: SliverChildListDelegate(
             <Widget>[
+              const SizedBox(height: 18.0),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 18.0,
-                  horizontal: 16.0,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
                       child: Column(
@@ -98,7 +94,13 @@ class _ContentDataView extends StatelessWidget {
                               fontWeight: AppFontWeight.semibold,
                             ),
                           ),
-                          // const SizedBox(height: 2),
+                          const SizedBox(height: 2.0),
+                          Text(
+                            state.plan.description.capitalize(),
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.outline,
+                            ),
+                          ),
                           _CategoryChip(
                             key: Key(state.plan.category.id),
                             category: state.plan.category,
@@ -126,11 +128,21 @@ class _ContentDataView extends StatelessWidget {
                     if (allocation != null)
                       AmountRatioItem.large(
                         allocationAmount: allocation.amount,
-                        budgetAmount: allocation.budget.amount,
+                        baseAmount: allocation.budget.amount,
                       )
                   ],
                 ),
               ),
+              const SizedBox(height: 2.0),
+              ActionButtonRow(
+                actions: <ActionButton>[
+                  ActionButton(
+                    icon: Icons.edit,
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
             ],
           ),
         ),
@@ -159,7 +171,7 @@ class _ContentDataView extends StatelessWidget {
                 return ListTile(
                   key: Key(allocation.id),
                   title: Text(
-                    allocation.budget.title,
+                    allocation.budget.title.sentence(),
                     style: textTheme.titleMedium,
                   ),
                   subtitle: BudgetDurationText(
@@ -168,7 +180,7 @@ class _ContentDataView extends StatelessWidget {
                   ),
                   trailing: AmountRatioItem(
                     allocationAmount: allocation.amount,
-                    budgetAmount: allocation.budget.amount,
+                    baseAmount: allocation.budget.amount,
                   ),
                 );
               },
@@ -192,7 +204,7 @@ class _CategoryChip extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return ActionChip(
-      label: Text(category.title),
+      label: Text(category.title.sentence()),
       avatar: Icon(category.icon, color: category.foregroundColor, size: 16.0),
       backgroundColor: category.backgroundColor,
       side: BorderSide.none,

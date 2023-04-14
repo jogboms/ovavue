@@ -138,21 +138,21 @@ class _ContentDataView extends StatelessWidget {
           ),
         ),
         SliverPinnedHeader(
-          child: _ActionButtonRow(
-            actions: <_ActionButton>[
-              _ActionButton(
+          child: ActionButtonRow(
+            actions: <ActionButton>[
+              ActionButton(
                 icon: Icons.add_chart,
                 onPressed: () {},
               ),
-              _ActionButton(
+              ActionButton(
                 icon: Icons.add_moderator_outlined,
                 onPressed: () {},
               ),
-              _ActionButton(
+              ActionButton(
                 icon: Icons.edit,
                 onPressed: () {},
               ),
-              _ActionButton(
+              ActionButton(
                 icon: Icons.copy_outlined,
                 onPressed: () {},
               ),
@@ -447,49 +447,6 @@ class _CategoryChip extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ActionButton extends StatelessWidget {
-  const _ActionButton({required this.icon, required this.onPressed});
-
-  final IconData icon;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return FilledButton.tonal(
-      style: FilledButton.styleFrom(
-        padding: const EdgeInsets.all(12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      onPressed: onPressed,
-      child: Icon(icon),
-    );
-  }
-}
-
-class _ActionButtonRow extends StatelessWidget {
-  const _ActionButtonRow({required this.actions});
-
-  final List<_ActionButton> actions;
-
-  static const double _padding = 8.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: _padding),
-      color: Theme.of(context).scaffoldBackgroundColor,
-      alignment: Alignment.center,
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: _padding,
-        children: actions,
       ),
     );
   }

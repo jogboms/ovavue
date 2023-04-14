@@ -7,17 +7,17 @@ class AmountRatioItem extends StatelessWidget {
   const AmountRatioItem({
     super.key,
     required this.allocationAmount,
-    required this.budgetAmount,
+    required this.baseAmount,
   }) : isLarge = false;
 
   const AmountRatioItem.large({
     super.key,
     required this.allocationAmount,
-    required this.budgetAmount,
+    required this.baseAmount,
   }) : isLarge = true;
 
   final Money allocationAmount;
-  final Money budgetAmount;
+  final Money baseAmount;
   final bool isLarge;
 
   @override
@@ -38,7 +38,7 @@ class AmountRatioItem extends StatelessWidget {
         ),
         SizedBox(height: isLarge ? 2 : 0),
         Text(
-          allocationAmount.percentage(budgetAmount),
+          allocationAmount.percentage(baseAmount),
           style: (isLarge ? textTheme.titleLarge : textTheme.titleMedium)?.copyWith(
             fontWeight: AppFontWeight.semibold,
             color: colorScheme.outline,
