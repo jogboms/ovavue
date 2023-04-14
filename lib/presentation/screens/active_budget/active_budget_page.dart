@@ -122,7 +122,7 @@ class _ContentDataView extends StatelessWidget {
                   budgetAmount: state.budget.amount,
                   allocationAmount: state.budget.amount - state.allocation,
                   onPressed: (String id) => Navigator.of(context).push(
-                    BudgetCategoryDetailPage.route(
+                    BudgetCategoryDetailForBudgetPage.route(
                       id: id,
                       budgetId: state.budget.id,
                     ),
