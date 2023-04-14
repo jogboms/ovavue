@@ -43,6 +43,7 @@ Stream<BudgetCategoryByBudgetState> selectedBudgetCategoryByBudget(
               id: element.id,
               path: element.path,
               title: element.title,
+              description: element.description,
               allocation: allocationsByPlan[element.id]?.amount.asMoney,
             ),
           )

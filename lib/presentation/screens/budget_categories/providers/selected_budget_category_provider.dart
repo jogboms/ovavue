@@ -31,6 +31,7 @@ Stream<BudgetCategoryState> selectedBudgetCategory(SelectedBudgetCategoryRef ref
                   id: element.id,
                   path: element.path,
                   title: element.title,
+                  description: element.description,
                   allocation: null,
                 ),
               )

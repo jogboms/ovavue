@@ -52,6 +52,7 @@ Future<void> main() async {
                     id: plan.id,
                     path: plan.path,
                     title: plan.title,
+                    description: plan.description,
                     allocation: null,
                   ),
                 )

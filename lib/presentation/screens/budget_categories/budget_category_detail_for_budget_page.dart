@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import '../../routing.dart';
-import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
 import 'providers/selected_budget_category_by_budget_provider.dart';
+import 'widgets/budget_category_header.dart';
+import 'widgets/budget_category_plan_tile.dart';
 
 class BudgetCategoryDetailForBudgetPage extends StatefulWidget {
   const BudgetCategoryDetailForBudgetPage({super.key, required this.id, required this.budgetId});
@@ -63,7 +64,11 @@ class _ContentDataView extends StatelessWidget {
         ),
         SliverList(
           delegate: SliverChildListDelegate(<Widget>[
-            _Header(state: state),
+            BudgetCategoryHeader(
+              category: state.category,
+              allocationAmount: state.allocation,
+              budgetAmount: state.budget.amount,
+            ),
             ActionButtonRow(
               actions: <ActionButton>[
                 ActionButton(
@@ -101,7 +106,7 @@ class _ContentDataView extends StatelessWidget {
               builder: (BuildContext context, int index) {
                 final BudgetCategoryPlanViewModel plan = state.plans[index];
 
-                return _PlanTile(
+                return BudgetCategoryPlanTile(
                   key: Key(plan.id),
                   plan: plan,
                   categoryAllocationAmount: state.allocation,
@@ -117,108 +122,6 @@ class _ContentDataView extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({required this.state});
-
-  final BudgetCategoryByBudgetState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          CircleAvatar(
-            backgroundColor: state.category.backgroundColor,
-            child: Icon(
-              state.category.icon,
-              color: state.category.foregroundColor,
-            ),
-          ),
-          const SizedBox(width: 8.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  state.category.title.sentence(),
-                  style: textTheme.titleLarge?.copyWith(
-                    fontWeight: AppFontWeight.semibold,
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                Text(
-                  state.category.description.capitalize(),
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.outline,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (state.allocation != Money.zero) ...<Widget>[
-            const SizedBox(width: 8.0),
-            AmountRatioItem.large(
-              allocationAmount: state.allocation,
-              baseAmount: state.budget.amount,
-            )
-          ]
-        ],
-      ),
-    );
-  }
-}
-
-class _PlanTile extends StatelessWidget {
-  const _PlanTile({
-    super.key,
-    required this.plan,
-    required this.categoryAllocationAmount,
-    required this.onPressed,
-  });
-
-  final BudgetCategoryPlanViewModel plan;
-  final Money categoryAllocationAmount;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
-
-    final Money? allocation = plan.allocation;
-
-    return AmountRatioDecoratedBox(
-      ratio: allocation?.ratio(categoryAllocationAmount) ?? 0.0,
-      color: colorScheme.background,
-      onPressed: onPressed,
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Text(
-              plan.title.sentence(),
-              style: textTheme.titleMedium?.copyWith(
-                color: colorScheme.onBackground,
-              ),
-            ),
-          ),
-          if (allocation != null)
-            AmountRatioItem(
-              allocationAmount: allocation,
-              baseAmount: categoryAllocationAmount,
-            ),
-        ],
-      ),
     );
   }
 }

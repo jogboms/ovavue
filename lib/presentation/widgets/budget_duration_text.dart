@@ -13,7 +13,7 @@ class BudgetDurationText extends StatelessWidget {
     super.key,
     required this.startedAt,
     required this.endedAt,
-  }) : isLarge = false;
+  }) : isLarge = true;
 
   final DateTime startedAt;
   final DateTime? endedAt;

@@ -74,6 +74,7 @@ Future<void> main() async {
                     id: plan.id,
                     path: plan.path,
                     title: plan.title,
+                    description: plan.description,
                     allocation: expectedBudgetAllocations
                         .firstWhere((_) => _.plan.id == plan.id && _.budget.id == expectedBudget.id)
                         .amount
