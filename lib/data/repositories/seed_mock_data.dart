@@ -8,7 +8,6 @@ import 'budget_allocations/budget_allocations_mock_impl.dart';
 import 'budget_categories/budget_categories_mock_impl.dart';
 import 'budget_plans/budget_plans_mock_impl.dart';
 import 'budgets/budgets_mock_impl.dart';
-import 'extensions.dart';
 
 void seedMockData() {
   final String userId = AuthMockImpl.id;

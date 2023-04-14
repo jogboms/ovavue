@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-import '../../constants/app_routes.dart';
 import '../../models.dart';
+import '../../routing.dart';
 import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
-import '../budget_categories/budget_category_detail_for_budget_page.dart';
-import '../budget_categories/budget_category_detail_page.dart';
 import 'providers/selected_budget_plan_provider.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
@@ -16,13 +14,6 @@ class BudgetPlanDetailPage extends StatefulWidget {
 
   final String id;
   final String? budgetId;
-
-  static PageRoute<void> route({required String id, String? budgetId}) {
-    return MaterialPageRoute<void>(
-      builder: (_) => BudgetPlanDetailPage(id: id, budgetId: budgetId),
-      settings: const RouteSettings(name: AppRoutes.budgetPlanDetail),
-    );
-  }
 
   @override
   State<BudgetPlanDetailPage> createState() => BudgetPlanDetailPageState();
@@ -107,17 +98,13 @@ class _ContentDataView extends StatelessWidget {
                             onPressed: () {
                               final String? budgetId = this.budgetId;
                               if (budgetId != null) {
-                                Navigator.of(context).push(
-                                  BudgetCategoryDetailForBudgetPage.route(
-                                    id: state.plan.category.id,
-                                    budgetId: budgetId,
-                                  ),
+                                context.router.goToBudgetCategoryDetailForBudget(
+                                  id: state.plan.category.id,
+                                  budgetId: budgetId,
                                 );
                               } else {
-                                Navigator.of(context).push(
-                                  BudgetCategoryDetailPage.route(
-                                    id: state.plan.category.id,
-                                  ),
+                                context.router.goToBudgetCategoryDetail(
+                                  id: state.plan.category.id,
                                 );
                               }
                             },

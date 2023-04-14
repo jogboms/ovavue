@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-import '../../constants/app_routes.dart';
+import '../../routing.dart';
 import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
-import '../budget_plans/budget_plan_detail_page.dart';
 import 'providers/selected_budget_category_by_budget_provider.dart';
 
 class BudgetCategoryDetailForBudgetPage extends StatefulWidget {
@@ -14,13 +13,6 @@ class BudgetCategoryDetailForBudgetPage extends StatefulWidget {
 
   final String id;
   final String budgetId;
-
-  static PageRoute<void> route({required String id, required String budgetId}) {
-    return MaterialPageRoute<void>(
-      builder: (_) => BudgetCategoryDetailForBudgetPage(id: id, budgetId: budgetId),
-      settings: const RouteSettings(name: AppRoutes.budgetCategoryDetail),
-    );
-  }
 
   @override
   State<BudgetCategoryDetailForBudgetPage> createState() => BudgetCategoryDetailForBudgetPageState();
@@ -113,11 +105,9 @@ class _ContentDataView extends StatelessWidget {
                   key: Key(plan.id),
                   plan: plan,
                   categoryAllocationAmount: state.allocation,
-                  onPressed: () => Navigator.of(context).push(
-                    BudgetPlanDetailPage.route(
-                      id: plan.id,
-                      budgetId: state.budget.id,
-                    ),
+                  onPressed: () => context.router.goToBudgetPlanDetail(
+                    id: plan.id,
+                    budgetId: state.budget.id,
                   ),
                 );
               },

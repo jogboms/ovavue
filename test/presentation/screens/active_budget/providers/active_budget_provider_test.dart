@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/data.dart';
-import 'package:ovavue/data/repositories/extensions.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart' hide NormalizedBudgetAllocationViewModelExtension;
 import 'package:riverpod/riverpod.dart';

@@ -1,9 +1,15 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ovavue/data/repositories/extensions.dart';
-import 'package:ovavue/presentation.dart';
+import 'package:ovavue/core.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+
+import '../../models.dart';
+import '../../routing.dart';
+import '../../theme.dart';
+import '../../utils.dart';
+import '../../widgets.dart';
+import 'providers/active_budget_provider.dart';
 
 class ActiveBudgetPage extends StatefulWidget {
   const ActiveBudgetPage({super.key});
@@ -34,7 +40,7 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.menu),
         onPressed: () async {
-          late final NavigatorState navigator = Navigator.of(context);
+          late final AppRouter router = context.router;
           final _BottomSheetChoice? result = await showModalBottomSheet<_BottomSheetChoice>(
             context: context,
             builder: (_) => const _BottomSheetOptions(),
@@ -48,10 +54,10 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
               // TODO(Jogboms): Not implemented
               break;
             case _BottomSheetChoice.plans:
-              await navigator.push(BudgetPlansPage.route());
+              await router.goToBudgetPlans();
               break;
             case _BottomSheetChoice.categories:
-              await navigator.push(BudgetCategoriesPage.route());
+              await router.goToBudgetCategories();
               break;
             case _BottomSheetChoice.settings:
               // TODO(Jogboms): Not implemented
@@ -121,16 +127,12 @@ class _ContentDataView extends StatelessWidget {
                   categories: state.categories,
                   budgetAmount: state.budget.amount,
                   allocationAmount: state.budget.amount - state.allocation,
-                  onPressed: (String id) => Navigator.of(context).push(
-                    BudgetCategoryDetailForBudgetPage.route(
-                      id: id,
-                      budgetId: state.budget.id,
-                    ),
+                  onPressed: (String id) => context.router.goToBudgetCategoryDetailForBudget(
+                    id: id,
+                    budgetId: state.budget.id,
                   ),
-                  onExpand: () => Navigator.of(context).push(
-                    GroupedBudgetPlansPage.route(
-                      budgetId: state.budget.id,
-                    ),
+                  onExpand: () => context.router.goToGroupedBudgetPlans(
+                    budgetId: state.budget.id,
                   ),
                 ),
               ],
@@ -173,11 +175,9 @@ class _ContentDataView extends StatelessWidget {
                   key: Key(plan.id),
                   plan: plan,
                   budgetAmount: state.budget.amount,
-                  onPressed: () => Navigator.of(context).push(
-                    BudgetPlanDetailPage.route(
-                      id: plan.id,
-                      budgetId: state.budget.id,
-                    ),
+                  onPressed: () => context.router.goToBudgetPlanDetail(
+                    id: plan.id,
+                    budgetId: state.budget.id,
                   ),
                 );
               },
@@ -202,7 +202,7 @@ class _AppBarText extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        Text(budget.title, style: textTheme.labelLarge),
+        Text(budget.title.sentence(), style: textTheme.headlineSmall),
         const SizedBox(height: 4),
         BudgetDurationText(
           startedAt: budget.startedAt,
@@ -223,12 +223,13 @@ class _HeaderText extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.only(top: 4.0),
       child: Text(
         '$budgetAmount',
         textAlign: TextAlign.center,
-        style: theme.textTheme.headlineMedium?.copyWith(
+        style: theme.textTheme.displaySmall?.copyWith(
           color: theme.colorScheme.onSurface,
+          letterSpacing: 1.25,
           fontWeight: AppFontWeight.bold,
         ),
       ),
@@ -418,7 +419,7 @@ class _CategoryChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: backgroundColor.withOpacity(.15),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: backgroundColor.withOpacity(.15)),
+          border: Border.all(color: backgroundColor.withOpacity(.025)),
         ),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
@@ -432,14 +433,14 @@ class _CategoryChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(icon, size: 16, color: foregroundColor),
+              Icon(icon, size: 20, color: foregroundColor),
               const SizedBox(width: 12),
               Column(
                 children: <Widget>[
-                  Text(title.sentence(), style: theme.textTheme.bodySmall),
+                  Text(title.sentence(), style: theme.textTheme.bodyLarge),
                   Text(
                     '$allocationAmount (${allocationAmount.percentage(budgetAmount)})',
-                    style: theme.textTheme.labelMedium,
+                    style: theme.textTheme.labelLarge,
                   ),
                 ],
               ),
