@@ -30,7 +30,17 @@ Stream<BudgetPlanState> selectedBudgetPlan(
         (NormalizedBudgetAllocationEntityList allocations) => BudgetPlanState(
           plan: plan,
           allocation: allocations.singleWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
-          previousAllocations: allocations.where((_) => _.budget.id != budgetId).map((_) => _.toViewModel()).toList(),
+          previousAllocations: allocations
+              .where((_) => _.budget.id != budgetId)
+              .map((_) => _.toViewModel())
+              .sorted(
+                (
+                  BudgetPlanAllocationViewModel a,
+                  BudgetPlanAllocationViewModel b,
+                ) =>
+                    b.budget.startedAt.compareTo(a.budget.startedAt),
+              )
+              .toList(),
         ),
       )
       .distinct();

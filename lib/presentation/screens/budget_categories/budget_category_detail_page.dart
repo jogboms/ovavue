@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import '../../constants/app_routes.dart';
 
 class BudgetCategoryDetailPage extends StatefulWidget {
-  const BudgetCategoryDetailPage({super.key, required this.id});
+  const BudgetCategoryDetailPage({super.key, required this.id, required this.budgetId});
 
   final String id;
+  final String budgetId;
 
-  static PageRoute<void> route({required String id}) {
+  static PageRoute<void> route({required String id, required String budgetId}) {
     return MaterialPageRoute<void>(
-      builder: (_) => BudgetCategoryDetailPage(id: id),
+      builder: (_) => BudgetCategoryDetailPage(id: id, budgetId: budgetId),
       settings: const RouteSettings(name: AppRoutes.budgetCategoryDetail),
     );
   }

@@ -60,6 +60,7 @@ class BudgetsMockImpl implements BudgetsRepository {
         title: '${clock.now().year}.${index + 1}',
         userId: userId,
         plans: plans,
+        startedAt: clock.monthsFromNow(index),
       ),
     );
     _budgets$.add(
