@@ -165,8 +165,8 @@ class _ContentDataView extends StatelessWidget {
             bottom: MediaQuery.paddingOf(context).bottom + 72,
           ),
           sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+            delegate: SliverSeparatorBuilderDelegate(
+              builder: (BuildContext context, int index) {
                 final ActiveBudgetPlanViewModel plan = state.budget.plans[index];
 
                 return _PlanTile(
@@ -181,6 +181,7 @@ class _ContentDataView extends StatelessWidget {
                   ),
                 );
               },
+              separatorBuilder: (_, __) => const SizedBox(height: 4),
               childCount: state.budget.plans.length,
             ),
           ),
