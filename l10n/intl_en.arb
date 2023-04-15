@@ -12,5 +12,7 @@
   "tryAgainMessage": "Do try again after some time",
   "excessLabel": "Excess Amount",
   "previousAllocationsTitle": "Previous Allocations",
-  "associatedPlansTitle": "Associated Plans"
+  "associatedPlansTitle": "Associated Plans",
+  "plansPageTitle": "Plans",
+  "categoriesPageTitle": "Categories"
 }

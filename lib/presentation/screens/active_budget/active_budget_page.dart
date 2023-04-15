@@ -91,6 +91,7 @@ class _BottomSheetOptions extends StatelessWidget {
         children: <Widget>[
           for (final _BottomSheetChoice choice in _BottomSheetChoice.values)
             ListTile(
+              key: Key(choice.name),
               onTap: () => Navigator.of(context).pop(choice),
               title: Text(choice.name.capitalize(), textAlign: TextAlign.center),
             ),
@@ -160,6 +161,10 @@ class _ContentDataView extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        SliverPinnedTitleCountHeader(
+          title: context.l10n.associatedPlansTitle,
+          count: state.budget.plans.length,
         ),
         SliverPadding(
           padding: EdgeInsets.only(

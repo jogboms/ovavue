@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 import '../../models.dart';
 import '../../routing.dart';
@@ -133,17 +132,9 @@ class _ContentDataView extends StatelessWidget {
             ],
           ),
         ),
-        SliverPinnedHeader(
-          child: Container(
-            color: colorScheme.surface,
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: Text(
-              context.l10n.previousAllocationsTitle,
-              style: textTheme.titleMedium?.copyWith(
-                color: colorScheme.outline,
-              ),
-            ),
-          ),
+        SliverPinnedTitleCountHeader(
+          title: context.l10n.previousAllocationsTitle,
+          count: state.previousAllocations.length,
         ),
         SliverPadding(
           padding: EdgeInsets.only(

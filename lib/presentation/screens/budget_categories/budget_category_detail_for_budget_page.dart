@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 import '../../routing.dart';
 import '../../utils.dart';
@@ -51,8 +50,6 @@ class _ContentDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -84,17 +81,9 @@ class _ContentDataView extends StatelessWidget {
             const SizedBox(height: 8.0),
           ]),
         ),
-        SliverPinnedHeader(
-          child: Container(
-            color: colorScheme.surface,
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: Text(
-              context.l10n.associatedPlansTitle,
-              style: textTheme.titleMedium?.copyWith(
-                color: colorScheme.outline,
-              ),
-            ),
-          ),
+        SliverPinnedTitleCountHeader(
+          title: context.l10n.associatedPlansTitle,
+          count: state.plans.length,
         ),
         SliverPadding(
           padding: EdgeInsets.only(
