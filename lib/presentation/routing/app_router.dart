@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../screens/active_budget/grouped_budget_plans_page.dart';
 import '../screens/budget_categories/budget_categories_page.dart';
 import '../screens/budget_categories/budget_category_detail_for_budget_page.dart';
 import '../screens/budget_categories/budget_category_detail_page.dart';
 import '../screens/budget_plans/budget_plan_detail_page.dart';
 import '../screens/budget_plans/budget_plans_page.dart';
-import '../screens/budget_plans/grouped_budget_plans_page.dart';
 import 'app_routes.dart';
 
 class AppRouter {

@@ -10,6 +10,7 @@
   "genericErrorMessage": "An error occurred",
   "loadingMessage": "Loading...",
   "tryAgainMessage": "Do try again after some time",
+  "totalBudgetCaption": "Total budget",
   "excessLabel": "Excess Amount",
   "previousAllocationsTitle": "Previous Allocations",
   "associatedPlansTitle": "Associated Plans",
