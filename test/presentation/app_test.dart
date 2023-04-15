@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ovavue/presentation.dart';
 
 import '../utils.dart';
 
@@ -16,7 +17,7 @@ void main() {
       await tester.pump();
 
       expect(find.byKey(const Key('TESTING')), findsOneWidget);
-      expect(find.byType(Placeholder), findsOneWidget);
+      expect(find.byType(ActiveBudgetPage), findsOneWidget);
     });
   });
 }
