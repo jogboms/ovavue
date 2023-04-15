@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
@@ -57,7 +58,14 @@ Future<void> main() async {
           BudgetPlanState(
             allocation: expectedBudgetAllocations.firstWhere((_) => _.plan.id == expectedPlan.id).toViewModel(),
             plan: BudgetPlanViewModel.fromEntity(expectedPlan),
-            previousAllocations: expectedBudgetAllocations.map((_) => _.toViewModel()).skip(1).toList(),
+            previousAllocations: expectedBudgetAllocations
+                .map((_) => _.toViewModel())
+                .skip(1)
+                .sorted(
+                  (BudgetPlanAllocationViewModel a, BudgetPlanAllocationViewModel b) =>
+                      b.budget.startedAt.compareTo(a.budget.startedAt),
+                )
+                .toList(),
           ),
         ),
       );
