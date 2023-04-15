@@ -8,16 +8,15 @@ import 'budget_allocations/budget_allocations_mock_impl.dart';
 import 'budget_categories/budget_categories_mock_impl.dart';
 import 'budget_plans/budget_plans_mock_impl.dart';
 import 'budgets/budgets_mock_impl.dart';
-import 'extensions.dart';
 
 void seedMockData() {
   final String userId = AuthMockImpl.id;
-  final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(5, userId: userId);
+  final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(10, userId: userId);
   final NormalizedBudgetPlanEntityList plans = BudgetPlansMockImpl().seed(
-    3,
+    10,
     (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId, category: categories.random()),
   );
-  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(5, userId: userId, plans: plans);
+  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(15, userId: userId, plans: plans);
   final Map<String, NormalizedBudgetEntity> budgetById = budgets.foldToMap((_) => _.id);
   final Map<String, int> budgetToAmount = budgetById.map(
     (String key, NormalizedBudgetEntity value) => MapEntry<String, int>(key, value.amount),

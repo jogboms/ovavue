@@ -88,11 +88,7 @@ ThemeData themeBuilder(
       )
       .apply(fontFamily: kAppFontFamily);
 
-  final RoundedRectangleBorder buttonShape = RoundedRectangleBorder(
-    borderRadius: textFieldBorder.borderRadius,
-  );
   final ButtonStyle buttonStyle = ButtonStyle(
-    shape: MaterialStateProperty.all(buttonShape),
     textStyle: MaterialStateProperty.all(textTheme.labelLarge),
     elevation: MaterialStateProperty.all(0),
   );
@@ -108,6 +104,7 @@ ThemeData themeBuilder(
   );
 
   return ThemeData(
+    useMaterial3: true,
     brightness: brightness,
     primaryColor: primaryColor,
     primaryColorDark: primaryColor.shade700,

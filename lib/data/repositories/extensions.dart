@@ -17,15 +17,3 @@ extension RandomGeneratorExtensions on RandomGenerator {
     );
   }
 }
-
-extension RandomEnum<T extends Object> on Iterable<T> {
-  T random() {
-    if (isEmpty) {
-      throw StateError('No element');
-    }
-    if (length == 1) {
-      return elementAt(0);
-    }
-    return elementAt(Random().nextInt(length));
-  }
-}
