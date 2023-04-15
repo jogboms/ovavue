@@ -16,22 +16,25 @@ class AmountRatioDecoratedBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: color.withOpacity(.015),
-          border: Border.all(color: color.withOpacity(.025)),
-        ),
-        child: Container(
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: onPressed,
+        child: Ink(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: <Color>[color, color, Colors.transparent],
-              stops: <double>[0, ratio, ratio],
-            ),
+            color: color.withOpacity(.015),
+            border: Border.all(color: color.withOpacity(.025)),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-          child: child,
+          child: Ink(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: <Color>[color, color, Colors.transparent],
+                stops: <double>[0, ratio, ratio],
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            child: child,
+          ),
         ),
       ),
     );

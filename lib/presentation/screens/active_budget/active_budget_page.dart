@@ -418,39 +418,43 @@ class _CategoryChip extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final double gradientRatio = allocationAmount.ratio(budgetAmount);
 
-    return GestureDetector(
-      onTap: onPressed,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: backgroundColor.withOpacity(.15),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: backgroundColor.withOpacity(.025)),
-        ),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(8),
+        child: Ink(
           decoration: BoxDecoration(
+            color: backgroundColor.withOpacity(.15),
             borderRadius: BorderRadius.circular(8),
-            gradient: LinearGradient(
-              colors: <Color>[backgroundColor, backgroundColor, Colors.transparent],
-              stops: <double>[0, gradientRatio, gradientRatio],
-            ),
+            border: Border.all(color: backgroundColor.withOpacity(.025)),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(icon, size: 20, color: foregroundColor),
-              const SizedBox(width: 12),
-              Column(
-                children: <Widget>[
-                  Text(title.sentence(), style: theme.textTheme.bodyLarge),
-                  Text(
-                    '$allocationAmount (${allocationAmount.percentage(budgetAmount)})',
-                    style: theme.textTheme.labelLarge,
-                  ),
-                ],
+          child: Ink(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: <Color>[backgroundColor, backgroundColor, Colors.transparent],
+                stops: <double>[0, gradientRatio, gradientRatio],
               ),
-              const SizedBox(width: 4),
-            ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(icon, size: 20, color: foregroundColor),
+                const SizedBox(width: 12),
+                Column(
+                  children: <Widget>[
+                    Text(title.sentence(), style: theme.textTheme.bodyLarge),
+                    Text(
+                      '$allocationAmount (${allocationAmount.percentage(budgetAmount)})',
+                      style: theme.textTheme.labelLarge,
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 4),
+              ],
+            ),
           ),
         ),
       ),
