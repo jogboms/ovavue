@@ -1,8 +1,6 @@
-import 'package:equatable/equatable.dart';
-
 import 'reference_entity.dart';
 
-class CreateBudgetData with EquatableMixin {
+class CreateBudgetData {
   const CreateBudgetData({
     required this.title,
     required this.amount,
@@ -18,7 +16,4 @@ class CreateBudgetData with EquatableMixin {
   final List<ReferenceEntity> plans;
   final DateTime startedAt;
   final DateTime? endedAt;
-
-  @override
-  List<Object?> get props => <Object?>[title, amount, description, plans, startedAt, endedAt];
 }

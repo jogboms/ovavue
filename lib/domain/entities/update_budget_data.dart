@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class UpdateBudgetData with EquatableMixin {
+class UpdateBudgetData {
   const UpdateBudgetData({
     required this.id,
     required this.path,
@@ -16,7 +14,4 @@ class UpdateBudgetData with EquatableMixin {
   final int amount;
   final String description;
   final DateTime? endedAt;
-
-  @override
-  List<Object?> get props => <Object?>[id, path, title, amount, description, endedAt];
 }

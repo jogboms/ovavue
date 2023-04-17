@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class UpdateUserData with EquatableMixin {
+class UpdateUserData {
   const UpdateUserData({
     required this.id,
     required this.lastSeenAt,
@@ -8,7 +6,4 @@ class UpdateUserData with EquatableMixin {
 
   final String id;
   final DateTime lastSeenAt;
-
-  @override
-  List<Object?> get props => <Object?>[id, lastSeenAt];
 }
