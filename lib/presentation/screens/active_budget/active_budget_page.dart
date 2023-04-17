@@ -127,7 +127,7 @@ class _ContentDataView extends StatelessWidget {
                 _CategoryView(
                   categories: state.categories,
                   budgetAmount: state.budget.amount,
-                  allocationAmount: state.budget.amount - state.allocation,
+                  allocationAmount: state.allocation,
                   onPressed: (String id) => context.router.goToBudgetCategoryDetailForBudget(
                     id: id,
                     budgetId: state.budget.id,

@@ -28,9 +28,9 @@ void seedMockData() {
       final String budgetId = budgetById.keys.random();
 
       final int budget = budgetToAmount[budgetId] ?? 0;
-      final int amount = Random().nextInt(budget ~/ 2);
+      final int amount = Random().nextInt(max(1, (budget * Random().nextDouble()).toInt()));
 
-      budgetToAmount[budgetId] = budget - amount;
+      budgetToAmount[budgetId] = max(0, budget - amount);
 
       return BudgetAllocationsMockImpl.generateNormalizedAllocation(
         userId: userId,
