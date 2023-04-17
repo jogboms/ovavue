@@ -84,6 +84,12 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   }
 
   @override
+  Future<bool> update(UpdateBudgetAllocationData allocation) async {
+    _allocations$.add(_allocations..update(allocation.id, (BudgetAllocationEntity prev) => prev.update(allocation)));
+    return true;
+  }
+
+  @override
   Future<bool> delete(String path) async {
     final String id = _allocations.values.firstWhere((BudgetAllocationEntity element) => element.path == path).id;
     _allocations$.add(_allocations..remove(id));
@@ -120,6 +126,18 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
       _allocations$.stream.map(
         (Map<String, BudgetAllocationEntity> event) =>
             event.values.where((BudgetAllocationEntity element) => element.plan.id == planId).toList(),
+      );
+}
+
+extension on BudgetAllocationEntity {
+  BudgetAllocationEntity update(UpdateBudgetAllocationData update) => BudgetAllocationEntity(
+        id: id,
+        path: path,
+        amount: update.amount,
+        budget: budget,
+        plan: plan,
+        createdAt: createdAt,
+        updatedAt: clock.now(),
       );
 }
 

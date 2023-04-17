@@ -15,12 +15,10 @@ void main() {
     );
 
     final BudgetAllocationEntity dummyEntity = BudgetAllocationsMockImpl.generateAllocation(userId: '1');
-    final CreateBudgetAllocationData dummyData = CreateBudgetAllocationData(
+    const CreateBudgetAllocationData dummyData = CreateBudgetAllocationData(
       amount: 1,
-      budget: const ReferenceEntity(id: '1', path: 'path'),
-      plan: const ReferenceEntity(id: '1', path: 'path'),
-      startedAt: DateTime(0),
-      endedAt: null,
+      budget: ReferenceEntity(id: '1', path: 'path'),
+      plan: ReferenceEntity(id: '1', path: 'path'),
     );
 
     setUpAll(() {

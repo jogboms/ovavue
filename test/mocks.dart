@@ -17,11 +17,17 @@ class MockBudgetAllocationsRepository extends Mock implements BudgetAllocationsR
 
 class MockCreateBudgetAllocationUseCase extends Mock implements CreateBudgetAllocationUseCase {}
 
+class MockUpdateBudgetAllocationUseCase extends Mock implements UpdateBudgetAllocationUseCase {}
+
 class MockCreateBudgetCategoryUseCase extends Mock implements CreateBudgetCategoryUseCase {}
+
+class MockUpdateBudgetCategoryUseCase extends Mock implements UpdateBudgetCategoryUseCase {}
 
 class MockCreateBudgetPlanUseCase extends Mock implements CreateBudgetPlanUseCase {}
 
 class MockCreateBudgetUseCase extends Mock implements CreateBudgetUseCase {}
+
+class MockUpdateBudgetUseCase extends Mock implements UpdateBudgetUseCase {}
 
 class MockCreateUserUseCase extends Mock implements CreateUserUseCase {}
 

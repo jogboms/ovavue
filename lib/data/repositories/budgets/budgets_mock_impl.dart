@@ -94,6 +94,12 @@ class BudgetsMockImpl implements BudgetsRepository {
   }
 
   @override
+  Future<bool> update(UpdateBudgetData budget) async {
+    _budgets$.add(_budgets..update(budget.id, (BudgetEntity prev) => prev.update(budget)));
+    return true;
+  }
+
+  @override
   Future<bool> delete(String path) async {
     final String id = _budgets.values.firstWhere((BudgetEntity element) => element.path == path).id;
     _budgets$.add(_budgets..remove(id));
@@ -115,6 +121,21 @@ class BudgetsMockImpl implements BudgetsRepository {
 }
 
 int _sortFn(BudgetEntity a, BudgetEntity b) => b.startedAt.compareTo(a.startedAt);
+
+extension on BudgetEntity {
+  BudgetEntity update(UpdateBudgetData update) => BudgetEntity(
+        id: id,
+        path: path,
+        title: update.title,
+        description: update.description,
+        amount: update.amount,
+        startedAt: startedAt,
+        endedAt: update.endedAt,
+        plans: plans,
+        createdAt: createdAt,
+        updatedAt: clock.now(),
+      );
+}
 
 extension on NormalizedBudgetEntity {
   BudgetEntity get denormalize => BudgetEntity(

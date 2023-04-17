@@ -17,7 +17,7 @@ class MockRepositories {
   final BudgetCategoriesRepository budgetCategories = MockBudgetCategoriesRepository();
   final BudgetAllocationsRepository budgetAllocations = MockBudgetAllocationsRepository();
 
-  void reset() => <Object>[auth, users].forEach(mt.reset);
+  void reset() => <Object>[auth, users, budgets, budgetPlans, budgetCategories, budgetAllocations].forEach(mt.reset);
 }
 
 final MockRepositories mockRepositories = MockRepositories();
@@ -28,7 +28,10 @@ class MockUseCases {
   final CreateBudgetPlanUseCase createBudgetPlanUseCase = MockCreateBudgetPlanUseCase();
   final CreateBudgetUseCase createBudgetUseCase = MockCreateBudgetUseCase();
   final CreateUserUseCase createUserUseCase = MockCreateUserUseCase();
+  final UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase = MockUpdateBudgetAllocationUseCase();
+  final UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase = MockUpdateBudgetCategoryUseCase();
   final UpdateBudgetPlanUseCase updateBudgetPlanUseCase = MockUpdateBudgetPlanUseCase();
+  final UpdateBudgetUseCase updateBudgetUseCase = MockUpdateBudgetUseCase();
   final DeleteBudgetAllocationUseCase deleteBudgetAllocationUseCase = MockDeleteBudgetAllocationUseCase();
   final DeleteBudgetCategoryUseCase deleteBudgetCategoryUseCase = MockDeleteBudgetCategoryUseCase();
   final DeleteBudgetPlanUseCase deleteBudgetPlanUseCase = MockDeleteBudgetPlanUseCase();
@@ -55,7 +58,10 @@ class MockUseCases {
         createBudgetPlanUseCase,
         createBudgetUseCase,
         createUserUseCase,
+        updateBudgetAllocationUseCase,
+        updateBudgetCategoryUseCase,
         updateBudgetPlanUseCase,
+        updateBudgetUseCase,
         deleteBudgetAllocationUseCase,
         deleteBudgetCategoryUseCase,
         deleteBudgetPlanUseCase,
@@ -94,7 +100,10 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
