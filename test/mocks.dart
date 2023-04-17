@@ -87,6 +87,10 @@ class FakeCreateBudgetPlanData extends Fake implements CreateBudgetPlanData {}
 
 class FakeUpdateBudgetPlanData extends Fake implements UpdateBudgetPlanData {}
 
+class FakeCreateBudgetAllocationData extends Fake implements CreateBudgetAllocationData {}
+
+class FakeUpdateBudgetAllocationData extends Fake implements UpdateBudgetAllocationData {}
+
 class FakeRoute extends Fake implements Route<dynamic> {}
 
 class FakeStackTrace extends Fake implements StackTrace {}
