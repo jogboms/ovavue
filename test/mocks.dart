@@ -79,6 +79,10 @@ class MockAsyncCallback<T> extends Mock {
   Future<T> call();
 }
 
+class FakeCreateBudgetPlanData extends Fake implements CreateBudgetPlanData {}
+
+class FakeUpdateBudgetPlanData extends Fake implements UpdateBudgetPlanData {}
+
 class FakeRoute extends Fake implements Route<dynamic> {}
 
 class FakeStackTrace extends Fake implements StackTrace {}
