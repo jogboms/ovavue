@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart' as mt;
+import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
@@ -276,6 +277,10 @@ extension WidgetTesterExtensions on WidgetTester {
 
     mt.verify(() => observer.didPop(mt.any(), mt.any()));
   }
+}
+
+extension VerificationResultExtension on VerificationResult {
+  T capturedType<T>() => captured.first as T;
 }
 
 extension NormalizedBudgetEntityExtensions on NormalizedBudgetEntity {

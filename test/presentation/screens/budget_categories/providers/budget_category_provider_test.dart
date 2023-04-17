@@ -87,13 +87,12 @@ Future<void> main() async {
         expect(budgetCategoryId, '1');
         verify(mockFetchUser.call).called(1);
 
-        final CreateBudgetCategoryData resultingCreateBudgetCategoryData = verify(
+        verify(
           () => mockUseCases.createBudgetCategoryUseCase.call(
             userId: dummyUser.id,
-            category: captureAny(named: 'category'),
+            category: createBudgetCategoryData,
           ),
-        ).captured.first as CreateBudgetCategoryData;
-        expect(resultingCreateBudgetCategoryData, createBudgetCategoryData);
+        ).called(1);
       });
     });
 
@@ -111,10 +110,7 @@ Future<void> main() async {
         );
         await createProvider().update(updateBudgetCategoryData);
 
-        final UpdateBudgetCategoryData resultingUpdateBudgetCategoryData =
-            verify(() => mockUseCases.updateBudgetCategoryUseCase.call(captureAny())).captured.first
-                as UpdateBudgetCategoryData;
-        expect(resultingUpdateBudgetCategoryData, updateBudgetCategoryData);
+        verify(() => mockUseCases.updateBudgetCategoryUseCase.call(updateBudgetCategoryData)).called(1);
       });
     });
 
@@ -124,9 +120,7 @@ Future<void> main() async {
 
         await createProvider().delete('path');
 
-        final String resultingPath =
-            verify(() => mockUseCases.deleteBudgetCategoryUseCase.call(captureAny())).captured.first as String;
-        expect(resultingPath, 'path');
+        verify(() => mockUseCases.deleteBudgetCategoryUseCase.call('path')).called(1);
       });
     });
   });

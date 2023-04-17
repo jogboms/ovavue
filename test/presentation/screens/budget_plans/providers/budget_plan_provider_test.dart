@@ -81,10 +81,8 @@ Future<void> main() async {
         expect(budgetPlanId, '1');
         verify(mockFetchUser.call).called(1);
 
-        final CreateBudgetPlanData resultingCreateBudgetPlanData = verify(
-          () => mockUseCases.createBudgetPlanUseCase.call(userId: dummyUser.id, plan: captureAny(named: 'plan')),
-        ).captured.first as CreateBudgetPlanData;
-        expect(resultingCreateBudgetPlanData, createBudgetPlanData);
+        verify(() => mockUseCases.createBudgetPlanUseCase.call(userId: dummyUser.id, plan: createBudgetPlanData))
+            .called(1);
       });
     });
 
@@ -102,10 +100,7 @@ Future<void> main() async {
         );
         await createProvider().update(updateBudgetPlanData);
 
-        final UpdateBudgetPlanData resultingUpdateBudgetPlanData =
-            verify(() => mockUseCases.updateBudgetPlanUseCase.call(captureAny())).captured.first
-                as UpdateBudgetPlanData;
-        expect(resultingUpdateBudgetPlanData, updateBudgetPlanData);
+        verify(() => mockUseCases.updateBudgetPlanUseCase.call(updateBudgetPlanData)).called(1);
       });
     });
 
@@ -115,9 +110,7 @@ Future<void> main() async {
 
         await createProvider().delete('path');
 
-        final String resultingPath =
-            verify(() => mockUseCases.deleteBudgetPlanUseCase.call(captureAny())).captured.first as String;
-        expect(resultingPath, 'path');
+        verify(() => mockUseCases.deleteBudgetPlanUseCase.call('path')).called(1);
       });
     });
 
@@ -141,13 +134,12 @@ Future<void> main() async {
         expect(budgetPlanId, '1');
         verify(mockFetchUser.call).called(1);
 
-        final CreateBudgetAllocationData resultingCreateBudgetAllocationData = verify(
+        verify(
           () => mockUseCases.createBudgetAllocationUseCase.call(
             userId: dummyUser.id,
-            allocation: captureAny(named: 'allocation'),
+            allocation: createBudgetAllocationData,
           ),
-        ).captured.first as CreateBudgetAllocationData;
-        expect(resultingCreateBudgetAllocationData, createBudgetAllocationData);
+        ).called(1);
       });
     });
 
@@ -162,10 +154,7 @@ Future<void> main() async {
         );
         await createProvider().updateAllocation(updateBudgetAllocationData);
 
-        final UpdateBudgetAllocationData resultingUpdateBudgetAllocationData =
-            verify(() => mockUseCases.updateBudgetAllocationUseCase.call(captureAny())).captured.first
-                as UpdateBudgetAllocationData;
-        expect(resultingUpdateBudgetAllocationData, updateBudgetAllocationData);
+        verify(() => mockUseCases.updateBudgetAllocationUseCase.call(updateBudgetAllocationData)).called(1);
       });
     });
   });
