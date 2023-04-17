@@ -96,7 +96,13 @@ Registry createRegistry({
       ..set(mockRepositories.budgetPlans)
       ..set(mockRepositories.budgetCategories)
       ..set(mockRepositories.budgetAllocations)
-      ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
+      ..factory(
+        (RegistryFactory di) => CreateBudgetAllocationUseCase(
+          budgets: di(),
+          allocations: di(),
+          analytics: di(),
+        ),
+      )
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), analytics: di()))
@@ -105,7 +111,13 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
-      ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
+      ..factory(
+        (RegistryFactory di) => DeleteBudgetAllocationUseCase(
+          budgets: di(),
+          allocations: di(),
+          analytics: di(),
+        ),
+      )
       ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))

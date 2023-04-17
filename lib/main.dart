@@ -73,7 +73,7 @@ void main() async {
 
     /// UseCases.
     /// Callable classes that may contain logic or else route directly to repositories.
-    ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(budgets: di(), allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), analytics: di()))
@@ -82,7 +82,7 @@ void main() async {
     ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
-    ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
+    ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(budgets: di(), allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
