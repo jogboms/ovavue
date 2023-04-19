@@ -14,6 +14,11 @@ Future<void> main() async {
   const String budgetId = 'budget-id';
 
   final NormalizedBudgetPlanEntity expectedPlan = BudgetPlansMockImpl.generateNormalizedPlan(id: planId);
+  final List<NormalizedBudgetPlanEntity> expectedPlans = <NormalizedBudgetPlanEntity>[expectedPlan];
+  final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(
+    id: budgetId,
+    plans: expectedPlans,
+  );
 
   tearDown(mockUseCases.reset);
 
@@ -22,6 +27,11 @@ Future<void> main() async {
       final ProviderContainer container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
+          budgetsProvider.overrideWith(
+            (_) => Stream<List<BudgetViewModel>>.value(
+              <BudgetViewModel>[BudgetViewModel.fromEntity(expectedBudget)],
+            ),
+          ),
           budgetPlansProvider.overrideWith(
             (_) => Stream<List<BudgetPlanViewModel>>.value(
               <BudgetPlanViewModel>[BudgetPlanViewModel.fromEntity(expectedPlan)],
@@ -35,14 +45,11 @@ Future<void> main() async {
     }
 
     test('should show selected plan by id', () async {
-      final List<NormalizedBudgetPlanEntity> plans = <NormalizedBudgetPlanEntity>[expectedPlan];
-      final NormalizedBudgetEntity expectedBudget =
-          BudgetsMockImpl.generateNormalizedBudget(id: budgetId, plans: plans);
       final List<NormalizedBudgetAllocationEntity> expectedBudgetAllocations =
           List<NormalizedBudgetAllocationEntity>.generate(
         3,
         (int index) => BudgetAllocationsMockImpl.generateNormalizedAllocation(
-          budget: index == 0 ? expectedBudget : BudgetsMockImpl.generateNormalizedBudget(plans: plans),
+          budget: index == 0 ? expectedBudget : BudgetsMockImpl.generateNormalizedBudget(plans: expectedPlans),
           plan: expectedBudget.plans.first,
         ),
       );
@@ -58,6 +65,7 @@ Future<void> main() async {
           BudgetPlanState(
             allocation: expectedBudgetAllocations.firstWhere((_) => _.plan.id == expectedPlan.id).toViewModel(),
             plan: BudgetPlanViewModel.fromEntity(expectedPlan),
+            budget: BudgetViewModel.fromEntity(expectedBudget),
             previousAllocations: expectedBudgetAllocations
                 .map((_) => _.toViewModel())
                 .skip(1)

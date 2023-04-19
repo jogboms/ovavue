@@ -24,23 +24,26 @@ BudgetCategoryProvider budgetCategory(BudgetCategoryRef ref) {
 @visibleForTesting
 class BudgetCategoryProvider {
   const BudgetCategoryProvider({
-    required this.fetchUser,
-    required this.createBudgetCategoryUseCase,
-    required this.updateBudgetCategoryUseCase,
-    required this.deleteBudgetCategoryUseCase,
-  });
+    required Future<UserEntity> Function() fetchUser,
+    required CreateBudgetCategoryUseCase createBudgetCategoryUseCase,
+    required UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase,
+    required DeleteBudgetCategoryUseCase deleteBudgetCategoryUseCase,
+  })  : _deleteBudgetCategoryUseCase = deleteBudgetCategoryUseCase,
+        _updateBudgetCategoryUseCase = updateBudgetCategoryUseCase,
+        _createBudgetCategoryUseCase = createBudgetCategoryUseCase,
+        _fetchUser = fetchUser;
 
-  final Future<UserEntity> Function() fetchUser;
-  final CreateBudgetCategoryUseCase createBudgetCategoryUseCase;
-  final UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase;
-  final DeleteBudgetCategoryUseCase deleteBudgetCategoryUseCase;
+  final Future<UserEntity> Function() _fetchUser;
+  final CreateBudgetCategoryUseCase _createBudgetCategoryUseCase;
+  final UpdateBudgetCategoryUseCase _updateBudgetCategoryUseCase;
+  final DeleteBudgetCategoryUseCase _deleteBudgetCategoryUseCase;
 
   Future<String> create(CreateBudgetCategoryData data) async {
-    final String userId = (await fetchUser()).id;
-    return createBudgetCategoryUseCase(userId: userId, category: data);
+    final String userId = (await _fetchUser()).id;
+    return _createBudgetCategoryUseCase(userId: userId, category: data);
   }
 
-  Future<bool> update(UpdateBudgetCategoryData data) async => updateBudgetCategoryUseCase(data);
+  Future<bool> update(UpdateBudgetCategoryData data) async => _updateBudgetCategoryUseCase(data);
 
-  Future<bool> delete(String path) async => deleteBudgetCategoryUseCase(path);
+  Future<bool> delete(String path) async => _deleteBudgetCategoryUseCase(path);
 }

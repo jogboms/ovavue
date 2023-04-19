@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:ovavue/domain.dart';
-import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models.dart';
@@ -11,34 +9,23 @@ export 'models.dart';
 
 part 'selected_budget_category_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user, budgetCategories])
+@Riverpod(dependencies: <Object>[budgetPlans, budgetCategories])
 Stream<BudgetCategoryState> selectedBudgetCategory(SelectedBudgetCategoryRef ref, String id) async* {
-  final Registry registry = ref.read(registryProvider);
-  final UserEntity user = await ref.watch(userProvider.future);
+  final BudgetCategoryViewModel category = await ref.watch(
+    budgetCategoriesProvider.selectAsync(
+      (List<BudgetCategoryViewModel> categories) => categories.firstWhere((_) => _.id == id),
+    ),
+  );
+  final Iterable<BudgetPlanViewModel> plans = await ref.watch(
+    budgetPlansProvider.selectAsync(
+      (List<BudgetPlanViewModel> plans) => plans.where((_) => _.category.id == id),
+    ),
+  );
 
-  final List<BudgetCategoryViewModel> budgetCategories = await ref.watch(budgetCategoriesProvider.future);
-  final BudgetCategoryViewModel category = budgetCategories.firstWhere((_) => _.id == id);
-
-  yield* registry
-      .get<FetchBudgetPlansByCategoryUseCase>()
-      .call(userId: user.id, categoryId: id)
-      .map(
-        (NormalizedBudgetPlanEntityList plans) => BudgetCategoryState(
-          category: category,
-          plans: plans
-              .map(
-                (NormalizedBudgetPlanEntity element) => BudgetCategoryPlanViewModel(
-                  id: element.id,
-                  path: element.path,
-                  title: element.title,
-                  description: element.description,
-                  allocation: null,
-                ),
-              )
-              .toList(growable: false),
-        ),
-      )
-      .distinct();
+  yield BudgetCategoryState(
+    category: category,
+    plans: plans.map((_) => _.toViewModel(null)).toList(growable: false),
+  );
 }
 
 class BudgetCategoryState with EquatableMixin {

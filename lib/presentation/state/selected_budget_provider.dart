@@ -70,13 +70,10 @@ BudgetState _deriveState(
   return BudgetState(
     budget: budget.toViewModel(
       plans.sorted((SelectedBudgetPlanViewModel a, SelectedBudgetPlanViewModel b) {
-        final Money? moneyA = a.allocation?.amount;
-        final Money? moneyB = b.allocation?.amount;
-        if (moneyA != null && moneyB != null) {
-          return moneyB.compareTo(moneyA);
-        }
+        final Money moneyA = a.allocation?.amount ?? Money.zero;
+        final Money moneyB = b.allocation?.amount ?? Money.zero;
 
-        return 0;
+        return moneyB.compareTo(moneyA);
       }),
     ),
     allocation: allocationByCategory.values.sum.asMoney,

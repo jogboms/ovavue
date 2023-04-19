@@ -26,34 +26,39 @@ BudgetPlanProvider budgetPlan(BudgetPlanRef ref) {
 @visibleForTesting
 class BudgetPlanProvider {
   const BudgetPlanProvider({
-    required this.fetchUser,
-    required this.createBudgetPlanUseCase,
-    required this.updateBudgetPlanUseCase,
-    required this.deleteBudgetPlanUseCase,
-    required this.createBudgetAllocationUseCase,
-    required this.updateBudgetAllocationUseCase,
-  });
+    required Future<UserEntity> Function() fetchUser,
+    required CreateBudgetPlanUseCase createBudgetPlanUseCase,
+    required UpdateBudgetPlanUseCase updateBudgetPlanUseCase,
+    required DeleteBudgetPlanUseCase deleteBudgetPlanUseCase,
+    required CreateBudgetAllocationUseCase createBudgetAllocationUseCase,
+    required UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase,
+  })  : _updateBudgetAllocationUseCase = updateBudgetAllocationUseCase,
+        _createBudgetAllocationUseCase = createBudgetAllocationUseCase,
+        _deleteBudgetPlanUseCase = deleteBudgetPlanUseCase,
+        _updateBudgetPlanUseCase = updateBudgetPlanUseCase,
+        _createBudgetPlanUseCase = createBudgetPlanUseCase,
+        _fetchUser = fetchUser;
 
-  final Future<UserEntity> Function() fetchUser;
-  final CreateBudgetPlanUseCase createBudgetPlanUseCase;
-  final UpdateBudgetPlanUseCase updateBudgetPlanUseCase;
-  final DeleteBudgetPlanUseCase deleteBudgetPlanUseCase;
-  final CreateBudgetAllocationUseCase createBudgetAllocationUseCase;
-  final UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase;
+  final Future<UserEntity> Function() _fetchUser;
+  final CreateBudgetPlanUseCase _createBudgetPlanUseCase;
+  final UpdateBudgetPlanUseCase _updateBudgetPlanUseCase;
+  final DeleteBudgetPlanUseCase _deleteBudgetPlanUseCase;
+  final CreateBudgetAllocationUseCase _createBudgetAllocationUseCase;
+  final UpdateBudgetAllocationUseCase _updateBudgetAllocationUseCase;
 
   Future<String> create(CreateBudgetPlanData data) async {
-    final String userId = (await fetchUser()).id;
-    return createBudgetPlanUseCase(userId: userId, plan: data);
+    final String userId = (await _fetchUser()).id;
+    return _createBudgetPlanUseCase(userId: userId, plan: data);
   }
 
-  Future<bool> update(UpdateBudgetPlanData data) async => updateBudgetPlanUseCase(data);
+  Future<bool> update(UpdateBudgetPlanData data) async => _updateBudgetPlanUseCase(data);
 
-  Future<bool> delete(String path) async => deleteBudgetPlanUseCase(path);
+  Future<bool> delete(String path) async => _deleteBudgetPlanUseCase(path);
 
   Future<String> createAllocation(CreateBudgetAllocationData data) async {
-    final String userId = (await fetchUser()).id;
-    return createBudgetAllocationUseCase(userId: userId, allocation: data);
+    final String userId = (await _fetchUser()).id;
+    return _createBudgetAllocationUseCase(userId: userId, allocation: data);
   }
 
-  Future<bool> updateAllocation(UpdateBudgetAllocationData data) async => updateBudgetAllocationUseCase(data);
+  Future<bool> updateAllocation(UpdateBudgetAllocationData data) async => _updateBudgetAllocationUseCase(data);
 }

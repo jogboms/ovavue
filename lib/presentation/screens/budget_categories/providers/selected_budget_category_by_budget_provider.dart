@@ -4,7 +4,6 @@ import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/streams.dart';
 
 import '../../../models.dart';
 import '../../../state.dart';
@@ -15,7 +14,7 @@ export 'models.dart';
 
 part 'selected_budget_category_by_budget_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user, budgetCategories])
+@Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans, budgetCategories])
 Stream<BudgetCategoryByBudgetState> selectedBudgetCategoryByBudget(
   SelectedBudgetCategoryByBudgetRef ref, {
   required String id,
@@ -24,29 +23,27 @@ Stream<BudgetCategoryByBudgetState> selectedBudgetCategoryByBudget(
   final Registry registry = ref.read(registryProvider);
   final UserEntity user = await ref.watch(userProvider.future);
 
-  final List<BudgetCategoryViewModel> budgetCategories = await ref.watch(budgetCategoriesProvider.future);
-  final BudgetCategoryViewModel category = budgetCategories.firstWhere((_) => _.id == id);
+  final BudgetCategoryViewModel category = await ref.watch(
+    budgetCategoriesProvider.selectAsync(
+      (List<BudgetCategoryViewModel> categories) => categories.firstWhere((_) => _.id == id),
+    ),
+  );
+  final BudgetViewModel budget = await ref.watch(
+    budgetsProvider.selectAsync(
+      (List<BudgetViewModel> budgets) => budgets.firstWhere((_) => _.id == budgetId),
+    ),
+  );
+  final Iterable<BudgetPlanViewModel> budgetPlans = await ref.watch(
+    budgetPlansProvider.selectAsync(
+      (List<BudgetPlanViewModel> plans) => plans.where((_) => _.category.id == id),
+    ),
+  );
 
-  yield* CombineLatestStream.combine3(
-    registry.get<FetchBudgetUseCase>().call(userId: user.id, budgetId: budgetId),
-    registry.get<FetchBudgetPlansByCategoryUseCase>().call(userId: user.id, categoryId: id),
-    registry.get<FetchBudgetAllocationsUseCase>().call(userId: user.id, budgetId: budgetId),
-    (
-      NormalizedBudgetEntity budget,
-      NormalizedBudgetPlanEntityList budgetPlans,
-      NormalizedBudgetAllocationEntityList allocations,
-    ) {
+  yield* registry.get<FetchBudgetAllocationsUseCase>().call(userId: user.id, budgetId: budgetId).map(
+    (NormalizedBudgetAllocationEntityList allocations) {
       final Map<String, NormalizedBudgetAllocationEntity> allocationsByPlan = allocations.foldToMap((_) => _.plan.id);
       final List<BudgetCategoryPlanViewModel> plans = budgetPlans
-          .map(
-            (NormalizedBudgetPlanEntity element) => BudgetCategoryPlanViewModel(
-              id: element.id,
-              path: element.path,
-              title: element.title,
-              description: element.description,
-              allocation: allocationsByPlan[element.id]?.amount.asMoney,
-            ),
-          )
+          .map((_) => _.toViewModel(allocationsByPlan[_.id]?.amount.asMoney))
           .sorted(
             (
               BudgetCategoryPlanViewModel a,
@@ -59,11 +56,7 @@ Stream<BudgetCategoryByBudgetState> selectedBudgetCategoryByBudget(
       return BudgetCategoryByBudgetState(
         category: category,
         allocation: plans.map((_) => _.allocation).whereNotNull().sum(),
-        budget: BudgetCategoryBudgetViewModel(
-          id: budget.id,
-          path: budget.path,
-          amount: Money(budget.amount),
-        ),
+        budget: budget,
         plans: plans,
       );
     },
@@ -80,7 +73,7 @@ class BudgetCategoryByBudgetState with EquatableMixin {
 
   final BudgetCategoryViewModel category;
   final Money allocation;
-  final BudgetCategoryBudgetViewModel budget;
+  final BudgetViewModel budget;
   final List<BudgetCategoryPlanViewModel> plans;
 
   @override
