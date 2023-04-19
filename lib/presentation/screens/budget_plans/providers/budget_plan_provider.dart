@@ -23,8 +23,8 @@ BudgetPlanProvider budgetPlan(BudgetPlanRef ref) {
   );
 }
 
-@visibleForTesting
 class BudgetPlanProvider {
+  @visibleForTesting
   const BudgetPlanProvider({
     required Future<UserEntity> Function() fetchUser,
     required CreateBudgetPlanUseCase createBudgetPlanUseCase,

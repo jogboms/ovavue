@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ovavue/domain.dart';
 
 import '../../models.dart';
 import '../../routing.dart';
 import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
+import 'providers/budget_plan_provider.dart';
 import 'providers/selected_budget_plan_provider.dart';
+import 'widgets/budget_allocation_entry_form.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
   const BudgetPlanDetailPage({super.key, required this.id, this.budgetId});
@@ -55,6 +58,7 @@ class _ContentDataView extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colorScheme = theme.colorScheme;
 
+    final BudgetViewModel? budget = state.budget;
     final BudgetPlanAllocationViewModel? allocation = state.allocation;
 
     return CustomScrollView(
@@ -120,13 +124,26 @@ class _ContentDataView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 2.0),
-              ActionButtonRow(
-                actions: <ActionButton>[
-                  ActionButton(
-                    icon: Icons.edit,
-                    onPressed: () {},
-                  ),
-                ],
+              Consumer(
+                builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+                  actions: <ActionButton>[
+                    ActionButton(
+                      icon: Icons.edit,
+                      onPressed: () {},
+                    ),
+                    if (budget != null)
+                      ActionButton(
+                        icon: Icons.attach_money,
+                        onPressed: () => _handleAllocationAction(
+                          context,
+                          ref: ref,
+                          budget: budget,
+                          plan: state.plan,
+                          allocation: allocation,
+                        ),
+                      ),
+                  ],
+                ),
               ),
               const SizedBox(height: 8.0),
             ],
@@ -168,6 +185,45 @@ class _ContentDataView extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _handleAllocationAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetViewModel budget,
+    required BudgetPlanViewModel plan,
+    required BudgetPlanAllocationViewModel? allocation,
+  }) async {
+    final Money? amount = await showModalBottomSheet<Money>(
+      context: context,
+      builder: (_) => BudgetAllocationEntryForm(
+        allocation: allocation?.amount,
+        plan: state.plan,
+        budgetId: budget.id,
+      ),
+    );
+    if (amount == null) {
+      return;
+    }
+
+    final BudgetPlanProvider provider = ref.read(budgetPlanProvider);
+    if (allocation == null) {
+      await provider.createAllocation(
+        CreateBudgetAllocationData(
+          amount: amount.rawValue,
+          budget: ReferenceEntity(id: budget.id, path: budget.path),
+          plan: ReferenceEntity(id: plan.id, path: plan.path),
+        ),
+      );
+    } else {
+      await provider.updateAllocation(
+        UpdateBudgetAllocationData(
+          id: allocation.id,
+          path: allocation.path,
+          amount: amount.rawValue,
+        ),
+      );
+    }
   }
 }
 

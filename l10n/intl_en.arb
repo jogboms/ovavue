@@ -17,5 +17,14 @@
   "previousAllocationsTitle": "Previous Allocations",
   "associatedPlansTitle": "Associated Plans",
   "plansPageTitle": "Plans",
-  "categoriesPageTitle": "Categories"
+  "categoriesPageTitle": "Categories",
+  "notEnoughBudgetAmountErrorMessage": "You do not have up to that amount left",
+  "amountRemainingCaption": "{amount} left",
+  "@amountRemainingCaption": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

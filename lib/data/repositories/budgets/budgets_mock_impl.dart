@@ -33,7 +33,7 @@ class BudgetsMockImpl implements BudgetsRepository {
       path: '/budgets/$userId/$id',
       title: title ?? faker.lorem.words(2).join(' '),
       description: faker.lorem.sentence(),
-      amount: faker.randomGenerator.integer(1000000),
+      amount: (faker.randomGenerator.decimal(min: 1) * 1e9).toInt(),
       startedAt: startedAt,
       endedAt: endedAt,
       plans: plans ??
