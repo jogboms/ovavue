@@ -9,7 +9,7 @@ import '../../../state.dart';
 
 part 'budget_category_provider.g.dart';
 
-@riverpod
+@Riverpod(dependencies: <Object>[registry, user])
 BudgetCategoryProvider budgetCategory(BudgetCategoryRef ref) {
   final RegistryFactory di = ref.read(registryProvider).get;
 

@@ -28,7 +28,6 @@ class BudgetsMockImpl implements BudgetsRepository {
     id ??= faker.guid.guid();
     userId ??= AuthMockImpl.id;
     startedAt ??= faker.randomGenerator.dateTime;
-    endedAt ??= startedAt.add(const Duration(minutes: 10000));
     return NormalizedBudgetEntity(
       id: id,
       path: '/budgets/$userId/$id',
@@ -56,12 +55,16 @@ class BudgetsMockImpl implements BudgetsRepository {
   }) {
     final NormalizedBudgetEntityList items = NormalizedBudgetEntityList.generate(
       count,
-      (int index) => BudgetsMockImpl.generateNormalizedBudget(
-        title: '${clock.now().year}.${index + 1}',
-        userId: userId,
-        plans: plans,
-        startedAt: clock.monthsFromNow(index),
-      ),
+      (int index) {
+        final DateTime startedAt = clock.monthsFromNow(index);
+        return BudgetsMockImpl.generateNormalizedBudget(
+          title: '${clock.now().year}.${index + 1}',
+          userId: userId,
+          plans: plans,
+          startedAt: startedAt,
+          endedAt: count == index + 1 ? null : startedAt.add(const Duration(minutes: 10000)),
+        );
+      },
     );
     _budgets$.add(
       _budgets
@@ -139,15 +142,13 @@ class BudgetsMockImpl implements BudgetsRepository {
 
   @override
   Stream<BudgetEntity> fetchActiveBudget(String userId) => _budgets$.stream.map(
-        (Map<String, BudgetEntity> event) => (event.values.toList(growable: false)..sort(_sortFn)).first,
+        (Map<String, BudgetEntity> event) => event.values.toList(growable: false).firstWhere((_) => _.endedAt == null),
       );
 
   @override
   Stream<BudgetEntity> fetchOne({required String userId, required String budgetId}) =>
       _budgets$.stream.map((Map<String, BudgetEntity> event) => event[budgetId]!);
 }
-
-int _sortFn(BudgetEntity a, BudgetEntity b) => b.startedAt.compareTo(a.startedAt);
 
 extension on BudgetEntity {
   BudgetEntity copyWith({

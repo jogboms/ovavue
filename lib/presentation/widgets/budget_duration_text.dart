@@ -2,22 +2,30 @@ import 'package:flutter/material.dart';
 
 import '../utils.dart';
 
+enum BudgetDurationTextType { small, medium, large }
+
 class BudgetDurationText extends StatelessWidget {
   const BudgetDurationText({
     super.key,
     required this.startedAt,
     required this.endedAt,
-  }) : isLarge = false;
+  }) : type = BudgetDurationTextType.small;
+
+  const BudgetDurationText.medium({
+    super.key,
+    required this.startedAt,
+    required this.endedAt,
+  }) : type = BudgetDurationTextType.medium;
 
   const BudgetDurationText.large({
     super.key,
     required this.startedAt,
     required this.endedAt,
-  }) : isLarge = true;
+  }) : type = BudgetDurationTextType.large;
 
   final DateTime startedAt;
   final DateTime? endedAt;
-  final bool isLarge;
+  final BudgetDurationTextType type;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +34,18 @@ class BudgetDurationText extends StatelessWidget {
     final ColorScheme colorScheme = theme.colorScheme;
 
     final DateTime? endedAt = this.endedAt;
+    final TextStyle? textStyle;
+    switch (type) {
+      case BudgetDurationTextType.small:
+        textStyle = textTheme.bodySmall;
+        break;
+      case BudgetDurationTextType.medium:
+        textStyle = textTheme.titleSmall;
+        break;
+      case BudgetDurationTextType.large:
+        textStyle = textTheme.titleMedium;
+        break;
+    }
 
     return Text.rich(
       TextSpan(
@@ -37,10 +57,7 @@ class BudgetDurationText extends StatelessWidget {
           ]
         ],
       ),
-      style: (isLarge ? textTheme.titleMedium : textTheme.bodySmall)?.copyWith(
-        wordSpacing: 8,
-        color: colorScheme.outline,
-      ),
+      style: textStyle?.copyWith(wordSpacing: 4, color: colorScheme.outline),
     );
   }
 }

@@ -7,15 +7,16 @@ import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart' hide NormalizedBudgetAllocationViewModelExtension;
 import 'package:riverpod/riverpod.dart';
 
-import '../../../../utils.dart';
+import '../../utils.dart';
 
 Future<void> main() async {
   final UserEntity dummyUser = UsersMockImpl.user;
+  const String budgetId = 'budget-id';
 
   tearDown(mockUseCases.reset);
 
-  group('ActiveBudgetProvider', () {
-    Future<ActiveBudgetState> createProviderStream() {
+  group('SelectedBudgetProvider', () {
+    Future<BudgetState> createProviderStream() {
       final ProviderContainer container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
@@ -23,10 +24,10 @@ Future<void> main() async {
       );
 
       addTearDown(container.dispose);
-      return container.read(activeBudgetProvider.future);
+      return container.read(selectedBudgetProvider(budgetId).future);
     }
 
-    test('should show active budget', () async {
+    test('should show selected budget by id', () async {
       final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(
         plans: <NormalizedBudgetPlanEntity>[
           BudgetPlansMockImpl.generateNormalizedPlan(),
@@ -38,14 +39,14 @@ Future<void> main() async {
           plan: expectedBudget.plans.random(),
         ),
       ];
-      when(() => mockUseCases.fetchActiveBudgetUseCase.call(any()))
+      when(() => mockUseCases.fetchBudgetUseCase.call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')))
           .thenAnswer((_) => Stream<NormalizedBudgetEntity>.value(expectedBudget));
       when(
         () => mockUseCases.fetchBudgetAllocationsUseCase
             .call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')),
       ).thenAnswer((_) => Stream<NormalizedBudgetAllocationEntityList>.value(expectedBudgetAllocations));
 
-      final List<ActiveBudgetPlanViewModel> expectedPlans = expectedBudget.plans
+      final List<SelectedBudgetPlanViewModel> expectedPlans = expectedBudget.plans
           .map(
             (NormalizedBudgetPlanEntity plan) => plan.toViewModel(
               allocation: expectedBudgetAllocations
@@ -59,7 +60,7 @@ Future<void> main() async {
       expect(
         createProviderStream(),
         completion(
-          ActiveBudgetState(
+          BudgetState(
             budget: expectedBudget.toViewModel(expectedPlans),
             allocation: expectedPlans.map((_) => _.allocation?.amount).whereNotNull().sum(),
             categories: expectedBudget.plans
