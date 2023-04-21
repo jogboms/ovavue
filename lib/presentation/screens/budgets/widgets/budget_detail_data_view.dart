@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/core.dart';
+import 'package:ovavue/domain.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import '../../../models.dart';
@@ -18,6 +20,7 @@ class BudgetDetailDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final bool active = state.budget.endedAt == null;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -50,25 +53,33 @@ class BudgetDetailDataView extends StatelessWidget {
           ),
         ),
         SliverPinnedHeader(
-          child: ActionButtonRow(
-            actions: <ActionButton>[
-              ActionButton(
-                icon: Icons.add_chart,
-                onPressed: () {},
-              ),
-              ActionButton(
-                icon: Icons.add_moderator_outlined,
-                onPressed: () {},
-              ),
-              ActionButton(
-                icon: Icons.edit,
-                onPressed: () {},
-              ),
-              ActionButton(
-                icon: Icons.copy_outlined,
-                onPressed: () {},
-              ),
-            ],
+          child: Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
+              actions: <ActionButton>[
+                if (active) ...<ActionButton>[
+                  ActionButton(
+                    icon: Icons.attach_money_outlined,
+                    onPressed: () => _handleAllocationAction(context, ref: ref, budget: state.budget),
+                  ),
+                  ActionButton(
+                    icon: Icons.add_chart, // TODO(Jogboms): fix icon
+                    onPressed: () {},
+                  ),
+                  ActionButton(
+                    icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
+                    onPressed: () {},
+                  ),
+                  ActionButton(
+                    icon: Icons.edit,
+                    onPressed: () {},
+                  ),
+                ],
+                ActionButton(
+                  icon: Icons.copy_outlined, // TODO(Jogboms): fix icon
+                  onPressed: () {},
+                ),
+              ],
+            ),
           ),
         ),
         SliverPinnedTitleCountHeader(
@@ -102,6 +113,31 @@ class BudgetDetailDataView extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _handleAllocationAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required SelectedBudgetViewModel budget,
+  }) async {
+    final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
+      context: context,
+      budgetId: budget.id,
+      plansById: budget.plans.map((_) => _.id),
+      plan: null,
+      allocation: null,
+    );
+    if (result == null) {
+      return;
+    }
+
+    await ref.read(budgetPlanProvider).createAllocation(
+          CreateBudgetAllocationData(
+            amount: result.amount.rawValue,
+            budget: ReferenceEntity(id: budget.id, path: budget.path),
+            plan: ReferenceEntity(id: result.plan.id, path: result.plan.path),
+          ),
+        );
   }
 }
 

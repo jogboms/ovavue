@@ -9,7 +9,6 @@ export 'presentation/screens/budget_categories/providers/selected_budget_categor
 export 'presentation/screens/budget_categories/providers/selected_budget_category_provider.dart';
 export 'presentation/screens/budget_plans/budget_plan_detail_page.dart';
 export 'presentation/screens/budget_plans/budget_plans_page.dart';
-export 'presentation/screens/budget_plans/providers/budget_plan_provider.dart';
 export 'presentation/screens/budget_plans/providers/selected_budget_plan_provider.dart';
 export 'presentation/screens/budgets/active_budget_page.dart';
 export 'presentation/screens/budgets/grouped_budget_plans_page.dart';

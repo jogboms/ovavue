@@ -5,8 +5,8 @@ import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 import 'package:riverpod/riverpod.dart';
 
-import '../../../../mocks.dart';
-import '../../../../utils.dart';
+import '../../mocks.dart';
+import '../../utils.dart';
 
 Future<void> main() async {
   group('BudgetPlanProvider', () {

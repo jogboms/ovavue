@@ -4,12 +4,11 @@ import 'package:ovavue/domain.dart';
 
 import '../../models.dart';
 import '../../routing.dart';
+import '../../state.dart';
 import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
-import 'providers/budget_plan_provider.dart';
 import 'providers/selected_budget_plan_provider.dart';
-import 'widgets/budget_allocation_entry_form.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
   const BudgetPlanDetailPage({super.key, required this.id, this.budgetId});
@@ -131,7 +130,7 @@ class _ContentDataView extends StatelessWidget {
                       icon: Icons.edit,
                       onPressed: () {},
                     ),
-                    if (budget != null)
+                    if (budget != null && budget.active)
                       ActionButton(
                         icon: Icons.attach_money,
                         onPressed: () => _handleAllocationAction(
@@ -194,15 +193,14 @@ class _ContentDataView extends StatelessWidget {
     required BudgetPlanViewModel plan,
     required BudgetPlanAllocationViewModel? allocation,
   }) async {
-    final Money? amount = await showModalBottomSheet<Money>(
+    final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
       context: context,
-      builder: (_) => BudgetAllocationEntryForm(
-        allocation: allocation?.amount,
-        plan: state.plan,
-        budgetId: budget.id,
-      ),
+      allocation: allocation?.amount,
+      plan: plan,
+      budgetId: budget.id,
+      plansById: budget.plans.map((_) => _.id),
     );
-    if (amount == null) {
+    if (result == null) {
       return;
     }
 
@@ -210,7 +208,7 @@ class _ContentDataView extends StatelessWidget {
     if (allocation == null) {
       await provider.createAllocation(
         CreateBudgetAllocationData(
-          amount: amount.rawValue,
+          amount: result.amount.rawValue,
           budget: ReferenceEntity(id: budget.id, path: budget.path),
           plan: ReferenceEntity(id: plan.id, path: plan.path),
         ),
@@ -220,7 +218,7 @@ class _ContentDataView extends StatelessWidget {
         UpdateBudgetAllocationData(
           id: allocation.id,
           path: allocation.path,
-          amount: amount.rawValue,
+          amount: result.amount.rawValue,
         ),
       );
     }

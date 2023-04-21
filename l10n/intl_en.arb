@@ -19,6 +19,8 @@
   "plansPageTitle": "Plans",
   "categoriesPageTitle": "Categories",
   "notEnoughBudgetAmountErrorMessage": "You do not have up to that amount left",
+  "createPlanCaption": "Create new budget plan",
+  "selectPlanCaption": "Select a plan",
   "amountRemainingCaption": "{amount} left",
   "@amountRemainingCaption": {
     "placeholders": {

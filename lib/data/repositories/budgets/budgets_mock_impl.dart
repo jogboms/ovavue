@@ -49,9 +49,9 @@ class BudgetsMockImpl implements BudgetsRepository {
       BehaviorSubject<Map<String, BudgetEntity>>.seeded(_budgets);
 
   NormalizedBudgetEntityList seed(
-    int count, {
+    int count,
+    NormalizedBudgetPlanEntityList Function(int) plansBuilder, {
     String? userId,
-    NormalizedBudgetPlanEntityList? plans,
   }) {
     final NormalizedBudgetEntityList items = NormalizedBudgetEntityList.generate(
       count,
@@ -60,7 +60,7 @@ class BudgetsMockImpl implements BudgetsRepository {
         return BudgetsMockImpl.generateNormalizedBudget(
           title: '${clock.now().year}.${index + 1}',
           userId: userId,
-          plans: plans,
+          plans: plansBuilder(index),
           startedAt: startedAt,
           endedAt: count == index + 1 ? null : startedAt.add(const Duration(minutes: 10000)),
         );

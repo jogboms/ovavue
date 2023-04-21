@@ -78,7 +78,7 @@ class _ContentDataView extends StatelessWidget {
 
                 return ListTile(
                   title: Text(budget.title),
-                  subtitle: budget.endedAt == null
+                  subtitle: budget.active
                       ? Align(
                           alignment: Alignment.bottomLeft,
                           child: Container(
@@ -102,9 +102,14 @@ class _ContentDataView extends StatelessWidget {
                         ),
                   trailing: Text(
                     budget.amount.formatted,
-                    style: textTheme.titleMedium,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: budget.active ? colorScheme.onInverseSurface : null,
+                    ),
                   ),
-                  onTap: () => context.router.goToBudgetDetail(id: budget.id),
+                  selected: budget.active,
+                  selectedTileColor: colorScheme.inverseSurface,
+                  selectedColor: colorScheme.onInverseSurface,
+                  onTap: budget.active ? null : () => context.router.goToBudgetDetail(id: budget.id),
                 );
               },
               childCount: data.length,

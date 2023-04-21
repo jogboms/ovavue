@@ -32,7 +32,14 @@ class FetchBudgetUseCase {
           BudgetEntity budget,
           BudgetPlanEntityList plans,
           BudgetCategoryEntityList categories,
-        ) =>
-            budget.normalize(plans.normalize(categories)),
+        ) {
+          final Iterable<String> budgetPlansById = budget.plans.map((_) => _.id);
+          return budget.normalize(
+            plans
+                .where((_) => budgetPlansById.contains(_.id))
+                .map((_) => _.normalize(categories))
+                .toList(growable: false),
+          );
+        },
       );
 }

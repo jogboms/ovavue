@@ -44,6 +44,8 @@ class BudgetViewModel with EquatableMixin {
   final DateTime createdAt;
   final DateTime? updatedAt;
 
+  bool get active => endedAt == null;
+
   @override
   List<Object?> get props =>
       <Object?>[id, path, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];

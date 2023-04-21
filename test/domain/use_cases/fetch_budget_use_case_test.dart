@@ -31,8 +31,15 @@ void main() {
 
       when(() => budgetsRepository.fetchOne(userId: '1', budgetId: '1'))
           .thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget.asBudgetEntity));
-      when(() => budgetPlansRepository.fetch(any()))
-          .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(plans.asBudgetPlanEntityList));
+      when(() => budgetPlansRepository.fetch(any())).thenAnswer(
+        (_) => Stream<BudgetPlanEntityList>.value(
+          <NormalizedBudgetPlanEntity>[
+            ...plans,
+            BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first),
+            BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first),
+          ].asBudgetPlanEntityList,
+        ),
+      );
       when(() => budgetCategoriesRepository.fetch(any()))
           .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
