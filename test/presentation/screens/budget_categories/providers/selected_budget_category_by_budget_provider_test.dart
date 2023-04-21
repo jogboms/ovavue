@@ -25,7 +25,7 @@ Future<void> main() async {
   tearDown(mockUseCases.reset);
 
   group('SelectedBudgetCategoryByBudgetProvider', () {
-    Future<BudgetCategoryByBudgetState> createProviderStream() {
+    Future<BudgetCategoryState> createProviderStream() {
       final ProviderContainer container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
@@ -69,7 +69,7 @@ Future<void> main() async {
       expect(
         createProviderStream(),
         completion(
-          BudgetCategoryByBudgetState(
+          BudgetCategoryState(
             budget: BudgetViewModel.fromEntity(expectedBudget),
             plans: expectedPlans
                 .map(

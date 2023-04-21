@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
@@ -8,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../models.dart';
 import '../../../state.dart';
 import '../../../utils.dart';
+import 'budget_category_state.dart';
 import 'models.dart';
 
 export 'models.dart';
@@ -15,7 +15,7 @@ export 'models.dart';
 part 'selected_budget_category_by_budget_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans, budgetCategories])
-Stream<BudgetCategoryByBudgetState> selectedBudgetCategoryByBudget(
+Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
   SelectedBudgetCategoryByBudgetRef ref, {
   required String id,
   required String budgetId,
@@ -53,7 +53,7 @@ Stream<BudgetCategoryByBudgetState> selectedBudgetCategoryByBudget(
           )
           .toList(growable: false);
 
-      return BudgetCategoryByBudgetState(
+      return BudgetCategoryState(
         category: category,
         allocation: plans.map((_) => _.allocation).whereNotNull().sum(),
         budget: budget,
@@ -61,21 +61,4 @@ Stream<BudgetCategoryByBudgetState> selectedBudgetCategoryByBudget(
       );
     },
   ).distinct();
-}
-
-class BudgetCategoryByBudgetState with EquatableMixin {
-  const BudgetCategoryByBudgetState({
-    required this.category,
-    required this.allocation,
-    required this.budget,
-    required this.plans,
-  });
-
-  final BudgetCategoryViewModel category;
-  final Money allocation;
-  final BudgetViewModel budget;
-  final List<BudgetCategoryPlanViewModel> plans;
-
-  @override
-  List<Object?> get props => <Object?>[category, allocation, budget, plans];
 }

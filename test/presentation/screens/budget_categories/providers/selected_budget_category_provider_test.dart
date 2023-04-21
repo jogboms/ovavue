@@ -58,6 +58,8 @@ Future<void> main() async {
                 )
                 .toList(),
             category: BudgetCategoryViewModel.fromEntity(expectedCategory),
+            allocation: null,
+            budget: null,
           ),
         ),
       );

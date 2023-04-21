@@ -58,7 +58,7 @@ class _ContentDataView extends StatelessWidget {
           child: ActionButtonRow(
             actions: <ActionButton>[
               ActionButton(
-                icon: Icons.add_chart,
+                icon: Icons.add,
                 onPressed: () {},
               ),
             ],

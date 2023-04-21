@@ -1,11 +1,9 @@
-import 'package:equatable/equatable.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models.dart';
 import '../../../state.dart';
-import 'models.dart';
-
-export 'models.dart';
+import 'budget_category_state.dart';
+import 'selected_budget_category_by_budget_provider.dart';
 
 part 'selected_budget_category_provider.g.dart';
 
@@ -25,18 +23,7 @@ Stream<BudgetCategoryState> selectedBudgetCategory(SelectedBudgetCategoryRef ref
   yield BudgetCategoryState(
     category: category,
     plans: plans.map((_) => _.toViewModel(null)).toList(growable: false),
+    allocation: null,
+    budget: null,
   );
-}
-
-class BudgetCategoryState with EquatableMixin {
-  const BudgetCategoryState({
-    required this.category,
-    required this.plans,
-  });
-
-  final BudgetCategoryViewModel category;
-  final List<BudgetCategoryPlanViewModel> plans;
-
-  @override
-  List<Object?> get props => <Object?>[category, plans];
 }
