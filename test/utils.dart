@@ -120,7 +120,14 @@ Registry createRegistry({
         ),
       )
       ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
-      ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), analytics: di()))
+      ..factory(
+        (RegistryFactory di) => DeleteBudgetPlanUseCase(
+          budgets: di(),
+          plans: di(),
+          allocations: di(),
+          analytics: di(),
+        ),
+      )
       ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
       ..factory(

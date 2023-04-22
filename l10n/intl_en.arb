@@ -21,6 +21,7 @@
   "notEnoughBudgetAmountErrorMessage": "You do not have up to that amount left",
   "createPlanCaption": "Create new budget plan",
   "selectPlanCaption": "Select a plan",
+  "deletePlanAreYouSureAboutThisMessage": "This action is non-reversible and will also remove all allocations associated with this budget plan. Are you sure about this?",
   "amountRemainingCaption": "{amount} left",
   "@amountRemainingCaption": {
     "placeholders": {

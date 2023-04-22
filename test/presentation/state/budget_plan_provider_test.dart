@@ -106,11 +106,11 @@ Future<void> main() async {
 
     group('Delete', () {
       test('should delete existing budget plan', () async {
-        when(() => mockUseCases.deleteBudgetPlanUseCase.call(any())).thenAnswer((_) async => true);
+        when(() => mockUseCases.deleteBudgetPlanUseCase.call(id: '1', path: 'path')).thenAnswer((_) async => true);
 
-        await createProvider().delete('path');
+        await createProvider().delete(id: '1', path: 'path');
 
-        verify(() => mockUseCases.deleteBudgetPlanUseCase.call('path')).called(1);
+        verify(() => mockUseCases.deleteBudgetPlanUseCase.call(id: '1', path: 'path')).called(1);
       });
     });
 

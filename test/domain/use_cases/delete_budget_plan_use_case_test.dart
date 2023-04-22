@@ -7,25 +7,29 @@ import '../../utils.dart';
 void main() {
   group('DeleteBudgetPlanUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final BudgetPlansRepository budgetPlansRepository = mockRepositories.budgetPlans;
-    final DeleteBudgetPlanUseCase useCase = DeleteBudgetPlanUseCase(plans: budgetPlansRepository, analytics: analytics);
+    final DeleteBudgetPlanUseCase useCase = DeleteBudgetPlanUseCase(
+      budgets: mockRepositories.budgets,
+      plans: mockRepositories.budgetPlans,
+      allocations: mockRepositories.budgetAllocations,
+      analytics: analytics,
+    );
 
     tearDown(() {
       analytics.reset();
-      reset(budgetPlansRepository);
+      mockRepositories.reset();
     });
 
     test('should delete a budget plan', () async {
-      when(() => budgetPlansRepository.delete(any())).thenAnswer((_) async => true);
+      when(() => mockRepositories.budgetPlans.delete(any())).thenAnswer((_) async => true);
 
-      await expectLater(useCase('path'), completion(true));
+      await expectLater(useCase(id: 'id', path: 'path'), completion(true));
       expect(analytics.events, containsOnce(AnalyticsEvent.deleteBudgetPlan('path')));
     });
 
     test('should bubble delete errors', () {
-      when(() => budgetPlansRepository.delete(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetPlans.delete(any())).thenThrow(Exception('an error'));
 
-      expect(() => useCase('path'), throwsException);
+      expect(() => useCase(id: 'id', path: 'path'), throwsException);
     });
   });
 }

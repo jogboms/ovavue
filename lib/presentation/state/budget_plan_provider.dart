@@ -54,7 +54,12 @@ class BudgetPlanProvider {
 
   Future<bool> update(UpdateBudgetPlanData data) async => _updateBudgetPlanUseCase(data);
 
-  Future<bool> delete(String path) async => _deleteBudgetPlanUseCase(path);
+  Future<bool> delete({
+    required String id,
+    required String path,
+  }) async {
+    return _deleteBudgetPlanUseCase(id: id, path: path);
+  }
 
   Future<String> createAllocation(CreateBudgetAllocationData data) async {
     final String userId = (await _fetchUser()).id;
