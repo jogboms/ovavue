@@ -15,10 +15,7 @@ Future<void> main() async {
 
   final NormalizedBudgetPlanEntity expectedPlan = BudgetPlansMockImpl.generateNormalizedPlan(id: planId);
   final List<NormalizedBudgetPlanEntity> expectedPlans = <NormalizedBudgetPlanEntity>[expectedPlan];
-  final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(
-    id: budgetId,
-    plans: expectedPlans,
-  );
+  final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(id: budgetId);
 
   tearDown(mockUseCases.reset);
 
@@ -29,7 +26,7 @@ Future<void> main() async {
           userProvider.overrideWith((_) async => dummyUser),
           budgetsProvider.overrideWith(
             (_) => Stream<List<BudgetViewModel>>.value(
-              <BudgetViewModel>[BudgetViewModel.fromEntity(expectedBudget)],
+              <BudgetViewModel>[BudgetViewModel.fromEntity(expectedBudget, expectedPlans)],
             ),
           ),
           budgetPlansProvider.overrideWith(
@@ -49,8 +46,8 @@ Future<void> main() async {
           List<NormalizedBudgetAllocationEntity>.generate(
         3,
         (int index) => BudgetAllocationsMockImpl.generateNormalizedAllocation(
-          budget: index == 0 ? expectedBudget : BudgetsMockImpl.generateNormalizedBudget(plans: expectedPlans),
-          plan: expectedBudget.plans.first,
+          budget: index == 0 ? expectedBudget : BudgetsMockImpl.generateNormalizedBudget(),
+          plan: expectedPlans.first,
         ),
       );
 
@@ -65,7 +62,7 @@ Future<void> main() async {
           BudgetPlanState(
             allocation: expectedBudgetAllocations.firstWhere((_) => _.plan.id == expectedPlan.id).toViewModel(),
             plan: BudgetPlanViewModel.fromEntity(expectedPlan),
-            budget: BudgetViewModel.fromEntity(expectedBudget),
+            budget: BudgetViewModel.fromEntity(expectedBudget, expectedPlans),
             previousAllocations: expectedBudgetAllocations
                 .map((_) => _.toViewModel())
                 .skip(1)

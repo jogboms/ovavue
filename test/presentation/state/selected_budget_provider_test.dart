@@ -28,25 +28,24 @@ Future<void> main() async {
     }
 
     test('should show selected budget by id', () async {
-      final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(
-        plans: <NormalizedBudgetPlanEntity>[
-          BudgetPlansMockImpl.generateNormalizedPlan(),
-        ],
-      );
+      final List<NormalizedBudgetPlanEntity> expectedPlans = <NormalizedBudgetPlanEntity>[
+        BudgetPlansMockImpl.generateNormalizedPlan(),
+      ];
+      final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget();
       final List<NormalizedBudgetAllocationEntity> expectedBudgetAllocations = <NormalizedBudgetAllocationEntity>[
         BudgetAllocationsMockImpl.generateNormalizedAllocation(
           budget: expectedBudget,
-          plan: expectedBudget.plans.random(),
+          plan: expectedPlans.random(),
         ),
       ];
       when(() => mockUseCases.fetchBudgetUseCase.call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')))
           .thenAnswer((_) => Stream<NormalizedBudgetEntity>.value(expectedBudget));
       when(
-        () => mockUseCases.fetchBudgetAllocationsUseCase
+        () => mockUseCases.fetchBudgetAllocationsByBudgetUseCase
             .call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')),
       ).thenAnswer((_) => Stream<NormalizedBudgetAllocationEntityList>.value(expectedBudgetAllocations));
 
-      final List<SelectedBudgetPlanViewModel> expectedPlans = expectedBudget.plans
+      final List<SelectedBudgetPlanViewModel> expectedPlanViewModels = expectedPlans
           .map(
             (NormalizedBudgetPlanEntity plan) => plan.toViewModel(
               allocation: expectedBudgetAllocations
@@ -61,9 +60,9 @@ Future<void> main() async {
         createProviderStream(),
         completion(
           BudgetState(
-            budget: expectedBudget.toViewModel(expectedPlans),
-            allocation: expectedPlans.map((_) => _.allocation?.amount).whereNotNull().sum(),
-            categories: expectedBudget.plans
+            budget: expectedBudget.toViewModel(expectedPlanViewModels),
+            allocation: expectedPlanViewModels.map((_) => _.allocation?.amount).whereNotNull().sum(),
+            categories: expectedPlans
                 .uniqueBy((_) => _.category.id)
                 .map((_) => _.category)
                 .map(

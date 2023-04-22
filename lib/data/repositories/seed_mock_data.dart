@@ -17,23 +17,7 @@ void seedMockData() {
     5,
     (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId, category: categories.random()),
   );
-  final int plansLastIndex = plans.length - 1;
-  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(
-    15,
-    (_) {
-      final int selectedPlansStartIndex = random.nextInt(plansLastIndex);
-      final int selectedPlansLength = random.nextInt(plansLastIndex);
-      final List<BaseBudgetPlanEntity<BudgetCategoryEntity>> selectedPlans = plans.sublist(
-        selectedPlansStartIndex,
-        min(plansLastIndex, selectedPlansStartIndex + selectedPlansLength),
-      );
-      if (selectedPlans.isEmpty) {
-        return plans.sublist(0, 1);
-      }
-      return selectedPlans;
-    },
-    userId: userId,
-  );
+  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(15, userId: userId);
   final Map<String, NormalizedBudgetEntity> budgetById = budgets.foldToMap((_) => _.id);
   final Map<String, int> budgetToAmount = budgetById.map(
     (String key, NormalizedBudgetEntity value) => MapEntry<String, int>(key, value.amount),
@@ -43,7 +27,7 @@ void seedMockData() {
   final int preferredAllocationCount = budgets.length * plans.length;
   for (int i = 0; i < preferredAllocationCount; i++) {
     final String budgetId = budgetById.keys.random();
-    final NormalizedBudgetPlanEntity plan = budgetById[budgetId]!.plans.random();
+    final NormalizedBudgetPlanEntity plan = plans.random();
 
     final int budget = budgetToAmount[budgetId] ?? 0;
     final int amount = random.nextInt(max(1, (budget * random.nextDouble()).toInt()));

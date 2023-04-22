@@ -7,9 +7,11 @@ import '../../utils.dart';
 
 void main() {
   group('CreateUserUseCase', () {
-    final UsersRepository usersRepository = mockRepositories.users;
     final LogAnalytics analytics = LogAnalytics();
-    final CreateUserUseCase useCase = CreateUserUseCase(users: usersRepository, analytics: analytics);
+    final CreateUserUseCase useCase = CreateUserUseCase(
+      users: mockRepositories.users,
+      analytics: analytics,
+    );
 
     final AccountEntity dummyAccountModel = AuthMockImpl.generateAccount();
 
@@ -18,19 +20,19 @@ void main() {
     });
 
     tearDown(() {
-      reset(usersRepository);
+      mockRepositories.reset();
       analytics.reset();
     });
 
     test('should create a user', () async {
-      when(() => usersRepository.create(any())).thenAnswer((_) async => dummyAccountModel.id);
+      when(() => mockRepositories.users.create(any())).thenAnswer((_) async => dummyAccountModel.id);
 
       await expectLater(useCase(dummyAccountModel), completion(dummyAccountModel.id));
       expect(analytics.events, containsOnce(AnalyticsEvent.createUser(dummyAccountModel.id)));
     });
 
     test('should bubble create errors', () {
-      when(() => usersRepository.create(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.users.create(any())).thenThrow(Exception('an error'));
 
       expect(() => useCase(dummyAccountModel), throwsException);
     });

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
@@ -32,6 +34,7 @@ Future<void> main() async {
           deleteBudgetPlanUseCase: mockUseCases.deleteBudgetPlanUseCase,
           createBudgetAllocationUseCase: mockUseCases.createBudgetAllocationUseCase,
           updateBudgetAllocationUseCase: mockUseCases.updateBudgetAllocationUseCase,
+          deleteBudgetAllocationUseCase: mockUseCases.deleteBudgetAllocationUseCase,
         );
 
     test('should create new instance when read', () {
@@ -104,13 +107,69 @@ Future<void> main() async {
       });
     });
 
+    group('Update category', () {
+      test('should update existing budget plan\'s category', () async {
+        when(() => mockUseCases.updateBudgetPlanUseCase.call(any())).thenAnswer((_) async => true);
+
+        final BudgetCategoryViewModel expectedCategory = BudgetCategoryViewModel(
+          id: '1',
+          path: 'path',
+          title: 'title',
+          description: 'description',
+          icon: const IconData(0),
+          brightness: Brightness.dark,
+          foregroundColor: const Color(0xFFFFFFFF),
+          backgroundColor: const Color(0xFFFFFFFF),
+          createdAt: DateTime(0),
+          updatedAt: DateTime(0),
+        );
+        final BudgetPlanViewModel expectedPlan = BudgetPlanViewModel(
+          id: '1',
+          path: 'path',
+          title: 'title',
+          description: 'description',
+          category: expectedCategory,
+          createdAt: DateTime(0),
+          updatedAt: DateTime(0),
+        );
+
+        const UpdateBudgetPlanData updateBudgetPlanData = UpdateBudgetPlanData(
+          id: '1',
+          path: 'path',
+          title: 'title',
+          description: 'description',
+          categoryId: '1',
+          categoryPath: 'path',
+        );
+        await createProvider().updateCategory(plan: expectedPlan, category: expectedCategory);
+
+        final UpdateBudgetPlanData updateData =
+            verify(() => mockUseCases.updateBudgetPlanUseCase.call(captureAny())).capturedType();
+        expect(updateData.id, updateBudgetPlanData.id);
+        expect(updateData.path, updateBudgetPlanData.path);
+      });
+    });
+
     group('Delete', () {
       test('should delete existing budget plan', () async {
-        when(() => mockUseCases.deleteBudgetPlanUseCase.call(id: '1', path: 'path')).thenAnswer((_) async => true);
+        when(mockFetchUser.call).thenAnswer((_) async => dummyUser);
+        when(() => mockUseCases.deleteBudgetPlanUseCase.call(userId: dummyUser.id, id: '1', path: 'path'))
+            .thenAnswer((_) async => true);
 
         await createProvider().delete(id: '1', path: 'path');
 
-        verify(() => mockUseCases.deleteBudgetPlanUseCase.call(id: '1', path: 'path')).called(1);
+        verify(() => mockUseCases.deleteBudgetPlanUseCase.call(userId: dummyUser.id, id: '1', path: 'path')).called(1);
+      });
+    });
+
+    group('Delete allocation', () {
+      test('should delete existing budget plan', () async {
+        when(mockFetchUser.call).thenAnswer((_) async => dummyUser);
+        when(() => mockUseCases.deleteBudgetAllocationUseCase.call('path')).thenAnswer((_) async => true);
+
+        await createProvider().deleteAllocation('path');
+
+        verify(() => mockUseCases.deleteBudgetAllocationUseCase.call('path')).called(1);
       });
     });
 

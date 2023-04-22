@@ -21,6 +21,7 @@ BudgetPlanProvider budgetPlan(BudgetPlanRef ref) {
     deleteBudgetPlanUseCase: di(),
     createBudgetAllocationUseCase: di(),
     updateBudgetAllocationUseCase: di(),
+    deleteBudgetAllocationUseCase: di(),
   );
 }
 
@@ -33,7 +34,9 @@ class BudgetPlanProvider {
     required DeleteBudgetPlanUseCase deleteBudgetPlanUseCase,
     required CreateBudgetAllocationUseCase createBudgetAllocationUseCase,
     required UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase,
-  })  : _updateBudgetAllocationUseCase = updateBudgetAllocationUseCase,
+    required DeleteBudgetAllocationUseCase deleteBudgetAllocationUseCase,
+  })  : _deleteBudgetAllocationUseCase = deleteBudgetAllocationUseCase,
+        _updateBudgetAllocationUseCase = updateBudgetAllocationUseCase,
         _createBudgetAllocationUseCase = createBudgetAllocationUseCase,
         _deleteBudgetPlanUseCase = deleteBudgetPlanUseCase,
         _updateBudgetPlanUseCase = updateBudgetPlanUseCase,
@@ -46,6 +49,7 @@ class BudgetPlanProvider {
   final DeleteBudgetPlanUseCase _deleteBudgetPlanUseCase;
   final CreateBudgetAllocationUseCase _createBudgetAllocationUseCase;
   final UpdateBudgetAllocationUseCase _updateBudgetAllocationUseCase;
+  final DeleteBudgetAllocationUseCase _deleteBudgetAllocationUseCase;
 
   Future<String> create(CreateBudgetPlanData data) async {
     final String userId = (await _fetchUser()).id;
@@ -58,7 +62,8 @@ class BudgetPlanProvider {
     required String id,
     required String path,
   }) async {
-    return _deleteBudgetPlanUseCase(id: id, path: path);
+    final String userId = (await _fetchUser()).id;
+    return _deleteBudgetPlanUseCase(userId: userId, id: id, path: path);
   }
 
   Future<String> createAllocation(CreateBudgetAllocationData data) async {
@@ -67,6 +72,8 @@ class BudgetPlanProvider {
   }
 
   Future<bool> updateAllocation(UpdateBudgetAllocationData data) async => _updateBudgetAllocationUseCase(data);
+
+  Future<bool> deleteAllocation(String path) async => _deleteBudgetAllocationUseCase(path);
 
   Future<bool> updateCategory({
     required BudgetPlanViewModel plan,

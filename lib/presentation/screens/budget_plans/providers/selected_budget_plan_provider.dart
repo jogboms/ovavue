@@ -20,39 +20,42 @@ Stream<BudgetPlanState> selectedBudgetPlan(
   final Registry registry = ref.read(registryProvider);
   final UserEntity user = await ref.watch(userProvider.future);
 
-  final BudgetPlanViewModel plan = await ref.watch(
+  final BudgetPlanViewModel? plan = await ref.watch(
     budgetPlansProvider.selectAsync(
-      (List<BudgetPlanViewModel> plans) => plans.firstWhere((_) => _.id == id),
-    ),
-  );
-  final BudgetViewModel? budget = await ref.watch(
-    budgetsProvider.selectAsync(
-      (List<BudgetViewModel> budgets) => budgets.firstWhereOrNull((_) => _.id == budgetId),
+      (List<BudgetPlanViewModel> plans) => plans.firstWhereOrNull((_) => _.id == id),
     ),
   );
 
-  yield* registry
-      .get<FetchBudgetAllocationsByPlanUseCase>()
-      .call(userId: user.id, planId: id)
-      .map(
-        (NormalizedBudgetAllocationEntityList allocations) => BudgetPlanState(
-          plan: plan,
-          budget: budget,
-          allocation: allocations.singleWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
-          previousAllocations: allocations
-              .where((_) => _.budget.id != budgetId)
-              .map((_) => _.toViewModel())
-              .sorted(
-                (
-                  BudgetPlanAllocationViewModel a,
-                  BudgetPlanAllocationViewModel b,
-                ) =>
-                    b.budget.startedAt.compareTo(a.budget.startedAt),
-              )
-              .toList(),
-        ),
-      )
-      .distinct();
+  if (plan != null) {
+    final BudgetViewModel? budget = await ref.watch(
+      budgetsProvider.selectAsync(
+        (List<BudgetViewModel> budgets) => budgets.firstWhereOrNull((_) => _.id == budgetId),
+      ),
+    );
+
+    yield* registry
+        .get<FetchBudgetAllocationsByPlanUseCase>()
+        .call(userId: user.id, planId: id)
+        .map(
+          (NormalizedBudgetAllocationEntityList allocations) => BudgetPlanState(
+            plan: plan,
+            budget: budget,
+            allocation: allocations.firstWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
+            previousAllocations: allocations
+                .where((_) => _.budget.id != budgetId)
+                .map((_) => _.toViewModel())
+                .sorted(
+                  (
+                    BudgetPlanAllocationViewModel a,
+                    BudgetPlanAllocationViewModel b,
+                  ) =>
+                      b.budget.startedAt.compareTo(a.budget.startedAt),
+                )
+                .toList(),
+          ),
+        )
+        .distinct();
+  }
 }
 
 class BudgetPlanState with EquatableMixin {

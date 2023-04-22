@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
@@ -12,6 +11,8 @@ Future<void> main() async {
   const String categoryId = 'category-id';
 
   final BudgetCategoryEntity expectedCategory = BudgetCategoriesMockImpl.generateCategory(id: categoryId);
+  final NormalizedBudgetPlanEntity expectedPlan =
+      BudgetPlansMockImpl.generateNormalizedPlan(category: expectedCategory);
 
   tearDown(mockUseCases.reset);
 
@@ -25,6 +26,11 @@ Future<void> main() async {
               <BudgetCategoryViewModel>[BudgetCategoryViewModel.fromEntity(expectedCategory)],
             ),
           ),
+          budgetPlansProvider.overrideWith(
+            (_) => Stream<List<BudgetPlanViewModel>>.value(
+              <BudgetPlanViewModel>[BudgetPlanViewModel.fromEntity(expectedPlan)],
+            ),
+          ),
         ],
       );
 
@@ -33,30 +39,19 @@ Future<void> main() async {
     }
 
     test('should show selected category by id', () async {
-      final List<NormalizedBudgetPlanEntity> plans = <NormalizedBudgetPlanEntity>[
-        BudgetPlansMockImpl.generateNormalizedPlan(category: expectedCategory),
-      ];
-
-      when(
-        () => mockUseCases.fetchBudgetPlansByCategoryUseCase
-            .call(userId: any(named: 'userId'), categoryId: any(named: 'categoryId')),
-      ).thenAnswer((_) => Stream<NormalizedBudgetPlanEntityList>.value(plans));
-
       expect(
         createProviderStream(),
         completion(
           BudgetCategoryState(
-            plans: plans
-                .map(
-                  (NormalizedBudgetPlanEntity plan) => BudgetCategoryPlanViewModel(
-                    id: plan.id,
-                    path: plan.path,
-                    title: plan.title,
-                    description: plan.description,
-                    allocation: null,
-                  ),
-                )
-                .toList(),
+            plans: <BudgetCategoryPlanViewModel>[
+              BudgetCategoryPlanViewModel(
+                id: expectedPlan.id,
+                path: expectedPlan.path,
+                title: expectedPlan.title,
+                description: expectedPlan.description,
+                allocation: null,
+              )
+            ],
             category: BudgetCategoryViewModel.fromEntity(expectedCategory),
             allocation: null,
             budget: null,

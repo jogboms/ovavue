@@ -33,14 +33,14 @@ class FetchBudgetAllocationUseCase {
       CombineLatestStream.combine4(
         _allocations.fetchOne(userId: userId, budgetId: budgetId, planId: planId),
         _budgets.fetchOne(userId: userId, budgetId: budgetId),
-        _plans.fetch(userId),
+        _plans.fetchOne(userId: userId, planId: planId),
         _categories.fetch(userId),
         (
           BudgetAllocationEntity? allocation,
           BudgetEntity budget,
-          BudgetPlanEntityList plans,
+          BudgetPlanEntity plan,
           BudgetCategoryEntityList categories,
         ) =>
-            allocation?.normalize(budget.normalize(plans.normalize(categories))),
+            allocation?.normalize(budget.normalize(), plan.normalize(categories)),
       );
 }

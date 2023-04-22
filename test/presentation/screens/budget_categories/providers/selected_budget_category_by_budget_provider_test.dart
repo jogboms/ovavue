@@ -17,10 +17,7 @@ Future<void> main() async {
     category: expectedCategory,
   );
   final List<NormalizedBudgetPlanEntity> expectedPlans = <NormalizedBudgetPlanEntity>[expectedPlan];
-  final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(
-    id: budgetId,
-    plans: expectedPlans,
-  );
+  final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(id: budgetId);
 
   tearDown(mockUseCases.reset);
 
@@ -31,7 +28,7 @@ Future<void> main() async {
           userProvider.overrideWith((_) async => dummyUser),
           budgetsProvider.overrideWith(
             (_) => Stream<List<BudgetViewModel>>.value(
-              <BudgetViewModel>[BudgetViewModel.fromEntity(expectedBudget)],
+              <BudgetViewModel>[BudgetViewModel.fromEntity(expectedBudget, expectedPlans)],
             ),
           ),
           budgetPlansProvider.overrideWith(
@@ -57,12 +54,12 @@ Future<void> main() async {
         3,
         BudgetAllocationsMockImpl.generateNormalizedAllocation(
           budget: expectedBudget,
-          plan: expectedBudget.plans.first,
+          plan: expectedPlans.first,
         ),
       );
 
       when(
-        () => mockUseCases.fetchBudgetAllocationsUseCase
+        () => mockUseCases.fetchBudgetAllocationsByBudgetUseCase
             .call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')),
       ).thenAnswer((_) => Stream<NormalizedBudgetAllocationEntityList>.value(expectedBudgetAllocations));
 
@@ -70,7 +67,7 @@ Future<void> main() async {
         createProviderStream(),
         completion(
           BudgetCategoryState(
-            budget: BudgetViewModel.fromEntity(expectedBudget),
+            budget: BudgetViewModel.fromEntity(expectedBudget, expectedPlans),
             plans: expectedPlans
                 .map(
                   (NormalizedBudgetPlanEntity plan) => BudgetCategoryPlanViewModel(

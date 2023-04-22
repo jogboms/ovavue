@@ -82,6 +82,13 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
       _plans$.stream.map((Map<String, BudgetPlanEntity> event) => event.values.toList());
 
   @override
+  Stream<BudgetPlanEntity> fetchOne({
+    required String userId,
+    required String planId,
+  }) =>
+      _plans$.stream.map((Map<String, BudgetPlanEntity> event) => event.values.firstWhere((_) => _.id == planId));
+
+  @override
   Stream<BudgetPlanEntityList> fetchByCategory({
     required String userId,
     required String categoryId,

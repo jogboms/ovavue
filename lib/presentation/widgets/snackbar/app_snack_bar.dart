@@ -9,16 +9,18 @@ import 'snack_bar_provider.dart';
 
 class AppSnackBar {
   AppSnackBar.of(BuildContext context)
-      : _context = context,
-        state = SnackBarProvider.of(context);
+      : _theme = context.theme,
+        _l10n = context.l10n,
+        _state = SnackBarProvider.of(context);
 
   static const Key successKey = Key('snackBarSuccessKey');
   static const Key infoKey = Key('snackBarInfoKey');
   static const Key errorKey = Key('snackBarErrorKey');
   static const Key loadingKey = Key('snackBarLoadingKey');
 
-  final BuildContext _context;
-  final SnackBarProviderState? state;
+  final SnackBarProviderState? _state;
+  final ThemeData _theme;
+  final L10n _l10n;
 
   FutureOr<void> success(String value, {Duration? duration, Alignment? alignment}) => _showForType(
         value,
@@ -55,7 +57,7 @@ class AppSnackBar {
     bool dismissible = false,
   }) =>
       _show(
-        value ?? _context.l10n.loadingMessage,
+        value ?? _l10n.loadingMessage,
         key: loadingKey,
         color: color ?? Colors.black,
         alignment: alignment,
@@ -73,7 +75,7 @@ class AppSnackBar {
     Duration? duration,
     Alignment? alignment,
   }) {
-    final Color foregroundColor = type.toForegroundColor(_context.theme);
+    final Color foregroundColor = type.toForegroundColor(_theme);
     return _show(
       value,
       key: key,
@@ -81,7 +83,7 @@ class AppSnackBar {
       alignment: alignment,
       duration: duration,
       color: foregroundColor,
-      backgroundColor: type.toBackgroundColor(_context.theme),
+      backgroundColor: type.toBackgroundColor(_theme),
     );
   }
 
@@ -95,7 +97,7 @@ class AppSnackBar {
     bool dismissible = true,
     Alignment? alignment,
   }) =>
-      state?.showSnackBar(
+      _state?.showSnackBar(
         _RowBar(
           key: Key(value ?? ''),
           backgroundColor: backgroundColor,
@@ -118,7 +120,7 @@ class AppSnackBar {
         dismissible: dismissible,
       );
 
-  void hide() => state?.hideCurrentSnackBar();
+  void hide() => _state?.hideCurrentSnackBar();
 }
 
 class _RowBar extends StatelessWidget {

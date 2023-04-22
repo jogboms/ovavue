@@ -7,9 +7,8 @@ import '../../utils.dart';
 void main() {
   group('UpdateBudgetCategoryUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
     final UpdateBudgetCategoryUseCase useCase = UpdateBudgetCategoryUseCase(
-      categories: budgetCategoriesRepository,
+      categories: mockRepositories.budgetCategories,
       analytics: analytics,
     );
 
@@ -28,18 +27,18 @@ void main() {
 
     tearDown(() {
       analytics.reset();
-      reset(budgetCategoriesRepository);
+      mockRepositories.reset();
     });
 
     test('should create a budget category', () async {
-      when(() => budgetCategoriesRepository.update(any())).thenAnswer((_) async => true);
+      when(() => mockRepositories.budgetCategories.update(any())).thenAnswer((_) async => true);
 
       await expectLater(useCase(dummyData), completion(true));
       expect(analytics.events, containsOnce(AnalyticsEvent.updateBudgetCategory('path')));
     });
 
     test('should bubble update errors', () {
-      when(() => budgetCategoriesRepository.update(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetCategories.update(any())).thenThrow(Exception('an error'));
 
       expect(() => useCase(dummyData), throwsException);
     });

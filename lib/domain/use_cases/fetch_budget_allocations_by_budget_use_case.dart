@@ -1,3 +1,4 @@
+import 'package:ovavue/core.dart';
 import 'package:rxdart/streams.dart';
 
 import '../entities/budget_allocation_entity.dart';
@@ -9,8 +10,8 @@ import '../repositories/budget_categories.dart';
 import '../repositories/budget_plans.dart';
 import '../repositories/budgets.dart';
 
-class FetchBudgetAllocationsUseCase {
-  const FetchBudgetAllocationsUseCase({
+class FetchBudgetAllocationsByBudgetUseCase {
+  const FetchBudgetAllocationsByBudgetUseCase({
     required BudgetAllocationsRepository allocations,
     required BudgetsRepository budgets,
     required BudgetPlansRepository plans,
@@ -40,6 +41,6 @@ class FetchBudgetAllocationsUseCase {
           BudgetPlanEntityList plans,
           BudgetCategoryEntityList categories,
         ) =>
-            allocations.normalize(budget.normalize(plans.normalize(categories))),
+            allocations.normalize(budget.normalize(), plans.normalize(categories).foldToMap((_) => _.id)),
       );
 }

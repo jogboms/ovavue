@@ -7,12 +7,11 @@ import '../../utils.dart';
 
 void main() {
   group('FetchBudgetCategoriesUseCase', () {
-    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
     final FetchBudgetCategoriesUseCase useCase = FetchBudgetCategoriesUseCase(
-      categories: budgetCategoriesRepository,
+      categories: mockRepositories.budgetCategories,
     );
 
-    tearDown(() => reset(budgetCategoriesRepository));
+    tearDown(mockRepositories.reset);
 
     test('should fetch budget categories', () {
       final BudgetCategoryEntityList expectedBudgetCategories = BudgetCategoryEntityList.generate(
@@ -20,7 +19,7 @@ void main() {
         (_) => BudgetCategoriesMockImpl.generateCategory(),
       );
 
-      when(() => budgetCategoriesRepository.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgetCategories.fetch(any())).thenAnswer(
         (_) => Stream<BudgetCategoryEntityList>.value(expectedBudgetCategories),
       );
 
@@ -28,7 +27,7 @@ void main() {
     });
 
     test('should bubble fetch errors', () {
-      when(() => budgetCategoriesRepository.fetch(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetCategories.fetch(any())).thenThrow(Exception('an error'));
 
       expect(() => useCase('1'), throwsException);
     });
@@ -36,7 +35,7 @@ void main() {
     test('should bubble stream errors', () {
       final Exception expectedError = Exception('an error');
 
-      when(() => budgetCategoriesRepository.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgetCategories.fetch(any())).thenAnswer(
         (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 

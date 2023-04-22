@@ -6,50 +6,39 @@ import 'package:ovavue/domain.dart';
 import '../../utils.dart';
 
 void main() {
-  group('FetchBudgetAllocationsUseCase', () {
-    final BudgetAllocationsRepository budgetAllocationsRepository = mockRepositories.budgetAllocations;
-    final BudgetsRepository budgetsRepository = mockRepositories.budgets;
-    final BudgetPlansRepository budgetPlansRepository = mockRepositories.budgetPlans;
-    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
-    final FetchBudgetAllocationsUseCase useCase = FetchBudgetAllocationsUseCase(
-      allocations: budgetAllocationsRepository,
-      budgets: budgetsRepository,
-      plans: budgetPlansRepository,
-      categories: budgetCategoriesRepository,
+  group('FetchBudgetAllocationsByBudgetUseCase', () {
+    final FetchBudgetAllocationsByBudgetUseCase useCase = FetchBudgetAllocationsByBudgetUseCase(
+      allocations: mockRepositories.budgetAllocations,
+      budgets: mockRepositories.budgets,
+      plans: mockRepositories.budgetPlans,
+      categories: mockRepositories.budgetCategories,
     );
 
-    tearDown(() {
-      reset(budgetAllocationsRepository);
-      reset(budgetsRepository);
-      reset(budgetPlansRepository);
-      reset(budgetCategoriesRepository);
-    });
+    tearDown(mockRepositories.reset);
 
     test('should fetch budget allocations', () {
       final BudgetCategoryEntityList categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
       final NormalizedBudgetPlanEntity plan = BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first);
-      final NormalizedBudgetEntity budget = BudgetsMockImpl.generateNormalizedBudget(
-        plans: <NormalizedBudgetPlanEntity>[plan],
-      );
+      final NormalizedBudgetEntity budget = BudgetsMockImpl.generateNormalizedBudget();
       final NormalizedBudgetAllocationEntityList expectedAllocations = <NormalizedBudgetAllocationEntity>[
         BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget, plan: plan)
       ];
 
-      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1')).thenAnswer(
+      when(() => mockRepositories.budgetAllocations.fetch(userId: '1', budgetId: '1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntityList>.value(expectedAllocations.asBudgetAllocationEntityList.sublist(1)),
       );
-      when(() => budgetsRepository.fetchOne(userId: '1', budgetId: '1'))
+      when(() => mockRepositories.budgets.fetchOne(userId: '1', budgetId: '1'))
           .thenAnswer((_) => Stream<BudgetEntity>.value(budget.asBudgetEntity));
-      when(() => budgetPlansRepository.fetch(any()))
+      when(() => mockRepositories.budgetPlans.fetch(any()))
           .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[plan.asBudgetPlanEntity]));
-      when(() => budgetCategoriesRepository.fetch(any()))
+      when(() => mockRepositories.budgetCategories.fetch(any()))
           .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
       expectLater(useCase(userId: '1', budgetId: '1'), emits(expectedAllocations.sublist(1)));
     });
 
     test('should bubble fetch errors', () {
-      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1')).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetAllocations.fetch(userId: '1', budgetId: '1')).thenThrow(Exception('an error'));
 
       expect(() => useCase(userId: '1', budgetId: '1'), throwsException);
     });
@@ -57,16 +46,16 @@ void main() {
     test('should bubble stream errors', () {
       final Exception expectedError = Exception('an error');
 
-      when(() => budgetAllocationsRepository.fetch(userId: '1', budgetId: '1')).thenAnswer(
+      when(() => mockRepositories.budgetAllocations.fetch(userId: '1', budgetId: '1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntityList>.error(expectedError),
       );
-      when(() => budgetsRepository.fetchOne(userId: '1', budgetId: '1')).thenAnswer(
+      when(() => mockRepositories.budgets.fetchOne(userId: '1', budgetId: '1')).thenAnswer(
         (_) => Stream<BudgetEntity>.error(expectedError),
       );
-      when(() => budgetPlansRepository.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgetPlans.fetch(any())).thenAnswer(
         (_) => Stream<BudgetPlanEntityList>.error(expectedError),
       );
-      when(() => budgetCategoriesRepository.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgetCategories.fetch(any())).thenAnswer(
         (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 

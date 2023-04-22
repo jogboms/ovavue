@@ -7,44 +7,30 @@ import '../../utils.dart';
 
 void main() {
   group('FetchBudgetAllocationUseCase', () {
-    final BudgetAllocationsRepository budgetAllocationsRepository = mockRepositories.budgetAllocations;
-    final BudgetsRepository budgetsRepository = mockRepositories.budgets;
-    final BudgetPlansRepository budgetPlansRepository = mockRepositories.budgetPlans;
-    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
     final FetchBudgetAllocationUseCase useCase = FetchBudgetAllocationUseCase(
-      allocations: budgetAllocationsRepository,
-      budgets: budgetsRepository,
-      plans: budgetPlansRepository,
-      categories: budgetCategoriesRepository,
+      allocations: mockRepositories.budgetAllocations,
+      budgets: mockRepositories.budgets,
+      plans: mockRepositories.budgetPlans,
+      categories: mockRepositories.budgetCategories,
     );
 
-    tearDown(() {
-      reset(budgetAllocationsRepository);
-      reset(budgetsRepository);
-      reset(budgetPlansRepository);
-      reset(budgetCategoriesRepository);
-    });
+    tearDown(mockRepositories.reset);
 
     test('should fetch budget allocation for plan', () {
       final BudgetCategoryEntityList categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
       final NormalizedBudgetPlanEntity plan = BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first);
-      final NormalizedBudgetEntity budget = BudgetsMockImpl.generateNormalizedBudget(
-        plans: <NormalizedBudgetPlanEntity>[plan],
-      );
+      final NormalizedBudgetEntity budget = BudgetsMockImpl.generateNormalizedBudget();
       final NormalizedBudgetAllocationEntity expectedAllocation =
-          BudgetAllocationsMockImpl.generateNormalizedAllocation(
-        budget: budget,
-        plan: plan,
-      );
+          BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget, plan: plan);
 
-      when(() => budgetAllocationsRepository.fetchOne(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
+      when(() => mockRepositories.budgetAllocations.fetchOne(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntity>.value(expectedAllocation.asBudgetAllocationEntity),
       );
-      when(() => budgetsRepository.fetchOne(userId: '1', budgetId: '1'))
+      when(() => mockRepositories.budgets.fetchOne(userId: '1', budgetId: '1'))
           .thenAnswer((_) => Stream<BudgetEntity>.value(budget.asBudgetEntity));
-      when(() => budgetPlansRepository.fetch(any()))
-          .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[plan.asBudgetPlanEntity]));
-      when(() => budgetCategoriesRepository.fetch(any()))
+      when(() => mockRepositories.budgetPlans.fetchOne(userId: '1', planId: '1'))
+          .thenAnswer((_) => Stream<BudgetPlanEntity>.value(plan.asBudgetPlanEntity));
+      when(() => mockRepositories.budgetCategories.fetch(any()))
           .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
       expectLater(useCase(userId: '1', budgetId: '1', planId: '1'), emits(expectedAllocation));
@@ -53,25 +39,23 @@ void main() {
     test('should emit null when no budget allocation for plan', () {
       final BudgetCategoryEntityList categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
       final NormalizedBudgetPlanEntity plan = BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first);
-      final NormalizedBudgetEntity budget = BudgetsMockImpl.generateNormalizedBudget(
-        plans: <NormalizedBudgetPlanEntity>[plan],
-      );
+      final NormalizedBudgetEntity budget = BudgetsMockImpl.generateNormalizedBudget();
 
-      when(() => budgetAllocationsRepository.fetchOne(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
+      when(() => mockRepositories.budgetAllocations.fetchOne(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntity?>.value(null),
       );
-      when(() => budgetsRepository.fetchOne(userId: '1', budgetId: '1'))
+      when(() => mockRepositories.budgets.fetchOne(userId: '1', budgetId: '1'))
           .thenAnswer((_) => Stream<BudgetEntity>.value(budget.asBudgetEntity));
-      when(() => budgetPlansRepository.fetch(any()))
-          .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[plan.asBudgetPlanEntity]));
-      when(() => budgetCategoriesRepository.fetch(any()))
+      when(() => mockRepositories.budgetPlans.fetchOne(userId: '1', planId: '1'))
+          .thenAnswer((_) => Stream<BudgetPlanEntity>.value(plan.asBudgetPlanEntity));
+      when(() => mockRepositories.budgetCategories.fetch(any()))
           .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
       expectLater(useCase(userId: '1', budgetId: '1', planId: '1'), emits(null));
     });
 
     test('should bubble fetch errors', () {
-      when(() => budgetAllocationsRepository.fetchOne(userId: '1', budgetId: '1', planId: '1'))
+      when(() => mockRepositories.budgetAllocations.fetchOne(userId: '1', budgetId: '1', planId: '1'))
           .thenThrow(Exception('an error'));
 
       expect(() => useCase(userId: '1', budgetId: '1', planId: '1'), throwsException);
@@ -80,16 +64,16 @@ void main() {
     test('should bubble stream errors', () {
       final Exception expectedError = Exception('an error');
 
-      when(() => budgetAllocationsRepository.fetchOne(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
+      when(() => mockRepositories.budgetAllocations.fetchOne(userId: '1', budgetId: '1', planId: '1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntity>.error(expectedError),
       );
-      when(() => budgetsRepository.fetchOne(userId: '1', budgetId: '1')).thenAnswer(
+      when(() => mockRepositories.budgets.fetchOne(userId: '1', budgetId: '1')).thenAnswer(
         (_) => Stream<BudgetEntity>.error(expectedError),
       );
-      when(() => budgetPlansRepository.fetch(any())).thenAnswer(
-        (_) => Stream<BudgetPlanEntityList>.error(expectedError),
+      when(() => mockRepositories.budgetPlans.fetchOne(userId: '1', planId: '1')).thenAnswer(
+        (_) => Stream<BudgetPlanEntity>.error(expectedError),
       );
-      when(() => budgetCategoriesRepository.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgetCategories.fetch(any())).thenAnswer(
         (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 

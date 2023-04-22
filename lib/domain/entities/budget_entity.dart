@@ -10,7 +10,6 @@ class BaseBudgetEntity<T> with EquatableMixin {
     required this.title,
     required this.amount,
     required this.description,
-    required this.plans,
     required this.startedAt,
     required this.endedAt,
     required this.createdAt,
@@ -22,15 +21,13 @@ class BaseBudgetEntity<T> with EquatableMixin {
   final String title;
   final int amount;
   final String description;
-  final List<T> plans;
   final DateTime startedAt;
   final DateTime? endedAt;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
   @override
-  List<Object?> get props =>
-      <Object?>[id, path, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
+  List<Object?> get props => <Object?>[id, path, title, amount, description, startedAt, endedAt, createdAt, updatedAt];
 
   @override
   bool? get stringify => true;
@@ -47,12 +44,11 @@ extension NormalizedBudgetReferenceEntityExtension on NormalizedBudgetEntity {
 }
 
 extension NormalizeBudgetEntityListExtension on BudgetEntityList {
-  NormalizedBudgetEntityList normalize(NormalizedBudgetPlanEntityList plans) =>
-      map((BudgetEntity budget) => budget.normalize(plans)).toList(growable: false);
+  NormalizedBudgetEntityList normalize() => map((BudgetEntity budget) => budget.normalize()).toList(growable: false);
 }
 
 extension NormalizeBudgetEntityExtension on BudgetEntity {
-  NormalizedBudgetEntity normalize(NormalizedBudgetPlanEntityList plans) => NormalizedBudgetEntity(
+  NormalizedBudgetEntity normalize() => NormalizedBudgetEntity(
         id: id,
         path: path,
         title: title,
@@ -60,9 +56,6 @@ extension NormalizeBudgetEntityExtension on BudgetEntity {
         amount: amount,
         startedAt: startedAt,
         endedAt: endedAt,
-        plans: plans
-            .where((NormalizedBudgetPlanEntity plan) => plans.map((_) => _.id).contains(plan.id))
-            .toList(growable: false),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );

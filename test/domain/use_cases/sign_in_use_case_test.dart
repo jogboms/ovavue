@@ -7,19 +7,18 @@ import '../../utils.dart';
 
 void main() {
   group('SignInUseCase', () {
-    final AuthRepository authRepository = mockRepositories.auth;
     final LogAnalytics analytics = LogAnalytics();
-    final SignInUseCase useCase = SignInUseCase(auth: authRepository, analytics: analytics);
+    final SignInUseCase useCase = SignInUseCase(auth: mockRepositories.auth, analytics: analytics);
 
     tearDown(() {
-      reset(authRepository);
+      mockRepositories.reset();
       analytics.reset();
     });
 
     test('should sign in when auth state changes to valid value', () async {
       final AccountEntity dummyAccount = AuthMockImpl.generateAccount();
 
-      when(authRepository.signIn).thenAnswer((_) async => '1');
+      when(mockRepositories.auth.signIn).thenAnswer((_) async => '1');
       when(() => mockRepositories.auth.onAuthStateChanged).thenAnswer((_) => Stream<String>.value('1'));
       when(mockRepositories.auth.fetch).thenAnswer((_) async => dummyAccount);
 
@@ -29,21 +28,21 @@ void main() {
     });
 
     test('should not complete until auth state changes to valid value', () {
-      when(authRepository.signIn).thenAnswer((_) async => '1');
+      when(mockRepositories.auth.signIn).thenAnswer((_) async => '1');
       when(() => mockRepositories.auth.onAuthStateChanged).thenAnswer((_) => Stream<String?>.value(null));
 
       expect(useCase(), doesNotComplete);
     });
 
     test('should bubble errors', () {
-      when(authRepository.signIn).thenThrow(Exception('an error'));
+      when(mockRepositories.auth.signIn).thenThrow(Exception('an error'));
       when(() => mockRepositories.auth.onAuthStateChanged).thenAnswer((_) => Stream<String?>.value(null));
 
       expect(useCase(), throwsException);
     });
 
     test('should bubble auth change errors', () {
-      when(authRepository.signIn).thenAnswer((_) async => '1');
+      when(mockRepositories.auth.signIn).thenAnswer((_) async => '1');
       when(() => mockRepositories.auth.onAuthStateChanged).thenAnswer((_) => Stream<String?>.error(Exception()));
 
       expect(useCase(), throwsException);

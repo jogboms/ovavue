@@ -7,6 +7,7 @@ import '../../routing.dart';
 import '../../state.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
+import 'utils/delete_budget_plan_action.dart';
 
 class BudgetPlansPage extends StatefulWidget {
   const BudgetPlansPage({super.key});
@@ -31,6 +32,7 @@ class BudgetPlansPageState extends State<BudgetPlansPage> {
               ),
               error: ErrorView.new,
               loading: () => child!,
+              skipLoadingOnReload: true,
             ),
         child: const LoadingView(),
       ),
@@ -82,15 +84,16 @@ class _ContentDataView extends StatelessWidget {
                       motion: const BehindMotion(),
                       children: <SlidableAction>[
                         SlidableAction(
-                          onPressed: (BuildContext context) => _handleDeletePlanAction(
+                          onPressed: (BuildContext context) => deleteBudgetPlanAction(
                             context,
                             ref: ref,
                             plan: plan,
+                            dismissOnComplete: false,
                           ),
                           backgroundColor: const Color(0xFFFE4A49),
                           foregroundColor: Colors.white,
                           icon: Icons.delete,
-                          label: 'Delete',
+                          label: context.l10n.deleteLabel,
                         ),
                       ],
                     ),
@@ -108,30 +111,5 @@ class _ContentDataView extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  void _handleDeletePlanAction(
-    BuildContext context, {
-    required WidgetRef ref,
-    required BudgetPlanViewModel plan,
-  }) async {
-    final AppSnackBar snackBar = context.snackBar;
-    final bool choice = await showErrorChoiceBanner(
-      context,
-      message: context.l10n.deletePlanAreYouSureAboutThisMessage,
-    );
-    if (!choice) {
-      return;
-    }
-
-    final bool successful = await ref.read(budgetPlanProvider).delete(
-          id: plan.id,
-          path: plan.path,
-        );
-    if (successful) {
-      snackBar.success('Successful!'); // TODO(Jogboms): L10n
-    } else {
-      snackBar.error('Failed, try again.'); // TODO(Jogboms): L10n
-    }
   }
 }

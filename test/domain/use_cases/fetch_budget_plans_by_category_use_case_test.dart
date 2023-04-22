@@ -7,17 +7,12 @@ import '../../utils.dart';
 
 void main() {
   group('FetchBudgetPlansByCategoryUseCase', () {
-    final BudgetPlansRepository budgetPlansRepository = mockRepositories.budgetPlans;
-    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
     final FetchBudgetPlansByCategoryUseCase useCase = FetchBudgetPlansByCategoryUseCase(
-      plans: budgetPlansRepository,
-      categories: budgetCategoriesRepository,
+      plans: mockRepositories.budgetPlans,
+      categories: mockRepositories.budgetCategories,
     );
 
-    tearDown(() {
-      reset(budgetPlansRepository);
-      reset(budgetCategoriesRepository);
-    });
+    tearDown(mockRepositories.reset);
 
     test('should fetch budget plans for category', () {
       final BudgetCategoryEntity category = BudgetCategoriesMockImpl.generateCategory();
@@ -25,16 +20,17 @@ void main() {
         BudgetPlansMockImpl.generateNormalizedPlan(category: category)
       ];
 
-      when(() => budgetPlansRepository.fetchByCategory(userId: '1', categoryId: '1'))
+      when(() => mockRepositories.budgetPlans.fetchByCategory(userId: '1', categoryId: '1'))
           .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(expectedPlans.asBudgetPlanEntityList));
-      when(() => budgetCategoriesRepository.fetch(any()))
+      when(() => mockRepositories.budgetCategories.fetch(any()))
           .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(<BudgetCategoryEntity>[category]));
 
       expectLater(useCase(userId: '1', categoryId: '1'), emits(expectedPlans));
     });
 
     test('should bubble fetch errors', () {
-      when(() => budgetPlansRepository.fetchByCategory(userId: '1', categoryId: '1')).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetPlans.fetchByCategory(userId: '1', categoryId: '1'))
+          .thenThrow(Exception('an error'));
 
       expect(() => useCase(userId: '1', categoryId: '1'), throwsException);
     });
@@ -42,10 +38,10 @@ void main() {
     test('should bubble stream errors', () {
       final Exception expectedError = Exception('an error');
 
-      when(() => budgetPlansRepository.fetchByCategory(userId: '1', categoryId: '1')).thenAnswer(
+      when(() => mockRepositories.budgetPlans.fetchByCategory(userId: '1', categoryId: '1')).thenAnswer(
         (_) => Stream<BudgetPlanEntityList>.error(expectedError),
       );
-      when(() => budgetCategoriesRepository.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgetCategories.fetch(any())).thenAnswer(
         (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 

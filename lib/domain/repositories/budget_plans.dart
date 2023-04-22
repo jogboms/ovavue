@@ -11,6 +11,8 @@ abstract class BudgetPlansRepository {
 
   Stream<BudgetPlanEntityList> fetch(String userId);
 
+  Stream<BudgetPlanEntity> fetchOne({required String userId, required String planId});
+
   Stream<BudgetPlanEntityList> fetchByCategory({
     required String userId,
     required String categoryId,

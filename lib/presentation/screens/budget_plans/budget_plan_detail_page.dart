@@ -9,6 +9,7 @@ import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
 import 'providers/selected_budget_plan_provider.dart';
+import 'utils/delete_budget_plan_action.dart';
 import 'widgets/budget_category_selection_picker.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
@@ -39,6 +40,7 @@ class BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
                   ),
                   error: ErrorView.new,
                   loading: () => child!,
+                  skipLoadingOnReload: true,
                 ),
         child: const LoadingView(),
       ),
@@ -154,13 +156,22 @@ class _ContentDataView extends StatelessWidget {
                       ActionButton(
                         icon: Icons.delete,
                         backgroundColor: colorScheme.errorContainer,
-                        onPressed: () {},
+                        onPressed: () => deleteBudgetPlanAction(
+                          context,
+                          ref: ref,
+                          plan: state.plan,
+                          dismissOnComplete: true,
+                        ),
                       )
-                    else
+                    else if (allocation != null)
                       ActionButton(
                         icon: Icons.remove_circle_outline_outlined, // TODO(Jogboms): fix icon
                         backgroundColor: colorScheme.tertiaryContainer,
-                        onPressed: () {},
+                        onPressed: () => _handleDeleteAllocationAction(
+                          context,
+                          ref: ref,
+                          allocation: allocation,
+                        ),
                       ),
                   ],
                 ),
@@ -254,6 +265,21 @@ class _ContentDataView extends StatelessWidget {
     }
 
     await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
+  }
+
+  void _handleDeleteAllocationAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetPlanAllocationViewModel allocation,
+  }) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = context.snackBar;
+    final bool successful = await ref.read(budgetPlanProvider).deleteAllocation(allocation.path);
+    if (successful) {
+      snackBar.success(l10n.successfulMessage);
+    } else {
+      snackBar.error(l10n.genericErrorMessage);
+    }
   }
 }
 

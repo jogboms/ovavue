@@ -18,14 +18,17 @@ class BudgetViewModel with EquatableMixin {
     required this.updatedAt,
   });
 
-  static BudgetViewModel fromEntity(NormalizedBudgetEntity entity) {
+  static BudgetViewModel fromEntity(
+    NormalizedBudgetEntity entity,
+    List<NormalizedBudgetPlanEntity> plans,
+  ) {
     return BudgetViewModel(
       id: entity.id,
       title: entity.title,
       path: entity.path,
       amount: entity.amount.asMoney,
       description: entity.description,
-      plans: entity.plans.map(BudgetPlanViewModel.fromEntity).toList(growable: false),
+      plans: plans.map(BudgetPlanViewModel.fromEntity).toList(growable: false),
       startedAt: entity.startedAt,
       endedAt: entity.endedAt,
       createdAt: entity.createdAt,

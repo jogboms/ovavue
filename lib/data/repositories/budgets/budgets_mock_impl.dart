@@ -5,23 +5,20 @@ import 'package:ovavue/domain.dart';
 import 'package:rxdart/subjects.dart';
 
 import '../auth/auth_mock_impl.dart';
-import '../budget_plans/budget_plans_mock_impl.dart';
 import '../extensions.dart';
 
 class BudgetsMockImpl implements BudgetsRepository {
   static BudgetEntity generateBudget({
     String? id,
     String? userId,
-    NormalizedBudgetPlanEntityList? plans,
     DateTime? startedAt,
   }) =>
-      generateNormalizedBudget(id: id, userId: userId, plans: plans, startedAt: startedAt).denormalize;
+      generateNormalizedBudget(id: id, userId: userId, startedAt: startedAt).denormalize;
 
   static NormalizedBudgetEntity generateNormalizedBudget({
     String? id,
     String? title,
     String? userId,
-    NormalizedBudgetPlanEntityList? plans,
     DateTime? startedAt,
     DateTime? endedAt,
   }) {
@@ -36,8 +33,6 @@ class BudgetsMockImpl implements BudgetsRepository {
       amount: (faker.randomGenerator.decimal(min: 1) * 1e9).toInt(),
       startedAt: startedAt,
       endedAt: endedAt,
-      plans: plans ??
-          NormalizedBudgetPlanEntityList.generate(3, (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId)),
       createdAt: faker.randomGenerator.dateTime,
       updatedAt: clock.now(),
     );
@@ -49,8 +44,7 @@ class BudgetsMockImpl implements BudgetsRepository {
       BehaviorSubject<Map<String, BudgetEntity>>.seeded(_budgets);
 
   NormalizedBudgetEntityList seed(
-    int count,
-    NormalizedBudgetPlanEntityList Function(int) plansBuilder, {
+    int count, {
     String? userId,
   }) {
     final NormalizedBudgetEntityList items = NormalizedBudgetEntityList.generate(
@@ -60,7 +54,6 @@ class BudgetsMockImpl implements BudgetsRepository {
         return BudgetsMockImpl.generateNormalizedBudget(
           title: '${clock.now().year}.${index + 1}',
           userId: userId,
-          plans: plansBuilder(index),
           startedAt: startedAt,
           endedAt: count == index + 1 ? null : startedAt.add(const Duration(minutes: 10000)),
         );
@@ -88,7 +81,6 @@ class BudgetsMockImpl implements BudgetsRepository {
       amount: budget.amount,
       startedAt: budget.startedAt,
       endedAt: budget.endedAt,
-      plans: budget.plans,
       createdAt: clock.now(),
       updatedAt: null,
     );
@@ -106,33 +98,6 @@ class BudgetsMockImpl implements BudgetsRepository {
   Future<bool> delete(String path) async {
     final String id = _budgets.values.firstWhere((BudgetEntity element) => element.path == path).id;
     _budgets$.add(_budgets..remove(id));
-    return true;
-  }
-
-  @override
-  Future<bool> addPlan({required String userId, required String budgetId, required ReferenceEntity plan}) async {
-    _budgets$.add(
-      _budgets
-        ..update(
-          budgetId,
-          (BudgetEntity prev) => prev.copyWith(
-            plans: <ReferenceEntity>[...prev.plans.where((_) => _.id != plan.id), plan],
-          ),
-        ),
-    );
-    return true;
-  }
-
-  @override
-  Future<bool> removePlan({required String path, required String planId}) async {
-    final String id = _budgets.values.firstWhere((BudgetEntity element) => element.path == path).id;
-    _budgets$.add(
-      _budgets
-        ..update(
-          id,
-          (BudgetEntity prev) => prev.copyWith(plans: prev.plans.where((_) => _.id != planId).toList(growable: false)),
-        ),
-    );
     return true;
   }
 
@@ -157,7 +122,6 @@ extension on BudgetEntity {
     String? title,
     int? amount,
     String? description,
-    List<ReferenceEntity>? plans,
     DateTime? startedAt,
     DateTime? endedAt,
     DateTime? createdAt,
@@ -171,7 +135,6 @@ extension on BudgetEntity {
         amount: amount ?? this.amount,
         startedAt: startedAt ?? this.startedAt,
         endedAt: endedAt ?? this.endedAt,
-        plans: plans ?? this.plans,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -194,7 +157,6 @@ extension on NormalizedBudgetEntity {
         amount: amount,
         startedAt: startedAt,
         endedAt: endedAt,
-        plans: plans.map((NormalizedBudgetPlanEntity element) => element.reference).toList(growable: false),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );

@@ -97,6 +97,20 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   }
 
   @override
+  Future<bool> deleteByPlan({
+    required String userId,
+    required String planId,
+  }) async {
+    _allocations$.add(_allocations..removeWhere((__, _) => _.plan.id == planId));
+    return true;
+  }
+
+  @override
+  Stream<BudgetAllocationEntityList> fetchAll(String userId) => _allocations$.stream.map(
+        (Map<String, BudgetAllocationEntity> event) => event.values.toList(),
+      );
+
+  @override
   Stream<BudgetAllocationEntityList> fetch({
     required String userId,
     required String budgetId,

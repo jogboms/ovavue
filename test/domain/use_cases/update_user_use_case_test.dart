@@ -7,8 +7,7 @@ import '../../utils.dart';
 
 void main() {
   group('UpdateUserUseCase', () {
-    final UsersRepository usersRepository = mockRepositories.users;
-    final UpdateUserUseCase useCase = UpdateUserUseCase(users: usersRepository);
+    final UpdateUserUseCase useCase = UpdateUserUseCase(users: mockRepositories.users);
 
     final UpdateUserData dummyUpdateUserData = UpdateUserData(
       id: 'id',
@@ -19,16 +18,16 @@ void main() {
       registerFallbackValue(dummyUpdateUserData);
     });
 
-    tearDown(() => reset(usersRepository));
+    tearDown(mockRepositories.reset);
 
     test('should update a user', () {
-      when(() => usersRepository.update(any())).thenAnswer((_) async => true);
+      when(() => mockRepositories.users.update(any())).thenAnswer((_) async => true);
 
       expect(useCase(dummyUpdateUserData), completion(true));
     });
 
     test('should bubble update errors', () {
-      when(() => usersRepository.update(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.users.update(any())).thenThrow(Exception('an error'));
 
       expect(() => useCase(dummyUpdateUserData), throwsException);
     });

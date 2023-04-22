@@ -22,7 +22,7 @@ Stream<BudgetState> selectedBudget(SelectedBudgetRef ref, String id) async* {
       .call(userId: user.id, budgetId: id)
       .switchMap(
         (NormalizedBudgetEntity budget) => registry
-            .get<FetchBudgetAllocationsUseCase>()
+            .get<FetchBudgetAllocationsByBudgetUseCase>()
             .call(userId: user.id, budgetId: budget.id)
             .map((NormalizedBudgetAllocationEntityList allocations) => _deriveState(budget, allocations)),
       )
@@ -49,18 +49,19 @@ BudgetState _deriveState(
   NormalizedBudgetAllocationEntityList allocations,
 ) {
   final Map<String, NormalizedBudgetAllocationEntity> allocationByPlan = allocations.foldToMap((_) => _.plan.id);
-  final Map<String, int> allocationByCategory = budget.plans.groupFoldBy(
+  final NormalizedBudgetPlanEntityList budgetPlans = allocations.map((_) => _.plan).toList(growable: false);
+  final Map<String, int> allocationByCategory = budgetPlans.groupFoldBy(
     (_) => _.category.id,
     (int? previous, NormalizedBudgetPlanEntity plan) => (previous ?? 0) + (allocationByPlan[plan.id]?.amount ?? 0),
   );
   final Iterable<SelectedBudgetCategoryViewModel> categories =
-      budget.plans.uniqueBy((_) => _.category.id).map((_) => _.category).map(
+      budgetPlans.uniqueBy((_) => _.category.id).map((_) => _.category).map(
             (BudgetCategoryEntity category) => category.toViewModel(
               allocationByCategory[category.id]?.asMoney ?? Money.zero,
             ),
           );
   final Map<String, SelectedBudgetCategoryViewModel> categoriesById = categories.foldToMap((_) => _.id);
-  final Iterable<SelectedBudgetPlanViewModel> plans = budget.plans.map(
+  final Iterable<SelectedBudgetPlanViewModel> plans = budgetPlans.map(
     (NormalizedBudgetPlanEntity plan) => plan.toViewModel(
       allocation: allocationByPlan[plan.id]?.toViewModel(),
       category: categoriesById[plan.category.id]!,

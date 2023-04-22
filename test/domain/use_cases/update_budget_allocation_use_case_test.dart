@@ -7,9 +7,8 @@ import '../../utils.dart';
 void main() {
   group('UpdateBudgetAllocationUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final BudgetAllocationsRepository budgetAllocationsRepository = mockRepositories.budgetAllocations;
     final UpdateBudgetAllocationUseCase useCase = UpdateBudgetAllocationUseCase(
-      allocations: budgetAllocationsRepository,
+      allocations: mockRepositories.budgetAllocations,
       analytics: analytics,
     );
 
@@ -25,18 +24,18 @@ void main() {
 
     tearDown(() {
       analytics.reset();
-      reset(budgetAllocationsRepository);
+      mockRepositories.reset();
     });
 
     test('should create a budget allocation', () async {
-      when(() => budgetAllocationsRepository.update(any())).thenAnswer((_) async => true);
+      when(() => mockRepositories.budgetAllocations.update(any())).thenAnswer((_) async => true);
 
       await expectLater(useCase(dummyData), completion(true));
       expect(analytics.events, containsOnce(AnalyticsEvent.updateBudgetAllocation('path')));
     });
 
     test('should bubble update errors', () {
-      when(() => budgetAllocationsRepository.update(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetAllocations.update(any())).thenThrow(Exception('an error'));
 
       expect(() => useCase(dummyData), throwsException);
     });
