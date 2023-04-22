@@ -58,7 +58,7 @@ class _ContentDataView extends StatelessWidget {
           child: ActionButtonRow(
             actions: <ActionButton>[
               ActionButton(
-                icon: Icons.add_moderator_outlined,
+                icon: Icons.add,
                 onPressed: () {},
               ),
             ],

@@ -74,17 +74,9 @@ class _ContentDataView extends StatelessWidget {
               builder: (BuildContext context, int index) {
                 final BudgetCategoryViewModel category = data[index];
 
-                return ListTile(
+                return BudgetCategoryListTile(
                   key: Key(category.id),
-                  title: Text(category.title.sentence(), maxLines: 1),
-                  titleTextStyle: theme.textTheme.bodyLarge,
-                  subtitle: Text(category.description.capitalize(), maxLines: 2),
-                  subtitleTextStyle: theme.textTheme.bodyMedium,
-                  leading: CircleAvatar(
-                    backgroundColor: category.backgroundColor,
-                    foregroundColor: category.foregroundColor,
-                    child: Icon(category.icon),
-                  ),
+                  category: category,
                   onTap: () => context.router.goToBudgetCategoryDetail(id: category.id),
                 );
               },

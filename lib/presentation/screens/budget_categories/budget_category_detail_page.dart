@@ -26,6 +26,8 @@ class BudgetCategoryDetailPageState extends State<BudgetCategoryDetailPage> {
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) =>
             ref.watch(selectedBudgetCategoryProvider(widget.id)).when(
+                  skipLoadingOnRefresh: true,
+                  skipLoadingOnReload: true,
                   data: (BudgetCategoryState data) => BudgetCategoryDetailDataView(
                     key: dataViewKey,
                     state: data,

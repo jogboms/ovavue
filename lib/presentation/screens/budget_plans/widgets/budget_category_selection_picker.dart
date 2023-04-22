@@ -5,8 +5,8 @@ import '../../../models.dart';
 import '../../../state.dart';
 import '../../../widgets.dart';
 
-class BudgetPlanSelectionPicker extends StatelessWidget {
-  const BudgetPlanSelectionPicker({super.key});
+class BudgetCategorySelectionPicker extends StatelessWidget {
+  const BudgetCategorySelectionPicker({super.key});
 
   @visibleForTesting
   static const Key dataViewKey = Key('dataViewKey');
@@ -14,8 +14,8 @@ class BudgetPlanSelectionPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(budgetPlansProvider).when(
-            data: (List<BudgetPlanViewModel> data) => _ContentDataView(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(budgetCategoriesProvider).when(
+            data: (List<BudgetCategoryViewModel> data) => _ContentDataView(
               key: dataViewKey,
               data: data,
             ),
@@ -30,19 +30,19 @@ class BudgetPlanSelectionPicker extends StatelessWidget {
 class _ContentDataView extends StatelessWidget {
   const _ContentDataView({super.key, required this.data});
 
-  final List<BudgetPlanViewModel> data;
+  final List<BudgetCategoryViewModel> data;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 24),
       itemBuilder: (BuildContext context, int index) {
-        final BudgetPlanViewModel plan = data[index];
+        final BudgetCategoryViewModel category = data[index];
 
-        return BudgetPlanListTile(
-          key: Key(plan.id),
-          plan: plan,
-          onTap: () => Navigator.pop(context, plan),
+        return BudgetCategoryListTile(
+          key: Key(category.id),
+          category: category,
+          onTap: () => Navigator.pop(context, category),
         );
       },
       separatorBuilder: (_, __) => const SizedBox(height: 4),

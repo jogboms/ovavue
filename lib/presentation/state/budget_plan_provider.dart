@@ -5,6 +5,7 @@ import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../models.dart';
 import '../state.dart';
 
 part 'budget_plan_provider.g.dart';
@@ -61,4 +62,20 @@ class BudgetPlanProvider {
   }
 
   Future<bool> updateAllocation(UpdateBudgetAllocationData data) async => _updateBudgetAllocationUseCase(data);
+
+  Future<bool> updateCategory({
+    required BudgetPlanViewModel plan,
+    required BudgetCategoryViewModel category,
+  }) async {
+    return _updateBudgetPlanUseCase.call(
+      UpdateBudgetPlanData(
+        id: plan.id,
+        path: plan.path,
+        title: plan.title,
+        description: plan.description,
+        categoryId: category.id,
+        categoryPath: category.path,
+      ),
+    );
+  }
 }

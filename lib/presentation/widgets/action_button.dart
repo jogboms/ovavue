@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
-  const ActionButton({super.key, required this.icon, required this.onPressed});
+  const ActionButton({
+    super.key,
+    required this.icon,
+    this.backgroundColor,
+    required this.onPressed,
+  });
 
   final IconData icon;
+  final Color? backgroundColor;
   final VoidCallback onPressed;
 
   @override
@@ -14,6 +20,7 @@ class ActionButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+        backgroundColor: backgroundColor,
       ),
       onPressed: onPressed,
       child: Icon(icon),

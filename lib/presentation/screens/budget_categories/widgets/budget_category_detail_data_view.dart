@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models.dart';
 import '../../../routing.dart';
+import '../../../state.dart';
 import '../../../utils.dart';
 import '../../../widgets.dart';
 import '../providers/budget_category_state.dart';
@@ -34,17 +36,23 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
               allocationAmount: state.allocation,
               budgetAmount: state.budget?.amount,
             ),
-            ActionButtonRow(
-              actions: <ActionButton>[
-                ActionButton(
-                  icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
-                  onPressed: () => _handlePlanAddition(context),
-                ),
-                ActionButton(
-                  icon: Icons.edit,
-                  onPressed: () {},
-                ),
-              ],
+            Consumer(
+              builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
+                actions: <ActionButton>[
+                  ActionButton(
+                    icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
+                    onPressed: () => _handlePlanAdditionAction(
+                      context,
+                      ref: ref,
+                      category: state.category,
+                    ),
+                  ),
+                  ActionButton(
+                    icon: Icons.edit,
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 8.0),
           ]),
@@ -82,7 +90,11 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     );
   }
 
-  void _handlePlanAddition(BuildContext context) async {
+  void _handlePlanAdditionAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetCategoryViewModel category,
+  }) async {
     final BudgetPlanViewModel? plan = await showModalBottomSheet(
       context: context,
       builder: (_) => const BudgetPlanSelectionPicker(),
@@ -91,6 +103,6 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
       return;
     }
 
-    // TODO(Jogboms): add category to plan
+    await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
   }
 }

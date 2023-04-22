@@ -9,6 +9,7 @@ import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
 import 'providers/selected_budget_plan_provider.dart';
+import 'widgets/budget_category_selection_picker.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
   const BudgetPlanDetailPage({super.key, required this.id, this.budgetId});
@@ -126,10 +127,6 @@ class _ContentDataView extends StatelessWidget {
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
                   actions: <ActionButton>[
-                    ActionButton(
-                      icon: Icons.edit,
-                      onPressed: () {},
-                    ),
                     if (budget != null && budget.active)
                       ActionButton(
                         icon: Icons.attach_money,
@@ -140,6 +137,30 @@ class _ContentDataView extends StatelessWidget {
                           plan: state.plan,
                           allocation: allocation,
                         ),
+                      ),
+                    ActionButton(
+                      icon: Icons.add_chart, // TODO(Jogboms): fix icon
+                      onPressed: () => _handleUpdateCategoryAction(
+                        context,
+                        ref: ref,
+                        plan: state.plan,
+                      ),
+                    ),
+                    ActionButton(
+                      icon: Icons.edit,
+                      onPressed: () {},
+                    ),
+                    if (budget == null || !budget.active)
+                      ActionButton(
+                        icon: Icons.delete,
+                        backgroundColor: colorScheme.errorContainer,
+                        onPressed: () {},
+                      )
+                    else
+                      ActionButton(
+                        icon: Icons.remove_circle_outline_outlined, // TODO(Jogboms): fix icon
+                        backgroundColor: colorScheme.tertiaryContainer,
+                        onPressed: () {},
                       ),
                   ],
                 ),
@@ -161,21 +182,16 @@ class _ContentDataView extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
+                final BudgetPlanAllocationBudgetViewModel budget = allocation.budget;
 
-                return ListTile(
-                  key: Key(allocation.id),
-                  title: Text(
-                    allocation.budget.title.sentence(),
-                    style: textTheme.titleMedium,
-                  ),
-                  subtitle: BudgetDurationText(
-                    startedAt: allocation.budget.startedAt,
-                    endedAt: allocation.budget.endedAt,
-                  ),
-                  trailing: AmountRatioItem(
-                    allocationAmount: allocation.amount,
-                    baseAmount: allocation.budget.amount,
-                  ),
+                return BudgetListTile(
+                  key: Key(budget.id),
+                  id: budget.id,
+                  title: budget.title,
+                  budgetAmount: budget.amount,
+                  allocationAmount: allocation.amount,
+                  startedAt: budget.startedAt,
+                  endedAt: budget.endedAt,
                 );
               },
               childCount: state.previousAllocations.length,
@@ -222,6 +238,22 @@ class _ContentDataView extends StatelessWidget {
         ),
       );
     }
+  }
+
+  void _handleUpdateCategoryAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetPlanViewModel plan,
+  }) async {
+    final BudgetCategoryViewModel? category = await showModalBottomSheet(
+      context: context,
+      builder: (_) => const BudgetCategorySelectionPicker(),
+    );
+    if (category == null) {
+      return;
+    }
+
+    await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
   }
 }
 

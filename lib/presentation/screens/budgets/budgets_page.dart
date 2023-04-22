@@ -45,8 +45,6 @@ class _ContentDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -76,40 +74,15 @@ class _ContentDataView extends StatelessWidget {
               (BuildContext context, int index) {
                 final BudgetViewModel budget = data[index];
 
-                return ListTile(
-                  title: Text(budget.title),
-                  subtitle: budget.active
-                      ? Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: colorScheme.primaryContainer,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
-                            margin: const EdgeInsets.only(right: 2),
-                            child: Text(
-                              context.l10n.activeLabel,
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onPrimaryContainer,
-                              ),
-                            ),
-                          ),
-                        )
-                      : BudgetDurationText.medium(
-                          startedAt: budget.startedAt,
-                          endedAt: budget.endedAt,
-                        ),
-                  trailing: Text(
-                    budget.amount.formatted,
-                    style: textTheme.titleMedium?.copyWith(
-                      color: budget.active ? colorScheme.onInverseSurface : null,
-                    ),
-                  ),
-                  selected: budget.active,
-                  selectedTileColor: colorScheme.inverseSurface,
-                  selectedColor: colorScheme.onInverseSurface,
-                  onTap: budget.active ? null : () => context.router.goToBudgetDetail(id: budget.id),
+                return BudgetListTile(
+                  key: Key(budget.id),
+                  id: budget.id,
+                  title: budget.title,
+                  budgetAmount: budget.amount,
+                  allocationAmount: null,
+                  startedAt: budget.startedAt,
+                  endedAt: budget.endedAt,
+                  onTap: () => context.router.goToBudgetDetail(id: budget.id),
                 );
               },
               childCount: data.length,
