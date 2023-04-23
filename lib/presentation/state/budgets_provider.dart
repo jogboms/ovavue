@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,6 +24,7 @@ Stream<List<BudgetViewModel>> budgets(BudgetsRef ref) async* {
             budgetIdToPlans[budget.id]?.toList(growable: false) ?? const <NormalizedBudgetPlanEntity>[],
           ),
         )
+        .sorted((BudgetViewModel a, BudgetViewModel b) => b.startedAt.compareTo(a.startedAt))
         .toList(growable: false),
   );
 }
