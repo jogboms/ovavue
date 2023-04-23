@@ -256,11 +256,24 @@ class _ContentDataView extends StatelessWidget {
     required WidgetRef ref,
     required BudgetPlanViewModel plan,
   }) async {
+    final L10n l10n = context.l10n;
+
     final BudgetCategoryViewModel? category = await showModalBottomSheet(
       context: context,
-      builder: (_) => const BudgetCategorySelectionPicker(),
+      builder: (_) => BudgetCategorySelectionPicker(
+        selectedId: plan.category.id,
+      ),
     );
     if (category == null) {
+      return;
+    }
+
+    // ignore: use_build_context_synchronously
+    final bool choice = await showErrorChoiceBanner(
+      context,
+      message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
+    );
+    if (!choice) {
       return;
     }
 
@@ -274,6 +287,14 @@ class _ContentDataView extends StatelessWidget {
   }) async {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = context.snackBar;
+    final bool choice = await showErrorChoiceBanner(
+      context,
+      message: l10n.deleteAllocationAreYouSureAboutThisMessage,
+    );
+    if (!choice) {
+      return;
+    }
+
     final bool successful = await ref.read(budgetPlanProvider).deleteAllocation(allocation.path);
     if (successful) {
       snackBar.success(l10n.successfulMessage);

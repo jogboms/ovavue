@@ -47,6 +47,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                       context,
                       ref: ref,
                       category: state.category,
+                      planIds: state.plans.map((_) => _.id),
                     ),
                   ),
                   ActionButton(
@@ -107,12 +108,26 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     BuildContext context, {
     required WidgetRef ref,
     required BudgetCategoryViewModel category,
+    required Iterable<String> planIds,
   }) async {
+    final L10n l10n = context.l10n;
+
     final BudgetPlanViewModel? plan = await showModalBottomSheet(
       context: context,
-      builder: (_) => const BudgetPlanSelectionPicker(),
+      builder: (_) => BudgetPlanSelectionPicker(
+        selectedIds: planIds,
+      ),
     );
     if (plan == null) {
+      return;
+    }
+
+    // ignore: use_build_context_synchronously
+    final bool choice = await showErrorChoiceBanner(
+      context,
+      message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
+    );
+    if (!choice) {
       return;
     }
 
@@ -130,7 +145,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     final NavigatorState navigator = Navigator.of(context);
     final bool choice = await showErrorChoiceBanner(
       context,
-      message: context.l10n.deleteCategoryAreYouSureAboutThisMessage,
+      message: l10n.deleteCategoryAreYouSureAboutThisMessage,
     );
     if (!choice) {
       return;

@@ -17,7 +17,7 @@ void deleteBudgetPlanAction(
   final NavigatorState navigator = Navigator.of(context);
   final bool choice = await showErrorChoiceBanner(
     context,
-    message: context.l10n.deletePlanAreYouSureAboutThisMessage,
+    message: l10n.deletePlanAreYouSureAboutThisMessage,
   );
   if (!choice) {
     return;

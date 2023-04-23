@@ -49,7 +49,7 @@ Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
               BudgetCategoryPlanViewModel a,
               BudgetCategoryPlanViewModel b,
             ) =>
-                b.allocation?.compareTo(a.allocation ?? Money.zero) ?? 1,
+                (b.allocation ?? Money.zero).compareTo(a.allocation ?? Money.zero),
           )
           .toList(growable: false);
 

@@ -6,7 +6,9 @@ import '../../../state.dart';
 import '../../../widgets.dart';
 
 class BudgetCategorySelectionPicker extends StatelessWidget {
-  const BudgetCategorySelectionPicker({super.key});
+  const BudgetCategorySelectionPicker({super.key, required this.selectedId});
+
+  final String selectedId;
 
   @visibleForTesting
   static const Key dataViewKey = Key('dataViewKey');
@@ -17,7 +19,7 @@ class BudgetCategorySelectionPicker extends StatelessWidget {
       builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(budgetCategoriesProvider).when(
             data: (List<BudgetCategoryViewModel> data) => _ContentDataView(
               key: dataViewKey,
-              data: data,
+              data: data.where((_) => _.id != selectedId),
             ),
             error: ErrorView.new,
             loading: () => child!,
@@ -30,14 +32,14 @@ class BudgetCategorySelectionPicker extends StatelessWidget {
 class _ContentDataView extends StatelessWidget {
   const _ContentDataView({super.key, required this.data});
 
-  final List<BudgetCategoryViewModel> data;
+  final Iterable<BudgetCategoryViewModel> data;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 24),
       itemBuilder: (BuildContext context, int index) {
-        final BudgetCategoryViewModel category = data[index];
+        final BudgetCategoryViewModel category = data.elementAt(index);
 
         return BudgetCategoryListTile(
           key: Key(category.id),
