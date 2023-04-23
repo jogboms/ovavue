@@ -12,6 +12,7 @@
   "tryAgainMessage": "Do try again after some time",
   "budgetsPageTitle": "Budgets",
   "totalBudgetCaption": "Total budget",
+  "deleteLabel": "Delete",
   "excessLabel": "Excess Amount",
   "activeLabel": "active",
   "previousAllocationsTitle": "Previous Allocations",
@@ -22,6 +23,7 @@
   "createPlanCaption": "Create new budget plan",
   "selectPlanCaption": "Select a plan",
   "deletePlanAreYouSureAboutThisMessage": "This action is non-reversible and will also remove all allocations associated with this budget plan. Are you sure about this?",
+  "deleteCategoryAreYouSureAboutThisMessage": "This action is non-reversible. Are you sure about this?",
   "amountRemainingCaption": "{amount} left",
   "@amountRemainingCaption": {
     "placeholders": {

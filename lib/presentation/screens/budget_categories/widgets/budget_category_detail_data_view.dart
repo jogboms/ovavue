@@ -6,6 +6,7 @@ import '../../../routing.dart';
 import '../../../state.dart';
 import '../../../utils.dart';
 import '../../../widgets.dart';
+import '../providers/budget_category_provider.dart';
 import '../providers/budget_category_state.dart';
 import '../providers/models.dart';
 import 'budget_category_header.dart';
@@ -20,6 +21,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -51,6 +53,17 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                     icon: Icons.edit,
                     onPressed: () {},
                   ),
+                  if (state.plans.isEmpty)
+                    ActionButton(
+                      icon: Icons.delete,
+                      backgroundColor: colorScheme.errorContainer,
+                      onPressed: () => _handleCategoryDeletionAction(
+                        context,
+                        ref: ref,
+                        category: state.category,
+                        dismissOnComplete: true,
+                      ),
+                    )
                 ],
               ),
             ),
@@ -104,5 +117,33 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     }
 
     await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
+  }
+
+  void _handleCategoryDeletionAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetCategoryViewModel category,
+    required bool dismissOnComplete,
+  }) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = context.snackBar;
+    final NavigatorState navigator = Navigator.of(context);
+    final bool choice = await showErrorChoiceBanner(
+      context,
+      message: context.l10n.deleteCategoryAreYouSureAboutThisMessage,
+    );
+    if (!choice) {
+      return;
+    }
+
+    final bool successful = await ref.read(budgetCategoryProvider).delete(category.path);
+    if (successful) {
+      snackBar.success(l10n.successfulMessage);
+      if (dismissOnComplete) {
+        navigator.pop();
+      }
+    } else {
+      snackBar.error(l10n.genericErrorMessage);
+    }
   }
 }
