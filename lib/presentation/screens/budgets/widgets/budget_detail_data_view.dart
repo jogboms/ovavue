@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ import '../../../state.dart';
 import '../../../theme.dart';
 import '../../../utils.dart';
 import '../../../widgets.dart';
+import '../providers/budget_provider.dart';
 
 class BudgetDetailDataView extends StatelessWidget {
   const BudgetDetailDataView({super.key, required this.state});
@@ -76,7 +78,12 @@ class BudgetDetailDataView extends StatelessWidget {
                 ],
                 ActionButton(
                   icon: Icons.copy_outlined, // TODO(Jogboms): fix icon
-                  onPressed: () {},
+                  onPressed: () => _handleDuplicateAction(
+                    context,
+                    ref: ref,
+                    budget: state.budget,
+                    navigateOnComplete: false,
+                  ),
                 ),
               ],
             ),
@@ -138,6 +145,35 @@ class BudgetDetailDataView extends StatelessWidget {
             plan: ReferenceEntity(id: result.plan.id, path: result.plan.path),
           ),
         );
+  }
+
+  void _handleDuplicateAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required SelectedBudgetViewModel budget,
+    required bool navigateOnComplete,
+  }) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = context.snackBar;
+    final AppRouter router = context.router;
+
+    final DateTime startedAt = clock.now();
+    final int index = startedAt.year == budget.createdAt.year ? budget.index + 1 : 1;
+    final String title = '${startedAt.year}.${index.toString().padLeft(2, '0')}';
+
+    final String id = await ref.read(budgetProvider).create(
+          fromBudgetId: budget.id,
+          index: index,
+          title: title,
+          amount: budget.amount.rawValue,
+          description: budget.description,
+          startedAt: startedAt,
+          active: true,
+        );
+    snackBar.success(l10n.successfulMessage);
+    if (navigateOnComplete) {
+      router.goToBudgetDetail(id: id).ignore();
+    }
   }
 }
 

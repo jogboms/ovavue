@@ -9,6 +9,7 @@ class BudgetViewModel with EquatableMixin {
     required this.id,
     required this.title,
     required this.path,
+    required this.index,
     required this.amount,
     required this.description,
     required this.plans,
@@ -25,6 +26,7 @@ class BudgetViewModel with EquatableMixin {
     return BudgetViewModel(
       id: entity.id,
       title: entity.title,
+      index: entity.index,
       path: entity.path,
       amount: entity.amount.asMoney,
       description: entity.description,
@@ -38,6 +40,7 @@ class BudgetViewModel with EquatableMixin {
 
   final String id;
   final String path;
+  final int index;
   final String title;
   final Money amount;
   final String description;
@@ -51,5 +54,5 @@ class BudgetViewModel with EquatableMixin {
 
   @override
   List<Object?> get props =>
-      <Object?>[id, path, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
+      <Object?>[id, path, index, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
 }

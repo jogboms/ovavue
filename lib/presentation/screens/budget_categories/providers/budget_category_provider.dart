@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,7 +24,7 @@ BudgetCategoryProvider budgetCategory(BudgetCategoryRef ref) {
 @visibleForTesting
 class BudgetCategoryProvider {
   const BudgetCategoryProvider({
-    required Future<UserEntity> Function() fetchUser,
+    required AsyncValueGetter<UserEntity> fetchUser,
     required CreateBudgetCategoryUseCase createBudgetCategoryUseCase,
     required UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase,
     required DeleteBudgetCategoryUseCase deleteBudgetCategoryUseCase,
@@ -33,7 +33,7 @@ class BudgetCategoryProvider {
         _createBudgetCategoryUseCase = createBudgetCategoryUseCase,
         _fetchUser = fetchUser;
 
-  final Future<UserEntity> Function() _fetchUser;
+  final AsyncValueGetter<UserEntity> _fetchUser;
   final CreateBudgetCategoryUseCase _createBudgetCategoryUseCase;
   final UpdateBudgetCategoryUseCase _updateBudgetCategoryUseCase;
   final DeleteBudgetCategoryUseCase _deleteBudgetCategoryUseCase;

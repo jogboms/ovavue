@@ -76,7 +76,7 @@ void main() async {
     ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
-    ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))

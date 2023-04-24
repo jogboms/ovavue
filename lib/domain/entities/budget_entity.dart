@@ -7,6 +7,7 @@ class BaseBudgetEntity<T> with EquatableMixin {
   const BaseBudgetEntity({
     required this.id,
     required this.path,
+    required this.index,
     required this.title,
     required this.amount,
     required this.description,
@@ -18,6 +19,7 @@ class BaseBudgetEntity<T> with EquatableMixin {
 
   final String id;
   final String path;
+  final int index;
   final String title;
   final int amount;
   final String description;
@@ -27,7 +29,8 @@ class BaseBudgetEntity<T> with EquatableMixin {
   final DateTime? updatedAt;
 
   @override
-  List<Object?> get props => <Object?>[id, path, title, amount, description, startedAt, endedAt, createdAt, updatedAt];
+  List<Object?> get props =>
+      <Object?>[id, path, index, title, amount, description, startedAt, endedAt, createdAt, updatedAt];
 
   @override
   bool? get stringify => true;
@@ -51,6 +54,7 @@ extension NormalizeBudgetEntityExtension on BudgetEntity {
   NormalizedBudgetEntity normalize() => NormalizedBudgetEntity(
         id: id,
         path: path,
+        index: index,
         title: title,
         description: description,
         amount: amount,

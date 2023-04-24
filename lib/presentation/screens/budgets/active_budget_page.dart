@@ -31,6 +31,7 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
               ),
               error: ErrorView.new,
               loading: () => child!,
+              skipLoadingOnReload: true,
             ),
         child: const LoadingView(),
       ),

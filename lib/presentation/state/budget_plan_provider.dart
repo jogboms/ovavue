@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,7 +28,7 @@ BudgetPlanProvider budgetPlan(BudgetPlanRef ref) {
 class BudgetPlanProvider {
   @visibleForTesting
   const BudgetPlanProvider({
-    required Future<UserEntity> Function() fetchUser,
+    required AsyncValueGetter<UserEntity> fetchUser,
     required CreateBudgetPlanUseCase createBudgetPlanUseCase,
     required UpdateBudgetPlanUseCase updateBudgetPlanUseCase,
     required DeleteBudgetPlanUseCase deleteBudgetPlanUseCase,
@@ -43,7 +43,7 @@ class BudgetPlanProvider {
         _createBudgetPlanUseCase = createBudgetPlanUseCase,
         _fetchUser = fetchUser;
 
-  final Future<UserEntity> Function() _fetchUser;
+  final AsyncValueGetter<UserEntity> _fetchUser;
   final CreateBudgetPlanUseCase _createBudgetPlanUseCase;
   final UpdateBudgetPlanUseCase _updateBudgetPlanUseCase;
   final DeleteBudgetPlanUseCase _deleteBudgetPlanUseCase;

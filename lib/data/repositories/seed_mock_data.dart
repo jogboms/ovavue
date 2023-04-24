@@ -17,7 +17,7 @@ void seedMockData() {
     5,
     (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId, category: categories.random()),
   );
-  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(15, userId: userId);
+  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(2, userId: userId);
   final Map<String, NormalizedBudgetEntity> budgetById = budgets.foldToMap((_) => _.id);
   final Map<String, int> budgetToAmount = budgetById.map(
     (String key, NormalizedBudgetEntity value) => MapEntry<String, int>(key, value.amount),

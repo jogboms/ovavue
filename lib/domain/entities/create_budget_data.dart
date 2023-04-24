@@ -1,5 +1,6 @@
 class CreateBudgetData {
   const CreateBudgetData({
+    required this.index,
     required this.title,
     required this.amount,
     required this.description,
@@ -7,6 +8,7 @@ class CreateBudgetData {
     required this.endedAt,
   });
 
+  final int index;
   final String title;
   final int amount;
   final String description;

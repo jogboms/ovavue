@@ -107,7 +107,7 @@ Registry createRegistry({
       )
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
-      ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), analytics: di()))
+      ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
@@ -302,6 +302,7 @@ extension NormalizedBudgetEntityExtensions on NormalizedBudgetEntity {
   BudgetEntity get asBudgetEntity => BudgetEntity(
         id: id,
         path: path,
+        index: index,
         title: title,
         description: description,
         amount: amount,

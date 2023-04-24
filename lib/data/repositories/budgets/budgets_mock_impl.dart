@@ -10,13 +10,15 @@ import '../extensions.dart';
 class BudgetsMockImpl implements BudgetsRepository {
   static BudgetEntity generateBudget({
     String? id,
+    int? index,
     String? userId,
     DateTime? startedAt,
   }) =>
-      generateNormalizedBudget(id: id, userId: userId, startedAt: startedAt).denormalize;
+      generateNormalizedBudget(id: id, index: index, userId: userId, startedAt: startedAt).denormalize;
 
   static NormalizedBudgetEntity generateNormalizedBudget({
     String? id,
+    int? index,
     String? title,
     String? userId,
     DateTime? startedAt,
@@ -28,6 +30,7 @@ class BudgetsMockImpl implements BudgetsRepository {
     return NormalizedBudgetEntity(
       id: id,
       path: '/budgets/$userId/$id',
+      index: index ?? faker.randomGenerator.integer(100, min: 1),
       title: title ?? faker.lorem.words(2).join(' '),
       description: faker.lorem.sentence(),
       amount: (faker.randomGenerator.decimal(min: 1) * 1e9).toInt(),
@@ -52,6 +55,7 @@ class BudgetsMockImpl implements BudgetsRepository {
       (int index) {
         final DateTime startedAt = clock.monthsFromNow(index);
         return BudgetsMockImpl.generateNormalizedBudget(
+          index: index,
           title: '${clock.now().year}.${index + 1}',
           userId: userId,
           startedAt: startedAt,
@@ -71,11 +75,13 @@ class BudgetsMockImpl implements BudgetsRepository {
   }
 
   @override
-  Future<String> create(String userId, CreateBudgetData budget) async {
+  Future<ReferenceEntity> create(String userId, CreateBudgetData budget) async {
     final String id = faker.guid.guid();
+    final String path = '/budgets/$userId/$id';
     final BudgetEntity newItem = BudgetEntity(
       id: id,
-      path: '/budgets/$userId/$id',
+      path: path,
+      index: budget.index,
       title: budget.title,
       description: budget.description,
       amount: budget.amount,
@@ -85,7 +91,7 @@ class BudgetsMockImpl implements BudgetsRepository {
       updatedAt: null,
     );
     _budgets$.add(_budgets..putIfAbsent(id, () => newItem));
-    return id;
+    return ReferenceEntity(id: id, path: path);
   }
 
   @override
@@ -111,6 +117,13 @@ class BudgetsMockImpl implements BudgetsRepository {
       );
 
   @override
+  Future<bool> deactivateBudget({required String budgetPath, required DateTime endedAt}) async {
+    final String id = _budgets.values.firstWhere((BudgetEntity element) => element.path == budgetPath).id;
+    _budgets$.add(_budgets..update(id, (BudgetEntity prev) => prev.copyWith(endedAt: endedAt)));
+    return true;
+  }
+
+  @override
   Stream<BudgetEntity> fetchOne({required String userId, required String budgetId}) =>
       _budgets$.stream.map((Map<String, BudgetEntity> event) => event[budgetId]!);
 }
@@ -119,6 +132,7 @@ extension on BudgetEntity {
   BudgetEntity copyWith({
     String? id,
     String? path,
+    int? index,
     String? title,
     int? amount,
     String? description,
@@ -130,6 +144,7 @@ extension on BudgetEntity {
       BudgetEntity(
         id: id ?? this.id,
         path: path ?? this.path,
+        index: index ?? this.index,
         title: title ?? this.title,
         description: description ?? this.description,
         amount: amount ?? this.amount,
@@ -152,6 +167,7 @@ extension on NormalizedBudgetEntity {
   BudgetEntity get denormalize => BudgetEntity(
         id: id,
         path: path,
+        index: index,
         title: title,
         description: description,
         amount: amount,

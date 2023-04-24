@@ -9,6 +9,7 @@ class SelectedBudgetViewModel with EquatableMixin {
     required this.id,
     required this.title,
     required this.path,
+    required this.index,
     required this.amount,
     required this.description,
     required this.plans,
@@ -20,6 +21,7 @@ class SelectedBudgetViewModel with EquatableMixin {
 
   final String id;
   final String path;
+  final int index;
   final String title;
   final Money amount;
   final String description;
@@ -31,7 +33,7 @@ class SelectedBudgetViewModel with EquatableMixin {
 
   @override
   List<Object?> get props =>
-      <Object?>[id, path, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
+      <Object?>[id, path, index, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
 }
 
 extension NormalizedBudgetEntityViewModelExtension on NormalizedBudgetEntity {
@@ -39,6 +41,7 @@ extension NormalizedBudgetEntityViewModelExtension on NormalizedBudgetEntity {
     return SelectedBudgetViewModel(
       id: id,
       path: path,
+      index: index,
       title: title,
       amount: Money(amount),
       description: description,
