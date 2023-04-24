@@ -26,6 +26,12 @@
   "deleteCategoryAreYouSureAboutThisMessage": "This action is non-reversible. Are you sure about this?",
   "deleteAllocationAreYouSureAboutThisMessage": "This action is non-reversible and would remove the allocation on the active budget for this budget plan. Are you sure about this?",
   "updatePlanCategoryAreYouSureAboutThisMessage": "This action is non-reversible and would update the category assigned this budget plan across all budgets. Are you sure about this?",
+  "titleLabel": "Title",
+  "descriptionLabel": "Description",
+  "amountLabel": "Amount",
+  "startDateLabel": "Starting date",
+  "makeActiveLabel": "Make this active?",
+  "submitCaption": "Submit",
   "amountRemainingCaption": "{amount} left",
   "@amountRemainingCaption": {
     "placeholders": {

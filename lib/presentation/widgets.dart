@@ -10,6 +10,7 @@ export 'widgets/budget_duration_text.dart';
 export 'widgets/budget_list_tile.dart';
 export 'widgets/budget_plan_list_tile.dart';
 export 'widgets/custom_app_bar.dart';
+export 'widgets/date_picker_field.dart';
 export 'widgets/error_view.dart';
 export 'widgets/loading_spinner.dart';
 export 'widgets/loading_view.dart';

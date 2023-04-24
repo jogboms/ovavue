@@ -6,6 +6,7 @@ import '../../routing.dart';
 import '../../state.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
+import 'utils/create_budget_action.dart';
 
 class BudgetsPage extends StatefulWidget {
   const BudgetsPage({super.key});
@@ -55,13 +56,19 @@ class _ContentDataView extends StatelessWidget {
           centerTitle: true,
         ),
         SliverToBoxAdapter(
-          child: ActionButtonRow(
-            actions: <ActionButton>[
-              ActionButton(
-                icon: Icons.add,
-                onPressed: () {},
-              ),
-            ],
+          child: Consumer(
+            builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+              actions: <ActionButton>[
+                ActionButton(
+                  icon: Icons.add,
+                  onPressed: () => createBudgetAction(
+                    context,
+                    ref: ref,
+                    navigateOnComplete: true,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SliverPadding(
