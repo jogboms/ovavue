@@ -2,7 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:ovavue/presentation.dart';
+
+import '../../models.dart';
+import '../../routing.dart';
+import '../../state.dart';
+import '../../utils.dart';
+import '../../widgets.dart';
 
 class GroupedBudgetPlansPage extends StatefulWidget {
   const GroupedBudgetPlansPage({super.key, required this.budgetId});
@@ -23,15 +28,16 @@ class _GroupedBudgetPlansPageState extends State<GroupedBudgetPlansPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(activeBudgetProvider).when(
-              data: (ActiveBudgetState data) => _ContentDataView(
-                key: dataViewKey,
-                state: data,
-                expandAllGroups: _expandAllGroups,
-              ),
-              error: ErrorView.new,
-              loading: () => child!,
-            ),
+        builder: (BuildContext context, WidgetRef ref, Widget? child) =>
+            ref.watch(selectedBudgetProvider(widget.budgetId)).when(
+                  data: (BudgetState data) => _ContentDataView(
+                    key: dataViewKey,
+                    state: data,
+                    expandAllGroups: _expandAllGroups,
+                  ),
+                  error: ErrorView.new,
+                  loading: () => child!,
+                ),
         child: const LoadingView(),
       ),
       floatingActionButton: FloatingActionButton(
@@ -45,7 +51,7 @@ class _GroupedBudgetPlansPageState extends State<GroupedBudgetPlansPage> {
 class _ContentDataView extends StatelessWidget {
   const _ContentDataView({super.key, required this.state, required this.expandAllGroups});
 
-  final ActiveBudgetState state;
+  final BudgetState state;
   final bool expandAllGroups;
 
   @override
@@ -53,7 +59,7 @@ class _ContentDataView extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
 
-    final Map<String, List<ActiveBudgetPlanViewModel>> plansByCategory =
+    final Map<String, List<SelectedBudgetPlanViewModel>> plansByCategory =
         state.budget.plans.groupListsBy((_) => _.category.id);
 
     return CustomScrollView(
@@ -69,7 +75,7 @@ class _ContentDataView extends StatelessWidget {
           asSliver: true,
           centerTitle: true,
         ),
-        for (final ActiveBudgetCategoryViewModel category in state.categories)
+        for (final SelectedBudgetCategoryViewModel category in state.categories)
           SliverPadding(
             padding: const EdgeInsets.only(top: 4),
             sliver: _SliverPlansGroup(
@@ -94,9 +100,9 @@ class _SliverPlansGroup extends StatefulWidget {
     required this.expanded,
   });
 
-  final ActiveBudgetViewModel budget;
-  final ActiveBudgetCategoryViewModel category;
-  final List<ActiveBudgetPlanViewModel> plans;
+  final SelectedBudgetViewModel budget;
+  final SelectedBudgetCategoryViewModel category;
+  final List<SelectedBudgetPlanViewModel> plans;
   final bool expanded;
 
   @override
@@ -145,7 +151,7 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
               sliver: SliverList(
                 delegate: SliverSeparatorBuilderDelegate(
                   builder: (BuildContext context, int index) {
-                    final ActiveBudgetPlanViewModel plan = widget.plans[index];
+                    final SelectedBudgetPlanViewModel plan = widget.plans[index];
 
                     return _PlanTile(
                       key: Key(plan.id),
@@ -170,7 +176,7 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
 class _Header extends StatelessWidget {
   const _Header({super.key, required this.category});
 
-  final ActiveBudgetCategoryViewModel category;
+  final SelectedBudgetCategoryViewModel category;
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +214,7 @@ class _PlanTile extends StatelessWidget {
     required this.onPressed,
   });
 
-  final ActiveBudgetPlanViewModel plan;
+  final SelectedBudgetPlanViewModel plan;
   final Money categoryAllocationAmount;
   final VoidCallback onPressed;
 

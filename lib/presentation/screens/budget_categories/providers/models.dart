@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../models.dart';
 import '../../../utils.dart';
 
 class BudgetCategoryPlanViewModel with EquatableMixin {
@@ -21,17 +22,14 @@ class BudgetCategoryPlanViewModel with EquatableMixin {
   List<Object?> get props => <Object?>[id, path, title, description, allocation];
 }
 
-class BudgetCategoryBudgetViewModel with EquatableMixin {
-  const BudgetCategoryBudgetViewModel({
-    required this.id,
-    required this.path,
-    required this.amount,
-  });
-
-  final String id;
-  final String path;
-  final Money amount;
-
-  @override
-  List<Object?> get props => <Object?>[id, path, amount];
+extension BudgetCategoryPlanViewModelExtension on BudgetPlanViewModel {
+  BudgetCategoryPlanViewModel toViewModel(Money? allocation) {
+    return BudgetCategoryPlanViewModel(
+      id: id,
+      path: path,
+      title: title,
+      description: description,
+      allocation: allocation,
+    );
+  }
 }

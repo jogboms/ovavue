@@ -57,6 +57,12 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
   }
 
   @override
+  Future<bool> update(UpdateBudgetCategoryData category) async {
+    _categories$.add(_categories..update(category.id, (BudgetCategoryEntity prev) => prev.update(category)));
+    return true;
+  }
+
+  @override
   Future<bool> delete(String path) async {
     final String id = _categories.values.firstWhere((BudgetCategoryEntity element) => element.path == path).id;
     _categories$.add(_categories..remove(id));
@@ -66,4 +72,17 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
   @override
   Stream<BudgetCategoryEntityList> fetch(String userId) =>
       _categories$.stream.map((Map<String, BudgetCategoryEntity> event) => event.values.toList());
+}
+
+extension on BudgetCategoryEntity {
+  BudgetCategoryEntity update(UpdateBudgetCategoryData update) => BudgetCategoryEntity(
+        id: id,
+        path: path,
+        title: update.title,
+        description: update.description,
+        icon: update.icon,
+        color: update.color,
+        createdAt: createdAt,
+        updatedAt: clock.now(),
+      );
 }

@@ -19,6 +19,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_riverpod: ^2.3.2
+  flutter_slidable: ^3.0.0
   flutter_sticky_header: ^0.6.5
   intl: ^0.18.0
   logging: ^1.1.1

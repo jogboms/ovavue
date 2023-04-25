@@ -1,10 +1,22 @@
 import '../entities/budget_allocation_entity.dart';
 import '../entities/create_budget_allocation_data.dart';
+import '../entities/update_budget_allocation_data.dart';
 
 abstract class BudgetAllocationsRepository {
   Future<String> create(String userId, CreateBudgetAllocationData allocation);
 
+  Future<List<String>> createAll(String userId, List<CreateBudgetAllocationData> allocations);
+
+  Future<bool> update(UpdateBudgetAllocationData allocation);
+
   Future<bool> delete(String path);
+
+  Future<bool> deleteByPlan({
+    required String userId,
+    required String planId,
+  });
+
+  Stream<BudgetAllocationEntityList> fetchAll(String userId);
 
   Stream<BudgetAllocationEntityList> fetch({
     required String userId,

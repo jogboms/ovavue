@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../models.dart';
 import '../../routing.dart';
 import '../../state.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
+import 'utils/delete_budget_plan_action.dart';
 
 class BudgetPlansPage extends StatefulWidget {
   const BudgetPlansPage({super.key});
@@ -30,6 +32,7 @@ class BudgetPlansPageState extends State<BudgetPlansPage> {
               ),
               error: ErrorView.new,
               loading: () => child!,
+              skipLoadingOnReload: true,
             ),
         child: const LoadingView(),
       ),
@@ -58,38 +61,51 @@ class _ContentDataView extends StatelessWidget {
           child: ActionButtonRow(
             actions: <ActionButton>[
               ActionButton(
-                icon: Icons.add_moderator_outlined,
+                icon: Icons.add,
                 onPressed: () {},
               ),
             ],
           ),
         ),
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: 8.0,
-            bottom: MediaQuery.paddingOf(context).bottom,
-          ),
-          sliver: SliverList(
-            delegate: SliverSeparatorBuilderDelegate(
-              builder: (BuildContext context, int index) {
-                final BudgetPlanViewModel plan = data[index];
+        Consumer(
+          builder: (BuildContext context, WidgetRef ref, _) => SliverPadding(
+            padding: EdgeInsets.only(
+              top: 8.0,
+              bottom: MediaQuery.paddingOf(context).bottom,
+            ),
+            sliver: SliverList(
+              delegate: SliverSeparatorBuilderDelegate(
+                builder: (BuildContext context, int index) {
+                  final BudgetPlanViewModel plan = data[index];
 
-                return ListTile(
-                  key: Key(plan.id),
-                  title: Text(plan.title.sentence(), maxLines: 1),
-                  titleTextStyle: theme.textTheme.bodyLarge,
-                  subtitle: Text(plan.description.capitalize(), maxLines: 2),
-                  subtitleTextStyle: theme.textTheme.bodyMedium,
-                  leading: CircleAvatar(
-                    backgroundColor: plan.category.backgroundColor,
-                    foregroundColor: plan.category.foregroundColor,
-                    child: Icon(plan.category.icon),
-                  ),
-                  onTap: () => context.router.goToBudgetPlanDetail(id: plan.id),
-                );
-              },
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
-              childCount: data.length,
+                  return Slidable(
+                    key: Key(plan.id),
+                    endActionPane: ActionPane(
+                      motion: const BehindMotion(),
+                      children: <SlidableAction>[
+                        SlidableAction(
+                          onPressed: (BuildContext context) => deleteBudgetPlanAction(
+                            context,
+                            ref: ref,
+                            plan: plan,
+                            dismissOnComplete: false,
+                          ),
+                          backgroundColor: const Color(0xFFFE4A49),
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: context.l10n.deleteLabel,
+                        ),
+                      ],
+                    ),
+                    child: BudgetPlanListTile(
+                      plan: plan,
+                      onTap: () => context.router.goToBudgetPlanDetail(id: plan.id),
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 4),
+                childCount: data.length,
+              ),
             ),
           ),
         ),

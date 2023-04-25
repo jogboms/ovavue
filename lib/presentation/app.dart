@@ -3,7 +3,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ovavue/core.dart';
 import 'package:registry/registry.dart';
 
-import 'screens/active_budget/active_budget_page.dart';
+import 'screens/budgets/active_budget_page.dart';
 import 'theme.dart';
 import 'utils.dart';
 import 'widgets.dart';

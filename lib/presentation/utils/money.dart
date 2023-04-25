@@ -4,11 +4,31 @@ import 'package:intl/intl.dart';
 class Money with EquatableMixin implements Comparable<Money> {
   const Money(this.rawValue);
 
+  static const double _divisor = 1e+6;
+
   static const Money zero = Money(0);
+
+  static NumberFormat get _numberFormat => NumberFormat.simpleCurrency(decimalDigits: 2);
+
+  static String get decimalSeparator => _numberFormat.symbols.DECIMAL_SEP;
+
+  static RegExp regExp = RegExp('^\\d+$decimalSeparator?\\d{0,4}');
+
+  static Money parse(String value) {
+    if (value.isEmpty) {
+      return Money.zero;
+    }
+    return Money((_numberFormat.parse(value) * _divisor).toInt());
+  }
 
   final int rawValue;
 
-  String get formatted => NumberFormat.simpleCurrency(decimalDigits: 2).format(rawValue / 100);
+  double get _editableValue => rawValue / _divisor;
+
+  String get editableTextValue =>
+      NumberFormat.decimalPattern().format(_editableValue).replaceAll(_numberFormat.symbols.GROUP_SEP, '');
+
+  String get formatted => _numberFormat.format(_editableValue);
 
   @override
   List<Object> get props => <Object>[rawValue];
@@ -26,6 +46,14 @@ class Money with EquatableMixin implements Comparable<Money> {
 
     throw ArgumentError('invalid divisor type');
   }
+
+  bool operator >(Money other) => rawValue > other.rawValue;
+
+  bool operator >=(Money other) => rawValue >= other.rawValue;
+
+  bool operator <(Money other) => rawValue < other.rawValue;
+
+  bool operator <=(Money other) => rawValue < other.rawValue;
 
   @override
   int compareTo(Money other) => rawValue.compareTo(other.rawValue);

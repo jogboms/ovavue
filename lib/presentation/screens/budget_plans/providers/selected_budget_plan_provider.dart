@@ -11,7 +11,7 @@ import '../../../utils.dart';
 part 'models.dart';
 part 'selected_budget_plan_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user, budgetPlans])
+@Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans])
 Stream<BudgetPlanState> selectedBudgetPlan(
   SelectedBudgetPlanRef ref, {
   required String id,
@@ -20,43 +20,57 @@ Stream<BudgetPlanState> selectedBudgetPlan(
   final Registry registry = ref.read(registryProvider);
   final UserEntity user = await ref.watch(userProvider.future);
 
-  final List<BudgetPlanViewModel> plans = await ref.watch(budgetPlansProvider.future);
-  final BudgetPlanViewModel plan = plans.firstWhere((BudgetPlanViewModel element) => element.id == id);
+  final BudgetPlanViewModel? plan = await ref.watch(
+    budgetPlansProvider.selectAsync(
+      (List<BudgetPlanViewModel> plans) => plans.firstWhereOrNull((_) => _.id == id),
+    ),
+  );
 
-  yield* registry
-      .get<FetchBudgetAllocationsByPlanUseCase>()
-      .call(userId: user.id, planId: id)
-      .map(
-        (NormalizedBudgetAllocationEntityList allocations) => BudgetPlanState(
-          plan: plan,
-          allocation: allocations.singleWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
-          previousAllocations: allocations
-              .where((_) => _.budget.id != budgetId)
-              .map((_) => _.toViewModel())
-              .sorted(
-                (
-                  BudgetPlanAllocationViewModel a,
-                  BudgetPlanAllocationViewModel b,
-                ) =>
-                    b.budget.startedAt.compareTo(a.budget.startedAt),
-              )
-              .toList(),
-        ),
-      )
-      .distinct();
+  if (plan != null) {
+    final BudgetViewModel? budget = await ref.watch(
+      budgetsProvider.selectAsync(
+        (List<BudgetViewModel> budgets) => budgets.firstWhereOrNull((_) => _.id == budgetId),
+      ),
+    );
+
+    yield* registry
+        .get<FetchBudgetAllocationsByPlanUseCase>()
+        .call(userId: user.id, planId: id)
+        .map(
+          (NormalizedBudgetAllocationEntityList allocations) => BudgetPlanState(
+            plan: plan,
+            budget: budget,
+            allocation: allocations.firstWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
+            previousAllocations: allocations
+                .where((_) => _.budget.id != budgetId)
+                .map((_) => _.toViewModel())
+                .sorted(
+                  (
+                    BudgetPlanAllocationViewModel a,
+                    BudgetPlanAllocationViewModel b,
+                  ) =>
+                      b.budget.startedAt.compareTo(a.budget.startedAt),
+                )
+                .toList(),
+          ),
+        )
+        .distinct();
+  }
 }
 
 class BudgetPlanState with EquatableMixin {
   const BudgetPlanState({
     required this.plan,
+    required this.budget,
     required this.allocation,
     required this.previousAllocations,
   });
 
   final BudgetPlanViewModel plan;
+  final BudgetViewModel? budget;
   final BudgetPlanAllocationViewModel? allocation;
   final List<BudgetPlanAllocationViewModel> previousAllocations;
 
   @override
-  List<Object?> get props => <Object?>[plan, allocation, previousAllocations];
+  List<Object?> get props => <Object?>[plan, budget, allocation, previousAllocations];
 }

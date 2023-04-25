@@ -7,10 +7,10 @@ class BaseBudgetEntity<T> with EquatableMixin {
   const BaseBudgetEntity({
     required this.id,
     required this.path,
+    required this.index,
     required this.title,
     required this.amount,
     required this.description,
-    required this.plans,
     required this.startedAt,
     required this.endedAt,
     required this.createdAt,
@@ -19,10 +19,10 @@ class BaseBudgetEntity<T> with EquatableMixin {
 
   final String id;
   final String path;
+  final int index;
   final String title;
   final int amount;
   final String description;
-  final List<T> plans;
   final DateTime startedAt;
   final DateTime? endedAt;
   final DateTime createdAt;
@@ -30,7 +30,7 @@ class BaseBudgetEntity<T> with EquatableMixin {
 
   @override
   List<Object?> get props =>
-      <Object?>[id, path, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
+      <Object?>[id, path, index, title, amount, description, startedAt, endedAt, createdAt, updatedAt];
 
   @override
   bool? get stringify => true;
@@ -47,22 +47,19 @@ extension NormalizedBudgetReferenceEntityExtension on NormalizedBudgetEntity {
 }
 
 extension NormalizeBudgetEntityListExtension on BudgetEntityList {
-  NormalizedBudgetEntityList normalize(NormalizedBudgetPlanEntityList plans) =>
-      map((BudgetEntity budget) => budget.normalize(plans)).toList(growable: false);
+  NormalizedBudgetEntityList normalize() => map((BudgetEntity budget) => budget.normalize()).toList(growable: false);
 }
 
 extension NormalizeBudgetEntityExtension on BudgetEntity {
-  NormalizedBudgetEntity normalize(NormalizedBudgetPlanEntityList plans) => NormalizedBudgetEntity(
+  NormalizedBudgetEntity normalize() => NormalizedBudgetEntity(
         id: id,
         path: path,
+        index: index,
         title: title,
         description: description,
         amount: amount,
         startedAt: startedAt,
         endedAt: endedAt,
-        plans: plans
-            .where((NormalizedBudgetPlanEntity plan) => plans.map((_) => _.id).contains(plan.id))
-            .toList(growable: false),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );

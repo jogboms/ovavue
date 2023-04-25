@@ -7,21 +7,20 @@ import '../../utils.dart';
 
 void main() {
   group('FetchUserUseCase', () {
-    final UsersRepository usersRepository = mockRepositories.users;
-    final FetchUserUseCase useCase = FetchUserUseCase(users: usersRepository);
+    final FetchUserUseCase useCase = FetchUserUseCase(users: mockRepositories.users);
 
     final UserEntity dummyUser = UsersMockImpl.user;
 
-    tearDown(() => reset(usersRepository));
+    tearDown(mockRepositories.reset);
 
     test('should fetch users', () {
-      when(() => usersRepository.fetch(any())).thenAnswer((_) async => dummyUser);
+      when(() => mockRepositories.users.fetch(any())).thenAnswer((_) async => dummyUser);
 
       expect(useCase('1'), completion(dummyUser));
     });
 
     test('should fail gracefully with null', () {
-      when(() => usersRepository.fetch(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.users.fetch(any())).thenThrow(Exception('an error'));
 
       expect(useCase('1'), completion(isNull));
     });

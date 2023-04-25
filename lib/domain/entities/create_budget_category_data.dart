@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class CreateBudgetCategoryData with EquatableMixin {
+class CreateBudgetCategoryData {
   const CreateBudgetCategoryData({
     required this.title,
     required this.description,
@@ -12,7 +10,4 @@ class CreateBudgetCategoryData with EquatableMixin {
   final String description;
   final int icon;
   final int color;
-
-  @override
-  List<Object> get props => <Object>[title, description, icon, color];
 }

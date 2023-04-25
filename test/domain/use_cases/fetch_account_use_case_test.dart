@@ -7,21 +7,20 @@ import '../../utils.dart';
 
 void main() {
   group('FetchAccountUseCase', () {
-    final AuthRepository authRepository = mockRepositories.auth;
-    final FetchAccountUseCase useCase = FetchAccountUseCase(auth: authRepository);
+    final FetchAccountUseCase useCase = FetchAccountUseCase(auth: mockRepositories.auth);
 
     final AccountEntity dummyAccount = AuthMockImpl.generateAccount();
 
-    tearDown(() => reset(authRepository));
+    tearDown(mockRepositories.reset);
 
     test('should fetch auth', () {
-      when(authRepository.fetch).thenAnswer((_) async => dummyAccount);
+      when(mockRepositories.auth.fetch).thenAnswer((_) async => dummyAccount);
 
       expect(useCase(), completion(dummyAccount));
     });
 
     test('should bubble fetch errors', () {
-      when(authRepository.fetch).thenThrow(Exception('an error'));
+      when(mockRepositories.auth.fetch).thenThrow(Exception('an error'));
 
       // ignore: unnecessary_lambdas, causes the test to fail
       expect(() => useCase(), throwsException);

@@ -7,26 +7,29 @@ import '../../utils.dart';
 void main() {
   group('DeleteBudgetAllocationUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final BudgetAllocationsRepository budgetAllocationsRepository = mockRepositories.budgetAllocations;
     final DeleteBudgetAllocationUseCase useCase = DeleteBudgetAllocationUseCase(
-      allocations: budgetAllocationsRepository,
+      allocations: mockRepositories.budgetAllocations,
       analytics: analytics,
     );
 
+    setUpAll(() {
+      registerFallbackValue(const ReferenceEntity(id: '1', path: 'path'));
+    });
+
     tearDown(() {
       analytics.reset();
-      reset(budgetAllocationsRepository);
+      mockRepositories.reset();
     });
 
     test('should delete a budget allocation', () async {
-      when(() => budgetAllocationsRepository.delete(any())).thenAnswer((_) async => true);
+      when(() => mockRepositories.budgetAllocations.delete(any())).thenAnswer((_) async => true);
 
       await expectLater(useCase('path'), completion(true));
       expect(analytics.events, containsOnce(AnalyticsEvent.deleteBudgetAllocation('path')));
     });
 
     test('should bubble delete errors', () {
-      when(() => budgetAllocationsRepository.delete(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetAllocations.delete(any())).thenThrow(Exception('an error'));
 
       expect(() => useCase('path'), throwsException);
     });

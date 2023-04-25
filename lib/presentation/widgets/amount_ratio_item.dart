@@ -8,16 +8,19 @@ class AmountRatioItem extends StatelessWidget {
     super.key,
     required this.allocationAmount,
     required this.baseAmount,
+    this.foregroundColor,
   }) : isLarge = false;
 
   const AmountRatioItem.large({
     super.key,
     required this.allocationAmount,
     required this.baseAmount,
+    this.foregroundColor,
   }) : isLarge = true;
 
   final Money allocationAmount;
   final Money baseAmount;
+  final Color? foregroundColor;
   final bool isLarge;
 
   @override
@@ -34,6 +37,7 @@ class AmountRatioItem extends StatelessWidget {
           '$allocationAmount',
           style: (isLarge ? textTheme.headlineSmall : textTheme.titleMedium)?.copyWith(
             fontWeight: AppFontWeight.bold,
+            color: foregroundColor,
           ),
         ),
         SizedBox(height: isLarge ? 2 : 0),

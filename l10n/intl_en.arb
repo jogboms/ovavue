@@ -7,13 +7,37 @@
   "crashViewBugMessage1": "You just found a bug, no need to panic, we have logged the issue and would provide a resolution as soon as possible",
   "crashViewBugMessage2": "If there's more to it, you could also file a personal complaint with our customer service representative",
   "successfulMessage": "Successful",
-  "genericErrorMessage": "An error occurred",
+  "genericErrorMessage": "An error occurred. Try again?",
   "loadingMessage": "Loading...",
   "tryAgainMessage": "Do try again after some time",
+  "budgetsPageTitle": "Budgets",
   "totalBudgetCaption": "Total budget",
+  "deleteLabel": "Delete",
   "excessLabel": "Excess Amount",
+  "activeLabel": "active",
   "previousAllocationsTitle": "Previous Allocations",
   "associatedPlansTitle": "Associated Plans",
   "plansPageTitle": "Plans",
-  "categoriesPageTitle": "Categories"
+  "categoriesPageTitle": "Categories",
+  "notEnoughBudgetAmountErrorMessage": "You do not have up to that amount left",
+  "createPlanCaption": "Create new budget plan",
+  "selectPlanCaption": "Select a plan",
+  "deletePlanAreYouSureAboutThisMessage": "This action is non-reversible and will also remove all allocations associated with this budget plan. Are you sure about this?",
+  "deleteCategoryAreYouSureAboutThisMessage": "This action is non-reversible. Are you sure about this?",
+  "deleteAllocationAreYouSureAboutThisMessage": "This action is non-reversible and would remove the allocation on the active budget for this budget plan. Are you sure about this?",
+  "updatePlanCategoryAreYouSureAboutThisMessage": "This action is non-reversible and would update the category assigned this budget plan across all budgets. Are you sure about this?",
+  "titleLabel": "Title",
+  "descriptionLabel": "Description",
+  "amountLabel": "Amount",
+  "startDateLabel": "Starting date",
+  "makeActiveLabel": "Make this active?",
+  "submitCaption": "Submit",
+  "amountRemainingCaption": "{amount} left",
+  "@amountRemainingCaption": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

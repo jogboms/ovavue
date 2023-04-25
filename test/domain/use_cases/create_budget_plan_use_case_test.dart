@@ -8,8 +8,10 @@ import '../../utils.dart';
 void main() {
   group('CreateBudgetPlanUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final BudgetPlansRepository budgetPlansRepository = mockRepositories.budgetPlans;
-    final CreateBudgetPlanUseCase useCase = CreateBudgetPlanUseCase(plans: budgetPlansRepository, analytics: analytics);
+    final CreateBudgetPlanUseCase useCase = CreateBudgetPlanUseCase(
+      plans: mockRepositories.budgetPlans,
+      analytics: analytics,
+    );
 
     final BudgetPlanEntity dummyEntity = BudgetPlansMockImpl.generatePlan(userId: '1');
     const CreateBudgetPlanData dummyData = CreateBudgetPlanData(
@@ -24,18 +26,18 @@ void main() {
 
     tearDown(() {
       analytics.reset();
-      reset(budgetPlansRepository);
+      mockRepositories.reset();
     });
 
     test('should create a budget plan', () async {
-      when(() => budgetPlansRepository.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
+      when(() => mockRepositories.budgetPlans.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
 
       await expectLater(useCase(userId: '1', plan: dummyData), completion(dummyEntity.id));
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudgetPlan('1')));
     });
 
     test('should bubble create errors', () {
-      when(() => budgetPlansRepository.create(any(), any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetPlans.create(any(), any())).thenThrow(Exception('an error'));
 
       expect(() => useCase(userId: '1', plan: dummyData), throwsException);
     });

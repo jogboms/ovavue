@@ -65,6 +65,12 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
   }
 
   @override
+  Future<bool> update(UpdateBudgetPlanData plan) async {
+    _plans$.add(_plans..update(plan.id, (BudgetPlanEntity prev) => prev.update(plan)));
+    return true;
+  }
+
+  @override
   Future<bool> delete(String path) async {
     final String id = _plans.values.firstWhere((BudgetPlanEntity element) => element.path == path).id;
     _plans$.add(_plans..remove(id));
@@ -76,6 +82,13 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
       _plans$.stream.map((Map<String, BudgetPlanEntity> event) => event.values.toList());
 
   @override
+  Stream<BudgetPlanEntity> fetchOne({
+    required String userId,
+    required String planId,
+  }) =>
+      _plans$.stream.map((Map<String, BudgetPlanEntity> event) => event.values.firstWhere((_) => _.id == planId));
+
+  @override
   Stream<BudgetPlanEntityList> fetchByCategory({
     required String userId,
     required String categoryId,
@@ -83,6 +96,18 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
       _plans$.stream.map(
         (Map<String, BudgetPlanEntity> event) =>
             event.values.where((BudgetPlanEntity element) => element.category.id == categoryId).toList(),
+      );
+}
+
+extension on BudgetPlanEntity {
+  BudgetPlanEntity update(UpdateBudgetPlanData update) => BudgetPlanEntity(
+        id: id,
+        path: path,
+        title: update.title,
+        description: update.description,
+        category: ReferenceEntity(id: update.categoryId, path: update.categoryPath),
+        createdAt: createdAt,
+        updatedAt: clock.now(),
       );
 }
 

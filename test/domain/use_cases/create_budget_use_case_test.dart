@@ -8,15 +8,18 @@ import '../../utils.dart';
 void main() {
   group('CreateBudgetUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final BudgetsRepository budgetsRepository = mockRepositories.budgets;
-    final CreateBudgetUseCase useCase = CreateBudgetUseCase(budgets: budgetsRepository, analytics: analytics);
+    final CreateBudgetUseCase useCase = CreateBudgetUseCase(
+      budgets: mockRepositories.budgets,
+      allocations: mockRepositories.budgetAllocations,
+      analytics: analytics,
+    );
 
     final BudgetEntity dummyEntity = BudgetsMockImpl.generateBudget(userId: '1');
     final CreateBudgetData dummyData = CreateBudgetData(
+      index: 1,
       title: 'title',
       amount: 1,
       description: 'description',
-      plans: <ReferenceEntity>[],
       startedAt: DateTime(0),
       endedAt: null,
     );
@@ -27,20 +30,81 @@ void main() {
 
     tearDown(() {
       analytics.reset();
-      reset(budgetsRepository);
+      mockRepositories.reset();
     });
 
     test('should create a budget', () async {
-      when(() => budgetsRepository.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
+      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyEntity.reference);
 
-      await expectLater(useCase(userId: '1', budget: dummyData), completion(dummyEntity.id));
+      await expectLater(
+        useCase(
+          userId: '1',
+          budget: dummyData,
+          activeBudgetPath: null,
+          allocations: null,
+        ),
+        completion(dummyEntity.id),
+      );
+      expect(analytics.events, containsOnce(AnalyticsEvent.createBudget('1')));
+    });
+
+    test('should create a budget and deactivate active budget', () async {
+      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyEntity.reference);
+      when(() => mockRepositories.budgets.deactivateBudget(budgetPath: 'path', endedAt: any(named: 'endedAt')))
+          .thenAnswer((_) async => true);
+
+      await expectLater(
+        useCase(
+          userId: '1',
+          budget: dummyData,
+          activeBudgetPath: 'path',
+          allocations: null,
+        ),
+        completion(dummyEntity.id),
+      );
+      expect(analytics.events, containsOnce(AnalyticsEvent.createBudget('1')));
+    });
+
+    test('should create a budget and duplicate allocations', () async {
+      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyEntity.reference);
+      when(() => mockRepositories.budgetAllocations.createAll('1', any())).thenAnswer((_) async => <String>['1']);
+
+      await expectLater(
+        useCase(
+          userId: '1',
+          budget: dummyData,
+          activeBudgetPath: null,
+          allocations: <ReferenceEntity, int>{
+            const ReferenceEntity(id: '2', path: 'path'): 1,
+          },
+        ),
+        completion(dummyEntity.id),
+      );
+
+      final List<CreateBudgetAllocationData> allocations =
+          verify(() => mockRepositories.budgetAllocations.createAll(any(), captureAny())).capturedType();
+      expect(allocations.first.amount, 1);
+      expect(allocations.first.budget, dummyEntity.reference);
+      expect(allocations.first.plan, const ReferenceEntity(id: '2', path: 'path'));
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudget('1')));
     });
 
     test('should bubble create errors', () {
-      when(() => budgetsRepository.create(any(), any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgets.create(any(), any())).thenThrow(Exception('an error'));
 
-      expect(() => useCase(userId: '1', budget: dummyData), throwsException);
+      expect(
+        () => useCase(
+          userId: '1',
+          activeBudgetPath: 'path',
+          allocations: <ReferenceEntity, int>{},
+          budget: dummyData,
+        ),
+        throwsException,
+      );
     });
   });
+}
+
+extension on BudgetEntity {
+  ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
 }

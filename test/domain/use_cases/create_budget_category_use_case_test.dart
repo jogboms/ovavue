@@ -8,9 +8,8 @@ import '../../utils.dart';
 void main() {
   group('CreateBudgetCategoryUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final BudgetCategoriesRepository budgetCategoriesRepository = mockRepositories.budgetCategories;
     final CreateBudgetCategoryUseCase useCase = CreateBudgetCategoryUseCase(
-      categories: budgetCategoriesRepository,
+      categories: mockRepositories.budgetCategories,
       analytics: analytics,
     );
 
@@ -26,17 +25,20 @@ void main() {
       registerFallbackValue(dummyData);
     });
 
-    tearDown(analytics.reset);
+    tearDown(() {
+      analytics.reset();
+      mockRepositories.reset();
+    });
 
     test('should create a budget category', () async {
-      when(() => budgetCategoriesRepository.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
+      when(() => mockRepositories.budgetCategories.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
 
       await expectLater(useCase(userId: '1', category: dummyData), completion(dummyEntity.id));
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudgetCategory('1')));
     });
 
     test('should bubble create errors', () {
-      when(() => budgetCategoriesRepository.create(any(), any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetCategories.create(any(), any())).thenThrow(Exception('an error'));
 
       expect(() => useCase(userId: '1', category: dummyData), throwsException);
     });

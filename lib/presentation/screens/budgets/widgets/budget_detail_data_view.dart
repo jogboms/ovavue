@@ -2,113 +2,26 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/core.dart';
+import 'package:ovavue/domain.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-import '../../models.dart';
-import '../../routing.dart';
-import '../../theme.dart';
-import '../../utils.dart';
-import '../../widgets.dart';
-import 'providers/active_budget_provider.dart';
+import '../../../models.dart';
+import '../../../routing.dart';
+import '../../../state.dart';
+import '../../../theme.dart';
+import '../../../utils.dart';
+import '../../../widgets.dart';
+import '../utils/create_budget_action.dart';
 
-class ActiveBudgetPage extends StatefulWidget {
-  const ActiveBudgetPage({super.key});
+class BudgetDetailDataView extends StatelessWidget {
+  const BudgetDetailDataView({super.key, required this.state});
 
-  @override
-  State<ActiveBudgetPage> createState() => ActiveBudgetPageState();
-}
-
-@visibleForTesting
-class ActiveBudgetPageState extends State<ActiveBudgetPage> {
-  @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(activeBudgetProvider).when(
-              data: (ActiveBudgetState data) => _ContentDataView(
-                key: dataViewKey,
-                state: data,
-              ),
-              error: ErrorView.new,
-              loading: () => child!,
-            ),
-        child: const LoadingView(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.menu),
-        onPressed: () async {
-          late final AppRouter router = context.router;
-          final _BottomSheetChoice? result = await showModalBottomSheet<_BottomSheetChoice>(
-            context: context,
-            builder: (_) => const _BottomSheetOptions(),
-          );
-          if (result == null) {
-            return;
-          }
-
-          switch (result) {
-            case _BottomSheetChoice.budgets:
-              // TODO(Jogboms): Not implemented
-              break;
-            case _BottomSheetChoice.plans:
-              await router.goToBudgetPlans();
-              break;
-            case _BottomSheetChoice.categories:
-              await router.goToBudgetCategories();
-              break;
-            case _BottomSheetChoice.settings:
-              // TODO(Jogboms): Not implemented
-              break;
-          }
-        },
-      ),
-    );
-  }
-}
-
-enum _BottomSheetChoice {
-  budgets,
-  plans,
-  categories,
-  settings,
-}
-
-class _BottomSheetOptions extends StatelessWidget {
-  const _BottomSheetOptions();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0).copyWith(
-        bottom: MediaQuery.paddingOf(context).bottom,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          for (final _BottomSheetChoice choice in _BottomSheetChoice.values)
-            ListTile(
-              key: Key(choice.name),
-              onTap: () => Navigator.of(context).pop(choice),
-              title: Text(choice.name.capitalize(), textAlign: TextAlign.center),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ContentDataView extends StatelessWidget {
-  const _ContentDataView({super.key, required this.state});
-
-  final ActiveBudgetState state;
+  final BudgetState state;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final bool active = state.budget.endedAt == null;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -127,7 +40,7 @@ class _ContentDataView extends StatelessWidget {
                 _CategoryView(
                   categories: state.categories,
                   budgetAmount: state.budget.amount,
-                  allocationAmount: state.budget.amount - state.allocation,
+                  allocationAmount: state.allocation,
                   onPressed: (String id) => context.router.goToBudgetCategoryDetailForBudget(
                     id: id,
                     budgetId: state.budget.id,
@@ -141,25 +54,37 @@ class _ContentDataView extends StatelessWidget {
           ),
         ),
         SliverPinnedHeader(
-          child: ActionButtonRow(
-            actions: <ActionButton>[
-              ActionButton(
-                icon: Icons.add_chart,
-                onPressed: () {},
-              ),
-              ActionButton(
-                icon: Icons.add_moderator_outlined,
-                onPressed: () {},
-              ),
-              ActionButton(
-                icon: Icons.edit,
-                onPressed: () {},
-              ),
-              ActionButton(
-                icon: Icons.copy_outlined,
-                onPressed: () {},
-              ),
-            ],
+          child: Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
+              actions: <ActionButton>[
+                if (active) ...<ActionButton>[
+                  ActionButton(
+                    icon: Icons.attach_money_outlined,
+                    onPressed: () => _handleAllocationAction(context, ref: ref, budget: state.budget),
+                  ),
+                  ActionButton(
+                    icon: Icons.add_chart, // TODO(Jogboms): fix icon
+                    onPressed: () {},
+                  ),
+                  ActionButton(
+                    icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
+                    onPressed: () {},
+                  ),
+                  ActionButton(
+                    icon: Icons.edit,
+                    onPressed: () {},
+                  ),
+                ],
+                ActionButton(
+                  icon: Icons.copy_outlined, // TODO(Jogboms): fix icon
+                  onPressed: () => _handleDuplicateAction(
+                    context,
+                    ref: ref,
+                    budget: state.budget,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SliverPinnedTitleCountHeader(
@@ -174,7 +99,7 @@ class _ContentDataView extends StatelessWidget {
           sliver: SliverList(
             delegate: SliverSeparatorBuilderDelegate(
               builder: (BuildContext context, int index) {
-                final ActiveBudgetPlanViewModel plan = state.budget.plans[index];
+                final SelectedBudgetPlanViewModel plan = state.budget.plans[index];
 
                 return _PlanTile(
                   key: Key(plan.id),
@@ -194,12 +119,53 @@ class _ContentDataView extends StatelessWidget {
       ],
     );
   }
+
+  void _handleAllocationAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required SelectedBudgetViewModel budget,
+  }) async {
+    final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
+      context: context,
+      budgetId: budget.id,
+      plansById: budget.plans.map((_) => _.id),
+      plan: null,
+      allocation: null,
+    );
+    if (result == null) {
+      return;
+    }
+
+    await ref.read(budgetPlanProvider).createAllocation(
+          CreateBudgetAllocationData(
+            amount: result.amount.rawValue,
+            budget: ReferenceEntity(id: budget.id, path: budget.path),
+            plan: ReferenceEntity(id: result.plan.id, path: result.plan.path),
+          ),
+        );
+  }
+
+  void _handleDuplicateAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required SelectedBudgetViewModel budget,
+  }) async =>
+      createBudgetAction(
+        context,
+        ref: ref,
+        budgetId: budget.id,
+        index: budget.index,
+        amount: budget.amount,
+        description: budget.description,
+        createdAt: budget.createdAt,
+        navigateOnComplete: budget.endedAt != null,
+      );
 }
 
 class _AppBarText extends StatelessWidget {
   const _AppBarText({required this.budget});
 
-  final ActiveBudgetViewModel budget;
+  final SelectedBudgetViewModel budget;
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +222,7 @@ class _CategoryView extends StatefulWidget {
     required this.onExpand,
   });
 
-  final List<ActiveBudgetCategoryViewModel> categories;
+  final List<SelectedBudgetCategoryViewModel> categories;
   final Money budgetAmount;
   final Money allocationAmount;
   final ValueChanged<String> onPressed;
@@ -293,7 +259,7 @@ class _CategoryViewState extends State<_CategoryView> {
                   sectionsSpace: 2,
                   centerSpaceRadius: 4,
                   sections: <PieChartSectionData>[
-                    for (final ActiveBudgetCategoryViewModel category in widget.categories)
+                    for (final SelectedBudgetCategoryViewModel category in widget.categories)
                       _derivePieSectionData(
                         amount: category.allocation,
                         backgroundColor: category.backgroundColor,
@@ -319,7 +285,7 @@ class _CategoryViewState extends State<_CategoryView> {
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: <Widget>[
-                  for (final ActiveBudgetCategoryViewModel category in widget.categories)
+                  for (final SelectedBudgetCategoryViewModel category in widget.categories)
                     _CategoryChip(
                       key: Key(category.id),
                       title: category.title,
@@ -470,7 +436,7 @@ class _PlanTile extends StatelessWidget {
     required this.onPressed,
   });
 
-  final ActiveBudgetPlanViewModel plan;
+  final SelectedBudgetPlanViewModel plan;
   final Money budgetAmount;
   final VoidCallback onPressed;
 

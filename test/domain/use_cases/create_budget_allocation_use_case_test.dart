@@ -8,39 +8,37 @@ import '../../utils.dart';
 void main() {
   group('CreateBudgetAllocationUseCase', () {
     final LogAnalytics analytics = LogAnalytics();
-    final BudgetAllocationsRepository budgetAllocationsRepository = mockRepositories.budgetAllocations;
     final CreateBudgetAllocationUseCase useCase = CreateBudgetAllocationUseCase(
-      allocations: budgetAllocationsRepository,
+      allocations: mockRepositories.budgetAllocations,
       analytics: analytics,
     );
 
     final BudgetAllocationEntity dummyEntity = BudgetAllocationsMockImpl.generateAllocation(userId: '1');
-    final CreateBudgetAllocationData dummyData = CreateBudgetAllocationData(
+    const CreateBudgetAllocationData dummyData = CreateBudgetAllocationData(
       amount: 1,
-      budget: const ReferenceEntity(id: '1', path: 'path'),
-      plan: const ReferenceEntity(id: '1', path: 'path'),
-      startedAt: DateTime(0),
-      endedAt: null,
+      budget: ReferenceEntity(id: '1', path: 'path'),
+      plan: ReferenceEntity(id: '1', path: 'path'),
     );
 
     setUpAll(() {
+      registerFallbackValue(dummyData.budget);
       registerFallbackValue(dummyData);
     });
 
     tearDown(() {
       analytics.reset();
-      reset(budgetAllocationsRepository);
+      mockRepositories.reset();
     });
 
     test('should create a budget allocation', () async {
-      when(() => budgetAllocationsRepository.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
+      when(() => mockRepositories.budgetAllocations.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
 
       await expectLater(useCase(userId: '1', allocation: dummyData), completion(dummyEntity.id));
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudgetAllocation('1')));
     });
 
     test('should bubble create errors', () {
-      when(() => budgetAllocationsRepository.create(any(), any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetAllocations.create(any(), any())).thenThrow(Exception('an error'));
 
       expect(() => useCase(userId: '1', allocation: dummyData), throwsException);
     });

@@ -17,13 +17,21 @@ class MockBudgetAllocationsRepository extends Mock implements BudgetAllocationsR
 
 class MockCreateBudgetAllocationUseCase extends Mock implements CreateBudgetAllocationUseCase {}
 
+class MockUpdateBudgetAllocationUseCase extends Mock implements UpdateBudgetAllocationUseCase {}
+
 class MockCreateBudgetCategoryUseCase extends Mock implements CreateBudgetCategoryUseCase {}
+
+class MockUpdateBudgetCategoryUseCase extends Mock implements UpdateBudgetCategoryUseCase {}
 
 class MockCreateBudgetPlanUseCase extends Mock implements CreateBudgetPlanUseCase {}
 
 class MockCreateBudgetUseCase extends Mock implements CreateBudgetUseCase {}
 
+class MockUpdateBudgetUseCase extends Mock implements UpdateBudgetUseCase {}
+
 class MockCreateUserUseCase extends Mock implements CreateUserUseCase {}
+
+class MockUpdateBudgetPlanUseCase extends Mock implements UpdateBudgetPlanUseCase {}
 
 class MockDeleteBudgetAllocationUseCase extends Mock implements DeleteBudgetAllocationUseCase {}
 
@@ -37,7 +45,9 @@ class MockFetchAccountUseCase extends Mock implements FetchAccountUseCase {}
 
 class MockFetchBudgetAllocationUseCase extends Mock implements FetchBudgetAllocationUseCase {}
 
-class MockFetchBudgetAllocationsUseCase extends Mock implements FetchBudgetAllocationsUseCase {}
+class MockFetchBudgetAllocationsUseCase extends Mock implements FetchBudgetPlansByBudgetUseCase {}
+
+class MockFetchBudgetAllocationsByBudgetUseCase extends Mock implements FetchBudgetAllocationsByBudgetUseCase {}
 
 class MockFetchBudgetAllocationsByPlanUseCase extends Mock implements FetchBudgetAllocationsByPlanUseCase {}
 
@@ -70,6 +80,18 @@ class MockValueChangedCallback<T> extends Mock {
 class MockAsyncCallback<T> extends Mock {
   Future<T> call();
 }
+
+class FakeCreateBudgetCategoryData extends Fake implements CreateBudgetCategoryData {}
+
+class FakeUpdateBudgetCategoryData extends Fake implements UpdateBudgetCategoryData {}
+
+class FakeCreateBudgetPlanData extends Fake implements CreateBudgetPlanData {}
+
+class FakeUpdateBudgetPlanData extends Fake implements UpdateBudgetPlanData {}
+
+class FakeCreateBudgetAllocationData extends Fake implements CreateBudgetAllocationData {}
+
+class FakeUpdateBudgetAllocationData extends Fake implements UpdateBudgetAllocationData {}
 
 class FakeRoute extends Fake implements Route<dynamic> {}
 

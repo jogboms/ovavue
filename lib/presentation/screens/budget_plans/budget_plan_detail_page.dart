@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ovavue/domain.dart';
 
 import '../../models.dart';
 import '../../routing.dart';
+import '../../state.dart';
 import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
 import 'providers/selected_budget_plan_provider.dart';
+import 'utils/delete_budget_plan_action.dart';
+import 'widgets/budget_category_selection_picker.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
   const BudgetPlanDetailPage({super.key, required this.id, this.budgetId});
@@ -36,6 +40,7 @@ class BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
                   ),
                   error: ErrorView.new,
                   loading: () => child!,
+                  skipLoadingOnReload: true,
                 ),
         child: const LoadingView(),
       ),
@@ -55,6 +60,7 @@ class _ContentDataView extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colorScheme = theme.colorScheme;
 
+    final BudgetViewModel? budget = state.budget;
     final BudgetPlanAllocationViewModel? allocation = state.allocation;
 
     return CustomScrollView(
@@ -120,13 +126,55 @@ class _ContentDataView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 2.0),
-              ActionButtonRow(
-                actions: <ActionButton>[
-                  ActionButton(
-                    icon: Icons.edit,
-                    onPressed: () {},
-                  ),
-                ],
+              Consumer(
+                builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+                  actions: <ActionButton>[
+                    if (budget != null && budget.active)
+                      ActionButton(
+                        icon: Icons.attach_money,
+                        onPressed: () => _handleAllocationAction(
+                          context,
+                          ref: ref,
+                          budget: budget,
+                          plan: state.plan,
+                          allocation: allocation,
+                        ),
+                      ),
+                    ActionButton(
+                      icon: Icons.add_chart, // TODO(Jogboms): fix icon
+                      onPressed: () => _handleUpdateCategoryAction(
+                        context,
+                        ref: ref,
+                        plan: state.plan,
+                      ),
+                    ),
+                    ActionButton(
+                      icon: Icons.edit,
+                      onPressed: () {},
+                    ),
+                    if (budget == null || !budget.active)
+                      ActionButton(
+                        icon: Icons.delete,
+                        backgroundColor: colorScheme.errorContainer,
+                        onPressed: () => deleteBudgetPlanAction(
+                          context,
+                          ref: ref,
+                          plan: state.plan,
+                          dismissOnComplete: true,
+                        ),
+                      )
+                    else if (allocation != null)
+                      ActionButton(
+                        icon: Icons.remove_circle_outline_outlined, // TODO(Jogboms): fix icon
+                        backgroundColor: colorScheme.tertiaryContainer,
+                        onPressed: () => _handleDeleteAllocationAction(
+                          context,
+                          ref: ref,
+                          allocation: allocation,
+                        ),
+                      ),
+                  ],
+                ),
               ),
               const SizedBox(height: 8.0),
             ],
@@ -145,21 +193,16 @@ class _ContentDataView extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
+                final BudgetPlanAllocationBudgetViewModel budget = allocation.budget;
 
-                return ListTile(
-                  key: Key(allocation.id),
-                  title: Text(
-                    allocation.budget.title.sentence(),
-                    style: textTheme.titleMedium,
-                  ),
-                  subtitle: BudgetDurationText(
-                    startedAt: allocation.budget.startedAt,
-                    endedAt: allocation.budget.endedAt,
-                  ),
-                  trailing: AmountRatioItem(
-                    allocationAmount: allocation.amount,
-                    baseAmount: allocation.budget.amount,
-                  ),
+                return BudgetListTile(
+                  key: Key(budget.id),
+                  id: budget.id,
+                  title: budget.title,
+                  budgetAmount: budget.amount,
+                  allocationAmount: allocation.amount,
+                  startedAt: budget.startedAt,
+                  endedAt: budget.endedAt,
                 );
               },
               childCount: state.previousAllocations.length,
@@ -168,6 +211,96 @@ class _ContentDataView extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _handleAllocationAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetViewModel budget,
+    required BudgetPlanViewModel plan,
+    required BudgetPlanAllocationViewModel? allocation,
+  }) async {
+    final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
+      context: context,
+      allocation: allocation?.amount,
+      plan: plan,
+      budgetId: budget.id,
+      plansById: budget.plans.map((_) => _.id),
+    );
+    if (result == null) {
+      return;
+    }
+
+    final BudgetPlanProvider provider = ref.read(budgetPlanProvider);
+    if (allocation == null) {
+      await provider.createAllocation(
+        CreateBudgetAllocationData(
+          amount: result.amount.rawValue,
+          budget: ReferenceEntity(id: budget.id, path: budget.path),
+          plan: ReferenceEntity(id: plan.id, path: plan.path),
+        ),
+      );
+    } else {
+      await provider.updateAllocation(
+        UpdateBudgetAllocationData(
+          id: allocation.id,
+          path: allocation.path,
+          amount: result.amount.rawValue,
+        ),
+      );
+    }
+  }
+
+  void _handleUpdateCategoryAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetPlanViewModel plan,
+  }) async {
+    final L10n l10n = context.l10n;
+
+    final BudgetCategoryViewModel? category = await showModalBottomSheet(
+      context: context,
+      builder: (_) => BudgetCategorySelectionPicker(
+        selectedId: plan.category.id,
+      ),
+    );
+    if (category == null) {
+      return;
+    }
+
+    // ignore: use_build_context_synchronously
+    final bool choice = await showErrorChoiceBanner(
+      context,
+      message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
+    );
+    if (!choice) {
+      return;
+    }
+
+    await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
+  }
+
+  void _handleDeleteAllocationAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetPlanAllocationViewModel allocation,
+  }) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = context.snackBar;
+    final bool choice = await showErrorChoiceBanner(
+      context,
+      message: l10n.deleteAllocationAreYouSureAboutThisMessage,
+    );
+    if (!choice) {
+      return;
+    }
+
+    final bool successful = await ref.read(budgetPlanProvider).deleteAllocation(allocation.path);
+    if (successful) {
+      snackBar.success(l10n.successfulMessage);
+    } else {
+      snackBar.error(l10n.genericErrorMessage);
+    }
   }
 }
 

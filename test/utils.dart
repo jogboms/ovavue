@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart' as mt;
+import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
@@ -17,7 +18,7 @@ class MockRepositories {
   final BudgetCategoriesRepository budgetCategories = MockBudgetCategoriesRepository();
   final BudgetAllocationsRepository budgetAllocations = MockBudgetAllocationsRepository();
 
-  void reset() => <Object>[auth, users].forEach(mt.reset);
+  void reset() => <Object>[auth, users, budgets, budgetPlans, budgetCategories, budgetAllocations].forEach(mt.reset);
 }
 
 final MockRepositories mockRepositories = MockRepositories();
@@ -28,13 +29,19 @@ class MockUseCases {
   final CreateBudgetPlanUseCase createBudgetPlanUseCase = MockCreateBudgetPlanUseCase();
   final CreateBudgetUseCase createBudgetUseCase = MockCreateBudgetUseCase();
   final CreateUserUseCase createUserUseCase = MockCreateUserUseCase();
+  final UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase = MockUpdateBudgetAllocationUseCase();
+  final UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase = MockUpdateBudgetCategoryUseCase();
+  final UpdateBudgetPlanUseCase updateBudgetPlanUseCase = MockUpdateBudgetPlanUseCase();
+  final UpdateBudgetUseCase updateBudgetUseCase = MockUpdateBudgetUseCase();
   final DeleteBudgetAllocationUseCase deleteBudgetAllocationUseCase = MockDeleteBudgetAllocationUseCase();
   final DeleteBudgetCategoryUseCase deleteBudgetCategoryUseCase = MockDeleteBudgetCategoryUseCase();
   final DeleteBudgetPlanUseCase deleteBudgetPlanUseCase = MockDeleteBudgetPlanUseCase();
   final DeleteBudgetUseCase deleteBudgetUseCase = MockDeleteBudgetUseCase();
   final FetchAccountUseCase fetchAccountUseCase = MockFetchAccountUseCase();
   final FetchBudgetAllocationUseCase fetchBudgetAllocationUseCase = MockFetchBudgetAllocationUseCase();
-  final FetchBudgetAllocationsUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
+  final FetchBudgetPlansByBudgetUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
+  final FetchBudgetAllocationsByBudgetUseCase fetchBudgetAllocationsByBudgetUseCase =
+      MockFetchBudgetAllocationsByBudgetUseCase();
   final FetchBudgetAllocationsByPlanUseCase fetchBudgetAllocationsByPlanUseCase =
       MockFetchBudgetAllocationsByPlanUseCase();
   final FetchBudgetCategoriesUseCase fetchBudgetCategoriesUseCase = MockFetchBudgetCategoriesUseCase();
@@ -54,6 +61,10 @@ class MockUseCases {
         createBudgetPlanUseCase,
         createBudgetUseCase,
         createUserUseCase,
+        updateBudgetAllocationUseCase,
+        updateBudgetCategoryUseCase,
+        updateBudgetPlanUseCase,
+        updateBudgetUseCase,
         deleteBudgetAllocationUseCase,
         deleteBudgetCategoryUseCase,
         deleteBudgetPlanUseCase,
@@ -88,14 +99,34 @@ Registry createRegistry({
       ..set(mockRepositories.budgetPlans)
       ..set(mockRepositories.budgetCategories)
       ..set(mockRepositories.budgetAllocations)
-      ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
+      ..factory(
+        (RegistryFactory di) => CreateBudgetAllocationUseCase(
+          allocations: di(),
+          analytics: di(),
+        ),
+      )
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
-      ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), analytics: di()))
+      ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
-      ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
+      ..factory(
+        (RegistryFactory di) => DeleteBudgetAllocationUseCase(
+          allocations: di(),
+          analytics: di(),
+        ),
+      )
       ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
-      ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), analytics: di()))
+      ..factory(
+        (RegistryFactory di) => DeleteBudgetPlanUseCase(
+          plans: di(),
+          allocations: di(),
+          analytics: di(),
+        ),
+      )
       ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
       ..factory(
@@ -107,7 +138,15 @@ Registry createRegistry({
         ),
       )
       ..factory(
-        (RegistryFactory di) => FetchBudgetAllocationsUseCase(
+        (RegistryFactory di) => FetchBudgetPlansByBudgetUseCase(
+          allocations: di(),
+          budgets: di(),
+          plans: di(),
+          categories: di(),
+        ),
+      )
+      ..factory(
+        (RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(
           allocations: di(),
           budgets: di(),
           plans: di(),
@@ -125,9 +164,9 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
       ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di(), categories: di()))
       ..factory((RegistryFactory di) => FetchBudgetPlansByCategoryUseCase(plans: di(), categories: di()))
-      ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di(), plans: di(), categories: di()))
-      ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di(), plans: di(), categories: di()))
-      ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di(), plans: di(), categories: di()))
+      ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di()))
+      ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
+      ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
       ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
       ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
@@ -210,13 +249,15 @@ extension MockUseCasesExtensions on Registry {
     ..replace<CreateBudgetPlanUseCase>(mockUseCases.createBudgetPlanUseCase)
     ..replace<CreateBudgetUseCase>(mockUseCases.createBudgetUseCase)
     ..replace<CreateUserUseCase>(mockUseCases.createUserUseCase)
+    ..replace<UpdateBudgetPlanUseCase>(mockUseCases.updateBudgetPlanUseCase)
     ..replace<DeleteBudgetAllocationUseCase>(mockUseCases.deleteBudgetAllocationUseCase)
     ..replace<DeleteBudgetCategoryUseCase>(mockUseCases.deleteBudgetCategoryUseCase)
     ..replace<DeleteBudgetPlanUseCase>(mockUseCases.deleteBudgetPlanUseCase)
     ..replace<DeleteBudgetUseCase>(mockUseCases.deleteBudgetUseCase)
     ..replace<FetchAccountUseCase>(mockUseCases.fetchAccountUseCase)
     ..replace<FetchBudgetAllocationUseCase>(mockUseCases.fetchBudgetAllocationUseCase)
-    ..replace<FetchBudgetAllocationsUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
+    ..replace<FetchBudgetPlansByBudgetUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
+    ..replace<FetchBudgetAllocationsByBudgetUseCase>(mockUseCases.fetchBudgetAllocationsByBudgetUseCase)
     ..replace<FetchBudgetAllocationsByPlanUseCase>(mockUseCases.fetchBudgetAllocationsByPlanUseCase)
     ..replace<FetchBudgetCategoriesUseCase>(mockUseCases.fetchBudgetCategoriesUseCase)
     ..replace<FetchBudgetPlansUseCase>(mockUseCases.fetchBudgetPlansUseCase)
@@ -253,16 +294,20 @@ extension WidgetTesterExtensions on WidgetTester {
   }
 }
 
+extension VerificationResultExtension on VerificationResult {
+  T capturedType<T>() => captured.first as T;
+}
+
 extension NormalizedBudgetEntityExtensions on NormalizedBudgetEntity {
   BudgetEntity get asBudgetEntity => BudgetEntity(
         id: id,
         path: path,
+        index: index,
         title: title,
         description: description,
         amount: amount,
         startedAt: startedAt,
         endedAt: endedAt,
-        plans: plans.map((NormalizedBudgetPlanEntity element) => element.reference).toList(growable: false),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );
