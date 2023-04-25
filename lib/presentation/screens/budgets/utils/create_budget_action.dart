@@ -25,8 +25,7 @@ void createBudgetAction(
   final BudgetEntryResult? result = await showBudgetEntryForm(
     context: context,
     budgetId: budgetId,
-    // TODO(jogboms): default index.
-    index: index ?? 1,
+    index: index,
     amount: amount,
     description: description,
     createdAt: createdAt ?? clock.now(),
