@@ -53,7 +53,7 @@ class Money with EquatableMixin implements Comparable<Money> {
 
   bool operator <(Money other) => rawValue < other.rawValue;
 
-  bool operator <=(Money other) => rawValue < other.rawValue;
+  bool operator <=(Money other) => rawValue <= other.rawValue;
 
   @override
   int compareTo(Money other) => rawValue.compareTo(other.rawValue);

@@ -9,7 +9,15 @@ extension L10nExtensions on BuildContext {
 }
 
 extension StringExtensions on String {
-  String capitalize() => this[0].toUpperCase() + substring(1);
+  String capitalize() {
+    if (isEmpty) {
+      return this;
+    }
+    if (length == 1) {
+      return toUpperCase();
+    }
+    return this[0].toUpperCase() + substring(1);
+  }
 
   String sentence() => split(' ').map((_) => _.capitalize()).join(' ');
 }

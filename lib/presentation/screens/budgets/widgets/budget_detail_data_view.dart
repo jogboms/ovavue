@@ -11,7 +11,9 @@ import '../../../state.dart';
 import '../../../theme.dart';
 import '../../../utils.dart';
 import '../../../widgets.dart';
+import '../providers/budget_provider.dart';
 import '../utils/create_budget_action.dart';
+import 'budget_entry_form.dart';
 
 class BudgetDetailDataView extends StatelessWidget {
   const BudgetDetailDataView({super.key, required this.state});
@@ -72,7 +74,11 @@ class BudgetDetailDataView extends StatelessWidget {
                   ),
                   ActionButton(
                     icon: Icons.edit,
-                    onPressed: () {},
+                    onPressed: () => _handleUpdateAction(
+                      context,
+                      ref: ref,
+                      budget: state.budget,
+                    ),
                   ),
                 ],
                 ActionButton(
@@ -142,6 +148,34 @@ class BudgetDetailDataView extends StatelessWidget {
             budget: ReferenceEntity(id: budget.id, path: budget.path),
             plan: ReferenceEntity(id: result.plan.id, path: result.plan.path),
           ),
+        );
+  }
+
+  void _handleUpdateAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required SelectedBudgetViewModel budget,
+  }) async {
+    final BudgetEntryResult? result = await showBudgetEntryForm(
+      context: context,
+      type: BudgetEntryType.update,
+      budgetId: budget.id,
+      index: budget.index,
+      title: budget.title,
+      amount: budget.amount,
+      description: budget.description,
+      createdAt: budget.createdAt,
+    );
+    if (result == null) {
+      return;
+    }
+
+    await ref.read(budgetProvider).update(
+          id: budget.id,
+          path: budget.path,
+          title: result.title,
+          amount: result.amount.rawValue,
+          description: result.description,
         );
   }
 
