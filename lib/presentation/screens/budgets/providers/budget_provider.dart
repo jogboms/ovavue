@@ -37,6 +37,7 @@ BudgetProvider budget(BudgetRef ref) {
       ),
     ),
     createBudgetUseCase: di(),
+    updateBudgetUseCase: di(),
   );
 }
 
@@ -47,7 +48,9 @@ class BudgetProvider {
     required AsyncValueGetter<String> fetchActiveBudgetPath,
     required Future<PlanToAllocationMap> Function(String id) fetchBudgetAllocations,
     required CreateBudgetUseCase createBudgetUseCase,
-  })  : _createBudgetUseCase = createBudgetUseCase,
+    required UpdateBudgetUseCase updateBudgetUseCase,
+  })  : _updateBudgetUseCase = updateBudgetUseCase,
+        _createBudgetUseCase = createBudgetUseCase,
         _fetchBudgetAllocations = fetchBudgetAllocations,
         _fetchActiveBudgetPath = fetchActiveBudgetPath,
         _fetchUser = fetchUser;
@@ -56,6 +59,7 @@ class BudgetProvider {
   final AsyncValueGetter<String> _fetchActiveBudgetPath;
   final Future<PlanToAllocationMap> Function(String id) _fetchBudgetAllocations;
   final CreateBudgetUseCase _createBudgetUseCase;
+  final UpdateBudgetUseCase _updateBudgetUseCase;
 
   Future<String> create({
     required String? fromBudgetId,
@@ -80,6 +84,25 @@ class BudgetProvider {
         amount: amount,
         description: description,
         startedAt: startedAt,
+        endedAt: null,
+      ),
+    );
+  }
+
+  Future<bool> update({
+    required String id,
+    required String path,
+    required String title,
+    required int amount,
+    required String description,
+  }) async {
+    return _updateBudgetUseCase.call(
+      UpdateBudgetData(
+        id: id,
+        path: path,
+        title: title,
+        amount: amount,
+        description: description,
         endedAt: null,
       ),
     );

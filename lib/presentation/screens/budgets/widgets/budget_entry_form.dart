@@ -4,18 +4,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/presentation.dart';
 
+enum BudgetEntryType { create, update }
+
 class BudgetEntryForm extends StatefulWidget {
   const BudgetEntryForm({
     super.key,
+    required this.type,
     required this.budgetId,
     required this.index,
+    required this.title,
     required this.description,
     required this.amount,
     required this.createdAt,
   });
 
+  final BudgetEntryType type;
   final String? budgetId;
   final int? index;
+  final String? title;
   final String? description;
   final Money? amount;
   final DateTime createdAt;
@@ -30,7 +36,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
 
   late int _index = _computeIndex(widget.index ?? 0);
   late String? _budgetId = widget.budgetId;
-  late final TextEditingController _titleController = TextEditingController(text: _deriveTitle(_index));
+  late final TextEditingController _titleController = TextEditingController(text: widget.title ?? _deriveTitle(_index));
   late final TextEditingController _descriptionController = TextEditingController(text: widget.description ?? '');
   late final TextEditingController _amountController = TextEditingController(
     text: widget.amount?.editableTextValue ?? '',
@@ -51,6 +57,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
     final L10n l10n = context.l10n;
     const SizedBox spacing = SizedBox(height: 12.0);
 
+    final bool creating = widget.type == BudgetEntryType.create;
     final String? initialBudgetId = widget.budgetId;
     final String? selectedBudgetId = _budgetId;
 
@@ -70,7 +77,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 spacing,
-                if (initialBudgetId == null && budgets.isNotEmpty) ...<Widget>[
+                if (creating && initialBudgetId == null && budgets.isNotEmpty) ...<Widget>[
                   Builder(
                     builder: (BuildContext context) => budgets.length == 1
                         ? Builder(
@@ -123,18 +130,20 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                   maxLines: 2,
                   decoration: InputDecoration(labelText: l10n.descriptionLabel),
                 ),
-                spacing,
-                DatePickerField(
-                  initialValue: clock.now(),
-                  labelText: l10n.startDateLabel,
-                  onChanged: (DateTime date) => setState(() => _startedAt = date),
-                ),
-                spacing,
-                SwitchListTile.adaptive(
-                  value: _activeState,
-                  onChanged: (bool state) => setState(() => _activeState = !_activeState),
-                  title: Text(l10n.makeActiveLabel),
-                ),
+                if (creating) ...<Widget>[
+                  spacing,
+                  DatePickerField(
+                    initialValue: clock.now(),
+                    labelText: l10n.startDateLabel,
+                    onChanged: (DateTime date) => setState(() => _startedAt = date),
+                  ),
+                  spacing,
+                  SwitchListTile.adaptive(
+                    value: _activeState,
+                    onChanged: (bool state) => setState(() => _activeState = !_activeState),
+                    title: Text(l10n.makeActiveLabel),
+                  ),
+                ],
                 spacing,
                 FilledButton.tonal(
                   onPressed: _handleSubmit,
@@ -206,8 +215,10 @@ class _BudgetItem extends StatelessWidget {
 
 Future<BudgetEntryResult?> showBudgetEntryForm({
   required BuildContext context,
+  required BudgetEntryType type,
   required String? budgetId,
   required int? index,
+  required String? title,
   required Money? amount,
   required String? description,
   required DateTime createdAt,
@@ -217,8 +228,10 @@ Future<BudgetEntryResult?> showBudgetEntryForm({
       barrierDismissible: false,
       builder: (_) => _DialogPage(
         (_) => BudgetEntryForm(
+          type: type,
           budgetId: budgetId,
           index: index,
+          title: title,
           description: description,
           amount: amount,
           createdAt: createdAt,
