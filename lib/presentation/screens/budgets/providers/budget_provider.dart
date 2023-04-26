@@ -16,12 +16,14 @@ BudgetProvider budget(BudgetRef ref) {
 
   return BudgetProvider(
     fetchUser: () => ref.read(userProvider.future),
-    fetchActiveBudgetPath: () => ref.read(activeBudgetProvider.selectAsync((BaseBudgetState state) {
-      if (state is BudgetState) {
-        return state.budget.path;
-      }
-      return null;
-    })),
+    fetchActiveBudgetPath: () => ref.read(
+      activeBudgetProvider.selectAsync((BaseBudgetState state) {
+        if (state is BudgetState) {
+          return state.budget.path;
+        }
+        return null;
+      }),
+    ),
     fetchBudgetAllocations: (String id) => ref.read(
       selectedBudgetProvider(id).selectAsync(
         (BudgetState data) => data.budget.plans.fold(
