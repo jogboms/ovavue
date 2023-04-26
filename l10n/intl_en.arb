@@ -47,6 +47,7 @@
   "makeActiveLabel": "Make this active?",
   "submitCaption": "Submit",
   "selectIconCaption": "Select icon",
+  "emptyContentMessage": "Nothing to see here :)",
   "amountRemainingCaption": "{amount} left",
   "@amountRemainingCaption": {
     "placeholders": {

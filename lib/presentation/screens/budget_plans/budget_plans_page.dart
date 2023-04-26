@@ -73,48 +73,51 @@ class _ContentDataView extends StatelessWidget {
             ),
           ),
         ),
-        Consumer(
-          builder: (BuildContext context, WidgetRef ref, _) => SliverPadding(
-            padding: EdgeInsets.only(
-              top: 8.0,
-              bottom: MediaQuery.paddingOf(context).bottom,
-            ),
-            sliver: SliverList(
-              delegate: SliverSeparatorBuilderDelegate(
-                builder: (BuildContext context, int index) {
-                  final BudgetPlanViewModel plan = data[index];
+        if (data.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          Consumer(
+            builder: (BuildContext context, WidgetRef ref, _) => SliverPadding(
+              padding: EdgeInsets.only(
+                top: 8.0,
+                bottom: MediaQuery.paddingOf(context).bottom,
+              ),
+              sliver: SliverList(
+                delegate: SliverSeparatorBuilderDelegate(
+                  builder: (BuildContext context, int index) {
+                    final BudgetPlanViewModel plan = data[index];
 
-                  return Slidable(
-                    key: Key(plan.id),
-                    endActionPane: ActionPane(
-                      motion: const BehindMotion(),
-                      children: <SlidableAction>[
-                        SlidableAction(
-                          onPressed: (BuildContext context) => deleteBudgetPlanAction(
-                            context,
-                            ref: ref,
-                            plan: plan,
-                            dismissOnComplete: false,
+                    return Slidable(
+                      key: Key(plan.id),
+                      endActionPane: ActionPane(
+                        motion: const BehindMotion(),
+                        children: <SlidableAction>[
+                          SlidableAction(
+                            onPressed: (BuildContext context) => deleteBudgetPlanAction(
+                              context,
+                              ref: ref,
+                              plan: plan,
+                              dismissOnComplete: false,
+                            ),
+                            backgroundColor: const Color(0xFFFE4A49),
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: context.l10n.deleteLabel,
                           ),
-                          backgroundColor: const Color(0xFFFE4A49),
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: context.l10n.deleteLabel,
-                        ),
-                      ],
-                    ),
-                    child: BudgetPlanListTile(
-                      plan: plan,
-                      onTap: () => context.router.goToBudgetPlanDetail(id: plan.id),
-                    ),
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(height: 4),
-                childCount: data.length,
+                        ],
+                      ),
+                      child: BudgetPlanListTile(
+                        plan: plan,
+                        onTap: () => context.router.goToBudgetPlanDetail(id: plan.id),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => const SizedBox(height: 4),
+                  childCount: data.length,
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

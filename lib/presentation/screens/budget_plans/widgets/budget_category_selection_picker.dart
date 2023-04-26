@@ -36,6 +36,10 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (data.isEmpty) {
+      return const EmptyView();
+    }
+
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 24),
       itemBuilder: (BuildContext context, int index) {

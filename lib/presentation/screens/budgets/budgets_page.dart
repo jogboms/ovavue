@@ -71,31 +71,34 @@ class _ContentDataView extends StatelessWidget {
             ),
           ),
         ),
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: 8.0,
-            bottom: MediaQuery.paddingOf(context).bottom,
-          ),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final BudgetViewModel budget = data[index];
-
-                return BudgetListTile(
-                  key: Key(budget.id),
-                  id: budget.id,
-                  title: budget.title,
-                  budgetAmount: budget.amount,
-                  allocationAmount: null,
-                  startedAt: budget.startedAt,
-                  endedAt: budget.endedAt,
-                  onTap: () => context.router.goToBudgetDetail(id: budget.id),
-                );
-              },
-              childCount: data.length,
+        if (data.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          SliverPadding(
+            padding: EdgeInsets.only(
+              top: 8.0,
+              bottom: MediaQuery.paddingOf(context).bottom,
             ),
-          ),
-        )
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  final BudgetViewModel budget = data[index];
+
+                  return BudgetListTile(
+                    key: Key(budget.id),
+                    id: budget.id,
+                    title: budget.title,
+                    budgetAmount: budget.amount,
+                    allocationAmount: null,
+                    startedAt: budget.startedAt,
+                    endedAt: budget.endedAt,
+                    onTap: () => context.router.goToBudgetDetail(id: budget.id),
+                  );
+                },
+                childCount: data.length,
+              ),
+            ),
+          )
       ],
     );
   }
