@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
-import '../widgets.dart';
 
 class BudgetAllocationEntryForm extends StatefulWidget {
   const BudgetAllocationEntryForm({
@@ -62,8 +61,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Consumer(
-          child: const LoadingView(),
-          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+          builder: (BuildContext context, WidgetRef ref, _) {
             final Money budgetRemainderAmount = ref.watch(
               selectedBudgetProvider(widget.budgetId).select(
                 (_) => _.requireValue.budget.amount - _.requireValue.allocation,

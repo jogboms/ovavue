@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:ovavue/core/extensions.dart';
+import 'package:ovavue/core.dart';
 
 import '../utils.dart';
-
-enum BudgetCategoryEntryType { create, update }
 
 class BudgetCategoryEntryForm extends StatefulWidget {
   const BudgetCategoryEntryForm({
     super.key,
-    required this.type,
     required this.title,
     required this.description,
     required this.icon,
     required this.colorScheme,
   });
 
-  final BudgetCategoryEntryType type;
   final String? title;
   final String? description;
   final BudgetCategoryIcon? icon;
@@ -131,7 +127,6 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
 
 Future<BudgetCategoryEntryResult?> showBudgetCategoryEntryForm({
   required BuildContext context,
-  required BudgetCategoryEntryType type,
   required String? title,
   required String? description,
   required BudgetCategoryIcon? icon,
@@ -142,7 +137,6 @@ Future<BudgetCategoryEntryResult?> showBudgetCategoryEntryForm({
       barrierDismissible: false,
       builder: (_) => _DialogPage(
         (_) => BudgetCategoryEntryForm(
-          type: type,
           title: title,
           description: description,
           icon: icon,

@@ -176,7 +176,6 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
 
     final BudgetCategoryEntryResult? result = await showBudgetCategoryEntryForm(
       context: context,
-      type: BudgetCategoryEntryType.create,
       title: category.title,
       description: category.title,
       icon: category.icon,

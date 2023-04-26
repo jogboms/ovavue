@@ -60,7 +60,7 @@ class _ContentDataView extends StatelessWidget {
               actions: <ActionButton>[
                 ActionButton(
                   icon: Icons.add,
-                  onPressed: () => createCategoryAction(context: context, ref: ref),
+                  onPressed: () => createBudgetCategoryAction(context: context, ref: ref),
                 ),
               ],
             ),

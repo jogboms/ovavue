@@ -6,7 +6,7 @@ import '../routing.dart';
 import '../state.dart';
 import '../widgets.dart';
 
-void createCategoryAction({
+void createBudgetCategoryAction({
   required BuildContext context,
   required WidgetRef ref,
 }) async {
@@ -14,7 +14,6 @@ void createCategoryAction({
 
   final BudgetCategoryEntryResult? result = await showBudgetCategoryEntryForm(
     context: context,
-    type: BudgetCategoryEntryType.create,
     title: null,
     description: null,
     icon: null,
