@@ -150,7 +150,11 @@ class _ContentDataView extends StatelessWidget {
                     ),
                     ActionButton(
                       icon: Icons.edit,
-                      onPressed: () {},
+                      onPressed: () => _handleUpdateAction(
+                        context,
+                        ref: ref,
+                        plan: state.plan,
+                      ),
                     ),
                     if (budget == null || !budget.active)
                       ActionButton(
@@ -296,6 +300,42 @@ class _ContentDataView extends StatelessWidget {
     }
 
     final bool successful = await ref.read(budgetPlanProvider).deleteAllocation(allocation.path);
+    if (successful) {
+      snackBar.success(l10n.successfulMessage);
+    } else {
+      snackBar.error(l10n.genericErrorMessage);
+    }
+  }
+
+  void _handleUpdateAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetPlanViewModel plan,
+  }) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = context.snackBar;
+
+    final BudgetPlanEntryResult? result = await showBudgetPlanEntryForm(
+      context: context,
+      type: BudgetPlanEntryType.update,
+      title: plan.title,
+      description: plan.description,
+      category: plan.category,
+    );
+    if (result == null) {
+      return null;
+    }
+
+    final bool successful = await ref.read(budgetPlanProvider).update(
+          UpdateBudgetPlanData(
+            id: plan.id,
+            path: plan.path,
+            title: result.title,
+            description: result.description,
+            categoryId: plan.category.id,
+            categoryPath: plan.category.path,
+          ),
+        );
     if (successful) {
       snackBar.success(l10n.successfulMessage);
     } else {

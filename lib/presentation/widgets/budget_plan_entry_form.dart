@@ -46,6 +46,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
     final L10n l10n = context.l10n;
     const SizedBox spacing = SizedBox(height: 12.0);
 
+    final bool creating = widget.type == BudgetPlanEntryType.create;
     final BudgetCategoryViewModel? initialCategory = widget.category;
     final BudgetCategoryViewModel? selectedCategory = _selectedCategory;
 
@@ -78,7 +79,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                   decoration: InputDecoration(labelText: l10n.descriptionLabel),
                 ),
                 spacing,
-                if (initialCategory == null) ...<Widget>[
+                if (initialCategory == null && creating) ...<Widget>[
                   Builder(
                     builder: (BuildContext context) {
                       if (categories.isEmpty) {
