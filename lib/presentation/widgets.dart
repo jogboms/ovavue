@@ -13,6 +13,7 @@ export 'widgets/budget_plan_entry_form.dart';
 export 'widgets/budget_plan_list_tile.dart';
 export 'widgets/custom_app_bar.dart';
 export 'widgets/date_picker_field.dart';
+export 'widgets/dialog_page.dart';
 export 'widgets/empty_view.dart';
 export 'widgets/error_view.dart';
 export 'widgets/loading_spinner.dart';

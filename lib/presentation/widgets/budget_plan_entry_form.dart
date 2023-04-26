@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'dialog_page.dart';
 
 enum BudgetPlanEntryType { create, update }
 
@@ -223,16 +224,13 @@ Future<BudgetPlanEntryResult?> showBudgetPlanEntryForm({
   required String? description,
   required BudgetCategoryViewModel? category,
 }) =>
-    showDialog(
+    showDialogPage(
       context: context,
-      barrierDismissible: false,
-      builder: (_) => _DialogPage(
-        (_) => BudgetPlanEntryForm(
-          type: type,
-          title: title,
-          description: description,
-          category: category,
-        ),
+      builder: (_) => BudgetPlanEntryForm(
+        type: type,
+        title: title,
+        description: description,
+        category: category,
       ),
     );
 
@@ -246,38 +244,4 @@ class BudgetPlanEntryResult {
   final String title;
   final String description;
   final BudgetCategoryViewModel category;
-}
-
-class _DialogPage extends StatelessWidget {
-  const _DialogPage(this.builder);
-
-  final WidgetBuilder builder;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        IconButton(
-          onPressed: () => Navigator.pop(context),
-          style: TextButton.styleFrom(backgroundColor: colorScheme.inverseSurface),
-          color: colorScheme.onInverseSurface,
-          icon: const Icon(Icons.close),
-        ),
-        const SizedBox(height: 16.0),
-        Expanded(
-          child: Material(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: SizedBox(
-              width: double.infinity,
-              child: builder(context),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

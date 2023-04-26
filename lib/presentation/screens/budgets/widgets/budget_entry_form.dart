@@ -239,19 +239,16 @@ Future<BudgetEntryResult?> showBudgetEntryForm({
   required String? description,
   required DateTime createdAt,
 }) =>
-    showDialog(
+    showDialogPage(
       context: context,
-      barrierDismissible: false,
-      builder: (_) => _DialogPage(
-        (_) => BudgetEntryForm(
-          type: type,
-          budgetId: budgetId,
-          index: index,
-          title: title,
-          description: description,
-          amount: amount,
-          createdAt: createdAt,
-        ),
+      builder: (_) => BudgetEntryForm(
+        type: type,
+        budgetId: budgetId,
+        index: index,
+        title: title,
+        description: description,
+        amount: amount,
+        createdAt: createdAt,
       ),
     );
 
@@ -273,38 +270,4 @@ class BudgetEntryResult {
   final Money amount;
   final DateTime startedAt;
   final bool active;
-}
-
-class _DialogPage extends StatelessWidget {
-  const _DialogPage(this.builder);
-
-  final WidgetBuilder builder;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        IconButton(
-          onPressed: () => Navigator.pop(context),
-          style: TextButton.styleFrom(backgroundColor: colorScheme.inverseSurface),
-          color: colorScheme.onInverseSurface,
-          icon: const Icon(Icons.close),
-        ),
-        const SizedBox(height: 16.0),
-        Expanded(
-          child: Material(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: SizedBox(
-              width: double.infinity,
-              child: builder(context),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

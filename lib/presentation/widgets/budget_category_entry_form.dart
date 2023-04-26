@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ovavue/core.dart';
 
 import '../utils.dart';
+import 'dialog_page.dart';
 
 class BudgetCategoryEntryForm extends StatefulWidget {
   const BudgetCategoryEntryForm({
@@ -132,16 +133,13 @@ Future<BudgetCategoryEntryResult?> showBudgetCategoryEntryForm({
   required BudgetCategoryIcon? icon,
   required BudgetCategoryColorScheme? colorScheme,
 }) =>
-    showDialog(
+    showDialogPage(
       context: context,
-      barrierDismissible: false,
-      builder: (_) => _DialogPage(
-        (_) => BudgetCategoryEntryForm(
-          title: title,
-          description: description,
-          icon: icon,
-          colorScheme: colorScheme,
-        ),
+      builder: (_) => BudgetCategoryEntryForm(
+        title: title,
+        description: description,
+        icon: icon,
+        colorScheme: colorScheme,
       ),
     );
 
@@ -157,40 +155,6 @@ class BudgetCategoryEntryResult {
   final String description;
   final BudgetCategoryIcon icon;
   final BudgetCategoryColorScheme colorScheme;
-}
-
-class _DialogPage extends StatelessWidget {
-  const _DialogPage(this.builder);
-
-  final WidgetBuilder builder;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        IconButton(
-          onPressed: () => Navigator.pop(context),
-          style: TextButton.styleFrom(backgroundColor: colorScheme.inverseSurface),
-          color: colorScheme.onInverseSurface,
-          icon: const Icon(Icons.close),
-        ),
-        const SizedBox(height: 16.0),
-        Expanded(
-          child: Material(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: SizedBox(
-              width: double.infinity,
-              child: builder(context),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
 
 class _IconPicker extends StatelessWidget {
