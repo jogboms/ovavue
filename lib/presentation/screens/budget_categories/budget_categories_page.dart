@@ -55,36 +55,45 @@ class _ContentDataView extends StatelessWidget {
           centerTitle: true,
         ),
         SliverToBoxAdapter(
-          child: ActionButtonRow(
-            actions: <ActionButton>[
-              ActionButton(
-                icon: Icons.add,
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: 8.0,
-            bottom: MediaQuery.paddingOf(context).bottom,
-          ),
-          sliver: SliverList(
-            delegate: SliverSeparatorBuilderDelegate(
-              builder: (BuildContext context, int index) {
-                final BudgetCategoryViewModel category = data[index];
-
-                return BudgetCategoryListTile(
-                  key: Key(category.id),
-                  category: category,
-                  onTap: () => context.router.goToBudgetCategoryDetail(id: category.id),
-                );
-              },
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
-              childCount: data.length,
+          child: Consumer(
+            builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+              actions: <ActionButton>[
+                ActionButton(
+                  icon: Icons.add,
+                  onPressed: () => createBudgetCategoryAction(
+                    context: context,
+                    ref: ref,
+                    navigateOnComplete: true,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
+        if (data.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          SliverPadding(
+            padding: EdgeInsets.only(
+              top: 8.0,
+              bottom: MediaQuery.paddingOf(context).bottom,
+            ),
+            sliver: SliverList(
+              delegate: SliverSeparatorBuilderDelegate(
+                builder: (BuildContext context, int index) {
+                  final BudgetCategoryViewModel category = data[index];
+
+                  return BudgetCategoryListTile(
+                    key: Key(category.id),
+                    category: category,
+                    onTap: () => context.router.goToBudgetCategoryDetail(id: category.id),
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 4),
+                childCount: data.length,
+              ),
+            ),
+          ),
       ],
     );
   }

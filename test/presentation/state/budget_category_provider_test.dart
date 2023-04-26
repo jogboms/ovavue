@@ -5,8 +5,8 @@ import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 import 'package:riverpod/riverpod.dart';
 
-import '../../../../mocks.dart';
-import '../../../../utils.dart';
+import '../../mocks.dart';
+import '../../utils.dart';
 
 Future<void> main() async {
   group('BudgetCategoryProvider', () {
@@ -58,8 +58,8 @@ Future<void> main() async {
         const CreateBudgetCategoryData(
           title: 'title',
           description: 'description',
-          icon: 1,
-          color: 1,
+          iconIndex: 1,
+          colorSchemeIndex: 1,
         ),
       );
 
@@ -79,8 +79,8 @@ Future<void> main() async {
         const CreateBudgetCategoryData createBudgetCategoryData = CreateBudgetCategoryData(
           title: 'title',
           description: 'description',
-          icon: 1,
-          color: 1,
+          iconIndex: 1,
+          colorSchemeIndex: 1,
         );
         final String budgetCategoryId = await createProvider().create(createBudgetCategoryData);
 
@@ -105,8 +105,8 @@ Future<void> main() async {
           path: 'path',
           title: 'title',
           description: 'description',
-          icon: 1,
-          color: 1,
+          iconIndex: 1,
+          colorSchemeIndex: 1,
         );
         await createProvider().update(updateBudgetCategoryData);
 

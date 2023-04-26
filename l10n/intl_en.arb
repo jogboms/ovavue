@@ -10,6 +10,8 @@
   "genericErrorMessage": "An error occurred. Try again?",
   "loadingMessage": "Loading...",
   "tryAgainMessage": "Do try again after some time",
+  "letsCreateMessage": "Lets create your first budget plan",
+  "getStatedCaption": "Get started",
   "budgetsPageTitle": "Budgets",
   "totalBudgetCaption": "Total budget",
   "deleteLabel": "Delete",
@@ -21,8 +23,18 @@
   "categoriesPageTitle": "Categories",
   "nonZeroAmountErrorMessage": "You would need an amount higher than zero",
   "notEnoughBudgetAmountErrorMessage": "You do not have up to that amount left",
+  "atLeastNCharactersErrorMessage": "This needs to be at least {count} characters",
+  "@atLeastNCharactersErrorMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "createPlanCaption": "Create new budget plan",
   "selectPlanCaption": "Select a plan",
+  "createCategoryCaption": "Create new budget category",
+  "selectCategoryCaption": "Select a category",
   "selectBudgetTemplateCaption": "Select a budget template",
   "deletePlanAreYouSureAboutThisMessage": "This action is non-reversible and will also remove all allocations associated with this budget plan. Are you sure about this?",
   "deleteCategoryAreYouSureAboutThisMessage": "This action is non-reversible. Are you sure about this?",
@@ -34,6 +46,8 @@
   "startDateLabel": "Starting date",
   "makeActiveLabel": "Make this active?",
   "submitCaption": "Submit",
+  "selectIconCaption": "Select icon",
+  "emptyContentMessage": "Nothing to see here :)",
   "amountRemainingCaption": "{amount} left",
   "@amountRemainingCaption": {
     "placeholders": {

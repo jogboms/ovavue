@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:collection/collection.dart';
 import 'package:faker/faker.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
@@ -112,8 +113,9 @@ class BudgetsMockImpl implements BudgetsRepository {
       _budgets$.stream.map((Map<String, BudgetEntity> event) => event.values.toList());
 
   @override
-  Stream<BudgetEntity> fetchActiveBudget(String userId) => _budgets$.stream.map(
-        (Map<String, BudgetEntity> event) => event.values.toList(growable: false).firstWhere((_) => _.endedAt == null),
+  Stream<BudgetEntity?> fetchActiveBudget(String userId) => _budgets$.stream.map(
+        (Map<String, BudgetEntity> event) =>
+            event.values.toList(growable: false).firstWhereOrNull((_) => _.endedAt == null),
       );
 
   @override

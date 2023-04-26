@@ -4,7 +4,6 @@ export 'presentation/routing.dart';
 export 'presentation/screens/budget_categories/budget_categories_page.dart';
 export 'presentation/screens/budget_categories/budget_category_detail_for_budget_page.dart';
 export 'presentation/screens/budget_categories/budget_category_detail_page.dart';
-export 'presentation/screens/budget_categories/providers/budget_category_provider.dart';
 export 'presentation/screens/budget_categories/providers/budget_category_state.dart';
 export 'presentation/screens/budget_categories/providers/selected_budget_category_by_budget_provider.dart';
 export 'presentation/screens/budget_categories/providers/selected_budget_category_provider.dart';

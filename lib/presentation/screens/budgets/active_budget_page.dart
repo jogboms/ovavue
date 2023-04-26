@@ -6,6 +6,7 @@ import '../../state.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
 import 'providers/active_budget_provider.dart';
+import 'utils/create_budget_action.dart';
 import 'widgets/budget_detail_data_view.dart';
 
 class ActiveBudgetPage extends StatefulWidget {
@@ -25,10 +26,13 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
     return Scaffold(
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(activeBudgetProvider).when(
-              data: (BudgetState data) => BudgetDetailDataView(
-                key: dataViewKey,
-                state: data,
-              ),
+              data: (BaseBudgetState state) {
+                if (state is BudgetState) {
+                  return BudgetDetailDataView(key: dataViewKey, state: state);
+                }
+
+                return _EmptyBudgetView(ref: ref);
+              },
               error: ErrorView.new,
               loading: () => child!,
               skipLoadingOnReload: true,
@@ -59,6 +63,44 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
               break;
           }
         },
+      ),
+    );
+  }
+}
+
+class _EmptyBudgetView extends StatelessWidget {
+  const _EmptyBudgetView({required this.ref});
+
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final L10n l10n = context.l10n;
+
+    const Widget spacing = SizedBox(height: 12);
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(
+            Icons.add_circle_outline,
+            size: 32,
+            color: theme.colorScheme.secondary,
+          ),
+          spacing,
+          Text(
+            l10n.letsCreateMessage,
+            style: theme.textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
+          spacing,
+          TextButton(
+            onPressed: () => createBudgetAction(context, ref: ref, navigateOnComplete: false),
+            child: Text(l10n.getStatedCaption),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
@@ -7,8 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/transformers.dart';
 
 import '../models.dart';
-import '../state.dart';
 import '../utils.dart';
+import 'account_provider.dart';
+import 'budget_state.dart';
+import 'registry_provider.dart';
+import 'user_provider.dart';
 
 part 'selected_budget_provider.g.dart';
 
@@ -27,21 +29,6 @@ Stream<BudgetState> selectedBudget(SelectedBudgetRef ref, String id) async* {
             .map((NormalizedBudgetAllocationEntityList allocations) => _deriveState(budget, allocations)),
       )
       .distinct();
-}
-
-class BudgetState with EquatableMixin {
-  const BudgetState({
-    required this.budget,
-    required this.allocation,
-    required this.categories,
-  });
-
-  final SelectedBudgetViewModel budget;
-  final Money allocation;
-  final List<SelectedBudgetCategoryViewModel> categories;
-
-  @override
-  List<Object> get props => <Object>[budget, allocation, categories];
 }
 
 BudgetState _deriveState(

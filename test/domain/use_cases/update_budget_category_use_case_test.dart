@@ -17,8 +17,8 @@ void main() {
       path: 'path',
       title: 'title',
       description: 'description',
-      icon: 1,
-      color: 1,
+      iconIndex: 1,
+      colorSchemeIndex: 1,
     );
 
     setUpAll(() {

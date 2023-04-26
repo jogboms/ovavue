@@ -32,10 +32,10 @@ class BudgetCategoryHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           CircleAvatar(
-            backgroundColor: category.backgroundColor,
+            backgroundColor: category.colorScheme.background,
             child: Icon(
-              category.icon,
-              color: category.foregroundColor,
+              category.icon.data,
+              color: category.colorScheme.foreground,
             ),
           ),
           const SizedBox(width: 8.0),

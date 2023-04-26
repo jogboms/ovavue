@@ -15,8 +15,8 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
       path: '/categories/${userId ?? AuthMockImpl.id}/$id',
       title: faker.lorem.words(1).join(' '),
       description: faker.lorem.sentence(),
-      icon: 0,
-      color: faker.randomGenerator.integer(1000000) * 0xfffff,
+      iconIndex: faker.randomGenerator.integer(10),
+      colorSchemeIndex: faker.randomGenerator.integer(10),
       createdAt: faker.randomGenerator.dateTime,
       updatedAt: clock.now(),
     );
@@ -47,8 +47,8 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
       path: '/categories/$userId/$id',
       title: category.title,
       description: category.description,
-      icon: category.icon,
-      color: category.color,
+      iconIndex: category.iconIndex,
+      colorSchemeIndex: category.colorSchemeIndex,
       createdAt: clock.now(),
       updatedAt: null,
     );
@@ -80,8 +80,8 @@ extension on BudgetCategoryEntity {
         path: path,
         title: update.title,
         description: update.description,
-        icon: update.icon,
-        color: update.color,
+        iconIndex: update.iconIndex,
+        colorSchemeIndex: update.colorSchemeIndex,
         createdAt: createdAt,
         updatedAt: clock.now(),
       );

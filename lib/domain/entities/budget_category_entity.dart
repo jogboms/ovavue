@@ -8,8 +8,8 @@ class BudgetCategoryEntity with EquatableMixin {
     required this.path,
     required this.title,
     required this.description,
-    required this.icon,
-    required this.color,
+    required this.iconIndex,
+    required this.colorSchemeIndex,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -18,13 +18,13 @@ class BudgetCategoryEntity with EquatableMixin {
   final String path;
   final String title;
   final String description;
-  final int icon;
-  final int color;
+  final int iconIndex;
+  final int colorSchemeIndex;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
   @override
-  List<Object?> get props => <Object?>[id, path, title, description, icon, color, createdAt, updatedAt];
+  List<Object?> get props => <Object?>[id, path, title, description, iconIndex, colorSchemeIndex, createdAt, updatedAt];
 
   @override
   bool? get stringify => true;

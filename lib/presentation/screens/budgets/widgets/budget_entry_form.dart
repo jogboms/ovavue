@@ -2,7 +2,11 @@ import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ovavue/presentation.dart';
+
+import '../../../models.dart';
+import '../../../state.dart';
+import '../../../utils.dart';
+import '../../../widgets.dart';
 
 enum BudgetEntryType { create, update }
 
@@ -32,7 +36,7 @@ class BudgetEntryForm extends StatefulWidget {
 
 class _BudgetEntryFormState extends State<BudgetEntryForm> {
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  static final GlobalKey<FormFieldState<String>> _budgetsFieldKey = GlobalKey(debugLabel: 'plansFieldKey');
+  static final GlobalKey<FormFieldState<String>> _budgetsFieldKey = GlobalKey(debugLabel: 'budgetsFieldKey');
 
   late int _index = _computeIndex(widget.index ?? 0);
   late String? _budgetId = widget.budgetId;
@@ -82,9 +86,8 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                     builder: (BuildContext context) => budgets.length == 1
                         ? Builder(
                             builder: (_) {
-                              final BudgetViewModel budget = budgets.first;
-                              _handleSelection(budget);
-                              return _BudgetItem(key: Key(budget.id), title: budgets.first.title);
+                              _handleSelection(budgets.first);
+                              return const SizedBox.shrink();
                             },
                           )
                         : DropdownButtonFormField<String>(
@@ -99,7 +102,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                                 DropdownMenuItem<String>(
                                   key: Key(budget.id),
                                   value: budget.id,
-                                  child: _BudgetItem(title: budget.title),
+                                  child: _BudgetItem(title: budget.title, amount: budget.amount),
                                 ),
                             ],
                             onChanged: (String? id) => _handleIdSelection(budgets, id),
@@ -197,18 +200,31 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
 }
 
 class _BudgetItem extends StatelessWidget {
-  const _BudgetItem({super.key, required this.title});
+  const _BudgetItem({required this.title, required this.amount});
 
   final String title;
+  final Money amount;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return Text(
-      title.sentence(),
-      maxLines: 1,
-      style: theme.textTheme.bodyLarge,
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            title.sentence(),
+            maxLines: 1,
+            style: theme.textTheme.bodyLarge,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          '(${amount.formatted})',
+          maxLines: 1,
+          style: theme.textTheme.bodySmall,
+        ),
+      ],
     );
   }
 }
@@ -223,19 +239,16 @@ Future<BudgetEntryResult?> showBudgetEntryForm({
   required String? description,
   required DateTime createdAt,
 }) =>
-    showDialog(
+    showDialogPage(
       context: context,
-      barrierDismissible: false,
-      builder: (_) => _DialogPage(
-        (_) => BudgetEntryForm(
-          type: type,
-          budgetId: budgetId,
-          index: index,
-          title: title,
-          description: description,
-          amount: amount,
-          createdAt: createdAt,
-        ),
+      builder: (_) => BudgetEntryForm(
+        type: type,
+        budgetId: budgetId,
+        index: index,
+        title: title,
+        description: description,
+        amount: amount,
+        createdAt: createdAt,
       ),
     );
 
@@ -257,38 +270,4 @@ class BudgetEntryResult {
   final Money amount;
   final DateTime startedAt;
   final bool active;
-}
-
-class _DialogPage extends StatelessWidget {
-  const _DialogPage(this.builder);
-
-  final WidgetBuilder builder;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        IconButton(
-          onPressed: () => Navigator.pop(context),
-          style: TextButton.styleFrom(backgroundColor: colorScheme.inverseSurface),
-          color: colorScheme.onInverseSurface,
-          icon: const Icon(Icons.close),
-        ),
-        const SizedBox(height: 16.0),
-        Expanded(
-          child: Material(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: SizedBox(
-              width: double.infinity,
-              child: builder(context),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

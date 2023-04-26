@@ -12,7 +12,7 @@ abstract class BudgetsRepository {
 
   Stream<BudgetEntityList> fetch(String userId);
 
-  Stream<BudgetEntity> fetchActiveBudget(String userId);
+  Stream<BudgetEntity?> fetchActiveBudget(String userId);
 
   Future<bool> deactivateBudget({
     required String budgetPath,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ovavue/domain.dart';
 
 import '../../../models.dart';
 import '../../../routing.dart';
 import '../../../state.dart';
 import '../../../utils.dart';
 import '../../../widgets.dart';
-import '../providers/budget_category_provider.dart';
 import '../providers/budget_category_state.dart';
 import '../providers/models.dart';
 import 'budget_category_header.dart';
@@ -52,7 +52,11 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                   ),
                   ActionButton(
                     icon: Icons.edit,
-                    onPressed: () {},
+                    onPressed: () => _handleCategoryUpdateAction(
+                      context,
+                      ref: ref,
+                      category: state.category,
+                    ),
                   ),
                   if (state.plans.isEmpty)
                     ActionButton(
@@ -157,6 +161,42 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
       if (dismissOnComplete) {
         navigator.pop();
       }
+    } else {
+      snackBar.error(l10n.genericErrorMessage);
+    }
+  }
+
+  void _handleCategoryUpdateAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetCategoryViewModel category,
+  }) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = context.snackBar;
+
+    final BudgetCategoryEntryResult? result = await showBudgetCategoryEntryForm(
+      context: context,
+      title: category.title,
+      description: category.title,
+      icon: category.icon,
+      colorScheme: category.colorScheme,
+    );
+    if (result == null) {
+      return;
+    }
+
+    final bool successful = await ref.read(budgetCategoryProvider).update(
+          UpdateBudgetCategoryData(
+            id: category.id,
+            path: category.path,
+            title: result.title,
+            description: result.description,
+            iconIndex: result.icon.index,
+            colorSchemeIndex: result.colorScheme.index,
+          ),
+        );
+    if (successful) {
+      snackBar.success(l10n.successfulMessage);
     } else {
       snackBar.error(l10n.genericErrorMessage);
     }

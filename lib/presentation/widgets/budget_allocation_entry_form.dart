@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
-import '../widgets.dart';
 
 class BudgetAllocationEntryForm extends StatefulWidget {
   const BudgetAllocationEntryForm({
@@ -62,8 +61,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Consumer(
-          child: const LoadingView(),
-          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+          builder: (BuildContext context, WidgetRef ref, _) {
             final Money budgetRemainderAmount = ref.watch(
               selectedBudgetProvider(widget.budgetId).select(
                 (_) => _.requireValue.budget.amount - _.requireValue.allocation,
@@ -90,7 +88,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                             alignment: Alignment.centerLeft,
                             child: TextButton.icon(
                               key: _createPlanButtonKey,
-                              onPressed: () {},
+                              onPressed: () => _handlePlanCreation(ref),
                               icon: const Icon(Icons.tag), // TODO(Jogboms): Fix icon
                               label: Text(context.l10n.createPlanCaption),
                             ),
@@ -129,7 +127,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                             const SizedBox(width: 8),
                             IconButton(
                               key: _createPlanButtonKey,
-                              onPressed: () {},
+                              onPressed: () => _handlePlanCreation(ref),
                               icon: const Icon(Icons.add),
                             ),
                           ],
@@ -173,6 +171,19 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
     );
   }
 
+  void _handlePlanCreation(WidgetRef ref) async {
+    final String? id = await createBudgetPlanAction(
+      context: context,
+      ref: ref,
+      navigateOnComplete: false,
+    );
+    if (id != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _plansFieldKey.currentState?.didChange(id);
+      });
+    }
+  }
+
   void _handlePlanSelection(BudgetPlanViewModel plan) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _selectedPlan.value = plan;
@@ -209,10 +220,10 @@ class _PlanItem extends StatelessWidget {
     return Row(
       children: <Widget>[
         CircleAvatar(
-          backgroundColor: plan.category.backgroundColor,
-          foregroundColor: plan.category.foregroundColor,
+          backgroundColor: plan.category.colorScheme.background,
+          foregroundColor: plan.category.colorScheme.foreground,
           radius: 16,
-          child: Icon(plan.category.icon, size: 16),
+          child: Icon(plan.category.icon.data, size: 16),
         ),
         const SizedBox(width: 8),
         Text(
