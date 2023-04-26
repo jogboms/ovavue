@@ -9,25 +9,24 @@ import '../../../../utils.dart';
 Future<void> main() async {
   final UserEntity dummyUser = UsersMockImpl.user;
 
-  final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget();
-
   tearDown(mockUseCases.reset);
 
   group('ActiveBudgetProvider', () {
-    Future<BudgetState> createProviderStream() {
+    Future<BaseBudgetState> createProviderStream(NormalizedBudgetEntity? budget) {
       final ProviderContainer container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
-          activeBudgetIdProvider.overrideWith((_) => Stream<String>.value(expectedBudget.id)),
-          selectedBudgetProvider(expectedBudget.id).overrideWith(
-            (_) => Stream<BudgetState>.value(
-              BudgetState(
-                budget: expectedBudget.toViewModel(<SelectedBudgetPlanViewModel>[]),
-                allocation: Money.zero,
-                categories: <SelectedBudgetCategoryViewModel>[],
+          activeBudgetIdProvider.overrideWith((_) => Stream<String?>.value(budget?.id)),
+          if (budget != null)
+            selectedBudgetProvider(budget.id).overrideWith(
+              (_) => Stream<BudgetState>.value(
+                BudgetState(
+                  budget: budget.toViewModel(<SelectedBudgetPlanViewModel>[]),
+                  allocation: Money.zero,
+                  categories: <SelectedBudgetCategoryViewModel>[],
+                ),
               ),
-            ),
-          )
+            )
         ],
       );
 
@@ -36,8 +35,10 @@ Future<void> main() async {
     }
 
     test('should show active budget', () async {
+      final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget();
+
       expect(
-        createProviderStream(),
+        createProviderStream(expectedBudget),
         completion(
           BudgetState(
             budget: expectedBudget.toViewModel(<SelectedBudgetPlanViewModel>[]),
@@ -45,6 +46,13 @@ Future<void> main() async {
             categories: <SelectedBudgetCategoryViewModel>[],
           ),
         ),
+      );
+    });
+
+    test('should return empty budget state when no active budget', () async {
+      expect(
+        createProviderStream(null),
+        completion(BaseBudgetState.empty),
       );
     });
   });

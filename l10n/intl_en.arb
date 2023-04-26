@@ -10,6 +10,8 @@
   "genericErrorMessage": "An error occurred. Try again?",
   "loadingMessage": "Loading...",
   "tryAgainMessage": "Do try again after some time",
+  "letsCreateMessage": "Lets create your first budget plan",
+  "getStatedCaption": "Get started",
   "budgetsPageTitle": "Budgets",
   "totalBudgetCaption": "Total budget",
   "deleteLabel": "Delete",

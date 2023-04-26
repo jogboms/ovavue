@@ -13,7 +13,7 @@ Future<void> main() async {
   tearDown(mockUseCases.reset);
 
   group('ActiveBudgetIdProvider', () {
-    Future<String> createProviderStream() {
+    Future<String?> createProviderStream() {
       final ProviderContainer container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
@@ -32,6 +32,16 @@ Future<void> main() async {
       expect(
         createProviderStream(),
         completion(expectedBudget.id),
+      );
+    });
+
+    test('should return null when no active budget', () async {
+      when(() => mockUseCases.fetchActiveBudgetUseCase.call(any()))
+          .thenAnswer((_) => Stream<NormalizedBudgetEntity?>.value(null));
+
+      expect(
+        createProviderStream(),
+        completion(null),
       );
     });
   });

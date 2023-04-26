@@ -16,7 +16,12 @@ BudgetProvider budget(BudgetRef ref) {
 
   return BudgetProvider(
     fetchUser: () => ref.read(userProvider.future),
-    fetchActiveBudgetPath: () => ref.read(activeBudgetProvider.selectAsync((_) => _.budget.path)),
+    fetchActiveBudgetPath: () => ref.read(activeBudgetProvider.selectAsync((BaseBudgetState state) {
+      if (state is BudgetState) {
+        return state.budget.path;
+      }
+      return null;
+    })),
     fetchBudgetAllocations: (String id) => ref.read(
       selectedBudgetProvider(id).selectAsync(
         (BudgetState data) => data.budget.plans.fold(
@@ -45,7 +50,7 @@ class BudgetProvider {
   @visibleForTesting
   BudgetProvider({
     required AsyncValueGetter<UserEntity> fetchUser,
-    required AsyncValueGetter<String> fetchActiveBudgetPath,
+    required AsyncValueGetter<String?> fetchActiveBudgetPath,
     required Future<PlanToAllocationMap> Function(String id) fetchBudgetAllocations,
     required CreateBudgetUseCase createBudgetUseCase,
     required UpdateBudgetUseCase updateBudgetUseCase,
@@ -56,7 +61,7 @@ class BudgetProvider {
         _fetchUser = fetchUser;
 
   final AsyncValueGetter<UserEntity> _fetchUser;
-  final AsyncValueGetter<String> _fetchActiveBudgetPath;
+  final AsyncValueGetter<String?> _fetchActiveBudgetPath;
   final Future<PlanToAllocationMap> Function(String id) _fetchBudgetAllocations;
   final CreateBudgetUseCase _createBudgetUseCase;
   final UpdateBudgetUseCase _updateBudgetUseCase;
@@ -71,7 +76,7 @@ class BudgetProvider {
     required bool active,
   }) async {
     final String userId = (await _fetchUser()).id;
-    final String activeBudgetPath = await _fetchActiveBudgetPath();
+    final String? activeBudgetPath = await _fetchActiveBudgetPath();
     final PlanToAllocationMap? allocations = fromBudgetId != null ? await _fetchBudgetAllocations(fromBudgetId) : null;
 
     return _createBudgetUseCase.call(
