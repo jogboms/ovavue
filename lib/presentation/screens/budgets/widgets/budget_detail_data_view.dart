@@ -70,7 +70,7 @@ class BudgetDetailDataView extends StatelessWidget {
                   ),
                   ActionButton(
                     icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
-                    onPressed: () {},
+                    onPressed: () => createCategoryAction(context: context, ref: ref),
                   ),
                   ActionButton(
                     icon: Icons.edit,

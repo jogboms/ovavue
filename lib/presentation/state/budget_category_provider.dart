@@ -5,7 +5,9 @@ import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../state.dart';
+import 'account_provider.dart';
+import 'registry_provider.dart';
+import 'user_provider.dart';
 
 part 'budget_category_provider.g.dart';
 

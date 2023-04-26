@@ -5,6 +5,7 @@ export 'widgets/amount_ratio_item.dart';
 export 'widgets/app_crash_error_view.dart';
 export 'widgets/app_icon.dart';
 export 'widgets/budget_allocation_entry_form.dart';
+export 'widgets/budget_category_entry_form.dart';
 export 'widgets/budget_category_list_tile.dart';
 export 'widgets/budget_duration_text.dart';
 export 'widgets/budget_list_tile.dart';

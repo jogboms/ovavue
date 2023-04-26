@@ -17,8 +17,8 @@ void main() {
     const CreateBudgetCategoryData dummyData = CreateBudgetCategoryData(
       title: 'title',
       description: 'description',
-      icon: 0,
-      color: 0,
+      iconIndex: 0,
+      colorSchemeIndex: 0,
     );
 
     setUpAll(() {

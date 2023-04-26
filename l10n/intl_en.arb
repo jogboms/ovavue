@@ -21,6 +21,14 @@
   "categoriesPageTitle": "Categories",
   "nonZeroAmountErrorMessage": "You would need an amount higher than zero",
   "notEnoughBudgetAmountErrorMessage": "You do not have up to that amount left",
+  "atLeastNCharactersErrorMessage": "This needs to be at least {count} characters",
+  "@atLeastNCharactersErrorMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "createPlanCaption": "Create new budget plan",
   "selectPlanCaption": "Select a plan",
   "selectBudgetTemplateCaption": "Select a budget template",
@@ -34,6 +42,7 @@
   "startDateLabel": "Starting date",
   "makeActiveLabel": "Make this active?",
   "submitCaption": "Submit",
+  "selectIconCaption": "Select icon",
   "amountRemainingCaption": "{amount} left",
   "@amountRemainingCaption": {
     "placeholders": {

@@ -19,18 +19,17 @@ class BudgetCategoryViewModel with EquatableMixin {
   });
 
   static BudgetCategoryViewModel fromEntity(BudgetCategoryEntity entity) {
-    final DynamicColorScheme colorScheme = DynamicColorScheme.fromHex(entity.color);
+    final BudgetCategoryColorScheme colorScheme = BudgetCategoryColorScheme.values[entity.colorSchemeIndex];
 
     return BudgetCategoryViewModel(
       id: entity.id,
       path: entity.path,
       title: entity.title,
       description: entity.description,
-      // TODO(Jogboms): Implement icons picker.
-      icon: Icons.category_outlined,
+      icon: BudgetCategoryIcon.values[entity.iconIndex].data,
       brightness: colorScheme.brightness,
-      foregroundColor: colorScheme.foregroundColor,
-      backgroundColor: colorScheme.backgroundColor,
+      foregroundColor: colorScheme.foreground,
+      backgroundColor: colorScheme.background,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     );
