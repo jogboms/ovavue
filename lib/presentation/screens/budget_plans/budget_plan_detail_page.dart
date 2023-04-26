@@ -316,11 +316,11 @@ class _CategoryChip extends StatelessWidget {
 
     return ActionChip(
       label: Text(category.title.sentence()),
-      avatar: Icon(category.icon, color: category.foregroundColor, size: 16.0),
-      backgroundColor: category.backgroundColor,
+      avatar: Icon(category.icon.data, color: category.colorScheme.foreground, size: 16.0),
+      backgroundColor: category.colorScheme.background,
       side: BorderSide.none,
       labelStyle: textTheme.bodyMedium?.copyWith(
-        color: category.foregroundColor,
+        color: category.colorScheme.foreground,
       ),
       onPressed: onPressed,
     );

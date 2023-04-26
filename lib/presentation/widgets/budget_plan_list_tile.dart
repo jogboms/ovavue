@@ -19,9 +19,9 @@ class BudgetPlanListTile extends StatelessWidget {
       subtitle: Text(plan.description.capitalize(), maxLines: 2),
       subtitleTextStyle: theme.textTheme.bodyMedium,
       leading: CircleAvatar(
-        backgroundColor: plan.category.backgroundColor,
-        foregroundColor: plan.category.foregroundColor,
-        child: Icon(plan.category.icon),
+        backgroundColor: plan.category.colorScheme.background,
+        foregroundColor: plan.category.colorScheme.foreground,
+        child: Icon(plan.category.icon.data),
       ),
       onTap: onTap,
     );

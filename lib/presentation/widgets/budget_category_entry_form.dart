@@ -11,11 +11,15 @@ class BudgetCategoryEntryForm extends StatefulWidget {
     required this.type,
     required this.title,
     required this.description,
+    required this.icon,
+    required this.colorScheme,
   });
 
   final BudgetCategoryEntryType type;
   final String? title;
   final String? description;
+  final BudgetCategoryIcon? icon;
+  final BudgetCategoryColorScheme? colorScheme;
 
   @override
   State<BudgetCategoryEntryForm> createState() => _BudgetCategoryEntryFormState();
@@ -26,8 +30,8 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
 
   late final TextEditingController _titleController = TextEditingController(text: widget.title ?? '');
   late final TextEditingController _descriptionController = TextEditingController(text: widget.description ?? '');
-  late BudgetCategoryIcon _icon = BudgetCategoryIcon.values.random();
-  late BudgetCategoryColorScheme _colorScheme = BudgetCategoryColorScheme.values.random();
+  late BudgetCategoryIcon _icon = widget.icon ?? BudgetCategoryIcon.values.random();
+  late BudgetCategoryColorScheme _colorScheme = widget.colorScheme ?? BudgetCategoryColorScheme.values.random();
 
   @override
   void dispose() {
@@ -130,6 +134,8 @@ Future<BudgetCategoryEntryResult?> showBudgetCategoryEntryForm({
   required BudgetCategoryEntryType type,
   required String? title,
   required String? description,
+  required BudgetCategoryIcon? icon,
+  required BudgetCategoryColorScheme? colorScheme,
 }) =>
     showDialog(
       context: context,
@@ -139,6 +145,8 @@ Future<BudgetCategoryEntryResult?> showBudgetCategoryEntryForm({
           type: type,
           title: title,
           description: description,
+          icon: icon,
+          colorScheme: colorScheme,
         ),
       ),
     );

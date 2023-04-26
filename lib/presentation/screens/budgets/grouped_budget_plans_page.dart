@@ -187,9 +187,9 @@ class _Header extends StatelessWidget {
         children: <Widget>[
           CircleAvatar(
             radius: 16.0,
-            backgroundColor: category.backgroundColor,
-            foregroundColor: category.foregroundColor,
-            child: Icon(category.icon, size: 16.0),
+            backgroundColor: category.colorScheme.background,
+            foregroundColor: category.colorScheme.foreground,
+            child: Icon(category.icon.data, size: 16.0),
           ),
           const SizedBox(width: 12.0),
           Column(
@@ -225,7 +225,7 @@ class _PlanTile extends StatelessWidget {
     final BudgetAllocationViewModel? allocation = plan.allocation;
 
     return AmountRatioDecoratedBox(
-      color: plan.category.backgroundColor,
+      color: plan.category.colorScheme.background,
       ratio: allocation?.amount.ratio(categoryAllocationAmount) ?? 0.0,
       onPressed: onPressed,
       child: Row(

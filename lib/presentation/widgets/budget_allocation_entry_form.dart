@@ -209,10 +209,10 @@ class _PlanItem extends StatelessWidget {
     return Row(
       children: <Widget>[
         CircleAvatar(
-          backgroundColor: plan.category.backgroundColor,
-          foregroundColor: plan.category.foregroundColor,
+          backgroundColor: plan.category.colorScheme.background,
+          foregroundColor: plan.category.colorScheme.foreground,
           radius: 16,
-          child: Icon(plan.category.icon, size: 16),
+          child: Icon(plan.category.icon.data, size: 16),
         ),
         const SizedBox(width: 8),
         Text(

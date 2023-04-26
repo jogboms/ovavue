@@ -296,9 +296,9 @@ class _CategoryViewState extends State<_CategoryView> {
                     for (final SelectedBudgetCategoryViewModel category in widget.categories)
                       _derivePieSectionData(
                         amount: category.allocation,
-                        backgroundColor: category.backgroundColor,
-                        foregroundColor: category.foregroundColor,
-                        icon: category.icon,
+                        backgroundColor: category.colorScheme.background,
+                        foregroundColor: category.colorScheme.foreground,
+                        icon: category.icon.data,
                       ),
                     _derivePieSectionData(
                       amount: excessAmount,
@@ -323,10 +323,10 @@ class _CategoryViewState extends State<_CategoryView> {
                     _CategoryChip(
                       key: Key(category.id),
                       title: category.title,
-                      icon: category.icon,
+                      icon: category.icon.data,
                       allocationAmount: category.allocation,
-                      backgroundColor: category.backgroundColor,
-                      foregroundColor: category.foregroundColor,
+                      backgroundColor: category.colorScheme.background,
+                      foregroundColor: category.colorScheme.foreground,
                       budgetAmount: widget.budgetAmount,
                       onPressed: () => widget.onPressed(category.id),
                     ),
@@ -481,7 +481,7 @@ class _PlanTile extends StatelessWidget {
     final BudgetAllocationViewModel? allocation = plan.allocation;
 
     return AmountRatioDecoratedBox(
-      color: plan.category.backgroundColor,
+      color: plan.category.colorScheme.background,
       ratio: allocation?.amount.ratio(budgetAmount) ?? 0.0,
       onPressed: onPressed,
       child: Row(
@@ -489,7 +489,7 @@ class _PlanTile extends StatelessWidget {
           Expanded(
             child: Row(
               children: <Widget>[
-                Icon(plan.category.icon),
+                Icon(plan.category.icon.data),
                 const SizedBox(width: 6.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

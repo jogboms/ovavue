@@ -23,9 +23,9 @@ class BudgetCategoryListTile extends StatelessWidget {
       subtitle: Text(category.description.capitalize(), maxLines: 2),
       subtitleTextStyle: theme.textTheme.bodyMedium,
       leading: CircleAvatar(
-        backgroundColor: category.backgroundColor,
-        foregroundColor: category.foregroundColor,
-        child: Icon(category.icon),
+        backgroundColor: category.colorScheme.background,
+        foregroundColor: category.colorScheme.foreground,
+        child: Icon(category.icon.data),
       ),
       onTap: onTap,
     );

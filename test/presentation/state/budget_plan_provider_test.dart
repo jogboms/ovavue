@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
@@ -116,10 +114,8 @@ Future<void> main() async {
           path: 'path',
           title: 'title',
           description: 'description',
-          icon: const IconData(0),
-          brightness: Brightness.dark,
-          foregroundColor: const Color(0xFFFFFFFF),
-          backgroundColor: const Color(0xFFFFFFFF),
+          icon: BudgetCategoryIcon.values.first,
+          colorScheme: BudgetCategoryColorScheme.values.first,
           createdAt: DateTime(0),
           updatedAt: DateTime(0),
         );

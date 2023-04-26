@@ -17,6 +17,8 @@ void createCategoryAction({
     type: BudgetCategoryEntryType.create,
     title: null,
     description: null,
+    icon: null,
+    colorScheme: null,
   );
   if (result == null) {
     return;
