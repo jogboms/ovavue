@@ -6,34 +6,36 @@ import '../routing.dart';
 import '../state.dart';
 import '../widgets.dart';
 
-Future<String?> createBudgetCategoryAction({
+Future<String?> createBudgetPlanAction({
   required BuildContext context,
   required WidgetRef ref,
   required bool navigateOnComplete,
 }) async {
   final AppRouter router = context.router;
 
-  final BudgetCategoryEntryResult? result = await showBudgetCategoryEntryForm(
+  final BudgetPlanEntryResult? result = await showBudgetPlanEntryForm(
     context: context,
+    type: BudgetPlanEntryType.create,
     title: null,
     description: null,
-    icon: null,
-    colorScheme: null,
+    category: null,
   );
   if (result == null) {
     return null;
   }
 
-  final String id = await ref.read(budgetCategoryProvider).create(
-        CreateBudgetCategoryData(
+  final String id = await ref.read(budgetPlanProvider).create(
+        CreateBudgetPlanData(
           title: result.title,
           description: result.description,
-          iconIndex: result.icon.index,
-          colorSchemeIndex: result.colorScheme.index,
+          category: ReferenceEntity(
+            id: result.category.id,
+            path: result.category.path,
+          ),
         ),
       );
   if (navigateOnComplete) {
-    await router.goToBudgetCategoryDetail(id: id);
+    await router.goToBudgetPlanDetail(id: id);
   }
 
   return id;

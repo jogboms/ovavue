@@ -86,9 +86,8 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                     builder: (BuildContext context) => budgets.length == 1
                         ? Builder(
                             builder: (_) {
-                              final BudgetViewModel budget = budgets.first;
-                              _handleSelection(budget);
-                              return _BudgetItem(key: Key(budget.id), title: budgets.first.title);
+                              _handleSelection(budgets.first);
+                              return const SizedBox.shrink();
                             },
                           )
                         : DropdownButtonFormField<String>(
@@ -103,7 +102,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                                 DropdownMenuItem<String>(
                                   key: Key(budget.id),
                                   value: budget.id,
-                                  child: _BudgetItem(title: budget.title),
+                                  child: _BudgetItem(title: budget.title, amount: budget.amount),
                                 ),
                             ],
                             onChanged: (String? id) => _handleIdSelection(budgets, id),
@@ -201,18 +200,31 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
 }
 
 class _BudgetItem extends StatelessWidget {
-  const _BudgetItem({super.key, required this.title});
+  const _BudgetItem({required this.title, required this.amount});
 
   final String title;
+  final Money amount;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return Text(
-      title.sentence(),
-      maxLines: 1,
-      style: theme.textTheme.bodyLarge,
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            title.sentence(),
+            maxLines: 1,
+            style: theme.textTheme.bodyLarge,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          '(${amount.formatted})',
+          maxLines: 1,
+          style: theme.textTheme.bodySmall,
+        ),
+      ],
     );
   }
 }

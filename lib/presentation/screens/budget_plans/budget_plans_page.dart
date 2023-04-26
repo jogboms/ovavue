@@ -58,13 +58,19 @@ class _ContentDataView extends StatelessWidget {
           centerTitle: true,
         ),
         SliverToBoxAdapter(
-          child: ActionButtonRow(
-            actions: <ActionButton>[
-              ActionButton(
-                icon: Icons.add,
-                onPressed: () {},
-              ),
-            ],
+          child: Consumer(
+            builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+              actions: <ActionButton>[
+                ActionButton(
+                  icon: Icons.add,
+                  onPressed: () => createBudgetPlanAction(
+                    context: context,
+                    ref: ref,
+                    navigateOnComplete: false,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Consumer(

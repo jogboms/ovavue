@@ -88,7 +88,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                             alignment: Alignment.centerLeft,
                             child: TextButton.icon(
                               key: _createPlanButtonKey,
-                              onPressed: () {},
+                              onPressed: () => _handlePlanCreation(ref),
                               icon: const Icon(Icons.tag), // TODO(Jogboms): Fix icon
                               label: Text(context.l10n.createPlanCaption),
                             ),
@@ -127,7 +127,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                             const SizedBox(width: 8),
                             IconButton(
                               key: _createPlanButtonKey,
-                              onPressed: () {},
+                              onPressed: () => _handlePlanCreation(ref),
                               icon: const Icon(Icons.add),
                             ),
                           ],
@@ -169,6 +169,19 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
         ),
       ),
     );
+  }
+
+  void _handlePlanCreation(WidgetRef ref) async {
+    final String? id = await createBudgetPlanAction(
+      context: context,
+      ref: ref,
+      navigateOnComplete: false,
+    );
+    if (id != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _plansFieldKey.currentState?.didChange(id);
+      });
+    }
   }
 
   void _handlePlanSelection(BudgetPlanViewModel plan) {

@@ -9,6 +9,7 @@ export 'widgets/budget_category_entry_form.dart';
 export 'widgets/budget_category_list_tile.dart';
 export 'widgets/budget_duration_text.dart';
 export 'widgets/budget_list_tile.dart';
+export 'widgets/budget_plan_entry_form.dart';
 export 'widgets/budget_plan_list_tile.dart';
 export 'widgets/custom_app_bar.dart';
 export 'widgets/date_picker_field.dart';

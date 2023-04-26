@@ -33,6 +33,8 @@
   },
   "createPlanCaption": "Create new budget plan",
   "selectPlanCaption": "Select a plan",
+  "createCategoryCaption": "Create new budget category",
+  "selectCategoryCaption": "Select a category",
   "selectBudgetTemplateCaption": "Select a budget template",
   "deletePlanAreYouSureAboutThisMessage": "This action is non-reversible and will also remove all allocations associated with this budget plan. Are you sure about this?",
   "deleteCategoryAreYouSureAboutThisMessage": "This action is non-reversible. Are you sure about this?",

@@ -66,11 +66,19 @@ class BudgetDetailDataView extends StatelessWidget {
                   ),
                   ActionButton(
                     icon: Icons.add_chart, // TODO(Jogboms): fix icon
-                    onPressed: () {},
+                    onPressed: () => createBudgetPlanAction(
+                      context: context,
+                      ref: ref,
+                      navigateOnComplete: true,
+                    ),
                   ),
                   ActionButton(
                     icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
-                    onPressed: () => createBudgetCategoryAction(context: context, ref: ref),
+                    onPressed: () => createBudgetCategoryAction(
+                      context: context,
+                      ref: ref,
+                      navigateOnComplete: true,
+                    ),
                   ),
                   ActionButton(
                     icon: Icons.edit,

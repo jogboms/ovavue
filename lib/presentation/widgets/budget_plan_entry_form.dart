@@ -1,0 +1,282 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models.dart';
+import '../state.dart';
+import '../utils.dart';
+
+enum BudgetPlanEntryType { create, update }
+
+class BudgetPlanEntryForm extends StatefulWidget {
+  const BudgetPlanEntryForm({
+    super.key,
+    required this.type,
+    required this.title,
+    required this.description,
+    required this.category,
+  });
+
+  final BudgetPlanEntryType type;
+  final String? title;
+  final String? description;
+  final BudgetCategoryViewModel? category;
+
+  @override
+  State<BudgetPlanEntryForm> createState() => _BudgetPlanEntryFormState();
+}
+
+class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final GlobalKey<FormFieldState<String>> _categoriesFieldKey = GlobalKey(debugLabel: 'categoriesFieldKey');
+  static const Key _createCategoryButtonKey = Key('createCategoryButtonKey');
+
+  late final TextEditingController _titleController = TextEditingController(text: widget.title ?? '');
+  late final TextEditingController _descriptionController = TextEditingController(text: widget.description ?? '');
+  late BudgetCategoryViewModel? _selectedCategory = widget.category;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final L10n l10n = context.l10n;
+    const SizedBox spacing = SizedBox(height: 12.0);
+
+    final BudgetCategoryViewModel? initialCategory = widget.category;
+    final BudgetCategoryViewModel? selectedCategory = _selectedCategory;
+
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 24.0,
+        ),
+        child: Consumer(
+          builder: (BuildContext context, WidgetRef ref, _) {
+            final Iterable<BudgetCategoryViewModel> categories =
+                ref.watch(budgetCategoriesProvider).valueOrNull ?? const <BudgetCategoryViewModel>[];
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                spacing,
+                TextFormField(
+                  controller: _titleController,
+                  decoration: InputDecoration(labelText: l10n.titleLabel),
+                  validator: (String? value) =>
+                      value != null && value.length < 3 ? l10n.atLeastNCharactersErrorMessage(3) : null,
+                ),
+                spacing,
+                TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 2,
+                  decoration: InputDecoration(labelText: l10n.descriptionLabel),
+                ),
+                spacing,
+                if (initialCategory == null) ...<Widget>[
+                  Builder(
+                    builder: (BuildContext context) {
+                      if (categories.isEmpty) {
+                        return Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton.icon(
+                            key: _createCategoryButtonKey,
+                            onPressed: () => _handleCategoryCreation(ref),
+                            icon: const Icon(Icons.tag), // TODO(Jogboms): Fix icon
+                            label: Text(context.l10n.createCategoryCaption),
+                          ),
+                        );
+                      }
+
+                      return Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: categories.length == 1
+                                ? Builder(
+                                    builder: (_) {
+                                      final BudgetCategoryViewModel category = categories.first;
+                                      _handleCategorySelection(category);
+                                      return _CategoryItem(key: Key(category.id), category: categories.first);
+                                    },
+                                  )
+                                : DropdownButtonFormField<String>(
+                                    key: _categoriesFieldKey,
+                                    value: selectedCategory?.id,
+                                    isExpanded: true,
+                                    decoration: InputDecoration(
+                                      hintText: context.l10n.selectCategoryCaption,
+                                    ),
+                                    items: <DropdownMenuItem<String>>[
+                                      for (final BudgetCategoryViewModel category in categories)
+                                        DropdownMenuItem<String>(
+                                          key: Key(category.id),
+                                          value: category.id,
+                                          child: _CategoryItem(category: category),
+                                        ),
+                                    ],
+                                    onChanged: (String? id) => _handleCategoryIdSelection(categories, id),
+                                  ),
+                          ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            key: _createCategoryButtonKey,
+                            onPressed: () => _handleCategoryCreation(ref),
+                            icon: const Icon(Icons.add),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                spacing,
+                FilledButton.tonal(
+                  onPressed: _handleSubmit,
+                  child: Text(l10n.submitCaption),
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _handleCategoryCreation(WidgetRef ref) async {
+    final String? id = await createBudgetCategoryAction(
+      context: context,
+      ref: ref,
+      navigateOnComplete: false,
+    );
+    if (id != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _categoriesFieldKey.currentState?.didChange(id);
+      });
+    }
+  }
+
+  void _handleCategorySelection(BudgetCategoryViewModel category) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _selectedCategory = category;
+    });
+  }
+
+  void _handleCategoryIdSelection(Iterable<BudgetCategoryViewModel> categories, String? id) {
+    if (id != null) {
+      _selectedCategory = categories.firstWhere((_) => _.id == id);
+    }
+  }
+
+  void _handleSubmit() {
+    final BudgetCategoryViewModel? category = _selectedCategory;
+    if (category != null && _formKey.currentState?.validate() == true) {
+      Navigator.pop(
+        context,
+        BudgetPlanEntryResult(
+          title: _titleController.text,
+          description: _descriptionController.text,
+          category: category,
+        ),
+      );
+    }
+  }
+}
+
+class _CategoryItem extends StatelessWidget {
+  const _CategoryItem({super.key, required this.category});
+
+  final BudgetCategoryViewModel category;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    return Row(
+      children: <Widget>[
+        CircleAvatar(
+          backgroundColor: category.colorScheme.background,
+          foregroundColor: category.colorScheme.foreground,
+          radius: 16,
+          child: Icon(category.icon.data, size: 16),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          category.title.sentence(),
+          maxLines: 1,
+          style: theme.textTheme.bodyLarge,
+        ),
+      ],
+    );
+  }
+}
+
+Future<BudgetPlanEntryResult?> showBudgetPlanEntryForm({
+  required BuildContext context,
+  required BudgetPlanEntryType type,
+  required String? title,
+  required String? description,
+  required BudgetCategoryViewModel? category,
+}) =>
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => _DialogPage(
+        (_) => BudgetPlanEntryForm(
+          type: type,
+          title: title,
+          description: description,
+          category: category,
+        ),
+      ),
+    );
+
+class BudgetPlanEntryResult {
+  const BudgetPlanEntryResult({
+    required this.title,
+    required this.description,
+    required this.category,
+  });
+
+  final String title;
+  final String description;
+  final BudgetCategoryViewModel category;
+}
+
+class _DialogPage extends StatelessWidget {
+  const _DialogPage(this.builder);
+
+  final WidgetBuilder builder;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        IconButton(
+          onPressed: () => Navigator.pop(context),
+          style: TextButton.styleFrom(backgroundColor: colorScheme.inverseSurface),
+          color: colorScheme.onInverseSurface,
+          icon: const Icon(Icons.close),
+        ),
+        const SizedBox(height: 16.0),
+        Expanded(
+          child: Material(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: SizedBox(
+              width: double.infinity,
+              child: builder(context),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
