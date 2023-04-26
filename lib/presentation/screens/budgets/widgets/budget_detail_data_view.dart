@@ -368,10 +368,11 @@ class _CategoryViewState extends State<_CategoryView> {
     required Color backgroundColor,
     required Color foregroundColor,
   }) {
-    final double dimension = MediaQuery.of(context).size.width;
+    final double dimension = MediaQuery.of(context).size.shortestSide;
     final ThemeData theme = Theme.of(context);
     final TextStyle labelTextStyle = theme.textTheme.labelSmall!.copyWith(
       fontWeight: AppFontWeight.bold,
+      color: foregroundColor,
       letterSpacing: .01,
     );
 
@@ -416,47 +417,29 @@ class _CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final double gradientRatio = allocationAmount.ratio(budgetAmount);
 
-    return Material(
-      type: MaterialType.transparency,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(8),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: backgroundColor.withOpacity(.15),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: backgroundColor.withOpacity(.025)),
-          ),
-          child: Ink(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              gradient: LinearGradient(
-                colors: <Color>[backgroundColor, backgroundColor, Colors.transparent],
-                stops: <double>[0, gradientRatio, gradientRatio],
+    return AmountRatioDecoratedBox(
+      onPressed: onPressed,
+      color: backgroundColor,
+      ratio: allocationAmount.ratio(budgetAmount),
+      borderRadius: BorderRadius.circular(8),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(icon, size: 20, color: theme.colorScheme.onSurface),
+          const SizedBox(width: 12),
+          Column(
+            children: <Widget>[
+              Text(title.sentence(), style: theme.textTheme.bodyLarge),
+              Text(
+                '$allocationAmount (${allocationAmount.percentage(budgetAmount)})',
+                style: theme.textTheme.labelLarge,
               ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(icon, size: 20, color: foregroundColor),
-                const SizedBox(width: 12),
-                Column(
-                  children: <Widget>[
-                    Text(title.sentence(), style: theme.textTheme.bodyLarge),
-                    Text(
-                      '$allocationAmount (${allocationAmount.percentage(budgetAmount)})',
-                      style: theme.textTheme.labelLarge,
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 4),
-              ],
-            ),
+            ],
           ),
-        ),
+          const SizedBox(width: 4),
+        ],
       ),
     );
   }
