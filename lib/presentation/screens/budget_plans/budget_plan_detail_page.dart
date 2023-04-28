@@ -299,7 +299,10 @@ class _ContentDataView extends StatelessWidget {
       return;
     }
 
-    final bool successful = await ref.read(budgetPlanProvider).deleteAllocation(allocation.path);
+    final bool successful = await ref.read(budgetPlanProvider).deleteAllocation(
+          id: allocation.id,
+          path: allocation.path,
+        );
     if (successful) {
       snackBar.success(l10n.successfulMessage);
     } else {

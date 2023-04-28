@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 
 import '../../utils.dart';
@@ -13,7 +12,6 @@ void main() {
       analytics: analytics,
     );
 
-    final BudgetPlanEntity dummyEntity = BudgetPlansMockImpl.generatePlan(userId: '1');
     const CreateBudgetPlanData dummyData = CreateBudgetPlanData(
       title: 'title',
       description: 'description',
@@ -30,9 +28,9 @@ void main() {
     });
 
     test('should create a budget plan', () async {
-      when(() => mockRepositories.budgetPlans.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
+      when(() => mockRepositories.budgetPlans.create(any(), any())).thenAnswer((_) async => '1');
 
-      await expectLater(useCase(userId: '1', plan: dummyData), completion(dummyEntity.id));
+      await expectLater(useCase(userId: '1', plan: dummyData), completion('1'));
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudgetPlan('1')));
     });
 

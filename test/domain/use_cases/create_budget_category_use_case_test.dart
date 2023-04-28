@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 
 import '../../utils.dart';
@@ -13,7 +12,6 @@ void main() {
       analytics: analytics,
     );
 
-    final BudgetCategoryEntity dummyEntity = BudgetCategoriesMockImpl.generateCategory(userId: '1');
     const CreateBudgetCategoryData dummyData = CreateBudgetCategoryData(
       title: 'title',
       description: 'description',
@@ -31,9 +29,9 @@ void main() {
     });
 
     test('should create a budget category', () async {
-      when(() => mockRepositories.budgetCategories.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
+      when(() => mockRepositories.budgetCategories.create(any(), any())).thenAnswer((_) async => '1');
 
-      await expectLater(useCase(userId: '1', category: dummyData), completion(dummyEntity.id));
+      await expectLater(useCase(userId: '1', category: dummyData), completion('1'));
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudgetCategory('1')));
     });
 

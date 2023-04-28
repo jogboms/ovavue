@@ -43,8 +43,6 @@ class MockDeleteBudgetUseCase extends Mock implements DeleteBudgetUseCase {}
 
 class MockFetchAccountUseCase extends Mock implements FetchAccountUseCase {}
 
-class MockFetchBudgetAllocationUseCase extends Mock implements FetchBudgetAllocationUseCase {}
-
 class MockFetchBudgetAllocationsUseCase extends Mock implements FetchBudgetPlansByBudgetUseCase {}
 
 class MockFetchBudgetAllocationsByBudgetUseCase extends Mock implements FetchBudgetAllocationsByBudgetUseCase {}
@@ -54,8 +52,6 @@ class MockFetchBudgetAllocationsByPlanUseCase extends Mock implements FetchBudge
 class MockFetchBudgetCategoriesUseCase extends Mock implements FetchBudgetCategoriesUseCase {}
 
 class MockFetchBudgetPlansUseCase extends Mock implements FetchBudgetPlansUseCase {}
-
-class MockFetchBudgetPlansByCategoryUseCase extends Mock implements FetchBudgetPlansByCategoryUseCase {}
 
 class MockFetchBudgetUseCase extends Mock implements FetchBudgetUseCase {}
 

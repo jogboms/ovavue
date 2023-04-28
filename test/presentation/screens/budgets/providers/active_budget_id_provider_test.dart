@@ -25,9 +25,9 @@ Future<void> main() async {
     }
 
     test('should show active budget id', () async {
-      final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget();
+      final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget();
       when(() => mockUseCases.fetchActiveBudgetUseCase.call(any()))
-          .thenAnswer((_) => Stream<NormalizedBudgetEntity>.value(expectedBudget));
+          .thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
 
       expect(
         createProviderStream(),
@@ -37,7 +37,7 @@ Future<void> main() async {
 
     test('should return null when no active budget', () async {
       when(() => mockUseCases.fetchActiveBudgetUseCase.call(any()))
-          .thenAnswer((_) => Stream<NormalizedBudgetEntity?>.value(null));
+          .thenAnswer((_) => Stream<BudgetEntity?>.value(null));
 
       expect(
         createProviderStream(),

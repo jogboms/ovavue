@@ -12,8 +12,11 @@ class DeleteBudgetCategoryUseCase {
   final BudgetCategoriesRepository _categories;
   final Analytics _analytics;
 
-  Future<bool> call(String path) {
+  Future<bool> call({
+    required String id,
+    required String path,
+  }) {
     _analytics.log(AnalyticsEvent.deleteBudgetCategory(path)).ignore();
-    return _categories.delete(path);
+    return _categories.delete(id: id, path: path);
   }
 }

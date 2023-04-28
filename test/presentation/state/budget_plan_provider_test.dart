@@ -161,11 +161,12 @@ Future<void> main() async {
     group('Delete allocation', () {
       test('should delete existing budget plan', () async {
         when(mockFetchUser.call).thenAnswer((_) async => dummyUser);
-        when(() => mockUseCases.deleteBudgetAllocationUseCase.call('path')).thenAnswer((_) async => true);
+        when(() => mockUseCases.deleteBudgetAllocationUseCase.call(id: any(named: 'id'), path: any(named: 'path')))
+            .thenAnswer((_) async => true);
 
-        await createProvider().deleteAllocation('path');
+        await createProvider().deleteAllocation(id: '1', path: 'path');
 
-        verify(() => mockUseCases.deleteBudgetAllocationUseCase.call('path')).called(1);
+        verify(() => mockUseCases.deleteBudgetAllocationUseCase.call(id: '1', path: 'path')).called(1);
       });
     });
 

@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 import 'budget_plan_entity.dart';
 import 'reference_entity.dart';
 
+@visibleForTesting
 class BaseBudgetEntity<T> with EquatableMixin {
   const BaseBudgetEntity({
     required this.id,
@@ -36,31 +38,12 @@ class BaseBudgetEntity<T> with EquatableMixin {
   bool? get stringify => true;
 }
 
-typedef BudgetEntity = BaseBudgetEntity<ReferenceEntity>;
-typedef NormalizedBudgetEntity = BaseBudgetEntity<NormalizedBudgetPlanEntity>;
+typedef BudgetReferenceEntity = BaseBudgetEntity<ReferenceEntity>;
+typedef BudgetEntity = BaseBudgetEntity<BudgetPlanEntity>;
 
+typedef BudgetEntityReferenceList = List<BudgetReferenceEntity>;
 typedef BudgetEntityList = List<BudgetEntity>;
-typedef NormalizedBudgetEntityList = List<NormalizedBudgetEntity>;
 
-extension NormalizedBudgetReferenceEntityExtension on NormalizedBudgetEntity {
+extension BudgetEntityExtension<T> on BaseBudgetEntity<T> {
   ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
-}
-
-extension NormalizeBudgetEntityListExtension on BudgetEntityList {
-  NormalizedBudgetEntityList normalize() => map((BudgetEntity budget) => budget.normalize()).toList(growable: false);
-}
-
-extension NormalizeBudgetEntityExtension on BudgetEntity {
-  NormalizedBudgetEntity normalize() => NormalizedBudgetEntity(
-        id: id,
-        path: path,
-        index: index,
-        title: title,
-        description: description,
-        amount: amount,
-        startedAt: startedAt,
-        endedAt: endedAt,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
 }

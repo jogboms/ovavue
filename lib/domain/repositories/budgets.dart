@@ -8,9 +8,12 @@ abstract class BudgetsRepository {
 
   Future<bool> update(UpdateBudgetData budget);
 
-  Future<bool> delete(String path);
+  Future<bool> delete({
+    required String id,
+    required String path,
+  });
 
-  Stream<BudgetEntityList> fetch(String userId);
+  Stream<BudgetEntityList> fetchAll(String userId);
 
   Stream<BudgetEntity?> fetchActiveBudget(String userId);
 

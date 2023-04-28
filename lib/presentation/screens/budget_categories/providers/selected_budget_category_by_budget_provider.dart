@@ -40,8 +40,8 @@ Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
   );
 
   yield* registry.get<FetchBudgetAllocationsByBudgetUseCase>().call(userId: user.id, budgetId: budgetId).map(
-    (NormalizedBudgetAllocationEntityList allocations) {
-      final Map<String, NormalizedBudgetAllocationEntity> allocationsByPlan = allocations.foldToMap((_) => _.plan.id);
+    (BudgetAllocationEntityList allocations) {
+      final Map<String, BudgetAllocationEntity> allocationsByPlan = allocations.foldToMap((_) => _.plan.id);
       final List<BudgetCategoryPlanViewModel> plans = budgetPlans
           .map((_) => _.toViewModel(allocationsByPlan[_.id]?.amount.asMoney))
           .sorted(

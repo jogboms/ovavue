@@ -2,24 +2,21 @@ import 'package:clock/clock.dart';
 import 'package:faker/faker.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
-import 'package:rxdart/subjects.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../auth/auth_mock_impl.dart';
 import '../budget_categories/budget_categories_mock_impl.dart';
 import '../extensions.dart';
 
 class BudgetPlansMockImpl implements BudgetPlansRepository {
-  static BudgetPlanEntity generatePlan({String? id, String? userId, BudgetCategoryEntity? category, DateTime? date}) =>
-      generateNormalizedPlan(id: id, userId: userId, category: category).denormalize;
-
-  static NormalizedBudgetPlanEntity generateNormalizedPlan({
+  static BudgetPlanEntity generatePlan({
     String? id,
     String? userId,
     BudgetCategoryEntity? category,
   }) {
     id ??= faker.guid.guid();
     userId ??= AuthMockImpl.id;
-    return NormalizedBudgetPlanEntity(
+    return BudgetPlanEntity(
       id: id,
       path: '/plans/$userId/$id',
       title: faker.lorem.words(2).join(' '),
@@ -30,19 +27,30 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
     );
   }
 
-  static final Map<String, BudgetPlanEntity> _plans = <String, BudgetPlanEntity>{};
+  static final Map<String, BudgetPlanReferenceEntity> _plans = <String, BudgetPlanReferenceEntity>{};
 
-  final BehaviorSubject<Map<String, BudgetPlanEntity>> _plans$ =
-      BehaviorSubject<Map<String, BudgetPlanEntity>>.seeded(_plans);
+  static final BehaviorSubject<Map<String, BudgetPlanReferenceEntity>> _plans$ =
+      BehaviorSubject<Map<String, BudgetPlanReferenceEntity>>.seeded(_plans);
 
-  NormalizedBudgetPlanEntityList seed(int count, NormalizedBudgetPlanEntity Function(int) builder) {
-    final NormalizedBudgetPlanEntityList items = NormalizedBudgetPlanEntityList.generate(count, builder);
+  static final Stream<Map<String, BudgetPlanEntity>> plans$ = _plans$.switchMap(
+    (Map<String, BudgetPlanReferenceEntity> plans) => BudgetCategoriesMockImpl.categories$.map(
+      (Map<String, BudgetCategoryEntity> categories) => plans.map(
+        (String id, BudgetPlanReferenceEntity plan) => MapEntry<String, BudgetPlanEntity>(
+          id,
+          plan.normalize(categories.values),
+        ),
+      ),
+    ),
+  );
+
+  BudgetPlanEntityList seed(int count, BudgetPlanEntity Function(int) builder) {
+    final BudgetPlanEntityList items = BudgetPlanEntityList.generate(count, builder);
     _plans$.add(
       _plans
         ..addAll(
           items
-              .map((NormalizedBudgetPlanEntity element) => element.denormalize)
-              .foldToMap((BudgetPlanEntity element) => element.id),
+              .map((BudgetPlanEntity element) => element.denormalize)
+              .foldToMap((BudgetPlanReferenceEntity element) => element.id),
         ),
     );
     return items;
@@ -51,7 +59,7 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
   @override
   Future<String> create(String userId, CreateBudgetPlanData plan) async {
     final String id = faker.guid.guid();
-    final BudgetPlanEntity newItem = BudgetPlanEntity(
+    final BudgetPlanReferenceEntity newItem = BudgetPlanReferenceEntity(
       id: id,
       path: '/plans/$userId/$id',
       title: plan.title,
@@ -66,41 +74,43 @@ class BudgetPlansMockImpl implements BudgetPlansRepository {
 
   @override
   Future<bool> update(UpdateBudgetPlanData plan) async {
-    _plans$.add(_plans..update(plan.id, (BudgetPlanEntity prev) => prev.update(plan)));
+    _plans$.add(_plans..update(plan.id, (BudgetPlanReferenceEntity prev) => prev.update(plan)));
     return true;
   }
 
   @override
-  Future<bool> delete(String path) async {
-    final String id = _plans.values.firstWhere((BudgetPlanEntity element) => element.path == path).id;
+  Future<bool> delete({
+    required String id,
+    required String path,
+  }) async {
+    final String id = _plans.values.firstWhere((BudgetPlanReferenceEntity element) => element.path == path).id;
     _plans$.add(_plans..remove(id));
     return true;
   }
 
   @override
-  Stream<BudgetPlanEntityList> fetch(String userId) =>
-      _plans$.stream.map((Map<String, BudgetPlanEntity> event) => event.values.toList());
+  Stream<BudgetPlanEntityList> fetchAll(String userId) =>
+      plans$.map((Map<String, BudgetPlanEntity> event) => event.values.toList());
 
   @override
   Stream<BudgetPlanEntity> fetchOne({
     required String userId,
     required String planId,
   }) =>
-      _plans$.stream.map((Map<String, BudgetPlanEntity> event) => event.values.firstWhere((_) => _.id == planId));
+      plans$.map((Map<String, BudgetPlanEntity> event) => event.values.firstWhere((_) => _.id == planId));
 
   @override
   Stream<BudgetPlanEntityList> fetchByCategory({
     required String userId,
     required String categoryId,
   }) =>
-      _plans$.stream.map(
-        (Map<String, BudgetPlanEntity> event) =>
-            event.values.where((BudgetPlanEntity element) => element.category.id == categoryId).toList(),
+      plans$.map(
+        (Map<String, BudgetPlanEntity> event) => event.values.where((_) => _.category.id == categoryId).toList(),
       );
 }
 
-extension on BudgetPlanEntity {
-  BudgetPlanEntity update(UpdateBudgetPlanData update) => BudgetPlanEntity(
+extension on BudgetPlanReferenceEntity {
+  BudgetPlanReferenceEntity update(UpdateBudgetPlanData update) => BudgetPlanReferenceEntity(
         id: id,
         path: path,
         title: update.title,
@@ -109,10 +119,20 @@ extension on BudgetPlanEntity {
         createdAt: createdAt,
         updatedAt: clock.now(),
       );
+
+  BudgetPlanEntity normalize(Iterable<BudgetCategoryEntity> categories) => BudgetPlanEntity(
+        id: id,
+        path: path,
+        title: title,
+        description: description,
+        category: categories.firstWhere((BudgetCategoryEntity category) => this.category.id == category.id),
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
 }
 
-extension on NormalizedBudgetPlanEntity {
-  BudgetPlanEntity get denormalize => BudgetPlanEntity(
+extension on BudgetPlanEntity {
+  BudgetPlanReferenceEntity get denormalize => BudgetPlanReferenceEntity(
         id: id,
         path: path,
         title: title,

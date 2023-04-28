@@ -84,50 +84,14 @@ void main() async {
     ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
-    ..factory(
-      (RegistryFactory di) => DeleteBudgetPlanUseCase(
-        plans: di(),
-        allocations: di(),
-        analytics: di(),
-      ),
-    )
+    ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
     ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
-    ..factory(
-      (RegistryFactory di) => FetchBudgetAllocationUseCase(
-        allocations: di(),
-        budgets: di(),
-        plans: di(),
-        categories: di(),
-      ),
-    )
-    ..factory(
-      (RegistryFactory di) => FetchBudgetPlansByBudgetUseCase(
-        allocations: di(),
-        budgets: di(),
-        plans: di(),
-        categories: di(),
-      ),
-    )
-    ..factory(
-      (RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(
-        allocations: di(),
-        budgets: di(),
-        plans: di(),
-        categories: di(),
-      ),
-    )
-    ..factory(
-      (RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(
-        allocations: di(),
-        budgets: di(),
-        plans: di(),
-        categories: di(),
-      ),
-    )
+    ..factory((RegistryFactory di) => FetchBudgetPlansByBudgetUseCase(allocations: di()))
+    ..factory((RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(allocations: di()))
+    ..factory((RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(allocations: di()))
     ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
-    ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di(), categories: di()))
-    ..factory((RegistryFactory di) => FetchBudgetPlansByCategoryUseCase(plans: di(), categories: di()))
+    ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di()))
     ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))

@@ -24,8 +24,10 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
 
   static final Map<String, BudgetCategoryEntity> _categories = <String, BudgetCategoryEntity>{};
 
-  final BehaviorSubject<Map<String, BudgetCategoryEntity>> _categories$ =
+  static final BehaviorSubject<Map<String, BudgetCategoryEntity>> _categories$ =
       BehaviorSubject<Map<String, BudgetCategoryEntity>>.seeded(_categories);
+
+  static final Stream<Map<String, BudgetCategoryEntity>> categories$ = _categories$.stream;
 
   BudgetCategoryEntityList seed(
     int count, {
@@ -63,14 +65,17 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
   }
 
   @override
-  Future<bool> delete(String path) async {
+  Future<bool> delete({
+    required String id,
+    required String path,
+  }) async {
     final String id = _categories.values.firstWhere((BudgetCategoryEntity element) => element.path == path).id;
     _categories$.add(_categories..remove(id));
     return true;
   }
 
   @override
-  Stream<BudgetCategoryEntityList> fetch(String userId) =>
+  Stream<BudgetCategoryEntityList> fetchAll(String userId) =>
       _categories$.stream.map((Map<String, BudgetCategoryEntity> event) => event.values.toList());
 }
 

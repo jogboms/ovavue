@@ -36,7 +36,7 @@ class SelectedBudgetViewModel with EquatableMixin {
       <Object?>[id, path, index, title, amount, description, plans, startedAt, endedAt, createdAt, updatedAt];
 }
 
-extension NormalizedBudgetEntityViewModelExtension on NormalizedBudgetEntity {
+extension BudgetEntityViewModelExtension on BudgetEntity {
   SelectedBudgetViewModel toViewModel(List<SelectedBudgetPlanViewModel> plans) {
     return SelectedBudgetViewModel(
       id: id,

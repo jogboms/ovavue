@@ -9,7 +9,10 @@ abstract class BudgetAllocationsRepository {
 
   Future<bool> update(UpdateBudgetAllocationData allocation);
 
-  Future<bool> delete(String path);
+  Future<bool> delete({
+    required String id,
+    required String path,
+  });
 
   Future<bool> deleteByPlan({
     required String userId,
@@ -18,7 +21,7 @@ abstract class BudgetAllocationsRepository {
 
   Stream<BudgetAllocationEntityList> fetchAll(String userId);
 
-  Stream<BudgetAllocationEntityList> fetch({
+  Stream<BudgetAllocationEntityList> fetchByBudget({
     required String userId,
     required String budgetId,
   });

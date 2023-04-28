@@ -23,23 +23,23 @@ Stream<BudgetState> selectedBudget(SelectedBudgetRef ref, String id) async* {
       .get<FetchBudgetUseCase>()
       .call(userId: user.id, budgetId: id)
       .switchMap(
-        (NormalizedBudgetEntity budget) => registry
+        (BudgetEntity budget) => registry
             .get<FetchBudgetAllocationsByBudgetUseCase>()
             .call(userId: user.id, budgetId: budget.id)
-            .map((NormalizedBudgetAllocationEntityList allocations) => _deriveState(budget, allocations)),
+            .map((BudgetAllocationEntityList allocations) => _deriveState(budget, allocations)),
       )
       .distinct();
 }
 
 BudgetState _deriveState(
-  NormalizedBudgetEntity budget,
-  NormalizedBudgetAllocationEntityList allocations,
+  BudgetEntity budget,
+  BudgetAllocationEntityList allocations,
 ) {
-  final Map<String, NormalizedBudgetAllocationEntity> allocationByPlan = allocations.foldToMap((_) => _.plan.id);
-  final NormalizedBudgetPlanEntityList budgetPlans = allocations.map((_) => _.plan).toList(growable: false);
+  final Map<String, BudgetAllocationEntity> allocationByPlan = allocations.foldToMap((_) => _.plan.id);
+  final BudgetPlanEntityList budgetPlans = allocations.map((_) => _.plan).toList(growable: false);
   final Map<String, int> allocationByCategory = budgetPlans.groupFoldBy(
     (_) => _.category.id,
-    (int? previous, NormalizedBudgetPlanEntity plan) => (previous ?? 0) + (allocationByPlan[plan.id]?.amount ?? 0),
+    (int? previous, BudgetPlanEntity plan) => (previous ?? 0) + (allocationByPlan[plan.id]?.amount ?? 0),
   );
   final Iterable<SelectedBudgetCategoryViewModel> categories =
       budgetPlans.uniqueBy((_) => _.category.id).map((_) => _.category).map(
@@ -49,7 +49,7 @@ BudgetState _deriveState(
           );
   final Map<String, SelectedBudgetCategoryViewModel> categoriesById = categories.foldToMap((_) => _.id);
   final Iterable<SelectedBudgetPlanViewModel> plans = budgetPlans.map(
-    (NormalizedBudgetPlanEntity plan) => plan.toViewModel(
+    (BudgetPlanEntity plan) => plan.toViewModel(
       allocation: allocationByPlan[plan.id]?.toViewModel(),
       category: categoriesById[plan.category.id]!,
     ),

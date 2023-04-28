@@ -9,44 +9,38 @@ void main() {
   group('FetchBudgetPlansByBudgetUseCase', () {
     final FetchBudgetPlansByBudgetUseCase useCase = FetchBudgetPlansByBudgetUseCase(
       allocations: mockRepositories.budgetAllocations,
-      budgets: mockRepositories.budgets,
-      plans: mockRepositories.budgetPlans,
-      categories: mockRepositories.budgetCategories,
     );
 
     tearDown(mockRepositories.reset);
 
     test('should fetch budget plans by budget', () {
       final BudgetCategoryEntityList categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
-      final NormalizedBudgetPlanEntityList plans = <NormalizedBudgetPlanEntity>[
-        BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first),
-        BudgetPlansMockImpl.generateNormalizedPlan(category: categories.first),
+      final BudgetPlanEntityList plans = <BudgetPlanEntity>[
+        BudgetPlansMockImpl.generatePlan(category: categories.first),
+        BudgetPlansMockImpl.generatePlan(category: categories.first),
+        BudgetPlansMockImpl.generatePlan(category: categories.first),
+        BudgetPlansMockImpl.generatePlan(category: categories.first),
       ];
-      final NormalizedBudgetEntity budget1 = BudgetsMockImpl.generateNormalizedBudget();
-      final NormalizedBudgetEntity budget2 = BudgetsMockImpl.generateNormalizedBudget();
-      final NormalizedBudgetAllocationEntityList expectedAllocations = <NormalizedBudgetAllocationEntity>[
-        BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget1, plan: plans[0]),
-        BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget1, plan: plans[1]),
-        BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget2, plan: plans[0]),
-        BudgetAllocationsMockImpl.generateNormalizedAllocation(budget: budget2, plan: plans[1]),
+      final BudgetEntity budget1 = BudgetsMockImpl.generateBudget();
+      final BudgetEntity budget2 = BudgetsMockImpl.generateBudget();
+      final BudgetAllocationEntityList expectedAllocations = <BudgetAllocationEntity>[
+        BudgetAllocationsMockImpl.generateAllocation(budget: budget1, plan: plans[0]),
+        BudgetAllocationsMockImpl.generateAllocation(budget: budget1, plan: plans[1]),
+        BudgetAllocationsMockImpl.generateAllocation(budget: budget1, plan: plans[2]),
+        BudgetAllocationsMockImpl.generateAllocation(budget: budget1, plan: plans[3]),
+        BudgetAllocationsMockImpl.generateAllocation(budget: budget2, plan: plans[0]),
+        BudgetAllocationsMockImpl.generateAllocation(budget: budget2, plan: plans[1]),
       ];
 
       when(() => mockRepositories.budgetAllocations.fetchAll('1')).thenAnswer(
-        (_) => Stream<BudgetAllocationEntityList>.value(expectedAllocations.asBudgetAllocationEntityList),
+        (_) => Stream<BudgetAllocationEntityList>.value(expectedAllocations),
       );
-      when(() => mockRepositories.budgets.fetch('1')).thenAnswer(
-        (_) => Stream<BudgetEntityList>.value(<BudgetEntity>[budget1.asBudgetEntity, budget2.asBudgetEntity]),
-      );
-      when(() => mockRepositories.budgetPlans.fetch(any()))
-          .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(plans.asBudgetPlanEntityList));
-      when(() => mockRepositories.budgetCategories.fetch(any()))
-          .thenAnswer((_) => Stream<BudgetCategoryEntityList>.value(categories));
 
       expectLater(
         useCase('1'),
-        emits(<String, Set<NormalizedBudgetPlanEntity>>{
-          budget1.id: <NormalizedBudgetPlanEntity>{...plans},
-          budget2.id: <NormalizedBudgetPlanEntity>{...plans},
+        emits(<String, Set<BudgetPlanEntity>>{
+          budget1.id: <BudgetPlanEntity>{...plans},
+          budget2.id: <BudgetPlanEntity>{...plans.sublist(0, 2)},
         }),
       );
     });
@@ -62,15 +56,6 @@ void main() {
 
       when(() => mockRepositories.budgetAllocations.fetchAll('1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntityList>.error(expectedError),
-      );
-      when(() => mockRepositories.budgets.fetch('1')).thenAnswer(
-        (_) => Stream<BudgetEntityList>.error(expectedError),
-      );
-      when(() => mockRepositories.budgetPlans.fetch(any())).thenAnswer(
-        (_) => Stream<BudgetPlanEntityList>.error(expectedError),
-      );
-      when(() => mockRepositories.budgetCategories.fetch(any())).thenAnswer(
-        (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 
       expect(useCase('1'), emitsError(expectedError));

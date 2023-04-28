@@ -19,7 +19,7 @@ void main() {
         (_) => BudgetCategoriesMockImpl.generateCategory(),
       );
 
-      when(() => mockRepositories.budgetCategories.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgetCategories.fetchAll(any())).thenAnswer(
         (_) => Stream<BudgetCategoryEntityList>.value(expectedBudgetCategories),
       );
 
@@ -27,7 +27,7 @@ void main() {
     });
 
     test('should bubble fetch errors', () {
-      when(() => mockRepositories.budgetCategories.fetch(any())).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetCategories.fetchAll(any())).thenThrow(Exception('an error'));
 
       expect(() => useCase('1'), throwsException);
     });
@@ -35,7 +35,7 @@ void main() {
     test('should bubble stream errors', () {
       final Exception expectedError = Exception('an error');
 
-      when(() => mockRepositories.budgetCategories.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgetCategories.fetchAll(any())).thenAnswer(
         (_) => Stream<BudgetCategoryEntityList>.error(expectedError),
       );
 

@@ -12,18 +12,16 @@ void main() {
     tearDown(mockRepositories.reset);
 
     test('should fetch budgets', () {
-      final NormalizedBudgetEntityList expectedBudgets = <NormalizedBudgetEntity>[
-        BudgetsMockImpl.generateNormalizedBudget()
-      ];
+      final BudgetEntityList expectedBudgets = <BudgetEntity>[BudgetsMockImpl.generateBudget()];
 
-      when(() => mockRepositories.budgets.fetch(any()))
-          .thenAnswer((_) => Stream<BudgetEntityList>.value(expectedBudgets.asBudgetEntityList));
+      when(() => mockRepositories.budgets.fetchAll(any()))
+          .thenAnswer((_) => Stream<BudgetEntityList>.value(expectedBudgets));
 
       expectLater(useCase('1'), emits(expectedBudgets));
     });
 
     test('should bubble fetch errors', () {
-      when(() => mockRepositories.budgets.fetch('1')).thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgets.fetchAll('1')).thenThrow(Exception('an error'));
 
       expect(() => useCase('1'), throwsException);
     });
@@ -31,7 +29,7 @@ void main() {
     test('should bubble stream errors', () {
       final Exception expectedError = Exception('an error');
 
-      when(() => mockRepositories.budgets.fetch(any())).thenAnswer(
+      when(() => mockRepositories.budgets.fetchAll(any())).thenAnswer(
         (_) => Stream<BudgetEntityList>.error(expectedError),
       );
 

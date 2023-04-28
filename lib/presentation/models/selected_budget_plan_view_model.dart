@@ -29,7 +29,7 @@ class SelectedBudgetPlanViewModel with EquatableMixin {
   List<Object?> get props => <Object?>[id, path, title, allocation, description, category, createdAt, updatedAt];
 }
 
-extension NormalizedBudgetPlanEntityViewModelExtension on NormalizedBudgetPlanEntity {
+extension BudgetPlanEntityViewModelExtension on BudgetPlanEntity {
   SelectedBudgetPlanViewModel toViewModel({
     required BudgetAllocationViewModel? allocation,
     required SelectedBudgetCategoryViewModel category,

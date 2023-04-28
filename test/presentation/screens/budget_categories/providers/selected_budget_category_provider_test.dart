@@ -11,8 +11,7 @@ Future<void> main() async {
   const String categoryId = 'category-id';
 
   final BudgetCategoryEntity expectedCategory = BudgetCategoriesMockImpl.generateCategory(id: categoryId);
-  final NormalizedBudgetPlanEntity expectedPlan =
-      BudgetPlansMockImpl.generateNormalizedPlan(category: expectedCategory);
+  final BudgetPlanEntity expectedPlan = BudgetPlansMockImpl.generatePlan(category: expectedCategory);
 
   tearDown(mockUseCases.reset);
 

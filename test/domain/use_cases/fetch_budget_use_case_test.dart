@@ -12,10 +12,10 @@ void main() {
     tearDown(mockRepositories.reset);
 
     test('should fetch budget', () {
-      final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget();
+      final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget();
 
       when(() => mockRepositories.budgets.fetchOne(userId: '1', budgetId: '1'))
-          .thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget.asBudgetEntity));
+          .thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
 
       expectLater(useCase(userId: '1', budgetId: '1'), emits(expectedBudget));
     });

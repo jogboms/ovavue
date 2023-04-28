@@ -26,7 +26,7 @@ Future<void> main() async {
 
     test('should initialize with empty state', () {
       when(() => mockUseCases.fetchBudgetsUseCase.call(any()))
-          .thenAnswer((_) => Stream<List<NormalizedBudgetEntity>>.value(<NormalizedBudgetEntity>[]));
+          .thenAnswer((_) => Stream<List<BudgetEntity>>.value(<BudgetEntity>[]));
       when(() => mockUseCases.fetchBudgetAllocationsUseCase.call(any())).thenAnswer(
         (_) => Stream<BudgetIdToPlansMap>.value(BudgetIdToPlansMap.identity()),
       );
@@ -35,16 +35,15 @@ Future<void> main() async {
     });
 
     test('should emit fetched budgets', () {
-      final List<NormalizedBudgetEntity> expectedBudgets =
-          List<NormalizedBudgetEntity>.filled(3, BudgetsMockImpl.generateNormalizedBudget());
-      final List<NormalizedBudgetPlanEntity> expectedPlans =
-          NormalizedBudgetPlanEntityList.generate(3, (_) => BudgetPlansMockImpl.generateNormalizedPlan());
+      final List<BudgetEntity> expectedBudgets = List<BudgetEntity>.filled(3, BudgetsMockImpl.generateBudget());
+      final List<BudgetPlanEntity> expectedPlans =
+          BudgetPlanEntityList.generate(3, (_) => BudgetPlansMockImpl.generatePlan());
       when(() => mockUseCases.fetchBudgetsUseCase.call(any()))
-          .thenAnswer((_) => Stream<List<NormalizedBudgetEntity>>.value(expectedBudgets));
+          .thenAnswer((_) => Stream<List<BudgetEntity>>.value(expectedBudgets));
       when(() => mockUseCases.fetchBudgetAllocationsUseCase.call(any())).thenAnswer(
         (_) => Stream<BudgetIdToPlansMap>.value(
           expectedBudgets.foldToMap((_) => _.id).map(
-                (String id, NormalizedBudgetEntity budget) => MapEntry<String, Set<NormalizedBudgetPlanEntity>>(
+                (String id, BudgetEntity budget) => MapEntry<String, Set<BudgetPlanEntity>>(
                   id,
                   expectedPlans.toSet(),
                 ),
@@ -55,9 +54,7 @@ Future<void> main() async {
       expect(
         createProviderStream(),
         completion(
-          expectedBudgets
-              .map((NormalizedBudgetEntity budget) => BudgetViewModel.fromEntity(budget, expectedPlans))
-              .toList(),
+          expectedBudgets.map((BudgetEntity budget) => BudgetViewModel.fromEntity(budget, expectedPlans)).toList(),
         ),
       );
     });

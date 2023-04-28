@@ -22,7 +22,7 @@ class BudgetAllocationViewModel with EquatableMixin {
   List<Object?> get props => <Object?>[id, path, amount, createdAt, updatedAt];
 }
 
-extension BudgetAllocationViewModelExtension on NormalizedBudgetAllocationEntity {
+extension BudgetAllocationViewModelExtension on BudgetAllocationEntity {
   BudgetAllocationViewModel toViewModel() => BudgetAllocationViewModel(
         id: id,
         path: path,

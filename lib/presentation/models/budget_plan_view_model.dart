@@ -14,7 +14,7 @@ class BudgetPlanViewModel with EquatableMixin {
     required this.updatedAt,
   });
 
-  static BudgetPlanViewModel fromEntity(NormalizedBudgetPlanEntity entity) {
+  static BudgetPlanViewModel fromEntity(BudgetPlanEntity entity) {
     return BudgetPlanViewModel(
       id: entity.id,
       title: entity.title,
