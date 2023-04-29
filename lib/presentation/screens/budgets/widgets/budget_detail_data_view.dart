@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -278,7 +277,7 @@ class _CategoryView extends StatefulWidget {
 }
 
 class _CategoryViewState extends State<_CategoryView> {
-  _CategoryViewType _type = _CategoryViewType.values.random();
+  _CategoryViewType _type = _CategoryViewType.pieChart;
 
   @override
   Widget build(BuildContext context) {
@@ -287,8 +286,8 @@ class _CategoryViewState extends State<_CategoryView> {
     final ColorScheme colorScheme = theme.colorScheme;
 
     final Money excessAmount = widget.budgetAmount - widget.allocationAmount;
-    final Color excessAmountBackgroundColor = colorScheme.secondaryContainer;
-    final Color excessAmountForegroundColor = colorScheme.onSecondaryContainer;
+    final Color excessAmountBackgroundColor = colorScheme.mutedBackground;
+    final Color excessAmountForegroundColor = colorScheme.onMutedBackground;
     const IconData excessAmountIcon = Icons.padding_outlined;
 
     return AnimatedSize(
@@ -301,8 +300,8 @@ class _CategoryViewState extends State<_CategoryView> {
               aspectRatio: 1,
               child: PieChart(
                 PieChartData(
-                  sectionsSpace: 2,
-                  centerSpaceRadius: 4,
+                  sectionsSpace: 4,
+                  centerSpaceRadius: 16,
                   sections: <PieChartSectionData>[
                     for (final SelectedBudgetCategoryViewModel category in widget.categories)
                       _derivePieSectionData(
@@ -381,7 +380,7 @@ class _CategoryViewState extends State<_CategoryView> {
   }) {
     final double dimension = MediaQuery.of(context).size.shortestSide;
     final ThemeData theme = Theme.of(context);
-    final TextStyle labelTextStyle = theme.textTheme.labelSmall!.copyWith(
+    final TextStyle labelTextStyle = theme.textTheme.labelLarge!.copyWith(
       fontWeight: AppFontWeight.bold,
       color: foregroundColor,
       letterSpacing: .01,

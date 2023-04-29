@@ -3,6 +3,7 @@ import 'package:ovavue/core.dart';
 
 import '../utils.dart';
 import 'dialog_page.dart';
+import 'primary_button.dart';
 
 class BudgetCategoryEntryForm extends StatefulWidget {
   const BudgetCategoryEntryForm({
@@ -87,9 +88,9 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
               child: Text(l10n.selectIconCaption),
             ),
             spacing,
-            FilledButton.tonal(
+            PrimaryButton(
               onPressed: _handleSubmit,
-              child: Text(l10n.submitCaption),
+              caption: l10n.submitCaption,
             )
           ],
         ),

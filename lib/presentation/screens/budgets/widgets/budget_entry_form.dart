@@ -148,9 +148,9 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                   ),
                 ],
                 spacing,
-                FilledButton.tonal(
+                PrimaryButton(
                   onPressed: _handleSubmit,
-                  child: Text(l10n.submitCaption),
+                  caption: l10n.submitCaption,
                 )
               ],
             );

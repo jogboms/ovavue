@@ -5,6 +5,7 @@ import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'dialog_page.dart';
+import 'primary_button.dart';
 
 enum BudgetPlanEntryType { create, update }
 
@@ -137,9 +138,9 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                   const SizedBox(height: 8),
                 ],
                 spacing,
-                FilledButton.tonal(
+                PrimaryButton(
                   onPressed: _handleSubmit,
-                  child: Text(l10n.submitCaption),
+                  caption: l10n.submitCaption,
                 )
               ],
             );

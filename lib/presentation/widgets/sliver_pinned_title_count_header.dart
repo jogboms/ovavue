@@ -15,11 +15,11 @@ class SliverPinnedTitleCountHeader extends StatelessWidget {
 
     return SliverPinnedHeader(
       child: Container(
-        color: colorScheme.surface,
+        color: colorScheme.surfaceVariant,
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: DefaultTextStyle(
           style: textTheme.titleMedium!.copyWith(
-            color: colorScheme.outline,
+            color: colorScheme.onSurfaceVariant,
           ),
           child: Row(
             children: <Widget>[

@@ -32,7 +32,7 @@ class BudgetListTile extends StatelessWidget {
     final bool active = endedAt == null;
     final Money? allocationAmount = this.allocationAmount;
 
-    final Color? foregroundColor = active ? colorScheme.onInverseSurface : null;
+    final Color? foregroundColor = active ? colorScheme.onSurfaceVariant : null;
     final TextStyle? titleTextStyle = textTheme.titleMedium?.copyWith(color: foregroundColor);
 
     return ListTile(
@@ -42,7 +42,7 @@ class BudgetListTile extends StatelessWidget {
               alignment: Alignment.bottomLeft,
               child: Container(
                 decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
+                  color: colorScheme.inverseSurface,
                   borderRadius: BorderRadius.circular(4),
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
@@ -50,7 +50,7 @@ class BudgetListTile extends StatelessWidget {
                 child: Text(
                   context.l10n.activeLabel,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
+                    color: colorScheme.onInverseSurface,
                   ),
                 ),
               ),
@@ -64,8 +64,8 @@ class BudgetListTile extends StatelessWidget {
               foregroundColor: foregroundColor,
             ),
       selected: active,
-      selectedTileColor: colorScheme.inverseSurface,
-      selectedColor: colorScheme.onInverseSurface,
+      selectedTileColor: colorScheme.surfaceVariant,
+      selectedColor: foregroundColor,
       onTap: active ? null : onTap,
     );
   }
