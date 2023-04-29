@@ -209,7 +209,7 @@ class _ColorItem extends StatelessWidget {
   final VoidCallback onPressed;
   final bool selected;
 
-  static const double _dimension = 40.0;
+  static const double _dimension = 56.0;
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +221,7 @@ class _ColorItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.background,
           border: selected ? Border.all(color: colorScheme.foreground, width: 4) : null,
-          borderRadius: selected ? BorderRadius.circular(_dimension / 2) : null,
+          borderRadius: BorderRadius.circular(selected ? _dimension / 2 : 8),
         ),
         child: Icon(icon.data, color: colorScheme.foreground),
       ),
