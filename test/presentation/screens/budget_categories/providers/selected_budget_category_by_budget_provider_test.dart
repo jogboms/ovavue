@@ -13,11 +13,11 @@ Future<void> main() async {
   const String budgetId = 'budget-id';
 
   final BudgetCategoryEntity expectedCategory = BudgetCategoriesMockImpl.generateCategory(id: categoryId);
-  final NormalizedBudgetPlanEntity expectedPlan = BudgetPlansMockImpl.generateNormalizedPlan(
+  final BudgetPlanEntity expectedPlan = BudgetPlansMockImpl.generatePlan(
     category: expectedCategory,
   );
-  final List<NormalizedBudgetPlanEntity> expectedPlans = <NormalizedBudgetPlanEntity>[expectedPlan];
-  final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(id: budgetId);
+  final List<BudgetPlanEntity> expectedPlans = <BudgetPlanEntity>[expectedPlan];
+  final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget(id: budgetId);
 
   tearDown(mockUseCases.reset);
 
@@ -49,10 +49,9 @@ Future<void> main() async {
     }
 
     test('should show selected category by id', () async {
-      final List<NormalizedBudgetAllocationEntity> expectedBudgetAllocations =
-          List<NormalizedBudgetAllocationEntity>.filled(
+      final List<BudgetAllocationEntity> expectedBudgetAllocations = List<BudgetAllocationEntity>.filled(
         3,
-        BudgetAllocationsMockImpl.generateNormalizedAllocation(
+        BudgetAllocationsMockImpl.generateAllocation(
           budget: expectedBudget,
           plan: expectedPlans.first,
         ),
@@ -61,7 +60,7 @@ Future<void> main() async {
       when(
         () => mockUseCases.fetchBudgetAllocationsByBudgetUseCase
             .call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')),
-      ).thenAnswer((_) => Stream<NormalizedBudgetAllocationEntityList>.value(expectedBudgetAllocations));
+      ).thenAnswer((_) => Stream<BudgetAllocationEntityList>.value(expectedBudgetAllocations));
 
       expect(
         createProviderStream(),
@@ -70,7 +69,7 @@ Future<void> main() async {
             budget: BudgetViewModel.fromEntity(expectedBudget, expectedPlans),
             plans: expectedPlans
                 .map(
-                  (NormalizedBudgetPlanEntity plan) => BudgetCategoryPlanViewModel(
+                  (BudgetPlanEntity plan) => BudgetCategoryPlanViewModel(
                     id: plan.id,
                     path: plan.path,
                     title: plan.title,

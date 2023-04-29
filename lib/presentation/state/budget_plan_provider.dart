@@ -73,7 +73,11 @@ class BudgetPlanProvider {
 
   Future<bool> updateAllocation(UpdateBudgetAllocationData data) async => _updateBudgetAllocationUseCase(data);
 
-  Future<bool> deleteAllocation(String path) async => _deleteBudgetAllocationUseCase(path);
+  Future<bool> deleteAllocation({
+    required String id,
+    required String path,
+  }) async =>
+      _deleteBudgetAllocationUseCase(id: id, path: path);
 
   Future<bool> updateCategory({
     required BudgetPlanViewModel plan,

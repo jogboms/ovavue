@@ -8,5 +8,5 @@ class FetchActiveBudgetUseCase {
 
   final BudgetsRepository _budgets;
 
-  Stream<NormalizedBudgetEntity?> call(String userId) => _budgets.fetchActiveBudget(userId).map((_) => _?.normalize());
+  Stream<BudgetEntity?> call(String userId) => _budgets.fetchActiveBudget(userId);
 }

@@ -47,5 +47,9 @@ class BudgetCategoryProvider {
 
   Future<bool> update(UpdateBudgetCategoryData data) async => _updateBudgetCategoryUseCase(data);
 
-  Future<bool> delete(String path) async => _deleteBudgetCategoryUseCase(path);
+  Future<bool> delete({
+    required String id,
+    required String path,
+  }) async =>
+      _deleteBudgetCategoryUseCase(id: id, path: path);
 }

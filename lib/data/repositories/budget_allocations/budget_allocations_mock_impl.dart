@@ -2,66 +2,62 @@ import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:faker/faker.dart';
 import 'package:ovavue/core.dart';
+import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
-import 'package:rxdart/subjects.dart';
+import 'package:rxdart/rxdart.dart';
 
-import '../auth/auth_mock_impl.dart';
-import '../budget_plans/budget_plans_mock_impl.dart';
-import '../budgets/budgets_mock_impl.dart';
 import '../extensions.dart';
 
 class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   static BudgetAllocationEntity generateAllocation({
     String? id,
     String? userId,
-    NormalizedBudgetEntity? budget,
-    NormalizedBudgetPlanEntity? plan,
-    DateTime? startedAt,
-  }) =>
-      generateNormalizedAllocation(
-        id: id,
-        userId: userId,
-        budget: budget,
-        plan: plan,
-        startedAt: startedAt,
-      ).denormalize;
-
-  static NormalizedBudgetAllocationEntity generateNormalizedAllocation({
-    String? id,
-    String? userId,
     int? amount,
-    NormalizedBudgetEntity? budget,
-    NormalizedBudgetPlanEntity? plan,
+    BudgetEntity? budget,
+    BudgetPlanEntity? plan,
     DateTime? startedAt,
   }) {
     id ??= faker.guid.guid();
     userId ??= AuthMockImpl.id;
     startedAt ??= faker.randomGenerator.dateTime;
-    return NormalizedBudgetAllocationEntity(
+    return BudgetAllocationEntity(
       id: id,
       path: '/allocations/$userId/$id',
       amount: amount ?? faker.randomGenerator.integer(1000000),
-      budget: budget ?? BudgetsMockImpl.generateNormalizedBudget(userId: userId),
-      plan: plan ?? BudgetPlansMockImpl.generateNormalizedPlan(userId: userId),
+      budget: budget ?? BudgetsMockImpl.generateBudget(userId: userId),
+      plan: plan ?? BudgetPlansMockImpl.generatePlan(userId: userId),
       createdAt: faker.randomGenerator.dateTime,
       updatedAt: clock.now(),
     );
   }
 
-  static final Map<String, BudgetAllocationEntity> _allocations = <String, BudgetAllocationEntity>{};
+  static final Map<String, BudgetAllocationReferenceEntity> _allocations = <String, BudgetAllocationReferenceEntity>{};
 
-  final BehaviorSubject<Map<String, BudgetAllocationEntity>> _allocations$ =
-      BehaviorSubject<Map<String, BudgetAllocationEntity>>.seeded(_allocations);
+  static final BehaviorSubject<Map<String, BudgetAllocationReferenceEntity>> _allocations$ =
+      BehaviorSubject<Map<String, BudgetAllocationReferenceEntity>>.seeded(_allocations);
 
-  NormalizedBudgetAllocationEntityList seed(int count, NormalizedBudgetAllocationEntity Function(int) builder) {
-    final NormalizedBudgetAllocationEntityList items = NormalizedBudgetAllocationEntityList.generate(count, builder);
+  static final Stream<Map<String, BudgetAllocationEntity>> allocations$ = _allocations$.switchMap(
+    (Map<String, BudgetAllocationReferenceEntity> allocations) => CombineLatestStream.combine2(
+      BudgetsMockImpl.budgets$,
+      BudgetPlansMockImpl.plans$,
+      (Map<String, BudgetEntity> budgets, Map<String, BudgetPlanEntity> plans) => allocations.map(
+        (String id, BudgetAllocationReferenceEntity allocation) => MapEntry<String, BudgetAllocationEntity>(
+          id,
+          allocation.normalize(
+            budgets[allocation.budget.id]!,
+            plans[allocation.plan.id]!,
+          ),
+        ),
+      ),
+    ),
+  );
+
+  BudgetAllocationEntityList seed(int count, BudgetAllocationEntity Function(int) builder) {
+    final BudgetAllocationEntityList items = BudgetAllocationEntityList.generate(count, builder);
     _allocations$.add(
       _allocations
         ..addAll(
-          items
-              .uniqueBy((NormalizedBudgetAllocationEntity element) => Object.hash(element.budget.id, element.plan.id))
-              .map((NormalizedBudgetAllocationEntity element) => element.denormalize)
-              .foldToMap((BudgetAllocationEntity element) => element.id),
+          items.uniqueBy((_) => Object.hash(_.budget.id, _.plan.id)).map((_) => _.denormalize).foldToMap((_) => _.id),
         ),
     );
     return items;
@@ -70,7 +66,7 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   @override
   Future<String> create(String userId, CreateBudgetAllocationData allocation) async {
     final String id = faker.guid.guid();
-    final BudgetAllocationEntity newItem = BudgetAllocationEntity(
+    final BudgetAllocationReferenceEntity newItem = BudgetAllocationReferenceEntity(
       id: id,
       path: '/allocations/$userId/$id',
       amount: allocation.amount,
@@ -89,13 +85,16 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
 
   @override
   Future<bool> update(UpdateBudgetAllocationData allocation) async {
-    _allocations$.add(_allocations..update(allocation.id, (BudgetAllocationEntity prev) => prev.update(allocation)));
+    _allocations$.add(_allocations..update(allocation.id, (_) => _.update(allocation)));
     return true;
   }
 
   @override
-  Future<bool> delete(String path) async {
-    final String id = _allocations.values.firstWhere((BudgetAllocationEntity element) => element.path == path).id;
+  Future<bool> delete({
+    required String id,
+    required String path,
+  }) async {
+    final String id = _allocations.values.firstWhere((_) => _.path == path).id;
     _allocations$.add(_allocations..remove(id));
     return true;
   }
@@ -110,18 +109,17 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   }
 
   @override
-  Stream<BudgetAllocationEntityList> fetchAll(String userId) => _allocations$.stream.map(
+  Stream<BudgetAllocationEntityList> fetchAll(String userId) => allocations$.map(
         (Map<String, BudgetAllocationEntity> event) => event.values.toList(),
       );
 
   @override
-  Stream<BudgetAllocationEntityList> fetch({
+  Stream<BudgetAllocationEntityList> fetchByBudget({
     required String userId,
     required String budgetId,
   }) =>
-      _allocations$.stream.map(
-        (Map<String, BudgetAllocationEntity> event) =>
-            event.values.where((BudgetAllocationEntity element) => element.budget.id == budgetId).toList(),
+      allocations$.map(
+        (Map<String, BudgetAllocationEntity> event) => event.values.where((_) => _.budget.id == budgetId).toList(),
       );
 
   @override
@@ -130,9 +128,9 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
     required String budgetId,
     required String planId,
   }) =>
-      _allocations$.stream.map(
+      allocations$.map(
         (Map<String, BudgetAllocationEntity> event) => event.values.singleWhereOrNull(
-          (BudgetAllocationEntity element) => element.budget.id == budgetId && element.plan.id == planId,
+          (_) => _.budget.id == budgetId && _.plan.id == planId,
         ),
       );
 
@@ -141,14 +139,13 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
     required String userId,
     required String planId,
   }) =>
-      _allocations$.stream.map(
-        (Map<String, BudgetAllocationEntity> event) =>
-            event.values.where((BudgetAllocationEntity element) => element.plan.id == planId).toList(),
+      allocations$.map(
+        (Map<String, BudgetAllocationEntity> event) => event.values.where((_) => _.plan.id == planId).toList(),
       );
 }
 
-extension on BudgetAllocationEntity {
-  BudgetAllocationEntity update(UpdateBudgetAllocationData update) => BudgetAllocationEntity(
+extension on BudgetAllocationReferenceEntity {
+  BudgetAllocationReferenceEntity update(UpdateBudgetAllocationData update) => BudgetAllocationReferenceEntity(
         id: id,
         path: path,
         amount: update.amount,
@@ -157,10 +154,20 @@ extension on BudgetAllocationEntity {
         createdAt: createdAt,
         updatedAt: clock.now(),
       );
+
+  BudgetAllocationEntity normalize(BudgetEntity budget, BudgetPlanEntity plan) => BudgetAllocationEntity(
+        id: id,
+        path: path,
+        amount: amount,
+        budget: budget,
+        plan: plan,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
 }
 
-extension on NormalizedBudgetAllocationEntity {
-  BudgetAllocationEntity get denormalize => BudgetAllocationEntity(
+extension on BudgetAllocationEntity {
+  BudgetAllocationReferenceEntity get denormalize => BudgetAllocationReferenceEntity(
         id: id,
         path: path,
         amount: amount,

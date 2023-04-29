@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 import 'budget_entity.dart';
 import 'budget_plan_entity.dart';
 import 'reference_entity.dart';
 
+@visibleForTesting
 class BaseBudgetAllocationEntity<U, V> with EquatableMixin {
   const BaseBudgetAllocationEntity({
     required this.id,
@@ -30,49 +32,8 @@ class BaseBudgetAllocationEntity<U, V> with EquatableMixin {
   bool? get stringify => true;
 }
 
-typedef BudgetAllocationEntity = BaseBudgetAllocationEntity<ReferenceEntity, ReferenceEntity>;
-typedef NormalizedBudgetAllocationEntity
-    = BaseBudgetAllocationEntity<NormalizedBudgetEntity, NormalizedBudgetPlanEntity>;
+typedef BudgetAllocationReferenceEntity = BaseBudgetAllocationEntity<ReferenceEntity, ReferenceEntity>;
+typedef BudgetAllocationEntity = BaseBudgetAllocationEntity<BudgetEntity, BudgetPlanEntity>;
 
+typedef BudgetAllocationReferenceEntityList = List<BudgetAllocationReferenceEntity>;
 typedef BudgetAllocationEntityList = List<BudgetAllocationEntity>;
-typedef NormalizedBudgetAllocationEntityList = List<NormalizedBudgetAllocationEntity>;
-
-extension NormalizeBudgetAllocationEntityListExtension on BudgetAllocationEntityList {
-  NormalizedBudgetAllocationEntityList normalize(
-    NormalizedBudgetEntity budget,
-    Map<String, NormalizedBudgetPlanEntity> planIdToBudgetPlans,
-  ) =>
-      map(
-        (BudgetAllocationEntity allocation) => allocation.normalize(
-          budget,
-          planIdToBudgetPlans[allocation.plan.id]!,
-        ),
-      ).toList(growable: false);
-
-  NormalizedBudgetAllocationEntityList normalizeToMany(
-    Map<String, NormalizedBudgetEntity> budgetIdToBudgets,
-    Map<String, NormalizedBudgetPlanEntity> planIdToBudgetPlans,
-  ) =>
-      map(
-        (BudgetAllocationEntity allocation) => allocation.normalize(
-          budgetIdToBudgets[allocation.budget.id]!,
-          planIdToBudgetPlans[allocation.plan.id]!,
-        ),
-      ).toList(growable: false);
-}
-
-extension NormalizeBudgetAllocationEntityExtension on BudgetAllocationEntity {
-  NormalizedBudgetAllocationEntity normalize(
-    NormalizedBudgetEntity budget,
-    NormalizedBudgetPlanEntity plan,
-  ) =>
-      NormalizedBudgetAllocationEntity(
-        id: id,
-        path: path,
-        amount: amount,
-        budget: budget,
-        plan: plan,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
-}

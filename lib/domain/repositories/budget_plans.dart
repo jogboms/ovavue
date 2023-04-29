@@ -7,9 +7,12 @@ abstract class BudgetPlansRepository {
 
   Future<bool> update(UpdateBudgetPlanData plan);
 
-  Future<bool> delete(String path);
+  Future<bool> delete({
+    required String id,
+    required String path,
+  });
 
-  Stream<BudgetPlanEntityList> fetch(String userId);
+  Stream<BudgetPlanEntityList> fetchAll(String userId);
 
   Stream<BudgetPlanEntity> fetchOne({required String userId, required String planId});
 

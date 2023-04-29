@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
-import 'package:ovavue/presentation.dart' hide NormalizedBudgetAllocationViewModelExtension;
+import 'package:ovavue/presentation.dart' hide BudgetPlanAllocationViewModelExtension;
 import 'package:riverpod/riverpod.dart';
 
 import '../../utils.dart';
@@ -28,26 +28,26 @@ Future<void> main() async {
     }
 
     test('should show selected budget by id', () async {
-      final List<NormalizedBudgetPlanEntity> expectedPlans = <NormalizedBudgetPlanEntity>[
-        BudgetPlansMockImpl.generateNormalizedPlan(),
+      final List<BudgetPlanEntity> expectedPlans = <BudgetPlanEntity>[
+        BudgetPlansMockImpl.generatePlan(),
       ];
-      final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget();
-      final List<NormalizedBudgetAllocationEntity> expectedBudgetAllocations = <NormalizedBudgetAllocationEntity>[
-        BudgetAllocationsMockImpl.generateNormalizedAllocation(
+      final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget();
+      final List<BudgetAllocationEntity> expectedBudgetAllocations = <BudgetAllocationEntity>[
+        BudgetAllocationsMockImpl.generateAllocation(
           budget: expectedBudget,
           plan: expectedPlans.random(),
         ),
       ];
       when(() => mockUseCases.fetchBudgetUseCase.call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')))
-          .thenAnswer((_) => Stream<NormalizedBudgetEntity>.value(expectedBudget));
+          .thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
       when(
         () => mockUseCases.fetchBudgetAllocationsByBudgetUseCase
             .call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')),
-      ).thenAnswer((_) => Stream<NormalizedBudgetAllocationEntityList>.value(expectedBudgetAllocations));
+      ).thenAnswer((_) => Stream<BudgetAllocationEntityList>.value(expectedBudgetAllocations));
 
       final List<SelectedBudgetPlanViewModel> expectedPlanViewModels = expectedPlans
           .map(
-            (NormalizedBudgetPlanEntity plan) => plan.toViewModel(
+            (BudgetPlanEntity plan) => plan.toViewModel(
               allocation: expectedBudgetAllocations
                   .firstWhereOrNull((_) => _.plan.id == plan.id && _.budget.id == expectedBudget.id)
                   ?.toViewModel(),

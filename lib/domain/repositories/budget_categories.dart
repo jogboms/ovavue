@@ -7,7 +7,10 @@ abstract class BudgetCategoriesRepository {
 
   Future<bool> update(UpdateBudgetCategoryData category);
 
-  Future<bool> delete(String path);
+  Future<bool> delete({
+    required String id,
+    required String path,
+  });
 
-  Stream<BudgetCategoryEntityList> fetch(String userId);
+  Stream<BudgetCategoryEntityList> fetchAll(String userId);
 }

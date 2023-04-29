@@ -13,9 +13,9 @@ Future<void> main() async {
   const String planId = 'plan-id';
   const String budgetId = 'budget-id';
 
-  final NormalizedBudgetPlanEntity expectedPlan = BudgetPlansMockImpl.generateNormalizedPlan(id: planId);
-  final List<NormalizedBudgetPlanEntity> expectedPlans = <NormalizedBudgetPlanEntity>[expectedPlan];
-  final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget(id: budgetId);
+  final BudgetPlanEntity expectedPlan = BudgetPlansMockImpl.generatePlan(id: planId);
+  final List<BudgetPlanEntity> expectedPlans = <BudgetPlanEntity>[expectedPlan];
+  final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget(id: budgetId);
 
   tearDown(mockUseCases.reset);
 
@@ -42,11 +42,10 @@ Future<void> main() async {
     }
 
     test('should show selected plan by id', () async {
-      final List<NormalizedBudgetAllocationEntity> expectedBudgetAllocations =
-          List<NormalizedBudgetAllocationEntity>.generate(
+      final List<BudgetAllocationEntity> expectedBudgetAllocations = List<BudgetAllocationEntity>.generate(
         3,
-        (int index) => BudgetAllocationsMockImpl.generateNormalizedAllocation(
-          budget: index == 0 ? expectedBudget : BudgetsMockImpl.generateNormalizedBudget(),
+        (int index) => BudgetAllocationsMockImpl.generateAllocation(
+          budget: index == 0 ? expectedBudget : BudgetsMockImpl.generateBudget(),
           plan: expectedPlans.first,
         ),
       );
@@ -54,7 +53,7 @@ Future<void> main() async {
       when(
         () => mockUseCases.fetchBudgetAllocationsByPlanUseCase
             .call(userId: any(named: 'userId'), planId: any(named: 'planId')),
-      ).thenAnswer((_) => Stream<NormalizedBudgetAllocationEntityList>.value(expectedBudgetAllocations));
+      ).thenAnswer((_) => Stream<BudgetAllocationEntityList>.value(expectedBudgetAllocations));
 
       expect(
         createProviderStream(),

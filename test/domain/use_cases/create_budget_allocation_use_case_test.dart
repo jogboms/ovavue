@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 
 import '../../utils.dart';
@@ -13,7 +12,6 @@ void main() {
       analytics: analytics,
     );
 
-    final BudgetAllocationEntity dummyEntity = BudgetAllocationsMockImpl.generateAllocation(userId: '1');
     const CreateBudgetAllocationData dummyData = CreateBudgetAllocationData(
       amount: 1,
       budget: ReferenceEntity(id: '1', path: 'path'),
@@ -31,9 +29,9 @@ void main() {
     });
 
     test('should create a budget allocation', () async {
-      when(() => mockRepositories.budgetAllocations.create(any(), any())).thenAnswer((_) async => dummyEntity.id);
+      when(() => mockRepositories.budgetAllocations.create(any(), any())).thenAnswer((_) async => '1');
 
-      await expectLater(useCase(userId: '1', allocation: dummyData), completion(dummyEntity.id));
+      await expectLater(useCase(userId: '1', allocation: dummyData), completion('1'));
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudgetAllocation('1')));
     });
 

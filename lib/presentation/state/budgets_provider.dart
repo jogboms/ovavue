@@ -17,11 +17,11 @@ Stream<List<BudgetViewModel>> budgets(BudgetsRef ref) async* {
   yield* CombineLatestStream.combine2(
     registry.get<FetchBudgetsUseCase>().call(user.id),
     registry.get<FetchBudgetPlansByBudgetUseCase>().call(user.id),
-    (NormalizedBudgetEntityList budgets, BudgetIdToPlansMap budgetIdToPlans) => budgets
+    (BudgetEntityList budgets, BudgetIdToPlansMap budgetIdToPlans) => budgets
         .map(
-          (NormalizedBudgetEntity budget) => BudgetViewModel.fromEntity(
+          (BudgetEntity budget) => BudgetViewModel.fromEntity(
             budget,
-            budgetIdToPlans[budget.id]?.toList(growable: false) ?? const <NormalizedBudgetPlanEntity>[],
+            budgetIdToPlans[budget.id]?.toList(growable: false) ?? const <BudgetPlanEntity>[],
           ),
         )
         .sorted((BudgetViewModel a, BudgetViewModel b) => b.startedAt.compareTo(a.startedAt))

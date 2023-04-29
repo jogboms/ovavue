@@ -12,14 +12,6 @@ class BudgetsMockImpl implements BudgetsRepository {
   static BudgetEntity generateBudget({
     String? id,
     int? index,
-    String? userId,
-    DateTime? startedAt,
-  }) =>
-      generateNormalizedBudget(id: id, index: index, userId: userId, startedAt: startedAt).denormalize;
-
-  static NormalizedBudgetEntity generateNormalizedBudget({
-    String? id,
-    int? index,
     String? title,
     String? userId,
     DateTime? startedAt,
@@ -28,7 +20,7 @@ class BudgetsMockImpl implements BudgetsRepository {
     id ??= faker.guid.guid();
     userId ??= AuthMockImpl.id;
     startedAt ??= faker.randomGenerator.dateTime;
-    return NormalizedBudgetEntity(
+    return BudgetEntity(
       id: id,
       path: '/budgets/$userId/$id',
       index: index ?? faker.randomGenerator.integer(100, min: 1),
@@ -42,20 +34,26 @@ class BudgetsMockImpl implements BudgetsRepository {
     );
   }
 
-  static final Map<String, BudgetEntity> _budgets = <String, BudgetEntity>{};
+  static final Map<String, BudgetReferenceEntity> _budgets = <String, BudgetReferenceEntity>{};
 
-  final BehaviorSubject<Map<String, BudgetEntity>> _budgets$ =
-      BehaviorSubject<Map<String, BudgetEntity>>.seeded(_budgets);
+  static final BehaviorSubject<Map<String, BudgetReferenceEntity>> _budgets$ =
+      BehaviorSubject<Map<String, BudgetReferenceEntity>>.seeded(_budgets);
 
-  NormalizedBudgetEntityList seed(
+  static final Stream<Map<String, BudgetEntity>> budgets$ = _budgets$.map(
+    (Map<String, BudgetReferenceEntity> budgets) => budgets.map(
+      (String id, BudgetReferenceEntity budget) => MapEntry<String, BudgetEntity>(id, budget.normalize()),
+    ),
+  );
+
+  BudgetEntityList seed(
     int count, {
     String? userId,
   }) {
-    final NormalizedBudgetEntityList items = NormalizedBudgetEntityList.generate(
+    final BudgetEntityList items = BudgetEntityList.generate(
       count,
       (int index) {
         final DateTime startedAt = clock.monthsFromNow(index);
-        return BudgetsMockImpl.generateNormalizedBudget(
+        return BudgetsMockImpl.generateBudget(
           index: index,
           title: '${clock.now().year}.${index + 1}',
           userId: userId,
@@ -68,8 +66,8 @@ class BudgetsMockImpl implements BudgetsRepository {
       _budgets
         ..addAll(
           items
-              .map((NormalizedBudgetEntity element) => element.denormalize)
-              .foldToMap((BudgetEntity element) => element.id),
+              .map((BudgetEntity element) => element.denormalize)
+              .foldToMap((BudgetReferenceEntity element) => element.id),
         ),
     );
     return items;
@@ -79,7 +77,7 @@ class BudgetsMockImpl implements BudgetsRepository {
   Future<ReferenceEntity> create(String userId, CreateBudgetData budget) async {
     final String id = faker.guid.guid();
     final String path = '/budgets/$userId/$id';
-    final BudgetEntity newItem = BudgetEntity(
+    final BudgetReferenceEntity newItem = BudgetReferenceEntity(
       id: id,
       path: path,
       index: budget.index,
@@ -97,41 +95,44 @@ class BudgetsMockImpl implements BudgetsRepository {
 
   @override
   Future<bool> update(UpdateBudgetData budget) async {
-    _budgets$.add(_budgets..update(budget.id, (BudgetEntity prev) => prev.update(budget)));
+    _budgets$.add(_budgets..update(budget.id, (BudgetReferenceEntity prev) => prev.update(budget)));
     return true;
   }
 
   @override
-  Future<bool> delete(String path) async {
-    final String id = _budgets.values.firstWhere((BudgetEntity element) => element.path == path).id;
+  Future<bool> delete({
+    required String id,
+    required String path,
+  }) async {
+    final String id = _budgets.values.firstWhere((BudgetReferenceEntity element) => element.path == path).id;
     _budgets$.add(_budgets..remove(id));
     return true;
   }
 
   @override
-  Stream<BudgetEntityList> fetch(String userId) =>
-      _budgets$.stream.map((Map<String, BudgetEntity> event) => event.values.toList());
+  Stream<BudgetEntityList> fetchAll(String userId) =>
+      budgets$.map((Map<String, BudgetEntity> event) => event.values.toList());
 
   @override
-  Stream<BudgetEntity?> fetchActiveBudget(String userId) => _budgets$.stream.map(
+  Stream<BudgetEntity?> fetchActiveBudget(String userId) => budgets$.map(
         (Map<String, BudgetEntity> event) =>
             event.values.toList(growable: false).firstWhereOrNull((_) => _.endedAt == null),
       );
 
   @override
   Future<bool> deactivateBudget({required String budgetPath, required DateTime endedAt}) async {
-    final String id = _budgets.values.firstWhere((BudgetEntity element) => element.path == budgetPath).id;
-    _budgets$.add(_budgets..update(id, (BudgetEntity prev) => prev.copyWith(endedAt: endedAt)));
+    final String id = _budgets.values.firstWhere((BudgetReferenceEntity element) => element.path == budgetPath).id;
+    _budgets$.add(_budgets..update(id, (BudgetReferenceEntity prev) => prev.copyWith(endedAt: endedAt)));
     return true;
   }
 
   @override
   Stream<BudgetEntity> fetchOne({required String userId, required String budgetId}) =>
-      _budgets$.stream.map((Map<String, BudgetEntity> event) => event[budgetId]!);
+      budgets$.map((Map<String, BudgetEntity> event) => event[budgetId]!);
 }
 
-extension on BudgetEntity {
-  BudgetEntity copyWith({
+extension on BudgetReferenceEntity {
+  BudgetReferenceEntity copyWith({
     String? id,
     String? path,
     int? index,
@@ -143,7 +144,7 @@ extension on BudgetEntity {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) =>
-      BudgetEntity(
+      BudgetReferenceEntity(
         id: id ?? this.id,
         path: path ?? this.path,
         index: index ?? this.index,
@@ -156,7 +157,7 @@ extension on BudgetEntity {
         updatedAt: updatedAt ?? this.updatedAt,
       );
 
-  BudgetEntity update(UpdateBudgetData update) => copyWith(
+  BudgetReferenceEntity update(UpdateBudgetData update) => copyWith(
         title: update.title,
         description: update.description,
         amount: update.amount,
@@ -165,8 +166,23 @@ extension on BudgetEntity {
       );
 }
 
-extension on NormalizedBudgetEntity {
-  BudgetEntity get denormalize => BudgetEntity(
+extension on BudgetEntity {
+  BudgetReferenceEntity get denormalize => BudgetReferenceEntity(
+        id: id,
+        path: path,
+        index: index,
+        title: title,
+        description: description,
+        amount: amount,
+        startedAt: startedAt,
+        endedAt: endedAt,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
+}
+
+extension on BudgetReferenceEntity {
+  BudgetEntity normalize() => BudgetEntity(
         id: id,
         path: path,
         index: index,

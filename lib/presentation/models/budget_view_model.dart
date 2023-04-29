@@ -20,8 +20,8 @@ class BudgetViewModel with EquatableMixin {
   });
 
   static BudgetViewModel fromEntity(
-    NormalizedBudgetEntity entity,
-    List<NormalizedBudgetPlanEntity> plans,
+    BudgetEntity entity,
+    List<BudgetPlanEntity> plans,
   ) {
     return BudgetViewModel(
       id: entity.id,

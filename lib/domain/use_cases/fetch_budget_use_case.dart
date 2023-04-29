@@ -8,9 +8,9 @@ class FetchBudgetUseCase {
 
   final BudgetsRepository _budgets;
 
-  Stream<NormalizedBudgetEntity> call({
+  Stream<BudgetEntity> call({
     required String userId,
     required String budgetId,
   }) =>
-      _budgets.fetchOne(userId: userId, budgetId: budgetId).map((_) => _.normalize());
+      _budgets.fetchOne(userId: userId, budgetId: budgetId);
 }

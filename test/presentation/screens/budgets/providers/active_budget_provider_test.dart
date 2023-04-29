@@ -12,7 +12,7 @@ Future<void> main() async {
   tearDown(mockUseCases.reset);
 
   group('ActiveBudgetProvider', () {
-    Future<BaseBudgetState> createProviderStream(NormalizedBudgetEntity? budget) {
+    Future<BaseBudgetState> createProviderStream(BudgetEntity? budget) {
       final ProviderContainer container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
@@ -35,7 +35,7 @@ Future<void> main() async {
     }
 
     test('should show active budget', () async {
-      final NormalizedBudgetEntity expectedBudget = BudgetsMockImpl.generateNormalizedBudget();
+      final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget();
 
       expect(
         createProviderStream(expectedBudget),

@@ -37,7 +37,7 @@ Stream<BudgetPlanState> selectedBudgetPlan(
         .get<FetchBudgetAllocationsByPlanUseCase>()
         .call(userId: user.id, planId: id)
         .map(
-          (NormalizedBudgetAllocationEntityList allocations) => BudgetPlanState(
+          (BudgetAllocationEntityList allocations) => BudgetPlanState(
             plan: plan,
             budget: budget,
             allocation: allocations.firstWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),

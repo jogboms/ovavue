@@ -13,21 +13,21 @@ void seedMockData() {
   final Random random = Random();
   final String userId = AuthMockImpl.id;
   final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(10, userId: userId);
-  final NormalizedBudgetPlanEntityList plans = BudgetPlansMockImpl().seed(
+  final BudgetPlanEntityList plans = BudgetPlansMockImpl().seed(
     5,
-    (_) => BudgetPlansMockImpl.generateNormalizedPlan(userId: userId, category: categories.random()),
+    (_) => BudgetPlansMockImpl.generatePlan(userId: userId, category: categories.random()),
   );
-  final NormalizedBudgetEntityList budgets = BudgetsMockImpl().seed(2, userId: userId);
-  final Map<String, NormalizedBudgetEntity> budgetById = budgets.foldToMap((_) => _.id);
+  final BudgetEntityList budgets = BudgetsMockImpl().seed(2, userId: userId);
+  final Map<String, BudgetEntity> budgetById = budgets.foldToMap((_) => _.id);
   final Map<String, int> budgetToAmount = budgetById.map(
-    (String key, NormalizedBudgetEntity value) => MapEntry<String, int>(key, value.amount),
+    (String key, BudgetEntity value) => MapEntry<String, int>(key, value.amount),
   );
 
-  final List<NormalizedBudgetAllocationEntity> allocations = <NormalizedBudgetAllocationEntity>[];
+  final List<BudgetAllocationEntity> allocations = <BudgetAllocationEntity>[];
   final int preferredAllocationCount = budgets.length * plans.length;
   for (int i = 0; i < preferredAllocationCount; i++) {
     final String budgetId = budgetById.keys.random();
-    final NormalizedBudgetPlanEntity plan = plans.random();
+    final BudgetPlanEntity plan = plans.random();
 
     final int budget = budgetToAmount[budgetId] ?? 0;
     final int amount = random.nextInt(max(1, (budget * random.nextDouble()).toInt()));
@@ -39,7 +39,7 @@ void seedMockData() {
     budgetToAmount[budgetId] = max(0, budget - amount);
 
     allocations.add(
-      BudgetAllocationsMockImpl.generateNormalizedAllocation(
+      BudgetAllocationsMockImpl.generateAllocation(
         userId: userId,
         amount: amount,
         budget: budgetById[budgetId],

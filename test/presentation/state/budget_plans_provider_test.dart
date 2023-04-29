@@ -25,16 +25,16 @@ Future<void> main() async {
 
     test('should initialize with empty state', () {
       when(() => mockUseCases.fetchBudgetPlansUseCase.call(any()))
-          .thenAnswer((_) => Stream<List<NormalizedBudgetPlanEntity>>.value(<NormalizedBudgetPlanEntity>[]));
+          .thenAnswer((_) => Stream<List<BudgetPlanEntity>>.value(<BudgetPlanEntity>[]));
 
       expect(createProviderStream(), completes);
     });
 
     test('should emit fetched tags', () {
-      final List<NormalizedBudgetPlanEntity> expectedBudgetPlans =
-          List<NormalizedBudgetPlanEntity>.filled(3, BudgetPlansMockImpl.generateNormalizedPlan());
+      final List<BudgetPlanEntity> expectedBudgetPlans =
+          List<BudgetPlanEntity>.filled(3, BudgetPlansMockImpl.generatePlan());
       when(() => mockUseCases.fetchBudgetPlansUseCase.call(any()))
-          .thenAnswer((_) => Stream<List<NormalizedBudgetPlanEntity>>.value(expectedBudgetPlans));
+          .thenAnswer((_) => Stream<List<BudgetPlanEntity>>.value(expectedBudgetPlans));
 
       expect(
         createProviderStream(),

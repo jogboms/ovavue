@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 
 import '../../utils.dart';
@@ -14,7 +13,7 @@ void main() {
       analytics: analytics,
     );
 
-    final BudgetEntity dummyEntity = BudgetsMockImpl.generateBudget(userId: '1');
+    const ReferenceEntity dummyReference = ReferenceEntity(id: '1', path: 'path');
     final CreateBudgetData dummyData = CreateBudgetData(
       index: 1,
       title: 'title',
@@ -34,7 +33,7 @@ void main() {
     });
 
     test('should create a budget', () async {
-      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyEntity.reference);
+      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyReference);
 
       await expectLater(
         useCase(
@@ -43,13 +42,13 @@ void main() {
           activeBudgetPath: null,
           allocations: null,
         ),
-        completion(dummyEntity.id),
+        completion('1'),
       );
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudget('1')));
     });
 
     test('should create a budget and deactivate active budget', () async {
-      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyEntity.reference);
+      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyReference);
       when(() => mockRepositories.budgets.deactivateBudget(budgetPath: 'path', endedAt: any(named: 'endedAt')))
           .thenAnswer((_) async => true);
 
@@ -60,13 +59,13 @@ void main() {
           activeBudgetPath: 'path',
           allocations: null,
         ),
-        completion(dummyEntity.id),
+        completion('1'),
       );
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudget('1')));
     });
 
     test('should create a budget and duplicate allocations', () async {
-      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyEntity.reference);
+      when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyReference);
       when(() => mockRepositories.budgetAllocations.createAll('1', any())).thenAnswer((_) async => <String>['1']);
 
       await expectLater(
@@ -78,13 +77,13 @@ void main() {
             const ReferenceEntity(id: '2', path: 'path'): 1,
           },
         ),
-        completion(dummyEntity.id),
+        completion('1'),
       );
 
       final List<CreateBudgetAllocationData> allocations =
           verify(() => mockRepositories.budgetAllocations.createAll(any(), captureAny())).capturedType();
       expect(allocations.first.amount, 1);
-      expect(allocations.first.budget, dummyEntity.reference);
+      expect(allocations.first.budget, dummyReference);
       expect(allocations.first.plan, const ReferenceEntity(id: '2', path: 'path'));
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudget('1')));
     });
@@ -103,8 +102,4 @@ void main() {
       );
     });
   });
-}
-
-extension on BudgetEntity {
-  ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
 }
