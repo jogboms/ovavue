@@ -57,6 +57,7 @@ class BudgetDetailDataView extends StatelessWidget {
         SliverPinnedHeader(
           child: Consumer(
             builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
+              alignment: Alignment.center,
               actions: <ActionButton>[
                 if (active) ...<ActionButton>[
                   ActionButton(

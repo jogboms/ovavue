@@ -45,7 +45,7 @@ class AmountRatioItem extends StatelessWidget {
           allocationAmount.percentage(baseAmount),
           style: (isLarge ? textTheme.titleLarge : textTheme.titleMedium)?.copyWith(
             fontWeight: AppFontWeight.semibold,
-            color: colorScheme.outline,
+            color: Color.lerp(foregroundColor ?? colorScheme.onBackground, colorScheme.outline, .15),
           ),
         ),
       ],

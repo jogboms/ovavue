@@ -36,7 +36,7 @@ class BudgetCategoryColorScheme {
     BudgetCategoryColorScheme._(Color(0xFF000000), Color(0xFFFCEDDA), Brightness.light),
     BudgetCategoryColorScheme._(Color(0xFFFFFFFF), Color(0xFFEE4E34), Brightness.dark),
     BudgetCategoryColorScheme._(Color(0xFF000000), Color(0xFFADD8E6), Brightness.light),
-    BudgetCategoryColorScheme._(Color(0xFFFFFFFF), Color(0x89ABE3FF), Brightness.dark),
+    BudgetCategoryColorScheme._(Color(0xFF111111), Color(0x89ABE3FF), Brightness.light),
     BudgetCategoryColorScheme._(Color(0xFFFFFFFF), Color(0xEA738DFF), Brightness.dark),
     BudgetCategoryColorScheme._(Color(0xFF000000), Color(0xFFC5FAD5), Brightness.light),
     BudgetCategoryColorScheme._(Color(0xFFFFFFFF), Color(0xFF2C5F2D), Brightness.dark),

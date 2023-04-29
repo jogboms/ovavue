@@ -57,6 +57,7 @@ class _ContentDataView extends StatelessWidget {
         SliverToBoxAdapter(
           child: Consumer(
             builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+              alignment: Alignment.center,
               actions: <ActionButton>[
                 ActionButton(
                   icon: Icons.add,
