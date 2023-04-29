@@ -61,8 +61,8 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                   if (state.plans.isEmpty)
                     ActionButton(
                       icon: Icons.delete,
-                      backgroundColor: colorScheme.error,
-                      foregroundColor: colorScheme.onError,
+                      backgroundColor: colorScheme.surfaceVariant,
+                      foregroundColor: colorScheme.onSurfaceVariant,
                       onPressed: () => _handleCategoryDeletionAction(
                         context,
                         ref: ref,

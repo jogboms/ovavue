@@ -159,8 +159,8 @@ class _ContentDataView extends StatelessWidget {
                     if (budget == null || !budget.active)
                       ActionButton(
                         icon: Icons.delete,
-                        backgroundColor: colorScheme.error,
-                        foregroundColor: colorScheme.onError,
+                        backgroundColor: colorScheme.surfaceVariant,
+                        foregroundColor: colorScheme.onSurfaceVariant,
                         onPressed: () => deleteBudgetPlanAction(
                           context,
                           ref: ref,
@@ -171,8 +171,8 @@ class _ContentDataView extends StatelessWidget {
                     else if (allocation != null)
                       ActionButton(
                         icon: Icons.remove_circle_outline_outlined, // TODO(Jogboms): fix icon
-                        backgroundColor: colorScheme.error,
-                        foregroundColor: colorScheme.onError,
+                        backgroundColor: colorScheme.surfaceVariant,
+                        foregroundColor: colorScheme.onSurfaceVariant,
                         onPressed: () => _handleDeleteAllocationAction(
                           context,
                           ref: ref,
