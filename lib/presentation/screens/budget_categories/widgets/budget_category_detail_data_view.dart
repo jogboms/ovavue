@@ -128,17 +128,17 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     if (plan == null) {
       return;
     }
+    if (context.mounted) {
+      final bool choice = await showErrorChoiceBanner(
+        context,
+        message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
+      );
+      if (!choice) {
+        return;
+      }
 
-    // ignore: use_build_context_synchronously
-    final bool choice = await showErrorChoiceBanner(
-      context,
-      message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
-    );
-    if (!choice) {
-      return;
+      await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
     }
-
-    await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
   }
 
   void _handleCategoryDeletionAction(
