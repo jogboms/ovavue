@@ -105,31 +105,34 @@ class BudgetDetailDataView extends StatelessWidget {
           title: context.l10n.associatedPlansTitle,
           count: state.budget.plans.length,
         ),
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: 16.0,
-            bottom: MediaQuery.paddingOf(context).bottom + 72,
-          ),
-          sliver: SliverList(
-            delegate: SliverSeparatorBuilderDelegate(
-              builder: (BuildContext context, int index) {
-                final SelectedBudgetPlanViewModel plan = state.budget.plans[index];
+        if (state.budget.plans.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          SliverPadding(
+            padding: EdgeInsets.only(
+              top: 16.0,
+              bottom: MediaQuery.paddingOf(context).bottom + 72,
+            ),
+            sliver: SliverList(
+              delegate: SliverSeparatorBuilderDelegate(
+                builder: (BuildContext context, int index) {
+                  final SelectedBudgetPlanViewModel plan = state.budget.plans[index];
 
-                return _PlanTile(
-                  key: Key(plan.id),
-                  plan: plan,
-                  budgetAmount: state.budget.amount,
-                  onPressed: () => context.router.goToBudgetPlanDetail(
-                    id: plan.id,
-                    budgetId: state.budget.id,
-                  ),
-                );
-              },
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
-              childCount: state.budget.plans.length,
+                  return _PlanTile(
+                    key: Key(plan.id),
+                    plan: plan,
+                    budgetAmount: state.budget.amount,
+                    onPressed: () => context.router.goToBudgetPlanDetail(
+                      id: plan.id,
+                      budgetId: state.budget.id,
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 4),
+                childCount: state.budget.plans.length,
+              ),
             ),
           ),
-        ),
       ],
     );
   }

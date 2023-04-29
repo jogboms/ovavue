@@ -188,31 +188,34 @@ class _ContentDataView extends StatelessWidget {
           title: context.l10n.previousAllocationsTitle,
           count: state.previousAllocations.length,
         ),
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: 8.0,
-            bottom: MediaQuery.paddingOf(context).bottom,
-          ),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
-                final BudgetPlanAllocationBudgetViewModel budget = allocation.budget;
+        if (state.previousAllocations.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          SliverPadding(
+            padding: EdgeInsets.only(
+              top: 8.0,
+              bottom: MediaQuery.paddingOf(context).bottom,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
+                  final BudgetPlanAllocationBudgetViewModel budget = allocation.budget;
 
-                return BudgetListTile(
-                  key: Key(budget.id),
-                  id: budget.id,
-                  title: budget.title,
-                  budgetAmount: budget.amount,
-                  allocationAmount: allocation.amount,
-                  startedAt: budget.startedAt,
-                  endedAt: budget.endedAt,
-                );
-              },
-              childCount: state.previousAllocations.length,
+                  return BudgetListTile(
+                    key: Key(budget.id),
+                    id: budget.id,
+                    title: budget.title,
+                    budgetAmount: budget.amount,
+                    allocationAmount: allocation.amount,
+                    startedAt: budget.startedAt,
+                    endedAt: budget.endedAt,
+                  );
+                },
+                childCount: state.previousAllocations.length,
+              ),
             ),
           ),
-        ),
       ],
     );
   }
