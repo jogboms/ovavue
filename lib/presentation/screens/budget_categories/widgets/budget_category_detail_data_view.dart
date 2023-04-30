@@ -34,6 +34,9 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
               : SystemUiOverlayStyle.dark,
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
+          leading: BackButton(color: foregroundColor),
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
           flexibleSpace: FlexibleSpaceBar(
             background: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -44,7 +47,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                   budgetAmount: state.budget?.amount,
                 ),
                 Consumer(
-                  builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
+                  builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
                     actions: <ActionButton>[
                       ActionButton(
                         icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon

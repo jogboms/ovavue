@@ -26,8 +26,8 @@ class BudgetCategoryPlanTile extends StatelessWidget {
     final Money? categoryAllocationAmount = this.categoryAllocationAmount;
 
     return AmountRatioDecoratedBox(
-      ratio: categoryAllocationAmount != null ? allocation?.ratio(categoryAllocationAmount) ?? 0.0 : 0.0,
-      color: colorScheme.background,
+      ratio: allocation != null && categoryAllocationAmount != null ? allocation.ratio(categoryAllocationAmount) : 0.0,
+      color: colorScheme.surface,
       onPressed: onPressed,
       child: Row(
         children: <Widget>[
@@ -38,13 +38,13 @@ class BudgetCategoryPlanTile extends StatelessWidget {
                 Text(
                   plan.title.sentence(),
                   style: textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onBackground,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 Text(
                   plan.description.capitalize(),
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onBackground,
+                    color: colorScheme.onSurface,
                   ),
                   maxLines: 2,
                 ),
