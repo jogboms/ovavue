@@ -91,7 +91,6 @@ class BudgetProvider {
         amount: amount,
         description: description,
         startedAt: startedAt,
-        endedAt: null,
       ),
     );
   }

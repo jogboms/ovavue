@@ -26,9 +26,6 @@ class BaseBudgetPlanEntity<T> with EquatableMixin {
 
   @override
   List<Object?> get props => <Object?>[id, path, title, description, category, createdAt, updatedAt];
-
-  @override
-  bool? get stringify => true;
 }
 
 typedef BudgetPlanReferenceEntity = BaseBudgetPlanEntity<ReferenceEntity>;

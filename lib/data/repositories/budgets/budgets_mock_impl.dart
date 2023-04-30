@@ -85,7 +85,7 @@ class BudgetsMockImpl implements BudgetsRepository {
       description: budget.description,
       amount: budget.amount,
       startedAt: budget.startedAt,
-      endedAt: budget.endedAt,
+      endedAt: null,
       createdAt: clock.now(),
       updatedAt: null,
     );

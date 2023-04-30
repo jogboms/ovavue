@@ -1,11 +1,12 @@
-class CreateBudgetData {
+import 'package:equatable/equatable.dart';
+
+class CreateBudgetData with EquatableMixin {
   const CreateBudgetData({
     required this.index,
     required this.title,
     required this.amount,
     required this.description,
     required this.startedAt,
-    required this.endedAt,
   });
 
   final int index;
@@ -13,5 +14,7 @@ class CreateBudgetData {
   final int amount;
   final String description;
   final DateTime startedAt;
-  final DateTime? endedAt;
+
+  @override
+  List<Object?> get props => <Object?>[index, title, amount, description, startedAt];
 }
