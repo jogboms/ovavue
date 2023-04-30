@@ -54,7 +54,12 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
     final BudgetPlanViewModel? selectedPlan = _selectedPlan.value;
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0).withKeyboardPadding(context),
+      margin: EdgeInsets.fromLTRB(
+        16.0,
+        0,
+        16.0,
+        MediaQuery.paddingOf(context).bottom + 16.0,
+      ).withKeyboardPadding(context),
       child: Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
