@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 class BudgetCategoryIcon {
   const BudgetCategoryIcon._(this.data);
 
+  // TODO(Jogboms): fix default icon
+  static const BudgetCategoryIcon excess = BudgetCategoryIcon._(Icons.padding_outlined);
+
   final IconData data;
 
   int get index => values.indexOf(this);

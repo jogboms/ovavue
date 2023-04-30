@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'budget_category_avatar.dart';
 import 'dialog_page.dart';
 import 'primary_button.dart';
 
@@ -55,10 +56,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 24.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0).withKeyboardPadding(context),
         child: Consumer(
           builder: (BuildContext context, WidgetRef ref, _) {
             final Iterable<BudgetCategoryViewModel> categories =
@@ -201,11 +199,9 @@ class _CategoryItem extends StatelessWidget {
 
     return Row(
       children: <Widget>[
-        CircleAvatar(
-          backgroundColor: category.colorScheme.background,
-          foregroundColor: category.colorScheme.foreground,
-          radius: 16,
-          child: Icon(category.icon.data, size: 16),
+        BudgetCategoryAvatar.small(
+          colorScheme: category.colorScheme,
+          icon: category.icon.data,
         ),
         const SizedBox(width: 8),
         Text(

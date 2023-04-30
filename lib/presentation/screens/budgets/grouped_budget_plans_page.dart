@@ -6,6 +6,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import '../../models.dart';
 import '../../routing.dart';
 import '../../state.dart';
+import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
 
@@ -68,7 +69,10 @@ class _ContentDataView extends StatelessWidget {
           title: Column(
             children: <Widget>[
               Text(context.l10n.totalBudgetCaption.toUpperCase(), style: textTheme.labelMedium),
-              Text('${state.budget.amount}', style: textTheme.titleLarge),
+              Text(
+                '${state.budget.amount}',
+                style: textTheme.titleLarge?.copyWith(fontWeight: AppFontWeight.semibold),
+              ),
             ],
           ),
           backgroundColor: theme.scaffoldBackgroundColor,
@@ -185,11 +189,9 @@ class _Header extends StatelessWidget {
     return Expanded(
       child: Row(
         children: <Widget>[
-          CircleAvatar(
-            radius: 16.0,
-            backgroundColor: category.colorScheme.background,
-            foregroundColor: category.colorScheme.foreground,
-            child: Icon(category.icon.data, size: 16.0),
+          BudgetCategoryAvatar.small(
+            colorScheme: category.colorScheme,
+            icon: category.icon.data,
           ),
           const SizedBox(width: 12.0),
           Column(

@@ -3,6 +3,12 @@ import 'dart:ui';
 class BudgetCategoryColorScheme {
   const BudgetCategoryColorScheme._(this.foreground, this.background, this.brightness);
 
+  static const BudgetCategoryColorScheme excess = BudgetCategoryColorScheme._(
+    Color(0xFFB7B7B7),
+    Color(0xFF363636),
+    Brightness.dark,
+  );
+
   final Color foreground;
   final Color background;
   final Brightness brightness;

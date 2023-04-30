@@ -68,10 +68,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 24.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0).withKeyboardPadding(context),
         child: Consumer(
           builder: (BuildContext context, WidgetRef ref, _) {
             final Iterable<BudgetViewModel> budgets =

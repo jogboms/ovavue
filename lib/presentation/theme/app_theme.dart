@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'app_border_radius.dart';
 import 'app_font.dart' if (dart.library.html) 'app_font_web.dart';
 import 'app_style.dart';
-import 'color_schemes.dart';
 
-const Color _kMutedColor = Color(0xFF616161);
+const Color _kPrimaryLightColor = Color(0xFF006B5A);
+const Color _kPrimaryDarkColor = Color(0xFF5BDBBF);
+const Color _kBackgroundDarkColor = Color(0xFF010101);
 const double _kIconSize = 28.0;
 
 @visibleForTesting
@@ -52,8 +53,11 @@ ThemeData themeBuilder(
   final Brightness brightness = defaultTheme.brightness;
   final bool isDark = brightness == Brightness.dark;
 
-  final ColorScheme colorScheme = isDark ? darkColorScheme : lightColorScheme;
-  final Color scaffoldBackgroundColor = isDark ? const Color(0xFF010101) : colorScheme.background;
+  final ColorScheme colorScheme = ColorScheme.fromSeed(
+    seedColor: isDark ? _kPrimaryDarkColor : _kPrimaryLightColor,
+    brightness: brightness,
+  );
+  final Color scaffoldBackgroundColor = isDark ? _kBackgroundDarkColor : colorScheme.background;
 
   final OutlineInputBorder textFieldBorder = OutlineInputBorder(
     borderSide: BorderSide.none,
@@ -108,12 +112,4 @@ extension AppThemeThemeDataExtensions on ThemeData {
 
 extension BuildContextThemeExtensions on BuildContext {
   ThemeData get theme => Theme.of(this);
-}
-
-extension ColorSchemeExtensions on ColorScheme {
-  Color get inverseBackground => onBackground;
-
-  Color get mutedBackground => Color.lerp(_kMutedColor, background, .85)!;
-
-  Color get onMutedBackground => Color.lerp(_kMutedColor, onBackground, .15)!;
 }

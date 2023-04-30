@@ -22,6 +22,11 @@ extension StringExtensions on String {
   String sentence() => split(' ').map((_) => _.capitalize()).join(' ');
 }
 
+extension KeyboardPaddingEdgeInsets on EdgeInsets {
+  EdgeInsets withKeyboardPadding(BuildContext context) =>
+      copyWith(bottom: MediaQuery.viewInsetsOf(context).bottom + bottom);
+}
+
 extension DateTimeFormatExtension on DateTime {
   String format(DateTimeFormat type) => DateFormat(type._pattern).format(this);
 }

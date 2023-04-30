@@ -58,6 +58,7 @@ class BudgetDetailDataView extends StatelessWidget {
           child: Consumer(
             builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
               alignment: Alignment.center,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               actions: <ActionButton>[
                 if (active) ...<ActionButton>[
                   ActionButton(
@@ -218,8 +219,10 @@ class _AppBarText extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        Text(budget.title.sentence(), style: textTheme.headlineSmall),
-        const SizedBox(height: 4),
+        Text(
+          budget.title.sentence(),
+          style: textTheme.headlineSmall?.copyWith(fontWeight: AppFontWeight.semibold),
+        ),
         BudgetDurationText(
           startedAt: budget.startedAt,
           endedAt: budget.endedAt,
@@ -279,17 +282,15 @@ class _CategoryView extends StatefulWidget {
 
 class _CategoryViewState extends State<_CategoryView> {
   _CategoryViewType _type = _CategoryViewType.pieChart;
+  static const double _innerPieChartRadius = 16.0;
 
   @override
   Widget build(BuildContext context) {
     final L10n l10n = L10n.of(context);
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
 
     final Money excessAmount = widget.budgetAmount - widget.allocationAmount;
-    final Color excessAmountBackgroundColor = colorScheme.mutedBackground;
-    final Color excessAmountForegroundColor = colorScheme.onMutedBackground;
-    const IconData excessAmountIcon = Icons.padding_outlined;
+    const BudgetCategoryColorScheme excessAmountColorScheme = BudgetCategoryColorScheme.excess;
+    const BudgetCategoryIcon excessAmountIcon = BudgetCategoryIcon.excess;
 
     return AnimatedSize(
       duration: kThemeChangeDuration,
@@ -301,21 +302,19 @@ class _CategoryViewState extends State<_CategoryView> {
               aspectRatio: 1,
               child: PieChart(
                 PieChartData(
-                  sectionsSpace: 4,
-                  centerSpaceRadius: 16,
+                  sectionsSpace: _innerPieChartRadius / 4,
+                  centerSpaceRadius: _innerPieChartRadius,
                   sections: <PieChartSectionData>[
                     for (final SelectedBudgetCategoryViewModel category in widget.categories)
                       _derivePieSectionData(
                         amount: category.allocation,
-                        backgroundColor: category.colorScheme.background,
-                        foregroundColor: category.colorScheme.foreground,
+                        colorScheme: category.colorScheme,
                         icon: category.icon.data,
                       ),
                     _derivePieSectionData(
                       amount: excessAmount,
-                      backgroundColor: excessAmountBackgroundColor,
-                      foregroundColor: excessAmountForegroundColor,
-                      icon: excessAmountIcon,
+                      colorScheme: excessAmountColorScheme,
+                      icon: excessAmountIcon.data,
                     ),
                   ],
                 ),
@@ -344,10 +343,10 @@ class _CategoryViewState extends State<_CategoryView> {
                   _CategoryChip(
                     key: Key(l10n.excessLabel),
                     title: l10n.excessLabel,
-                    icon: excessAmountIcon,
+                    icon: excessAmountIcon.data,
                     allocationAmount: excessAmount,
-                    backgroundColor: excessAmountBackgroundColor,
-                    foregroundColor: excessAmountForegroundColor,
+                    backgroundColor: excessAmountColorScheme.background,
+                    foregroundColor: excessAmountColorScheme.foreground,
                     budgetAmount: widget.budgetAmount,
                   ),
                 ],
@@ -376,27 +375,22 @@ class _CategoryViewState extends State<_CategoryView> {
   PieChartSectionData _derivePieSectionData({
     required Money amount,
     required IconData icon,
-    required Color backgroundColor,
-    required Color foregroundColor,
+    required BudgetCategoryColorScheme colorScheme,
   }) {
     final double dimension = MediaQuery.of(context).size.shortestSide;
     final ThemeData theme = Theme.of(context);
     final TextStyle labelTextStyle = theme.textTheme.labelLarge!.copyWith(
       fontWeight: AppFontWeight.bold,
-      color: foregroundColor,
+      color: colorScheme.foreground,
       letterSpacing: .01,
     );
 
     return PieChartSectionData(
       title: amount.percentage(widget.budgetAmount),
       value: amount.rawValue.roundToDouble(),
-      color: backgroundColor,
-      radius: dimension / 2.5,
-      badgeWidget: CircleAvatar(
-        backgroundColor: backgroundColor,
-        foregroundColor: foregroundColor,
-        child: Icon(icon),
-      ),
+      color: colorScheme.background,
+      radius: (dimension / 2.5) - _innerPieChartRadius,
+      badgeWidget: BudgetCategoryAvatar(colorScheme: colorScheme, icon: icon),
       badgePositionPercentageOffset: .98,
       showTitle: amount.ratio(widget.budgetAmount) > .025,
       titleStyle: labelTextStyle,
@@ -484,7 +478,7 @@ class _PlanTile extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Icon(plan.category.icon.data),
-                const SizedBox(width: 6.0),
+                const SizedBox(width: 12.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
