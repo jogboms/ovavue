@@ -234,7 +234,7 @@ class _ContentDataView extends StatelessWidget {
       allocation: allocation?.amount,
       plan: plan,
       budgetId: budget.id,
-      plansById: budget.plans.map((_) => _.id),
+      plansById: <String>[plan.id],
     );
     if (result == null) {
       return;

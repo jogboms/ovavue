@@ -61,7 +61,7 @@ class _ContentDataView extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
 
     final Map<String, List<SelectedBudgetPlanViewModel>> plansByCategory =
-        state.budget.plans.groupListsBy((_) => _.category.id);
+        state.plans.groupListsBy((_) => _.category.id);
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -104,7 +104,7 @@ class _SliverPlansGroup extends StatefulWidget {
     required this.expanded,
   });
 
-  final SelectedBudgetViewModel budget;
+  final BudgetViewModel budget;
   final SelectedBudgetCategoryViewModel category;
   final List<SelectedBudgetPlanViewModel> plans;
   final bool expanded;

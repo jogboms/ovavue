@@ -60,7 +60,8 @@ Future<void> main() async {
         createProviderStream(),
         completion(
           BudgetState(
-            budget: expectedBudget.toViewModel(expectedPlanViewModels),
+            budget: BudgetViewModel.fromEntity(expectedBudget),
+            plans: expectedPlanViewModels,
             allocation: expectedPlanViewModels.map((_) => _.allocation?.amount).whereNotNull().sum(),
             categories: expectedPlans
                 .uniqueBy((_) => _.category.id)

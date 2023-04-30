@@ -38,7 +38,6 @@ class MockUseCases {
   final DeleteBudgetPlanUseCase deleteBudgetPlanUseCase = MockDeleteBudgetPlanUseCase();
   final DeleteBudgetUseCase deleteBudgetUseCase = MockDeleteBudgetUseCase();
   final FetchAccountUseCase fetchAccountUseCase = MockFetchAccountUseCase();
-  final FetchBudgetPlansByBudgetUseCase fetchBudgetAllocationsUseCase = MockFetchBudgetAllocationsUseCase();
   final FetchBudgetAllocationsByBudgetUseCase fetchBudgetAllocationsByBudgetUseCase =
       MockFetchBudgetAllocationsByBudgetUseCase();
   final FetchBudgetAllocationsByPlanUseCase fetchBudgetAllocationsByPlanUseCase =
@@ -68,7 +67,6 @@ class MockUseCases {
         deleteBudgetPlanUseCase,
         deleteBudgetUseCase,
         fetchAccountUseCase,
-        fetchBudgetAllocationsUseCase,
         fetchBudgetAllocationsByPlanUseCase,
         fetchBudgetCategoriesUseCase,
         fetchBudgetPlansUseCase,
@@ -109,7 +107,6 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
-      ..factory((RegistryFactory di) => FetchBudgetPlansByBudgetUseCase(allocations: di()))
       ..factory((RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(allocations: di()))
       ..factory((RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(allocations: di()))
       ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
@@ -205,7 +202,6 @@ extension MockUseCasesExtensions on Registry {
     ..replace<DeleteBudgetPlanUseCase>(mockUseCases.deleteBudgetPlanUseCase)
     ..replace<DeleteBudgetUseCase>(mockUseCases.deleteBudgetUseCase)
     ..replace<FetchAccountUseCase>(mockUseCases.fetchAccountUseCase)
-    ..replace<FetchBudgetPlansByBudgetUseCase>(mockUseCases.fetchBudgetAllocationsUseCase)
     ..replace<FetchBudgetAllocationsByBudgetUseCase>(mockUseCases.fetchBudgetAllocationsByBudgetUseCase)
     ..replace<FetchBudgetAllocationsByPlanUseCase>(mockUseCases.fetchBudgetAllocationsByPlanUseCase)
     ..replace<FetchBudgetCategoriesUseCase>(mockUseCases.fetchBudgetCategoriesUseCase)

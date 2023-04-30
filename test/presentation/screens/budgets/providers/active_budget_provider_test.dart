@@ -21,7 +21,8 @@ Future<void> main() async {
             selectedBudgetProvider(budget.id).overrideWith(
               (_) => Stream<BudgetState>.value(
                 BudgetState(
-                  budget: budget.toViewModel(<SelectedBudgetPlanViewModel>[]),
+                  budget: BudgetViewModel.fromEntity(budget),
+                  plans: <SelectedBudgetPlanViewModel>[],
                   allocation: Money.zero,
                   categories: <SelectedBudgetCategoryViewModel>[],
                 ),
@@ -41,7 +42,8 @@ Future<void> main() async {
         createProviderStream(expectedBudget),
         completion(
           BudgetState(
-            budget: expectedBudget.toViewModel(<SelectedBudgetPlanViewModel>[]),
+            budget: BudgetViewModel.fromEntity(expectedBudget),
+            plans: <SelectedBudgetPlanViewModel>[],
             allocation: Money.zero,
             categories: <SelectedBudgetCategoryViewModel>[],
           ),

@@ -10,11 +10,13 @@ abstract class BaseBudgetState {
 class BudgetState with EquatableMixin implements BaseBudgetState {
   const BudgetState({
     required this.budget,
+    required this.plans,
     required this.allocation,
     required this.categories,
   });
 
-  final SelectedBudgetViewModel budget;
+  final BudgetViewModel budget;
+  final List<SelectedBudgetPlanViewModel> plans;
   final Money allocation;
   final List<SelectedBudgetCategoryViewModel> categories;
 

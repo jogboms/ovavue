@@ -26,7 +26,7 @@ Future<void> main() async {
           userProvider.overrideWith((_) async => dummyUser),
           budgetsProvider.overrideWith(
             (_) => Stream<List<BudgetViewModel>>.value(
-              <BudgetViewModel>[BudgetViewModel.fromEntity(expectedBudget, expectedPlans)],
+              <BudgetViewModel>[BudgetViewModel.fromEntity(expectedBudget)],
             ),
           ),
           budgetPlansProvider.overrideWith(
@@ -61,7 +61,7 @@ Future<void> main() async {
           BudgetPlanState(
             allocation: expectedBudgetAllocations.firstWhere((_) => _.plan.id == expectedPlan.id).toViewModel(),
             plan: BudgetPlanViewModel.fromEntity(expectedPlan),
-            budget: BudgetViewModel.fromEntity(expectedBudget, expectedPlans),
+            budget: BudgetViewModel.fromEntity(expectedBudget),
             previousAllocations: expectedBudgetAllocations
                 .map((_) => _.toViewModel())
                 .skip(1)

@@ -26,7 +26,7 @@ BudgetProvider budget(BudgetRef ref) {
     ),
     fetchBudgetAllocations: (String id) => ref.read(
       selectedBudgetProvider(id).selectAsync(
-        (BudgetState data) => data.budget.plans.fold(
+        (BudgetState data) => data.plans.fold(
           <ReferenceEntity, int>{},
           (PlanToAllocationMap previousValue, SelectedBudgetPlanViewModel element) {
             final int? amount = element.allocation?.amount.rawValue;

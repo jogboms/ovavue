@@ -63,7 +63,12 @@ class BudgetDetailDataView extends StatelessWidget {
                 if (active) ...<ActionButton>[
                   ActionButton(
                     icon: Icons.attach_money_outlined,
-                    onPressed: () => _handleAllocationAction(context, ref: ref, budget: state.budget),
+                    onPressed: () => _handleAllocationAction(
+                      context,
+                      ref: ref,
+                      budget: state.budget,
+                      plans: state.plans,
+                    ),
                   ),
                   ActionButton(
                     icon: Icons.add_chart, // TODO(Jogboms): fix icon
@@ -104,9 +109,9 @@ class BudgetDetailDataView extends StatelessWidget {
         ),
         SliverPinnedTitleCountHeader(
           title: context.l10n.associatedPlansTitle,
-          count: state.budget.plans.length,
+          count: state.plans.length,
         ),
-        if (state.budget.plans.isEmpty)
+        if (state.plans.isEmpty)
           const SliverFillRemaining(child: EmptyView())
         else
           SliverPadding(
@@ -117,7 +122,7 @@ class BudgetDetailDataView extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverSeparatorBuilderDelegate(
                 builder: (BuildContext context, int index) {
-                  final SelectedBudgetPlanViewModel plan = state.budget.plans[index];
+                  final SelectedBudgetPlanViewModel plan = state.plans[index];
 
                   return _PlanTile(
                     key: Key(plan.id),
@@ -130,7 +135,7 @@ class BudgetDetailDataView extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (_, __) => const SizedBox(height: 4),
-                childCount: state.budget.plans.length,
+                childCount: state.plans.length,
               ),
             ),
           ),
@@ -141,12 +146,13 @@ class BudgetDetailDataView extends StatelessWidget {
   void _handleAllocationAction(
     BuildContext context, {
     required WidgetRef ref,
-    required SelectedBudgetViewModel budget,
+    required BudgetViewModel budget,
+    required List<SelectedBudgetPlanViewModel> plans,
   }) async {
     final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
       context: context,
       budgetId: budget.id,
-      plansById: budget.plans.map((_) => _.id),
+      plansById: plans.map((_) => _.id),
       plan: null,
       allocation: null,
     );
@@ -166,7 +172,7 @@ class BudgetDetailDataView extends StatelessWidget {
   void _handleUpdateAction(
     BuildContext context, {
     required WidgetRef ref,
-    required SelectedBudgetViewModel budget,
+    required BudgetViewModel budget,
   }) async {
     final BudgetEntryResult? result = await showBudgetEntryForm(
       context: context,
@@ -194,7 +200,7 @@ class BudgetDetailDataView extends StatelessWidget {
   void _handleDuplicateAction(
     BuildContext context, {
     required WidgetRef ref,
-    required SelectedBudgetViewModel budget,
+    required BudgetViewModel budget,
   }) async =>
       createBudgetAction(
         context,
@@ -211,7 +217,7 @@ class BudgetDetailDataView extends StatelessWidget {
 class _AppBarText extends StatelessWidget {
   const _AppBarText({required this.budget});
 
-  final SelectedBudgetViewModel budget;
+  final BudgetViewModel budget;
 
   @override
   Widget build(BuildContext context) {
