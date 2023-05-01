@@ -8,13 +8,13 @@ ci:
 	make format && make analyze && make test_coverage
 
 format:
-	fvm flutter format --set-exit-if-changed -l 120 lib
+	fvm dart format --set-exit-if-changed -l 120 lib
 
 analyze:
 	fvm flutter analyze lib
 
 test_coverage:
-	fvm flutter test --no-pub --coverage --test-randomize-ordering-seed random --enable-experiment=records
+	fvm flutter test --no-pub --coverage --test-randomize-ordering-seed random
 
 clean_coverage:
 	lcov --remove coverage/lcov.info 'lib/**/*.g.dart' 'lib/**/*_mock_impl.dart' 'lib/presentation/theme/*' 'lib/presentation/constants/*' -o coverage/lcov.info
@@ -29,10 +29,10 @@ generate_intl:
 	fvm flutter gen-l10n
 
 build_runner_build:
-	fvm flutter packages pub run build_runner build --delete-conflicting-outputs --enable-experiment=records
+	fvm flutter packages pub run build_runner build -d --enable-experiment=records,patterns,sealed-class
 
 build_runner_watch:
-	fvm flutter packages pub run build_runner watch --delete-conflicting-outputs --enable-experiment=records
+	fvm flutter packages pub run build_runner watch -d
 
 # iOS
 mock_ios:
