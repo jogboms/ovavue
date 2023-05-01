@@ -21,39 +21,39 @@ class BudgetCategoryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
 
     final Money? allocationAmount = this.allocationAmount;
     final Money? budgetAmount = this.budgetAmount;
+    final Color foregroundColor = category.colorScheme.foreground;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+      padding: const EdgeInsets.fromLTRB(16.0, 18.0, 16.0, 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          CircleAvatar(
-            backgroundColor: category.colorScheme.background,
-            child: Icon(
-              category.icon.data,
-              color: category.colorScheme.foreground,
-            ),
+          BudgetCategoryAvatar.inverse(
+            colorScheme: category.colorScheme,
+            icon: category.icon.data,
           ),
           const SizedBox(width: 8.0),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
                   category.title.sentence(),
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: AppFontWeight.semibold,
+                    color: foregroundColor,
                   ),
                 ),
                 const SizedBox(height: 2.0),
                 Text(
                   category.description.capitalize(),
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.outline,
+                    color: foregroundColor,
                   ),
                 ),
               ],
@@ -64,6 +64,7 @@ class BudgetCategoryHeader extends StatelessWidget {
             AmountRatioItem.large(
               allocationAmount: allocationAmount,
               baseAmount: budgetAmount,
+              foregroundColor: foregroundColor,
             )
           ]
         ],

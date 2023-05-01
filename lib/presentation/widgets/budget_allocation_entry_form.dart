@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'budget_category_avatar.dart';
 
 class BudgetAllocationEntryForm extends StatefulWidget {
   const BudgetAllocationEntryForm({
@@ -49,14 +50,16 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
 
   @override
   Widget build(BuildContext context) {
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
     final BudgetPlanViewModel? initialPlan = widget.plan;
     final BudgetPlanViewModel? selectedPlan = _selectedPlan.value;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(
-        bottom: mediaQuery.viewInsets.bottom + mediaQuery.padding.bottom + 16,
-      ),
+      margin: EdgeInsets.fromLTRB(
+        16.0,
+        0,
+        16.0,
+        MediaQuery.paddingOf(context).bottom + 16.0,
+      ).withKeyboardPadding(context),
       child: Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -219,11 +222,9 @@ class _PlanItem extends StatelessWidget {
 
     return Row(
       children: <Widget>[
-        CircleAvatar(
-          backgroundColor: plan.category.colorScheme.background,
-          foregroundColor: plan.category.colorScheme.foreground,
-          radius: 16,
-          child: Icon(plan.category.icon.data, size: 16),
+        BudgetCategoryAvatar.small(
+          colorScheme: plan.category.colorScheme,
+          icon: plan.category.icon.data,
         ),
         const SizedBox(width: 8),
         Text(

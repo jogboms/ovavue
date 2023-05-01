@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+import '../theme.dart';
+
 class SliverPinnedTitleCountHeader extends StatelessWidget {
   const SliverPinnedTitleCountHeader({super.key, required this.title, required this.count});
 
@@ -18,8 +20,9 @@ class SliverPinnedTitleCountHeader extends StatelessWidget {
         color: colorScheme.surface,
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: DefaultTextStyle(
-          style: textTheme.titleMedium!.copyWith(
-            color: colorScheme.outline,
+          style: textTheme.titleSmall!.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: AppFontWeight.semibold,
           ),
           child: Row(
             children: <Widget>[

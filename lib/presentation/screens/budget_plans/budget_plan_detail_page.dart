@@ -159,7 +159,8 @@ class _ContentDataView extends StatelessWidget {
                     if (budget == null || !budget.active)
                       ActionButton(
                         icon: Icons.delete,
-                        backgroundColor: colorScheme.errorContainer,
+                        backgroundColor: colorScheme.surfaceVariant,
+                        foregroundColor: colorScheme.onSurfaceVariant,
                         onPressed: () => deleteBudgetPlanAction(
                           context,
                           ref: ref,
@@ -170,7 +171,8 @@ class _ContentDataView extends StatelessWidget {
                     else if (allocation != null)
                       ActionButton(
                         icon: Icons.remove_circle_outline_outlined, // TODO(Jogboms): fix icon
-                        backgroundColor: colorScheme.tertiaryContainer,
+                        backgroundColor: colorScheme.surfaceVariant,
+                        foregroundColor: colorScheme.onSurfaceVariant,
                         onPressed: () => _handleDeleteAllocationAction(
                           context,
                           ref: ref,
@@ -188,31 +190,34 @@ class _ContentDataView extends StatelessWidget {
           title: context.l10n.previousAllocationsTitle,
           count: state.previousAllocations.length,
         ),
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: 8.0,
-            bottom: MediaQuery.paddingOf(context).bottom,
-          ),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
-                final BudgetPlanAllocationBudgetViewModel budget = allocation.budget;
+        if (state.previousAllocations.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          SliverPadding(
+            padding: EdgeInsets.only(
+              top: 8.0,
+              bottom: MediaQuery.paddingOf(context).bottom,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
+                  final BudgetPlanAllocationBudgetViewModel budget = allocation.budget;
 
-                return BudgetListTile(
-                  key: Key(budget.id),
-                  id: budget.id,
-                  title: budget.title,
-                  budgetAmount: budget.amount,
-                  allocationAmount: allocation.amount,
-                  startedAt: budget.startedAt,
-                  endedAt: budget.endedAt,
-                );
-              },
-              childCount: state.previousAllocations.length,
+                  return BudgetListTile(
+                    key: Key(budget.id),
+                    id: budget.id,
+                    title: budget.title,
+                    budgetAmount: budget.amount,
+                    allocationAmount: allocation.amount,
+                    startedAt: budget.startedAt,
+                    endedAt: budget.endedAt,
+                  );
+                },
+                childCount: state.previousAllocations.length,
+              ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -229,7 +234,7 @@ class _ContentDataView extends StatelessWidget {
       allocation: allocation?.amount,
       plan: plan,
       budgetId: budget.id,
-      plansById: budget.plans.map((_) => _.id),
+      plansById: <String>[plan.id],
     );
     if (result == null) {
       return;
@@ -271,17 +276,17 @@ class _ContentDataView extends StatelessWidget {
     if (category == null) {
       return;
     }
+    if (context.mounted) {
+      final bool choice = await showErrorChoiceBanner(
+        context,
+        message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
+      );
+      if (!choice) {
+        return;
+      }
 
-    // ignore: use_build_context_synchronously
-    final bool choice = await showErrorChoiceBanner(
-      context,
-      message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
-    );
-    if (!choice) {
-      return;
+      await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
     }
-
-    await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
   }
 
   void _handleDeleteAllocationAction(

@@ -87,7 +87,6 @@ void main() async {
     ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
     ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
-    ..factory((RegistryFactory di) => FetchBudgetPlansByBudgetUseCase(allocations: di()))
     ..factory((RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(allocations: di()))
     ..factory((RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(allocations: di()))
     ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
 
@@ -20,90 +21,106 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final Color backgroundColor = state.category.colorScheme.background;
+    final Color foregroundColor = state.category.colorScheme.foreground;
 
     return CustomScrollView(
       slivers: <Widget>[
-        CustomAppBar(
-          title: const Text(''),
-          asSliver: true,
-          centerTitle: true,
-          backgroundColor: theme.scaffoldBackgroundColor,
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(<Widget>[
-            BudgetCategoryHeader(
-              category: state.category,
-              allocationAmount: state.allocation,
-              budgetAmount: state.budget?.amount,
-            ),
-            Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
-                actions: <ActionButton>[
-                  ActionButton(
-                    icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
-                    onPressed: () => _handlePlanAdditionAction(
-                      context,
-                      ref: ref,
-                      category: state.category,
-                      planIds: state.plans.map((_) => _.id),
-                    ),
-                  ),
-                  ActionButton(
-                    icon: Icons.edit,
-                    onPressed: () => _handleCategoryUpdateAction(
-                      context,
-                      ref: ref,
-                      category: state.category,
-                    ),
-                  ),
-                  if (state.plans.isEmpty)
-                    ActionButton(
-                      icon: Icons.delete,
-                      backgroundColor: colorScheme.errorContainer,
-                      onPressed: () => _handleCategoryDeletionAction(
-                        context,
-                        ref: ref,
-                        category: state.category,
-                        dismissOnComplete: true,
+        SliverAppBar(
+          expandedHeight: 250,
+          pinned: true,
+          systemOverlayStyle: state.category.colorScheme.brightness == Brightness.dark
+              ? SystemUiOverlayStyle.light
+              : SystemUiOverlayStyle.dark,
+          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor,
+          leading: BackButton(color: foregroundColor),
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                BudgetCategoryHeader(
+                  category: state.category,
+                  allocationAmount: state.allocation,
+                  budgetAmount: state.budget?.amount,
+                ),
+                Consumer(
+                  builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+                    actions: <ActionButton>[
+                      ActionButton(
+                        icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
+                        backgroundColor: foregroundColor,
+                        foregroundColor: backgroundColor,
+                        onPressed: () => _handlePlanAdditionAction(
+                          context,
+                          ref: ref,
+                          category: state.category,
+                          planIds: state.plans.map((_) => _.id),
+                        ),
                       ),
-                    )
-                ],
-              ),
+                      ActionButton(
+                        icon: Icons.edit,
+                        backgroundColor: foregroundColor,
+                        foregroundColor: backgroundColor,
+                        onPressed: () => _handleCategoryUpdateAction(
+                          context,
+                          ref: ref,
+                          category: state.category,
+                        ),
+                      ),
+                      if (state.plans.isEmpty)
+                        ActionButton.outline(
+                          icon: Icons.delete,
+                          borderColor: foregroundColor,
+                          onPressed: () => _handleCategoryDeletionAction(
+                            context,
+                            ref: ref,
+                            category: state.category,
+                            dismissOnComplete: true,
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
             ),
-            const SizedBox(height: 8.0),
-          ]),
+          ),
         ),
         SliverPinnedTitleCountHeader(
           title: context.l10n.associatedPlansTitle,
           count: state.plans.length,
         ),
-        SliverPadding(
-          padding: EdgeInsets.only(
-            top: 8.0,
-            bottom: MediaQuery.paddingOf(context).bottom,
-          ),
-          sliver: SliverList(
-            delegate: SliverSeparatorBuilderDelegate(
-              builder: (BuildContext context, int index) {
-                final BudgetCategoryPlanViewModel plan = state.plans[index];
+        if (state.plans.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          SliverPadding(
+            padding: EdgeInsets.only(
+              top: 8.0,
+              bottom: MediaQuery.paddingOf(context).bottom,
+            ),
+            sliver: SliverList(
+              delegate: SliverSeparatorBuilderDelegate(
+                builder: (BuildContext context, int index) {
+                  final BudgetCategoryPlanViewModel plan = state.plans[index];
 
-                return BudgetCategoryPlanTile(
-                  key: Key(plan.id),
-                  plan: plan,
-                  categoryAllocationAmount: state.allocation,
-                  onPressed: () => context.router.goToBudgetPlanDetail(
-                    id: plan.id,
-                    budgetId: state.budget?.id,
-                  ),
-                );
-              },
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
-              childCount: state.plans.length,
+                  return BudgetCategoryPlanTile(
+                    key: Key(plan.id),
+                    plan: plan,
+                    categoryAllocationAmount: state.allocation,
+                    onPressed: () => context.router.goToBudgetPlanDetail(
+                      id: plan.id,
+                      budgetId: state.budget?.id,
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 4),
+                childCount: state.plans.length,
+              ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -125,17 +142,17 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     if (plan == null) {
       return;
     }
+    if (context.mounted) {
+      final bool choice = await showErrorChoiceBanner(
+        context,
+        message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
+      );
+      if (!choice) {
+        return;
+      }
 
-    // ignore: use_build_context_synchronously
-    final bool choice = await showErrorChoiceBanner(
-      context,
-      message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
-    );
-    if (!choice) {
-      return;
+      await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
     }
-
-    await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
   }
 
   void _handleCategoryDeletionAction(
@@ -177,7 +194,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     final BudgetCategoryEntryResult? result = await showBudgetCategoryEntryForm(
       context: context,
       title: category.title,
-      description: category.title,
+      description: category.description,
       icon: category.icon,
       colorScheme: category.colorScheme,
     );

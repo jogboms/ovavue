@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models.dart';
 import '../utils.dart';
+import 'budget_category_avatar.dart';
 
 class BudgetPlanListTile extends StatelessWidget {
   const BudgetPlanListTile({super.key, required this.plan, required this.onTap});
@@ -18,10 +19,9 @@ class BudgetPlanListTile extends StatelessWidget {
       titleTextStyle: theme.textTheme.bodyLarge,
       subtitle: Text(plan.description.capitalize(), maxLines: 2),
       subtitleTextStyle: theme.textTheme.bodyMedium,
-      leading: CircleAvatar(
-        backgroundColor: plan.category.colorScheme.background,
-        foregroundColor: plan.category.colorScheme.foreground,
-        child: Icon(plan.category.icon.data),
+      leading: BudgetCategoryAvatar(
+        colorScheme: plan.category.colorScheme,
+        icon: plan.category.icon.data,
       ),
       onTap: onTap,
     );

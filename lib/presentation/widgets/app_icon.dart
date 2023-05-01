@@ -16,7 +16,7 @@ class AppIcon extends StatelessWidget {
           constraints: BoxConstraints.tight(size),
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: backgroundColor ?? context.theme.colorScheme.inverseBackground,
+            color: backgroundColor ?? context.theme.colorScheme.onBackground,
             borderRadius: BorderRadius.circular(size.shortestSide / 4),
           ),
           child: const FlutterLogo(),

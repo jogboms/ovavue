@@ -37,7 +37,6 @@ export 'domain/use_cases/fetch_active_budget_use_case.dart';
 export 'domain/use_cases/fetch_budget_allocations_by_budget_use_case.dart';
 export 'domain/use_cases/fetch_budget_allocations_by_plan_use_case.dart';
 export 'domain/use_cases/fetch_budget_categories_use_case.dart';
-export 'domain/use_cases/fetch_budget_plans_by_budget_use_case.dart';
 export 'domain/use_cases/fetch_budget_plans_use_case.dart';
 export 'domain/use_cases/fetch_budget_use_case.dart';
 export 'domain/use_cases/fetch_budgets_use_case.dart';

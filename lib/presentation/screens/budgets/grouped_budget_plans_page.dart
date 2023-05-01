@@ -6,6 +6,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import '../../models.dart';
 import '../../routing.dart';
 import '../../state.dart';
+import '../../theme.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
 
@@ -60,7 +61,7 @@ class _ContentDataView extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
 
     final Map<String, List<SelectedBudgetPlanViewModel>> plansByCategory =
-        state.budget.plans.groupListsBy((_) => _.category.id);
+        state.plans.groupListsBy((_) => _.category.id);
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -68,7 +69,10 @@ class _ContentDataView extends StatelessWidget {
           title: Column(
             children: <Widget>[
               Text(context.l10n.totalBudgetCaption.toUpperCase(), style: textTheme.labelMedium),
-              Text('${state.budget.amount}', style: textTheme.titleLarge),
+              Text(
+                '${state.budget.amount}',
+                style: textTheme.titleLarge?.copyWith(fontWeight: AppFontWeight.semibold),
+              ),
             ],
           ),
           backgroundColor: theme.scaffoldBackgroundColor,
@@ -100,7 +104,7 @@ class _SliverPlansGroup extends StatefulWidget {
     required this.expanded,
   });
 
-  final SelectedBudgetViewModel budget;
+  final BudgetViewModel budget;
   final SelectedBudgetCategoryViewModel category;
   final List<SelectedBudgetPlanViewModel> plans;
   final bool expanded;
@@ -185,11 +189,9 @@ class _Header extends StatelessWidget {
     return Expanded(
       child: Row(
         children: <Widget>[
-          CircleAvatar(
-            radius: 16.0,
-            backgroundColor: category.colorScheme.background,
-            foregroundColor: category.colorScheme.foreground,
-            child: Icon(category.icon.data, size: 16.0),
+          BudgetCategoryAvatar.small(
+            colorScheme: category.colorScheme,
+            icon: category.icon.data,
           ),
           const SizedBox(width: 12.0),
           Column(

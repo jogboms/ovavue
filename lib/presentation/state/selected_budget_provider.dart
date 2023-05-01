@@ -56,14 +56,13 @@ BudgetState _deriveState(
   );
 
   return BudgetState(
-    budget: budget.toViewModel(
-      plans.sorted((SelectedBudgetPlanViewModel a, SelectedBudgetPlanViewModel b) {
-        final Money moneyA = a.allocation?.amount ?? Money.zero;
-        final Money moneyB = b.allocation?.amount ?? Money.zero;
+    budget: BudgetViewModel.fromEntity(budget),
+    plans: plans.sorted((SelectedBudgetPlanViewModel a, SelectedBudgetPlanViewModel b) {
+      final Money moneyA = a.allocation?.amount ?? Money.zero;
+      final Money moneyB = b.allocation?.amount ?? Money.zero;
 
-        return moneyB.compareTo(moneyA);
-      }),
-    ),
+      return moneyB.compareTo(moneyA);
+    }),
     allocation: allocationByCategory.values.sum.asMoney,
     categories: categories.sorted(
       (SelectedBudgetCategoryViewModel a, SelectedBudgetCategoryViewModel b) => b.allocation.compareTo(a.allocation),

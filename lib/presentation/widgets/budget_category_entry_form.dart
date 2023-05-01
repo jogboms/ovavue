@@ -3,6 +3,7 @@ import 'package:ovavue/core.dart';
 
 import '../utils.dart';
 import 'dialog_page.dart';
+import 'primary_button.dart';
 
 class BudgetCategoryEntryForm extends StatefulWidget {
   const BudgetCategoryEntryForm({
@@ -45,10 +46,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 24.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0).withKeyboardPadding(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -87,9 +85,9 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
               child: Text(l10n.selectIconCaption),
             ),
             spacing,
-            FilledButton.tonal(
+            PrimaryButton(
               onPressed: _handleSubmit,
-              child: Text(l10n.submitCaption),
+              caption: l10n.submitCaption,
             )
           ],
         ),
@@ -209,7 +207,7 @@ class _ColorItem extends StatelessWidget {
   final VoidCallback onPressed;
   final bool selected;
 
-  static const double _dimension = 40.0;
+  static const double _dimension = 56.0;
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +219,7 @@ class _ColorItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.background,
           border: selected ? Border.all(color: colorScheme.foreground, width: 4) : null,
-          borderRadius: selected ? BorderRadius.circular(_dimension / 2) : null,
+          borderRadius: BorderRadius.circular(selected ? _dimension / 2 : 8),
         ),
         child: Icon(icon.data, color: colorScheme.foreground),
       ),

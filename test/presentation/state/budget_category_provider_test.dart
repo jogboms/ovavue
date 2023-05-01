@@ -67,7 +67,7 @@ Future<void> main() async {
     });
 
     group('Create', () {
-      test('should create new budget plan for user', () async {
+      test('should create new budget category for user', () async {
         when(mockFetchUser.call).thenAnswer((_) async => dummyUser);
         when(
           () => mockUseCases.createBudgetCategoryUseCase.call(
@@ -97,7 +97,7 @@ Future<void> main() async {
     });
 
     group('Update', () {
-      test('should update existing budget plan', () async {
+      test('should update existing budget category', () async {
         when(() => mockUseCases.updateBudgetCategoryUseCase.call(any())).thenAnswer((_) async => true);
 
         const UpdateBudgetCategoryData updateBudgetCategoryData = UpdateBudgetCategoryData(
@@ -115,7 +115,7 @@ Future<void> main() async {
     });
 
     group('Delete', () {
-      test('should delete existing budget plan', () async {
+      test('should delete existing budget category', () async {
         when(() => mockUseCases.deleteBudgetCategoryUseCase.call(id: any(named: 'id'), path: any(named: 'path')))
             .thenAnswer((_) async => true);
 

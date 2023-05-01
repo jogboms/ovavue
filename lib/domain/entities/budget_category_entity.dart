@@ -25,9 +25,6 @@ class BudgetCategoryEntity with EquatableMixin {
 
   @override
   List<Object?> get props => <Object?>[id, path, title, description, iconIndex, colorSchemeIndex, createdAt, updatedAt];
-
-  @override
-  bool? get stringify => true;
 }
 
 extension BudgetCategoryReferenceEntityExtension on BudgetCategoryEntity {

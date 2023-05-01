@@ -43,8 +43,6 @@ class MockDeleteBudgetUseCase extends Mock implements DeleteBudgetUseCase {}
 
 class MockFetchAccountUseCase extends Mock implements FetchAccountUseCase {}
 
-class MockFetchBudgetAllocationsUseCase extends Mock implements FetchBudgetPlansByBudgetUseCase {}
-
 class MockFetchBudgetAllocationsByBudgetUseCase extends Mock implements FetchBudgetAllocationsByBudgetUseCase {}
 
 class MockFetchBudgetAllocationsByPlanUseCase extends Mock implements FetchBudgetAllocationsByPlanUseCase {}
@@ -76,6 +74,14 @@ class MockValueChangedCallback<T> extends Mock {
 class MockAsyncCallback<T> extends Mock {
   Future<T> call();
 }
+
+class MockAsyncCallbackValueChanged<T, U> extends Mock {
+  Future<T> call(U p0);
+}
+
+class FakeCreateBudgetData extends Fake implements CreateBudgetData {}
+
+class FakeUpdateBudgetData extends Fake implements UpdateBudgetData {}
 
 class FakeCreateBudgetCategoryData extends Fake implements CreateBudgetCategoryData {}
 

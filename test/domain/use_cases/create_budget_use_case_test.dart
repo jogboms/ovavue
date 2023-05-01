@@ -20,7 +20,6 @@ void main() {
       amount: 1,
       description: 'description',
       startedAt: DateTime(0),
-      endedAt: null,
     );
 
     setUpAll(() {
@@ -80,11 +79,18 @@ void main() {
         completion('1'),
       );
 
-      final List<CreateBudgetAllocationData> allocations =
-          verify(() => mockRepositories.budgetAllocations.createAll(any(), captureAny())).capturedType();
-      expect(allocations.first.amount, 1);
-      expect(allocations.first.budget, dummyReference);
-      expect(allocations.first.plan, const ReferenceEntity(id: '2', path: 'path'));
+      verify(
+        () => mockRepositories.budgetAllocations.createAll(
+          any(),
+          <CreateBudgetAllocationData>[
+            const CreateBudgetAllocationData(
+              amount: 1,
+              budget: dummyReference,
+              plan: ReferenceEntity(id: '2', path: 'path'),
+            )
+          ],
+        ),
+      );
       expect(analytics.events, containsOnce(AnalyticsEvent.createBudget('1')));
     });
 

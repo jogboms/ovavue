@@ -13,21 +13,21 @@ Future<bool> showErrorChoiceBanner(
   final Future<MaterialBannerClosedReason> result = scaffoldMessengerState
       .showMaterialBanner(
         MaterialBanner(
-          backgroundColor: theme.colorScheme.errorContainer,
+          backgroundColor: theme.colorScheme.error,
           content: Text(message),
           contentTextStyle: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.colorScheme.onErrorContainer,
+            color: theme.colorScheme.onError,
           ),
           actions: <Widget>[
             IconButton(
               onPressed: scaffoldMessengerState.removeCurrentMaterialBanner,
               icon: const Icon(Icons.check_outlined),
-              color: theme.colorScheme.onErrorContainer,
+              color: theme.colorScheme.onError,
             ),
             IconButton(
               onPressed: scaffoldMessengerState.hideCurrentMaterialBanner,
               icon: const Icon(Icons.close_outlined),
-              color: theme.colorScheme.onErrorContainer,
+              color: theme.colorScheme.onError,
             ),
           ],
         ),
