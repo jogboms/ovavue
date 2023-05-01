@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+import '../../../constants/app_icons.dart';
 import '../../../models.dart';
 import '../../../routing.dart';
 import '../../../state.dart';
@@ -62,7 +63,7 @@ class BudgetDetailDataView extends StatelessWidget {
               actions: <ActionButton>[
                 if (active) ...<ActionButton>[
                   ActionButton(
-                    icon: Icons.attach_money_outlined,
+                    icon: AppIcons.addAllocation,
                     onPressed: () => _handleAllocationAction(
                       context,
                       ref: ref,
@@ -71,7 +72,7 @@ class BudgetDetailDataView extends StatelessWidget {
                     ),
                   ),
                   ActionButton(
-                    icon: Icons.add_chart, // TODO(Jogboms): fix icon
+                    icon: AppIcons.addPlan,
                     onPressed: () => createBudgetPlanAction(
                       context: context,
                       ref: ref,
@@ -79,7 +80,7 @@ class BudgetDetailDataView extends StatelessWidget {
                     ),
                   ),
                   ActionButton(
-                    icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
+                    icon: AppIcons.addCategory,
                     onPressed: () => createBudgetCategoryAction(
                       context: context,
                       ref: ref,
@@ -87,7 +88,7 @@ class BudgetDetailDataView extends StatelessWidget {
                     ),
                   ),
                   ActionButton(
-                    icon: Icons.edit,
+                    icon: AppIcons.edit,
                     onPressed: () => _handleUpdateAction(
                       context,
                       ref: ref,
@@ -96,7 +97,7 @@ class BudgetDetailDataView extends StatelessWidget {
                   ),
                 ],
                 ActionButton(
-                  icon: Icons.copy_outlined, // TODO(Jogboms): fix icon
+                  icon: AppIcons.duplicateBudget,
                   onPressed: () => _handleDuplicateAction(
                     context,
                     ref: ref,
@@ -364,11 +365,11 @@ class _CategoryViewState extends State<_CategoryView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               IconButton(
-                icon: const Icon(Icons.fullscreen_exit_outlined),
+                icon: const Icon(AppIcons.expand),
                 onPressed: widget.onExpand,
               ),
               IconButton(
-                icon: const Icon(Icons.repeat),
+                icon: const Icon(AppIcons.toggle),
                 onPressed: () => setState(() {
                   _type = _CategoryViewType.values[(_type.index + 1) % _CategoryViewType.values.length];
                 }),

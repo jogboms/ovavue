@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../constants/app_icons.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -68,7 +69,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                 spacing,
                 TextFormField(
                   controller: _titleController,
-                  decoration: InputDecoration(labelText: l10n.titleLabel),
+                  decoration: InputDecoration(hintText: l10n.titleLabel),
                   validator: (String? value) =>
                       value != null && value.length < 3 ? l10n.atLeastNCharactersErrorMessage(3) : null,
                 ),
@@ -76,7 +77,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 2,
-                  decoration: InputDecoration(labelText: l10n.descriptionLabel),
+                  decoration: InputDecoration(hintText: l10n.descriptionLabel),
                 ),
                 spacing,
                 if (initialCategory == null && creating) ...<Widget>[
@@ -88,7 +89,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                           child: TextButton.icon(
                             key: _createCategoryButtonKey,
                             onPressed: () => _handleCategoryCreation(ref),
-                            icon: const Icon(Icons.tag), // TODO(Jogboms): Fix icon
+                            icon: const Icon(AppIcons.addCategory),
                             label: Text(context.l10n.createCategoryCaption),
                           ),
                         );
@@ -127,7 +128,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                           IconButton(
                             key: _createCategoryButtonKey,
                             onPressed: () => _handleCategoryCreation(ref),
-                            icon: const Icon(Icons.add),
+                            icon: const Icon(AppIcons.addCategory),
                           ),
                         ],
                       );

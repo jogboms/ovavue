@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/app_icons.dart';
+
 class DialogPage extends StatelessWidget {
   const DialogPage(this.builder, {super.key});
 
@@ -17,7 +19,7 @@ class DialogPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           style: TextButton.styleFrom(backgroundColor: colorScheme.inverseSurface),
           color: colorScheme.onInverseSurface,
-          icon: const Icon(Icons.close),
+          icon: const Icon(AppIcons.close),
         ),
         const SizedBox(height: 16.0),
         Expanded(

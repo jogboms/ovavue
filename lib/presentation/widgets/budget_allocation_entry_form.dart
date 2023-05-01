@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../constants/app_icons.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -92,7 +93,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                             child: TextButton.icon(
                               key: _createPlanButtonKey,
                               onPressed: () => _handlePlanCreation(ref),
-                              icon: const Icon(Icons.tag), // TODO(Jogboms): Fix icon
+                              icon: const Icon(AppIcons.addPlan),
                               label: Text(context.l10n.createPlanCaption),
                             ),
                           );
@@ -131,7 +132,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                             IconButton(
                               key: _createPlanButtonKey,
                               onPressed: () => _handlePlanCreation(ref),
-                              icon: const Icon(Icons.add),
+                              icon: const Icon(AppIcons.addPlan),
                             ),
                           ],
                         );

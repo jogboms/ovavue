@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
 
+import '../../constants/app_icons.dart';
 import '../../models.dart';
 import '../../routing.dart';
 import '../../state.dart';
@@ -131,7 +132,7 @@ class _ContentDataView extends StatelessWidget {
                   actions: <ActionButton>[
                     if (budget != null && budget.active)
                       ActionButton(
-                        icon: Icons.attach_money,
+                        icon: AppIcons.modifyAllocation,
                         onPressed: () => _handleAllocationAction(
                           context,
                           ref: ref,
@@ -141,7 +142,7 @@ class _ContentDataView extends StatelessWidget {
                         ),
                       ),
                     ActionButton(
-                      icon: Icons.add_chart, // TODO(Jogboms): fix icon
+                      icon: AppIcons.addCategory,
                       onPressed: () => _handleUpdateCategoryAction(
                         context,
                         ref: ref,
@@ -149,7 +150,7 @@ class _ContentDataView extends StatelessWidget {
                       ),
                     ),
                     ActionButton(
-                      icon: Icons.edit,
+                      icon: AppIcons.edit,
                       onPressed: () => _handleUpdateAction(
                         context,
                         ref: ref,
@@ -158,7 +159,7 @@ class _ContentDataView extends StatelessWidget {
                     ),
                     if (budget == null || !budget.active)
                       ActionButton(
-                        icon: Icons.delete,
+                        icon: AppIcons.delete,
                         backgroundColor: colorScheme.surfaceVariant,
                         foregroundColor: colorScheme.onSurfaceVariant,
                         onPressed: () => deleteBudgetPlanAction(
@@ -170,7 +171,7 @@ class _ContentDataView extends StatelessWidget {
                       )
                     else if (allocation != null)
                       ActionButton(
-                        icon: Icons.remove_circle_outline_outlined, // TODO(Jogboms): fix icon
+                        icon: AppIcons.removeAllocation,
                         backgroundColor: colorScheme.surfaceVariant,
                         foregroundColor: colorScheme.onSurfaceVariant,
                         onPressed: () => _handleDeleteAllocationAction(

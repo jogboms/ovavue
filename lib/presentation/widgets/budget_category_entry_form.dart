@@ -53,7 +53,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
             spacing,
             TextFormField(
               controller: _titleController,
-              decoration: InputDecoration(labelText: l10n.titleLabel),
+              decoration: InputDecoration(hintText: l10n.titleLabel),
               validator: (String? value) =>
                   value != null && value.length < 3 ? l10n.atLeastNCharactersErrorMessage(3) : null,
             ),
@@ -61,7 +61,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
             TextFormField(
               controller: _descriptionController,
               maxLines: 2,
-              decoration: InputDecoration(labelText: l10n.descriptionLabel),
+              decoration: InputDecoration(hintText: l10n.descriptionLabel),
             ),
             spacing,
             Wrap(
@@ -160,13 +160,16 @@ class _IconPicker extends StatelessWidget {
 
   final BudgetCategoryIcon initialValue;
 
+  static const double _dimension = 48.0;
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return SafeArea(
       top: false,
-      child: Padding(
+      child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
         child: Wrap(
           runSpacing: 8,
@@ -178,8 +181,8 @@ class _IconPicker extends StatelessWidget {
                 key: ObjectKey(icon),
                 onTap: icon == initialValue ? null : () => Navigator.pop(context, icon),
                 child: Ink(
-                  height: 42,
-                  width: 42,
+                  height: _dimension,
+                  width: _dimension,
                   child: Icon(
                     icon.data,
                     color: colorScheme.onSurface,

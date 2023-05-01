@@ -779,6 +779,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  tabler_icons:
+    dependency: "direct main"
+    description:
+      name: tabler_icons
+      sha256: "66f228edf680cddf36d1879d622f789ed314fedc6f6e9101d7d1d916ed537a29"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0+1"
   term_glyph:
     dependency: transitive
     description:

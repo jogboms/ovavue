@@ -21,7 +21,7 @@ class BudgetCategoryViewModel with EquatableMixin {
       path: entity.path,
       title: entity.title,
       description: entity.description,
-      icon: BudgetCategoryIcon.values[entity.iconIndex],
+      icon: BudgetCategoryIcon.fromIndex(entity.iconIndex),
       colorScheme: BudgetCategoryColorScheme.values[entity.colorSchemeIndex],
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
