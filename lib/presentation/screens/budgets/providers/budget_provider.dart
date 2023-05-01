@@ -36,7 +36,7 @@ BudgetProvider budget(BudgetRef ref) {
 
             return previousValue
               ..putIfAbsent(
-                ReferenceEntity(id: element.id, path: element.path),
+                (id: element.id, path: element.path),
                 () => amount,
               );
           },

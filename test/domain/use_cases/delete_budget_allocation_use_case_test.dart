@@ -13,7 +13,7 @@ void main() {
     );
 
     setUpAll(() {
-      registerFallbackValue(const ReferenceEntity(id: '1', path: 'path'));
+      registerFallbackValue(const (id: '1', path: 'path'));
     });
 
     tearDown(() {

@@ -163,8 +163,8 @@ class BudgetDetailDataView extends StatelessWidget {
     await ref.read(budgetPlanProvider).createAllocation(
           CreateBudgetAllocationData(
             amount: result.amount.rawValue,
-            budget: ReferenceEntity(id: budget.id, path: budget.path),
-            plan: ReferenceEntity(id: result.plan.id, path: result.plan.path),
+            budget: (id: budget.id, path: budget.path),
+            plan: (id: result.plan.id, path: result.plan.path),
           ),
         );
   }

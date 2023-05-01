@@ -64,7 +64,7 @@ BudgetState _deriveState(
     }),
     allocation: allocationByCategory.values.sum.asMoney,
     categories: categories.sorted(
-      (SelectedBudgetCategoryViewModel a, SelectedBudgetCategoryViewModel b) => b.allocation.compareTo(a.allocation),
+      (SelectedBudgetCategoryViewModel a, SelectedBudgetCategoryViewModel b) => b.$2.compareTo(a.$2),
     ),
   );
 }

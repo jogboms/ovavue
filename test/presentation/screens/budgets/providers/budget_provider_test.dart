@@ -106,7 +106,7 @@ Future<void> main() async {
         when(mockFetchActiveBudgetPath.call).thenAnswer((_) async => 'path');
         when(() => mockFetchBudgetAllocations.call('1')).thenAnswer(
           (_) async => <ReferenceEntity, int>{
-            const ReferenceEntity(id: '2', path: 'path'): 1,
+            const (id: '2', path: 'path'): 1,
           },
         );
         when(
@@ -144,7 +144,7 @@ Future<void> main() async {
             budget: createBudgetData,
             activeBudgetPath: 'path',
             allocations: <ReferenceEntity, int>{
-              const ReferenceEntity(id: '2', path: 'path'): 1,
+              const (id: '2', path: 'path'): 1,
             },
           ),
         ).called(1);

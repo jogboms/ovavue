@@ -13,7 +13,7 @@ void main() {
       analytics: analytics,
     );
 
-    const ReferenceEntity dummyReference = ReferenceEntity(id: '1', path: 'path');
+    const ReferenceEntity dummyReference = (id: '1', path: 'path');
     final CreateBudgetData dummyData = CreateBudgetData(
       index: 1,
       title: 'title',
@@ -73,7 +73,7 @@ void main() {
           budget: dummyData,
           activeBudgetPath: null,
           allocations: <ReferenceEntity, int>{
-            const ReferenceEntity(id: '2', path: 'path'): 1,
+            const (id: '2', path: 'path'): 1,
           },
         ),
         completion('1'),
@@ -86,7 +86,7 @@ void main() {
             const CreateBudgetAllocationData(
               amount: 1,
               budget: dummyReference,
-              plan: ReferenceEntity(id: '2', path: 'path'),
+              plan: (id: '2', path: 'path'),
             )
           ],
         ),

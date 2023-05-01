@@ -28,10 +28,7 @@ Future<String?> createBudgetPlanAction({
         CreateBudgetPlanData(
           title: result.title,
           description: result.description,
-          category: ReferenceEntity(
-            id: result.category.id,
-            path: result.category.path,
-          ),
+          category: (id: result.category.id, path: result.category.path),
         ),
       );
   if (navigateOnComplete) {

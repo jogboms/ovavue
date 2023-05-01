@@ -90,7 +90,7 @@ class BudgetsMockImpl implements BudgetsRepository {
       updatedAt: null,
     );
     _budgets$.add(_budgets..putIfAbsent(id, () => newItem));
-    return ReferenceEntity(id: id, path: path);
+    return (id: id, path: path);
   }
 
   @override
