@@ -47,17 +47,16 @@ BudgetState _deriveState(
               allocationByCategory[category.id]?.asMoney ?? Money.zero,
             ),
           );
-  final Map<String, SelectedBudgetCategoryViewModel> categoriesById = categories.foldToMap((_) => _.id);
-  final Iterable<SelectedBudgetPlanViewModel> plans = budgetPlans.map(
-    (BudgetPlanEntity plan) => plan.toViewModel(
-      allocation: allocationByPlan[plan.id]?.toViewModel(),
-      category: categoriesById[plan.category.id]!,
+  final Iterable<BudgetPlanViewModel> plans = budgetPlans.map(
+    (BudgetPlanEntity plan) => BudgetPlanViewModel.fromEntity(
+      plan,
+      allocationByPlan[plan.id]?.toViewModel(),
     ),
   );
 
   return BudgetState(
     budget: BudgetViewModel.fromEntity(budget),
-    plans: plans.sorted((SelectedBudgetPlanViewModel a, SelectedBudgetPlanViewModel b) {
+    plans: plans.sorted((BudgetPlanViewModel a, BudgetPlanViewModel b) {
       final Money moneyA = a.allocation?.amount ?? Money.zero;
       final Money moneyB = b.allocation?.amount ?? Money.zero;
 
@@ -65,7 +64,7 @@ BudgetState _deriveState(
     }),
     allocation: allocationByCategory.values.sum.asMoney,
     categories: categories.sorted(
-      (SelectedBudgetCategoryViewModel a, SelectedBudgetCategoryViewModel b) => b.allocation.compareTo(a.allocation),
+      (SelectedBudgetCategoryViewModel a, SelectedBudgetCategoryViewModel b) => b.$2.compareTo(a.$2),
     ),
   );
 }

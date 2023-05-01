@@ -59,7 +59,7 @@ Future<void> main() async {
         const CreateBudgetPlanData(
           title: 'title',
           description: 'description',
-          category: ReferenceEntity(id: 'id', path: 'path'),
+          category: (id: 'id', path: 'path'),
         ),
       );
 
@@ -75,7 +75,7 @@ Future<void> main() async {
         const CreateBudgetPlanData createBudgetPlanData = CreateBudgetPlanData(
           title: 'title',
           description: 'description',
-          category: ReferenceEntity(id: 'id', path: 'path'),
+          category: (id: 'id', path: 'path'),
         );
         final String budgetPlanId = await createProvider().create(createBudgetPlanData);
 
@@ -124,6 +124,7 @@ Future<void> main() async {
           path: 'path',
           title: 'title',
           description: 'description',
+          allocation: null,
           category: expectedCategory,
           createdAt: DateTime(0),
           updatedAt: DateTime(0),
@@ -182,8 +183,8 @@ Future<void> main() async {
 
         const CreateBudgetAllocationData createBudgetAllocationData = CreateBudgetAllocationData(
           amount: 1,
-          budget: ReferenceEntity(id: 'id', path: 'path'),
-          plan: ReferenceEntity(id: 'id', path: 'path'),
+          budget: (id: 'id', path: 'path'),
+          plan: (id: 'id', path: 'path'),
         );
         final String budgetPlanId = await createProvider().createAllocation(createBudgetAllocationData);
 

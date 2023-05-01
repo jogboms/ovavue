@@ -42,5 +42,5 @@ typedef BudgetEntityReferenceList = List<BudgetReferenceEntity>;
 typedef BudgetEntityList = List<BudgetEntity>;
 
 extension BudgetEntityExtension<T> on BaseBudgetEntity<T> {
-  ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
+  ReferenceEntity get reference => (id: id, path: path);
 }

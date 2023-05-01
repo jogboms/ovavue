@@ -22,7 +22,7 @@ Future<void> main() async {
               (_) => Stream<BudgetState>.value(
                 BudgetState(
                   budget: BudgetViewModel.fromEntity(budget),
-                  plans: <SelectedBudgetPlanViewModel>[],
+                  plans: <BudgetPlanViewModel>[],
                   allocation: Money.zero,
                   categories: <SelectedBudgetCategoryViewModel>[],
                 ),
@@ -43,7 +43,7 @@ Future<void> main() async {
         completion(
           BudgetState(
             budget: BudgetViewModel.fromEntity(expectedBudget),
-            plans: <SelectedBudgetPlanViewModel>[],
+            plans: <BudgetPlanViewModel>[],
             allocation: Money.zero,
             categories: <SelectedBudgetCategoryViewModel>[],
           ),

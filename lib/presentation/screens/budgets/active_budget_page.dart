@@ -22,12 +22,9 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
     return Scaffold(
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(activeBudgetProvider).when(
-              data: (BaseBudgetState state) {
-                if (state is BudgetState) {
-                  return BudgetDetailDataView(key: dataViewKey, state: state);
-                }
-
-                return _EmptyBudgetView(ref: ref);
+              data: (BaseBudgetState state) => switch (state) {
+                BudgetState() => BudgetDetailDataView(key: dataViewKey, state: state),
+                EmptyBudgetState() => _EmptyBudgetView(ref: ref),
               },
               error: ErrorView.new,
               loading: () => child!,

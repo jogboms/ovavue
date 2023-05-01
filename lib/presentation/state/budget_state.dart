@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../models.dart';
 import '../utils.dart';
 
-abstract class BaseBudgetState {
+sealed class BaseBudgetState {
   static const BaseBudgetState empty = EmptyBudgetState();
 }
 
@@ -16,7 +16,7 @@ class BudgetState with EquatableMixin implements BaseBudgetState {
   });
 
   final BudgetViewModel budget;
-  final List<SelectedBudgetPlanViewModel> plans;
+  final List<BudgetPlanViewModel> plans;
   final Money allocation;
   final List<SelectedBudgetCategoryViewModel> categories;
 

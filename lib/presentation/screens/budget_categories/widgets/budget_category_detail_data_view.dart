@@ -172,7 +172,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
       return;
     }
 
-    final bool successful = await ref.read(budgetCategoryProvider).delete(id: category.id, path: category.path);
+    final bool successful = await ref.read(budgetCategoryProvider).delete((id: category.id, path: category.path));
     if (successful) {
       snackBar.success(l10n.successfulMessage);
       if (dismissOnComplete) {

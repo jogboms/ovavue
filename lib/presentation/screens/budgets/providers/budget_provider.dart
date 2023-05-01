@@ -17,18 +17,18 @@ BudgetProvider budget(BudgetRef ref) {
   return BudgetProvider(
     fetchUser: () => ref.read(userProvider.future),
     fetchActiveBudgetPath: () => ref.read(
-      activeBudgetProvider.selectAsync((BaseBudgetState state) {
-        if (state is BudgetState) {
-          return state.budget.path;
-        }
-        return null;
-      }),
+      activeBudgetProvider.selectAsync(
+        (BaseBudgetState state) => switch (state) {
+          BudgetState() => state.budget.path,
+          EmptyBudgetState() => null,
+        },
+      ),
     ),
     fetchBudgetAllocations: (String id) => ref.read(
       selectedBudgetProvider(id).selectAsync(
         (BudgetState data) => data.plans.fold(
           <ReferenceEntity, int>{},
-          (PlanToAllocationMap previousValue, SelectedBudgetPlanViewModel element) {
+          (PlanToAllocationMap previousValue, BudgetPlanViewModel element) {
             final int? amount = element.allocation?.amount.rawValue;
             if (amount == null) {
               return previousValue;
@@ -36,7 +36,7 @@ BudgetProvider budget(BudgetRef ref) {
 
             return previousValue
               ..putIfAbsent(
-                ReferenceEntity(id: element.id, path: element.path),
+                (id: element.id, path: element.path),
                 () => amount,
               );
           },

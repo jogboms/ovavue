@@ -122,7 +122,7 @@ class BudgetDetailDataView extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverSeparatorBuilderDelegate(
                 builder: (BuildContext context, int index) {
-                  final SelectedBudgetPlanViewModel plan = state.plans[index];
+                  final BudgetPlanViewModel plan = state.plans[index];
 
                   return _PlanTile(
                     key: Key(plan.id),
@@ -147,7 +147,7 @@ class BudgetDetailDataView extends StatelessWidget {
     BuildContext context, {
     required WidgetRef ref,
     required BudgetViewModel budget,
-    required List<SelectedBudgetPlanViewModel> plans,
+    required List<BudgetPlanViewModel> plans,
   }) async {
     final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
       context: context,
@@ -163,8 +163,8 @@ class BudgetDetailDataView extends StatelessWidget {
     await ref.read(budgetPlanProvider).createAllocation(
           CreateBudgetAllocationData(
             amount: result.amount.rawValue,
-            budget: ReferenceEntity(id: budget.id, path: budget.path),
-            plan: ReferenceEntity(id: result.plan.id, path: result.plan.path),
+            budget: (id: budget.id, path: budget.path),
+            plan: (id: result.plan.id, path: result.plan.path),
           ),
         );
   }
@@ -311,9 +311,10 @@ class _CategoryViewState extends State<_CategoryView> {
                   sectionsSpace: _innerPieChartRadius / 4,
                   centerSpaceRadius: _innerPieChartRadius,
                   sections: <PieChartSectionData>[
-                    for (final SelectedBudgetCategoryViewModel category in widget.categories)
+                    // ignore: prefer_final_locals, false positive
+                    for (final (BudgetCategoryViewModel category, Money allocation) in widget.categories)
                       _derivePieSectionData(
-                        amount: category.allocation,
+                        amount: allocation,
                         colorScheme: category.colorScheme,
                         icon: category.icon.data,
                       ),
@@ -335,12 +336,13 @@ class _CategoryViewState extends State<_CategoryView> {
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: <Widget>[
-                  for (final SelectedBudgetCategoryViewModel category in widget.categories)
+                  // ignore: prefer_final_locals, false positive
+                  for (final (BudgetCategoryViewModel category, Money allocation) in widget.categories)
                     _CategoryChip(
                       key: Key(category.id),
                       title: category.title,
                       icon: category.icon.data,
-                      allocationAmount: category.allocation,
+                      allocationAmount: allocation,
                       backgroundColor: category.colorScheme.background,
                       foregroundColor: category.colorScheme.foreground,
                       budgetAmount: widget.budgetAmount,
@@ -464,7 +466,7 @@ class _PlanTile extends StatelessWidget {
     required this.onPressed,
   });
 
-  final SelectedBudgetPlanViewModel plan;
+  final BudgetPlanViewModel plan;
   final Money budgetAmount;
   final VoidCallback onPressed;
 

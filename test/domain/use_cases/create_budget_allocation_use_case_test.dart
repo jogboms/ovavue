@@ -14,8 +14,8 @@ void main() {
 
     const CreateBudgetAllocationData dummyData = CreateBudgetAllocationData(
       amount: 1,
-      budget: ReferenceEntity(id: '1', path: 'path'),
-      plan: ReferenceEntity(id: '1', path: 'path'),
+      budget: (id: '1', path: 'path'),
+      plan: (id: '1', path: 'path'),
     );
 
     setUpAll(() {

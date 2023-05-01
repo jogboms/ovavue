@@ -60,8 +60,7 @@ class _ContentDataView extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
 
-    final Map<String, List<SelectedBudgetPlanViewModel>> plansByCategory =
-        state.plans.groupListsBy((_) => _.category.id);
+    final Map<String, List<BudgetPlanViewModel>> plansByCategory = state.plans.groupListsBy((_) => _.category.id);
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -79,13 +78,15 @@ class _ContentDataView extends StatelessWidget {
           asSliver: true,
           centerTitle: true,
         ),
-        for (final SelectedBudgetCategoryViewModel category in state.categories)
+        // ignore: prefer_final_locals, false positive
+        for (final (BudgetCategoryViewModel category, Money allocation) in state.categories)
           SliverPadding(
             padding: const EdgeInsets.only(top: 4),
             sliver: _SliverPlansGroup(
               key: Key(category.id),
               budget: state.budget,
               category: category,
+              allocationAmount: allocation,
               plans: plansByCategory[category.id]!,
               expanded: expandAllGroups,
             ),
@@ -100,13 +101,15 @@ class _SliverPlansGroup extends StatefulWidget {
     super.key,
     required this.budget,
     required this.category,
+    required this.allocationAmount,
     required this.plans,
     required this.expanded,
   });
 
   final BudgetViewModel budget;
-  final SelectedBudgetCategoryViewModel category;
-  final List<SelectedBudgetPlanViewModel> plans;
+  final BudgetCategoryViewModel category;
+  final Money allocationAmount;
+  final List<BudgetPlanViewModel> plans;
   final bool expanded;
 
   @override
@@ -137,7 +140,11 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: <Widget>[
-                _Header(key: Key(widget.category.id), category: widget.category),
+                _Header(
+                  key: Key(widget.category.id),
+                  category: widget.category,
+                  allocationAmount: widget.allocationAmount,
+                ),
                 AnimatedRotation(
                   turns: _expanded ? 0 : 0.5,
                   duration: kThemeChangeDuration,
@@ -155,12 +162,12 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
               sliver: SliverList(
                 delegate: SliverSeparatorBuilderDelegate(
                   builder: (BuildContext context, int index) {
-                    final SelectedBudgetPlanViewModel plan = widget.plans[index];
+                    final BudgetPlanViewModel plan = widget.plans[index];
 
                     return _PlanTile(
                       key: Key(plan.id),
                       plan: plan,
-                      categoryAllocationAmount: widget.category.allocation,
+                      categoryAllocationAmount: widget.allocationAmount,
                       onPressed: () => context.router.goToBudgetPlanDetail(
                         id: plan.id,
                         budgetId: widget.budget.id,
@@ -178,9 +185,10 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({super.key, required this.category});
+  const _Header({super.key, required this.category, required this.allocationAmount});
 
-  final SelectedBudgetCategoryViewModel category;
+  final BudgetCategoryViewModel category;
+  final Money allocationAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +207,7 @@ class _Header extends StatelessWidget {
             children: <Widget>[
               Text(category.title.sentence(), style: textTheme.bodyMedium, maxLines: 1),
               const SizedBox(height: 2.0),
-              Text('${category.allocation}', style: textTheme.titleMedium),
+              Text('$allocationAmount', style: textTheme.titleMedium),
             ],
           ),
         ],
@@ -216,7 +224,7 @@ class _PlanTile extends StatelessWidget {
     required this.onPressed,
   });
 
-  final SelectedBudgetPlanViewModel plan;
+  final BudgetPlanViewModel plan;
   final Money categoryAllocationAmount;
   final VoidCallback onPressed;
 

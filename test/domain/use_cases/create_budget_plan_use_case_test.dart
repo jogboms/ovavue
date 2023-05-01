@@ -15,7 +15,7 @@ void main() {
     const CreateBudgetPlanData dummyData = CreateBudgetPlanData(
       title: 'title',
       description: 'description',
-      category: ReferenceEntity(id: '1', path: 'path'),
+      category: (id: '1', path: 'path'),
     );
 
     setUpAll(() {

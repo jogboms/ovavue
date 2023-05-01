@@ -28,7 +28,7 @@ class BudgetCategoryEntity with EquatableMixin {
 }
 
 extension BudgetCategoryReferenceEntityExtension on BudgetCategoryEntity {
-  ReferenceEntity get reference => ReferenceEntity(id: id, path: path);
+  ReferenceEntity get reference => (id: id, path: path);
 }
 
 typedef BudgetCategoryEntityList = List<BudgetCategoryEntity>;

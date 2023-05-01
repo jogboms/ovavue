@@ -245,8 +245,8 @@ class _ContentDataView extends StatelessWidget {
       await provider.createAllocation(
         CreateBudgetAllocationData(
           amount: result.amount.rawValue,
-          budget: ReferenceEntity(id: budget.id, path: budget.path),
-          plan: ReferenceEntity(id: plan.id, path: plan.path),
+          budget: (id: budget.id, path: budget.path),
+          plan: (id: plan.id, path: plan.path),
         ),
       );
     } else {
