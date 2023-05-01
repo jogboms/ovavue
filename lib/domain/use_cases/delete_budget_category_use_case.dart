@@ -1,5 +1,6 @@
 import '../analytics/analytics.dart';
 import '../analytics/analytics_event.dart';
+import '../entities/reference_entity.dart';
 import '../repositories/budget_categories.dart';
 
 class DeleteBudgetCategoryUseCase {
@@ -12,11 +13,8 @@ class DeleteBudgetCategoryUseCase {
   final BudgetCategoriesRepository _categories;
   final Analytics _analytics;
 
-  Future<bool> call({
-    required String id,
-    required String path,
-  }) {
-    _analytics.log(AnalyticsEvent.deleteBudgetCategory(path)).ignore();
-    return _categories.delete(id: id, path: path);
+  Future<bool> call(ReferenceEntity reference) {
+    _analytics.log(AnalyticsEvent.deleteBudgetCategory(reference.path)).ignore();
+    return _categories.delete(reference);
   }
 }

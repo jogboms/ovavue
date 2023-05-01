@@ -65,11 +65,8 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
   }
 
   @override
-  Future<bool> delete({
-    required String id,
-    required String path,
-  }) async {
-    final String id = _categories.values.firstWhere((BudgetCategoryEntity element) => element.path == path).id;
+  Future<bool> delete(ReferenceEntity reference) async {
+    final String id = _categories.values.firstWhere((_) => _.path == reference.path).id;
     _categories$.add(_categories..remove(id));
     return true;
   }
