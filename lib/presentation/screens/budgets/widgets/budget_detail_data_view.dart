@@ -311,9 +311,10 @@ class _CategoryViewState extends State<_CategoryView> {
                   sectionsSpace: _innerPieChartRadius / 4,
                   centerSpaceRadius: _innerPieChartRadius,
                   sections: <PieChartSectionData>[
-                    for (final SelectedBudgetCategoryViewModel category in widget.categories)
+                    // ignore: prefer_final_locals, false positive
+                    for (final (BudgetCategoryViewModel category, Money allocation) in widget.categories)
                       _derivePieSectionData(
-                        amount: category.allocation,
+                        amount: allocation,
                         colorScheme: category.colorScheme,
                         icon: category.icon.data,
                       ),
@@ -335,12 +336,13 @@ class _CategoryViewState extends State<_CategoryView> {
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: <Widget>[
-                  for (final SelectedBudgetCategoryViewModel category in widget.categories)
+                  // ignore: prefer_final_locals, false positive
+                  for (final (BudgetCategoryViewModel category, Money allocation) in widget.categories)
                     _CategoryChip(
                       key: Key(category.id),
                       title: category.title,
                       icon: category.icon.data,
-                      allocationAmount: category.allocation,
+                      allocationAmount: allocation,
                       backgroundColor: category.colorScheme.background,
                       foregroundColor: category.colorScheme.foreground,
                       budgetAmount: widget.budgetAmount,
