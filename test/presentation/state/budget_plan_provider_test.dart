@@ -124,6 +124,7 @@ Future<void> main() async {
           path: 'path',
           title: 'title',
           description: 'description',
+          allocation: null,
           category: expectedCategory,
           createdAt: DateTime(0),
           updatedAt: DateTime(0),

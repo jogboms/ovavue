@@ -122,7 +122,7 @@ class BudgetDetailDataView extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverSeparatorBuilderDelegate(
                 builder: (BuildContext context, int index) {
-                  final SelectedBudgetPlanViewModel plan = state.plans[index];
+                  final BudgetPlanViewModel plan = state.plans[index];
 
                   return _PlanTile(
                     key: Key(plan.id),
@@ -147,7 +147,7 @@ class BudgetDetailDataView extends StatelessWidget {
     BuildContext context, {
     required WidgetRef ref,
     required BudgetViewModel budget,
-    required List<SelectedBudgetPlanViewModel> plans,
+    required List<BudgetPlanViewModel> plans,
   }) async {
     final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
       context: context,
@@ -464,7 +464,7 @@ class _PlanTile extends StatelessWidget {
     required this.onPressed,
   });
 
-  final SelectedBudgetPlanViewModel plan;
+  final BudgetPlanViewModel plan;
   final Money budgetAmount;
   final VoidCallback onPressed;
 

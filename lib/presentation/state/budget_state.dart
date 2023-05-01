@@ -16,7 +16,7 @@ class BudgetState with EquatableMixin implements BaseBudgetState {
   });
 
   final BudgetViewModel budget;
-  final List<SelectedBudgetPlanViewModel> plans;
+  final List<BudgetPlanViewModel> plans;
   final Money allocation;
   final List<SelectedBudgetCategoryViewModel> categories;
 

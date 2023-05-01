@@ -45,13 +45,13 @@ Future<void> main() async {
             .call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')),
       ).thenAnswer((_) => Stream<BudgetAllocationEntityList>.value(expectedBudgetAllocations));
 
-      final List<SelectedBudgetPlanViewModel> expectedPlanViewModels = expectedPlans
+      final List<BudgetPlanViewModel> expectedPlanViewModels = expectedPlans
           .map(
-            (BudgetPlanEntity plan) => plan.toViewModel(
-              allocation: expectedBudgetAllocations
+            (BudgetPlanEntity plan) => BudgetPlanViewModel.fromEntity(
+              plan,
+              expectedBudgetAllocations
                   .firstWhereOrNull((_) => _.plan.id == plan.id && _.budget.id == expectedBudget.id)
                   ?.toViewModel(),
-              category: plan.category.toViewModel(expectedBudgetAllocations.first.amount.asMoney),
             ),
           )
           .toList();

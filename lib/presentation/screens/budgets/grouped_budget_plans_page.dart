@@ -60,8 +60,7 @@ class _ContentDataView extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
 
-    final Map<String, List<SelectedBudgetPlanViewModel>> plansByCategory =
-        state.plans.groupListsBy((_) => _.category.id);
+    final Map<String, List<BudgetPlanViewModel>> plansByCategory = state.plans.groupListsBy((_) => _.category.id);
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -106,7 +105,7 @@ class _SliverPlansGroup extends StatefulWidget {
 
   final BudgetViewModel budget;
   final SelectedBudgetCategoryViewModel category;
-  final List<SelectedBudgetPlanViewModel> plans;
+  final List<BudgetPlanViewModel> plans;
   final bool expanded;
 
   @override
@@ -155,7 +154,7 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
               sliver: SliverList(
                 delegate: SliverSeparatorBuilderDelegate(
                   builder: (BuildContext context, int index) {
-                    final SelectedBudgetPlanViewModel plan = widget.plans[index];
+                    final BudgetPlanViewModel plan = widget.plans[index];
 
                     return _PlanTile(
                       key: Key(plan.id),
@@ -216,7 +215,7 @@ class _PlanTile extends StatelessWidget {
     required this.onPressed,
   });
 
-  final SelectedBudgetPlanViewModel plan;
+  final BudgetPlanViewModel plan;
   final Money categoryAllocationAmount;
   final VoidCallback onPressed;
 

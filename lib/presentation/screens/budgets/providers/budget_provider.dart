@@ -28,7 +28,7 @@ BudgetProvider budget(BudgetRef ref) {
       selectedBudgetProvider(id).selectAsync(
         (BudgetState data) => data.plans.fold(
           <ReferenceEntity, int>{},
-          (PlanToAllocationMap previousValue, SelectedBudgetPlanViewModel element) {
+          (PlanToAllocationMap previousValue, BudgetPlanViewModel element) {
             final int? amount = element.allocation?.amount.rawValue;
             if (amount == null) {
               return previousValue;
