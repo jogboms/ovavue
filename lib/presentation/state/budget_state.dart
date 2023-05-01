@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../models.dart';
 import '../utils.dart';
 
-abstract class BaseBudgetState {
+sealed class BaseBudgetState {
   static const BaseBudgetState empty = EmptyBudgetState();
 }
 
