@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
+import '../../constants/app_icons.dart';
 import '../../models.dart';
 import '../../routing.dart';
 import '../../state.dart';
@@ -42,7 +43,7 @@ class _GroupedBudgetPlansPageState extends State<GroupedBudgetPlansPage> {
         child: const LoadingView(),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.legend_toggle_outlined),
+        child: const Icon(AppIcons.toggleAll),
         onPressed: () => setState(() => _expandAllGroups = !_expandAllGroups),
       ),
     );
@@ -148,7 +149,7 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
                 AnimatedRotation(
                   turns: _expanded ? 0 : 0.5,
                   duration: kThemeChangeDuration,
-                  child: const Icon(Icons.arrow_drop_down),
+                  child: const Icon(AppIcons.arrowDropDown),
                 ),
               ],
             ),

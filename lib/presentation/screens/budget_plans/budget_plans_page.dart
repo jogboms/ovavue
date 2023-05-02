@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../constants/app_icons.dart';
 import '../../models.dart';
 import '../../routing.dart';
 import '../../state.dart';
@@ -48,6 +49,7 @@ class _ContentDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -63,7 +65,7 @@ class _ContentDataView extends StatelessWidget {
               alignment: Alignment.center,
               actions: <ActionButton>[
                 ActionButton(
-                  icon: Icons.add,
+                  icon: AppIcons.plus,
                   onPressed: () => createBudgetPlanAction(
                     context: context,
                     ref: ref,
@@ -100,9 +102,9 @@ class _ContentDataView extends StatelessWidget {
                               plan: plan,
                               dismissOnComplete: false,
                             ),
-                            backgroundColor: const Color(0xFFFE4A49),
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete,
+                            backgroundColor: colorScheme.error,
+                            foregroundColor: colorScheme.onError,
+                            icon: AppIcons.delete,
                             label: context.l10n.deleteLabel,
                           ),
                         ],

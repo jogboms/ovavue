@@ -109,13 +109,13 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                 ],
                 TextFormField(
                   controller: _titleController,
-                  decoration: InputDecoration(labelText: l10n.titleLabel),
+                  decoration: InputDecoration(hintText: l10n.titleLabel),
                 ),
                 spacing,
                 TextFormField(
                   controller: _amountController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(labelText: l10n.amountLabel),
+                  decoration: InputDecoration(hintText: l10n.amountLabel),
                   keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
                   textInputAction: TextInputAction.done,
                   inputFormatters: <TextInputFormatter>[
@@ -128,13 +128,13 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 2,
-                  decoration: InputDecoration(labelText: l10n.descriptionLabel),
+                  decoration: InputDecoration(hintText: l10n.descriptionLabel),
                 ),
                 if (creating) ...<Widget>[
                   spacing,
                   DatePickerField(
                     initialValue: clock.now(),
-                    labelText: l10n.startDateLabel,
+                    hintText: l10n.startDateLabel,
                     onChanged: (DateTime date) => setState(() => _startedAt = date),
                   ),
                   spacing,

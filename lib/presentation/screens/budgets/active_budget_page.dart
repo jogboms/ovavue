@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/presentation.dart';
 
+import '../../constants/app_icons.dart';
 import 'utils/create_budget_action.dart';
 import 'widgets/budget_detail_data_view.dart';
 
@@ -33,7 +34,7 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
         child: const LoadingView(),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.menu),
+        child: const Icon(AppIcons.menu),
         onPressed: () async {
           late final AppRouter router = context.router;
           final _BottomSheetChoice? result = await showModalBottomSheet<_BottomSheetChoice>(
@@ -78,7 +79,7 @@ class _EmptyBudgetView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Icon(
-            Icons.add_circle_outline,
+            AppIcons.addBudget,
             size: 32,
             color: theme.colorScheme.secondary,
           ),
@@ -100,10 +101,14 @@ class _EmptyBudgetView extends StatelessWidget {
 }
 
 enum _BottomSheetChoice {
-  budgets,
-  plans,
-  categories,
-  settings,
+  budgets(AppIcons.budget),
+  plans(AppIcons.plans),
+  categories(AppIcons.categories),
+  settings(AppIcons.settings);
+
+  const _BottomSheetChoice(this._icon);
+
+  final IconData _icon;
 }
 
 class _BottomSheetOptions extends StatelessWidget {
@@ -111,19 +116,39 @@ class _BottomSheetOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = context.theme;
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Padding(
-      padding: const EdgeInsets.all(8.0).copyWith(
-        bottom: MediaQuery.paddingOf(context).bottom,
+      padding: EdgeInsets.fromLTRB(
+        8.0,
+        12.0,
+        8.0,
+        MediaQuery.paddingOf(context).bottom + 8.0,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Row(
         children: <Widget>[
           for (final _BottomSheetChoice choice in _BottomSheetChoice.values)
-            ListTile(
+            Expanded(
               key: Key(choice.name),
-              onTap: () => Navigator.of(context).pop(choice),
-              title: Text(choice.name.capitalize(), textAlign: TextAlign.center),
+              child: InkWell(
+                onTap: () => Navigator.of(context).pop(choice),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(choice._icon),
+                    const SizedBox(height: 4),
+                    Text(
+                      choice.name.capitalize(),
+                      textAlign: TextAlign.center,
+                      style: textTheme.labelLarge?.copyWith(
+                        color: colorScheme.outline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
         ],
       ),

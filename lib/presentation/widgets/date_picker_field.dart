@@ -8,7 +8,7 @@ class DatePickerField extends FormField<DateTime> {
     super.key,
     required super.initialValue,
     required this.onChanged,
-    String? labelText,
+    String? hintText,
     String? selectButtonText,
   }) : super(
           builder: (FormFieldState<DateTime> fieldState) {
@@ -19,7 +19,7 @@ class DatePickerField extends FormField<DateTime> {
 
             return InputDecorator(
               decoration: InputDecoration(
-                labelText: labelText ?? materialL10n.dateInputLabel,
+                hintText: hintText ?? materialL10n.dateInputLabel,
               ),
               child: Row(
                 children: <Widget>[

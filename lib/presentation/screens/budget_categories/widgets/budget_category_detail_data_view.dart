@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
 
+import '../../../constants/app_icons.dart';
 import '../../../models.dart';
 import '../../../routing.dart';
 import '../../../state.dart';
@@ -50,7 +51,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                   builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
                     actions: <ActionButton>[
                       ActionButton(
-                        icon: Icons.add_moderator_outlined, // TODO(Jogboms): fix icon
+                        icon: AppIcons.addPlan,
                         backgroundColor: foregroundColor,
                         foregroundColor: backgroundColor,
                         onPressed: () => _handlePlanAdditionAction(
@@ -61,7 +62,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                         ),
                       ),
                       ActionButton(
-                        icon: Icons.edit,
+                        icon: AppIcons.edit,
                         backgroundColor: foregroundColor,
                         foregroundColor: backgroundColor,
                         onPressed: () => _handleCategoryUpdateAction(
@@ -72,7 +73,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                       ),
                       if (state.plans.isEmpty)
                         ActionButton.outline(
-                          icon: Icons.delete,
+                          icon: AppIcons.delete,
                           borderColor: foregroundColor,
                           onPressed: () => _handleCategoryDeletionAction(
                             context,
