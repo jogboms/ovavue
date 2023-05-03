@@ -23,6 +23,8 @@ class BudgetDetailDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final AppRouter router = context.router;
+
     final bool active = state.budget.endedAt == null;
 
     return CustomScrollView(
@@ -43,14 +45,15 @@ class BudgetDetailDataView extends StatelessWidget {
                   categories: state.categories,
                   budgetAmount: state.budget.amount,
                   allocationAmount: state.allocation,
-                  onPressed: (String id) => context.router.goToBudgetCategoryDetailForBudget(
+                  onPressed: (String id) => router.goToBudgetCategoryDetailForBudget(
                     id: id,
                     budgetId: state.budget.id,
                   ),
-                  onExpand: () => context.router.goToGroupedBudgetPlans(
+                  onExpand: () => router.goToGroupedBudgetPlans(
                     budgetId: state.budget.id,
                   ),
                 ),
+                const SizedBox(height: 8),
               ],
             ),
           ),
@@ -59,7 +62,7 @@ class BudgetDetailDataView extends StatelessWidget {
           child: Consumer(
             builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
               alignment: Alignment.center,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: theme.scaffoldBackgroundColor,
               actions: <ActionButton>[
                 if (active) ...<ActionButton>[
                   ActionButton(
@@ -108,6 +111,7 @@ class BudgetDetailDataView extends StatelessWidget {
             ),
           ),
         ),
+        const SliverToBoxAdapter(child: SizedBox(height: 8)),
         SliverPinnedTitleCountHeader(
           title: context.l10n.associatedPlansTitle,
           count: state.plans.length,
@@ -129,7 +133,7 @@ class BudgetDetailDataView extends StatelessWidget {
                     key: Key(plan.id),
                     plan: plan,
                     budgetAmount: state.budget.amount,
-                    onPressed: () => context.router.goToBudgetPlanDetail(
+                    onPressed: () => router.goToBudgetPlanDetail(
                       id: plan.id,
                       budgetId: state.budget.id,
                     ),
@@ -230,7 +234,7 @@ class _AppBarText extends StatelessWidget {
           budget.title.sentence(),
           style: textTheme.headlineSmall?.copyWith(fontWeight: AppFontWeight.semibold),
         ),
-        BudgetDurationText(
+        BudgetDurationText.medium(
           startedAt: budget.startedAt,
           endedAt: budget.endedAt,
         ),

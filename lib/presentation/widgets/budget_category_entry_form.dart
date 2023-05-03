@@ -55,7 +55,10 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
             TextFormField(
               controller: _titleController,
               maxLength: kTitleMaxCharacterLength,
-              decoration: InputDecoration(hintText: l10n.titleLabel),
+              decoration: InputDecoration(
+                hintText: l10n.titleLabel,
+                prefixIcon: const Icon(AppIcons.title),
+              ),
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.next,
               validator: (String? value) =>
@@ -66,7 +69,10 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
               controller: _descriptionController,
               maxLines: 2,
               maxLength: kDescriptionMaxCharacterLength,
-              decoration: InputDecoration(hintText: l10n.descriptionLabel),
+              decoration: InputDecoration(
+                hintText: l10n.descriptionLabel,
+                prefixIcon: const Icon(AppIcons.description),
+              ),
               textCapitalization: TextCapitalization.sentences,
               onTapOutside: (_) => FocusScope.of(context).unfocus(),
             ),

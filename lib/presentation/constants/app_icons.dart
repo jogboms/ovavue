@@ -24,6 +24,10 @@ abstract class AppIcons {
   static const IconData arrowDown = TablerIcons.caret_down;
   static const IconData toggleAll = TablerIcons.switch_icon;
   static const IconData close = TablerIcons.x;
+  static const IconData amount = TablerIcons.premium_rights;
+  static const IconData date = TablerIcons.calendar_event;
+  static const IconData title = TablerIcons.heading;
+  static const IconData description = TablerIcons.letter_case;
 
   /// Would be great not to change the index of the icons. Append-only and/or Replace-only
   static final Map<int, IconData> categoryIcons = <IconData>{

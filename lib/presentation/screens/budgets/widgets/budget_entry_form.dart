@@ -93,6 +93,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                             value: selectedBudgetId,
                             isExpanded: true,
                             decoration: InputDecoration(
+                              prefixIcon: selectedBudgetId != null ? null : const Icon(AppIcons.budget),
                               hintText: context.l10n.selectBudgetTemplateCaption,
                             ),
                             items: <DropdownMenuItem<String>>[
@@ -111,7 +112,10 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                 TextFormField(
                   controller: _titleController,
                   maxLength: kTitleMaxCharacterLength,
-                  decoration: InputDecoration(hintText: l10n.titleLabel),
+                  decoration: InputDecoration(
+                    hintText: l10n.titleLabel,
+                    prefixIcon: const Icon(AppIcons.title),
+                  ),
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
                 ),
@@ -120,7 +124,10 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                   controller: _descriptionController,
                   maxLines: 2,
                   maxLength: kDescriptionMaxCharacterLength,
-                  decoration: InputDecoration(hintText: l10n.descriptionLabel),
+                  decoration: InputDecoration(
+                    hintText: l10n.descriptionLabel,
+                    prefixIcon: const Icon(AppIcons.description),
+                  ),
                   textCapitalization: TextCapitalization.sentences,
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
@@ -128,7 +135,10 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                 TextFormField(
                   controller: _amountController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(hintText: l10n.amountLabel),
+                  decoration: InputDecoration(
+                    hintText: l10n.amountLabel,
+                    prefixIcon: const Icon(AppIcons.amount),
+                  ),
                   keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
                   textInputAction: TextInputAction.done,
                   inputFormatters: <TextInputFormatter>[
@@ -216,6 +226,8 @@ class _BudgetItem extends StatelessWidget {
 
     return Row(
       children: <Widget>[
+        const Icon(AppIcons.budget),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             title.sentence(),

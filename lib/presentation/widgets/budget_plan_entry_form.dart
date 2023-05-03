@@ -70,7 +70,10 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                 TextFormField(
                   controller: _titleController,
                   maxLength: kTitleMaxCharacterLength,
-                  decoration: InputDecoration(hintText: l10n.titleLabel),
+                  decoration: InputDecoration(
+                    hintText: l10n.titleLabel,
+                    prefixIcon: const Icon(AppIcons.title),
+                  ),
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
                   validator: (String? value) =>
@@ -81,7 +84,10 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                   controller: _descriptionController,
                   maxLines: 2,
                   maxLength: kDescriptionMaxCharacterLength,
-                  decoration: InputDecoration(hintText: l10n.descriptionLabel),
+                  decoration: InputDecoration(
+                    hintText: l10n.descriptionLabel,
+                    prefixIcon: const Icon(AppIcons.description),
+                  ),
                   textCapitalization: TextCapitalization.sentences,
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
@@ -117,6 +123,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                                     value: selectedCategory?.id,
                                     isExpanded: true,
                                     decoration: InputDecoration(
+                                      prefixIcon: selectedCategory?.id != null ? null : const Icon(AppIcons.categories),
                                       hintText: context.l10n.selectCategoryCaption,
                                     ),
                                     items: <DropdownMenuItem<String>>[

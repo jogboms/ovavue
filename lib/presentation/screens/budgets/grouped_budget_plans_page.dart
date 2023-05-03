@@ -79,19 +79,22 @@ class _ContentDataView extends StatelessWidget {
           asSliver: true,
           centerTitle: true,
         ),
-        // ignore: prefer_final_locals, false positive
-        for (final (BudgetCategoryViewModel category, Money allocation) in state.categories)
-          SliverPadding(
-            padding: const EdgeInsets.only(top: 4),
-            sliver: _SliverPlansGroup(
-              key: Key(category.id),
-              budget: state.budget,
-              category: category,
-              allocationAmount: allocation,
-              plans: plansByCategory[category.id]!,
-              expanded: expandAllGroups,
+        if (state.categories.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          // ignore: prefer_final_locals, false positive
+          for (final (BudgetCategoryViewModel category, Money allocation) in state.categories)
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 4),
+              sliver: _SliverPlansGroup(
+                key: Key(category.id),
+                budget: state.budget,
+                category: category,
+                allocationAmount: allocation,
+                plans: plansByCategory[category.id]!,
+                expanded: expandAllGroups,
+              ),
             ),
-          ),
       ],
     );
   }
