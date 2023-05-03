@@ -149,7 +149,7 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
                 AnimatedRotation(
                   turns: _expanded ? 0 : 0.5,
                   duration: kThemeChangeDuration,
-                  child: const Icon(AppIcons.arrowDropDown),
+                  child: const Icon(AppIcons.arrowDown),
                 ),
               ],
             ),
