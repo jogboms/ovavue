@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ovavue/core.dart';
 
+import '../constants.dart';
 import '../utils.dart';
 import 'dialog_page.dart';
 import 'primary_button.dart';
@@ -53,7 +54,10 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
             spacing,
             TextFormField(
               controller: _titleController,
+              maxLength: kTitleMaxCharacterLength,
               decoration: InputDecoration(hintText: l10n.titleLabel),
+              textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.next,
               validator: (String? value) =>
                   value != null && value.length < 3 ? l10n.atLeastNCharactersErrorMessage(3) : null,
             ),
@@ -61,7 +65,10 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
             TextFormField(
               controller: _descriptionController,
               maxLines: 2,
+              maxLength: kDescriptionMaxCharacterLength,
               decoration: InputDecoration(hintText: l10n.descriptionLabel),
+              textCapitalization: TextCapitalization.sentences,
+              onTapOutside: (_) => FocusScope.of(context).unfocus(),
             ),
             spacing,
             Wrap(

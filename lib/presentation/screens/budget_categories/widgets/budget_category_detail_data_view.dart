@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
 
-import '../../../constants/app_icons.dart';
+import '../../../constants.dart';
 import '../../../models.dart';
 import '../../../routing.dart';
 import '../../../state.dart';

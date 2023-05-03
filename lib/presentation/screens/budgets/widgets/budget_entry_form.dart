@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants.dart';
 import '../../../models.dart';
 import '../../../state.dart';
 import '../../../utils.dart';
@@ -109,7 +110,19 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                 ],
                 TextFormField(
                   controller: _titleController,
+                  maxLength: kTitleMaxCharacterLength,
                   decoration: InputDecoration(hintText: l10n.titleLabel),
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                ),
+                spacing,
+                TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 2,
+                  maxLength: kDescriptionMaxCharacterLength,
+                  decoration: InputDecoration(hintText: l10n.descriptionLabel),
+                  textCapitalization: TextCapitalization.sentences,
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
                 spacing,
                 TextFormField(
@@ -124,12 +137,6 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                   validator: (String? value) =>
                       value == null || Money.parse(value) <= Money.zero ? context.l10n.nonZeroAmountErrorMessage : null,
                 ),
-                spacing,
-                TextFormField(
-                  controller: _descriptionController,
-                  maxLines: 2,
-                  decoration: InputDecoration(hintText: l10n.descriptionLabel),
-                ),
                 if (creating) ...<Widget>[
                   spacing,
                   DatePickerField(
@@ -138,11 +145,12 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                     onChanged: (DateTime date) => setState(() => _startedAt = date),
                   ),
                   spacing,
-                  SwitchListTile.adaptive(
-                    value: _activeState,
-                    onChanged: (bool state) => setState(() => _activeState = !_activeState),
-                    title: Text(l10n.makeActiveLabel),
-                  ),
+                  if (budgets.isNotEmpty)
+                    SwitchListTile.adaptive(
+                      value: _activeState,
+                      onChanged: (bool state) => setState(() => _activeState = !_activeState),
+                      title: Text(l10n.makeActiveLabel),
+                    ),
                 ],
                 spacing,
                 PrimaryButton(

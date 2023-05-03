@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants/app_icons.dart';
+import '../../constants.dart';
 import '../../models.dart';
 import '../../routing.dart';
 import '../../state.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/presentation.dart';
 
-import '../../constants/app_icons.dart';
+import '../../constants.dart';
 import 'utils/create_budget_action.dart';
 import 'widgets/budget_detail_data_view.dart';
 

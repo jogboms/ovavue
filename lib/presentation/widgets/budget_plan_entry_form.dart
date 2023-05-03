@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants/app_icons.dart';
+import '../constants.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -69,7 +69,10 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                 spacing,
                 TextFormField(
                   controller: _titleController,
+                  maxLength: kTitleMaxCharacterLength,
                   decoration: InputDecoration(hintText: l10n.titleLabel),
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
                   validator: (String? value) =>
                       value != null && value.length < 3 ? l10n.atLeastNCharactersErrorMessage(3) : null,
                 ),
@@ -77,7 +80,10 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 2,
+                  maxLength: kDescriptionMaxCharacterLength,
                   decoration: InputDecoration(hintText: l10n.descriptionLabel),
+                  textCapitalization: TextCapitalization.sentences,
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
                 spacing,
                 if (initialCategory == null && creating) ...<Widget>[
