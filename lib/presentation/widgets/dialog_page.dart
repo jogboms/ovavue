@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constants/app_icons.dart';
+import '../constants.dart';
 
 class DialogPage extends StatelessWidget {
   const DialogPage(this.builder, {super.key});

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
-import '../../constants/app_icons.dart';
+import '../../constants.dart';
 import '../../models.dart';
 import '../../routing.dart';
 import '../../state.dart';
@@ -79,19 +79,22 @@ class _ContentDataView extends StatelessWidget {
           asSliver: true,
           centerTitle: true,
         ),
-        // ignore: prefer_final_locals, false positive
-        for (final (BudgetCategoryViewModel category, Money allocation) in state.categories)
-          SliverPadding(
-            padding: const EdgeInsets.only(top: 4),
-            sliver: _SliverPlansGroup(
-              key: Key(category.id),
-              budget: state.budget,
-              category: category,
-              allocationAmount: allocation,
-              plans: plansByCategory[category.id]!,
-              expanded: expandAllGroups,
+        if (state.categories.isEmpty)
+          const SliverFillRemaining(child: EmptyView())
+        else
+          // ignore: prefer_final_locals, false positive
+          for (final (BudgetCategoryViewModel category, Money allocation) in state.categories)
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 4),
+              sliver: _SliverPlansGroup(
+                key: Key(category.id),
+                budget: state.budget,
+                category: category,
+                allocationAmount: allocation,
+                plans: plansByCategory[category.id]!,
+                expanded: expandAllGroups,
+              ),
             ),
-          ),
       ],
     );
   }
@@ -149,7 +152,7 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
                 AnimatedRotation(
                   turns: _expanded ? 0 : 0.5,
                   duration: kThemeChangeDuration,
-                  child: const Icon(AppIcons.arrowDropDown),
+                  child: const Icon(AppIcons.arrowDown),
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
 import '../utils.dart';
 
 class DatePickerField extends FormField<DateTime> {
@@ -20,6 +21,7 @@ class DatePickerField extends FormField<DateTime> {
             return InputDecorator(
               decoration: InputDecoration(
                 hintText: hintText ?? materialL10n.dateInputLabel,
+                prefixIcon: const Icon(AppIcons.date),
               ),
               child: Row(
                 children: <Widget>[

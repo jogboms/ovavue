@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants/app_icons.dart';
+import '../constants.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -51,6 +51,8 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
 
   @override
   Widget build(BuildContext context) {
+    final L10n l10n = context.l10n;
+
     final BudgetPlanViewModel? initialPlan = widget.plan;
     final BudgetPlanViewModel? selectedPlan = _selectedPlan.value;
 
@@ -115,6 +117,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                                       value: selectedPlan?.id,
                                       isExpanded: true,
                                       decoration: InputDecoration(
+                                        prefixIcon: selectedPlan?.id != null ? null : const Icon(AppIcons.plans),
                                         hintText: context.l10n.selectPlanCaption,
                                       ),
                                       items: <DropdownMenuItem<String>>[
@@ -157,6 +160,8 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                           _textAsMoney > remainderAmount ? context.l10n.notEnoughBudgetAmountErrorMessage : null,
                       decoration: InputDecoration(
                         counter: amountCounter,
+                        hintText: l10n.amountLabel,
+                        prefixIcon: const Icon(AppIcons.amount),
                       ),
                     ),
                     child: ListenableBuilder(

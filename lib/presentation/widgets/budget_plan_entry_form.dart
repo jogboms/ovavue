@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants/app_icons.dart';
+import '../constants.dart';
 import '../models.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -69,7 +69,13 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                 spacing,
                 TextFormField(
                   controller: _titleController,
-                  decoration: InputDecoration(hintText: l10n.titleLabel),
+                  maxLength: kTitleMaxCharacterLength,
+                  decoration: InputDecoration(
+                    hintText: l10n.titleLabel,
+                    prefixIcon: const Icon(AppIcons.title),
+                  ),
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
                   validator: (String? value) =>
                       value != null && value.length < 3 ? l10n.atLeastNCharactersErrorMessage(3) : null,
                 ),
@@ -77,7 +83,13 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 2,
-                  decoration: InputDecoration(hintText: l10n.descriptionLabel),
+                  maxLength: kDescriptionMaxCharacterLength,
+                  decoration: InputDecoration(
+                    hintText: l10n.descriptionLabel,
+                    prefixIcon: const Icon(AppIcons.description),
+                  ),
+                  textCapitalization: TextCapitalization.sentences,
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
                 spacing,
                 if (initialCategory == null && creating) ...<Widget>[
@@ -111,6 +123,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                                     value: selectedCategory?.id,
                                     isExpanded: true,
                                     decoration: InputDecoration(
+                                      prefixIcon: selectedCategory?.id != null ? null : const Icon(AppIcons.categories),
                                       hintText: context.l10n.selectCategoryCaption,
                                     ),
                                     items: <DropdownMenuItem<String>>[

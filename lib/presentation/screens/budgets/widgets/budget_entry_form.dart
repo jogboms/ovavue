@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants.dart';
 import '../../../models.dart';
 import '../../../state.dart';
 import '../../../utils.dart';
@@ -92,6 +93,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                             value: selectedBudgetId,
                             isExpanded: true,
                             decoration: InputDecoration(
+                              prefixIcon: selectedBudgetId != null ? null : const Icon(AppIcons.budget),
                               hintText: context.l10n.selectBudgetTemplateCaption,
                             ),
                             items: <DropdownMenuItem<String>>[
@@ -109,13 +111,34 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                 ],
                 TextFormField(
                   controller: _titleController,
-                  decoration: InputDecoration(hintText: l10n.titleLabel),
+                  maxLength: kTitleMaxCharacterLength,
+                  decoration: InputDecoration(
+                    hintText: l10n.titleLabel,
+                    prefixIcon: const Icon(AppIcons.title),
+                  ),
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                ),
+                spacing,
+                TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 2,
+                  maxLength: kDescriptionMaxCharacterLength,
+                  decoration: InputDecoration(
+                    hintText: l10n.descriptionLabel,
+                    prefixIcon: const Icon(AppIcons.description),
+                  ),
+                  textCapitalization: TextCapitalization.sentences,
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
                 spacing,
                 TextFormField(
                   controller: _amountController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(hintText: l10n.amountLabel),
+                  decoration: InputDecoration(
+                    hintText: l10n.amountLabel,
+                    prefixIcon: const Icon(AppIcons.amount),
+                  ),
                   keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
                   textInputAction: TextInputAction.done,
                   inputFormatters: <TextInputFormatter>[
@@ -123,12 +146,6 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                   ],
                   validator: (String? value) =>
                       value == null || Money.parse(value) <= Money.zero ? context.l10n.nonZeroAmountErrorMessage : null,
-                ),
-                spacing,
-                TextFormField(
-                  controller: _descriptionController,
-                  maxLines: 2,
-                  decoration: InputDecoration(hintText: l10n.descriptionLabel),
                 ),
                 if (creating) ...<Widget>[
                   spacing,
@@ -138,11 +155,12 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                     onChanged: (DateTime date) => setState(() => _startedAt = date),
                   ),
                   spacing,
-                  SwitchListTile.adaptive(
-                    value: _activeState,
-                    onChanged: (bool state) => setState(() => _activeState = !_activeState),
-                    title: Text(l10n.makeActiveLabel),
-                  ),
+                  if (budgets.isNotEmpty)
+                    SwitchListTile.adaptive(
+                      value: _activeState,
+                      onChanged: (bool state) => setState(() => _activeState = !_activeState),
+                      title: Text(l10n.makeActiveLabel),
+                    ),
                 ],
                 spacing,
                 PrimaryButton(
@@ -208,6 +226,8 @@ class _BudgetItem extends StatelessWidget {
 
     return Row(
       children: <Widget>[
+        const Icon(AppIcons.budget),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             title.sentence(),
