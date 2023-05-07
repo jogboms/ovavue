@@ -31,7 +31,6 @@ dependencies:
   riverpod: ^2.3.6
   riverpod_annotation: ^2.1.1
   rxdart: ^0.27.7
-  sentry: ^6.15.1
   sliver_tools: ^0.2.10
   tabler_icons: ^2.5.0+1
   universal_io: ^2.2.0

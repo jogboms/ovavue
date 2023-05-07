@@ -5,15 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 import 'package:registry/registry.dart';
-import 'package:sentry/sentry.dart';
 import 'package:universal_io/io.dart' as io;
 
 import 'core.dart';
 import 'data.dart';
 import 'domain.dart';
 import 'presentation.dart';
-
-const String _sentryDns = String.fromEnvironment('env.sentryDns');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +26,6 @@ void main() async {
     case Environment.prod:
       final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
       reporterClient = _ReporterClient(
-        SentryClient(SentryOptions(dsn: _sentryDns)),
         deviceInformation: deviceInformation,
         environment: environment,
       );
@@ -138,39 +134,43 @@ class _Repository {
 }
 
 class _ReporterClient implements ReporterClient {
-  const _ReporterClient(
-    this.client, {
+  _ReporterClient({
     required this.deviceInformation,
     required this.environment,
   });
 
-  final SentryClient client;
   final DeviceInformation deviceInformation;
   final Environment environment;
+  final Set<_ReporterErrorEvent> _events = <_ReporterErrorEvent>{};
 
   @override
   async.FutureOr<void> report({required StackTrace stackTrace, required Object error, Object? extra}) async {
-    final SentryEvent event = SentryEvent(
-      throwable: error,
-      environment: environment.name.toUpperCase(),
-      release: deviceInformation.appVersion,
-      tags: deviceInformation.toMap(),
-      user: SentryUser(
-        id: deviceInformation.deviceId,
+    _events.add(
+      (
+        error: error,
+        stackTrace: stackTrace,
+        environment: environment.name.toUpperCase(),
+        deviceInformation: deviceInformation.toMap(),
+        extra: extra is Map ? extra as Map<String, dynamic>? : <String, dynamic>{'extra': extra},
       ),
-      extra: extra is Map ? extra as Map<String, dynamic>? : <String, dynamic>{'extra': extra},
     );
-
-    await client.captureEvent(event, stackTrace: stackTrace);
   }
 
   @override
-  async.FutureOr<void> reportCrash(FlutterErrorDetails details) =>
-      client.captureException(details.exception, stackTrace: details.stack);
+  // TODO(Jogboms): handle crash
+  async.FutureOr<void> reportCrash(FlutterErrorDetails details) {}
 
   @override
   void log(Object object) => AppLog.i(object);
 }
+
+typedef _ReporterErrorEvent = ({
+  Object error,
+  StackTrace stackTrace,
+  String environment,
+  Map<String, String> deviceInformation,
+  Map<String, dynamic>? extra,
+});
 
 class _NoopReporterClient implements ReporterClient {
   const _NoopReporterClient();
