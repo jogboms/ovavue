@@ -10,7 +10,6 @@ import '../../../state.dart';
 import '../../../utils.dart';
 import '../../../widgets.dart';
 import '../providers/budget_category_state.dart';
-import '../providers/models.dart';
 import 'budget_category_header.dart';
 import 'budget_category_plan_tile.dart';
 import 'budget_plan_selection_picker.dart';
@@ -58,7 +57,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                           context,
                           ref: ref,
                           category: state.category,
-                          planIds: state.plans.map((_) => _.id),
+                          planIds: state.plans.map((_) => _.$1.id),
                         ),
                       ),
                       ActionButton(
@@ -105,11 +104,12 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverSeparatorBuilderDelegate(
                 builder: (BuildContext context, int index) {
-                  final BudgetCategoryPlanViewModel plan = state.plans[index];
+                  final (BudgetPlanViewModel plan, Money? allocationAmount) = state.plans[index];
 
                   return BudgetCategoryPlanTile(
                     key: Key(plan.id),
                     plan: plan,
+                    allocationAmount: allocationAmount,
                     categoryAllocationAmount: state.allocation,
                     onPressed: () => context.router.goToBudgetPlanDetail(
                       id: plan.id,

@@ -22,6 +22,7 @@ export 'domain/repositories/budget_categories.dart';
 export 'domain/repositories/budget_plans.dart';
 export 'domain/repositories/budgets.dart';
 export 'domain/repositories/users.dart';
+export 'domain/use_cases/activate_budget_use_case.dart';
 export 'domain/use_cases/create_budget_allocation_use_case.dart';
 export 'domain/use_cases/create_budget_category_use_case.dart';
 export 'domain/use_cases/create_budget_plan_use_case.dart';

@@ -96,8 +96,7 @@ Future<void> main() async {
           path: 'path',
           title: 'title',
           description: 'description',
-          categoryId: '1',
-          categoryPath: 'path',
+          category: (id: '1', path: 'path'),
         );
         await createProvider().update(updateBudgetPlanData);
 
@@ -135,8 +134,7 @@ Future<void> main() async {
           path: 'path',
           title: 'title',
           description: 'description',
-          categoryId: '1',
-          categoryPath: 'path',
+          category: (id: '1', path: 'path'),
         );
         await createProvider().updateCategory(plan: expectedPlan, category: expectedCategory);
 

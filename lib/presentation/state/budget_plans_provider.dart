@@ -17,5 +17,5 @@ Stream<List<BudgetPlanViewModel>> budgetPlans(BudgetPlansRef ref) async* {
   yield* registry
       .get<FetchBudgetPlansUseCase>()
       .call(user.id)
-      .map((_) => _.map(BudgetPlanViewModel.fromEntity).toList());
+      .map((_) => _.map(BudgetPlanViewModel.fromEntity).toList(growable: false));
 }

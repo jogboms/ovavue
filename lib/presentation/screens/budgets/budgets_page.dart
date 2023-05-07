@@ -92,6 +92,7 @@ class _ContentDataView extends StatelessWidget {
                     title: budget.title,
                     budgetAmount: budget.amount,
                     allocationAmount: null,
+                    active: budget.active,
                     startedAt: budget.startedAt,
                     endedAt: budget.endedAt,
                     onTap: () => context.router.goToBudgetDetail(id: budget.id),

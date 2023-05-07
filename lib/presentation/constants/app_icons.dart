@@ -13,6 +13,7 @@ abstract class AppIcons {
   static const IconData modifyAllocation =
       TablerIcons.adjustments; // TODO(jogboms): update to `adjustments_dollar` when available
   static const IconData removeAllocation = TablerIcons.coin_off;
+  static const IconData activateBudget = TablerIcons.bookmark;
   static const IconData duplicateBudget = TablerIcons.copy;
   static const IconData excessPlan = TablerIcons.fire_hydrant;
   static const IconData edit = TablerIcons.pencil;

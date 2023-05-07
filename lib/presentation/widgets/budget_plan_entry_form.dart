@@ -68,6 +68,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
               children: <Widget>[
                 spacing,
                 TextFormField(
+                  autofocus: creating,
                   controller: _titleController,
                   maxLength: kTitleMaxCharacterLength,
                   decoration: InputDecoration(

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../../../models.dart';
 import '../../../utils.dart';
 import '../../../widgets.dart';
-import '../providers/models.dart';
 
 class BudgetCategoryPlanTile extends StatelessWidget {
   const BudgetCategoryPlanTile({
     super.key,
     required this.plan,
+    required this.allocationAmount,
     required this.categoryAllocationAmount,
     required this.onPressed,
   });
 
-  final BudgetCategoryPlanViewModel plan;
+  final BudgetPlanViewModel plan;
+  final Money? allocationAmount;
   final Money? categoryAllocationAmount;
   final VoidCallback onPressed;
 
@@ -22,11 +24,13 @@ class BudgetCategoryPlanTile extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colorScheme = theme.colorScheme;
 
-    final Money? allocation = plan.allocation;
+    final Money? allocationAmount = this.allocationAmount;
     final Money? categoryAllocationAmount = this.categoryAllocationAmount;
 
     return AmountRatioDecoratedBox(
-      ratio: allocation != null && categoryAllocationAmount != null ? allocation.ratio(categoryAllocationAmount) : 0.0,
+      ratio: allocationAmount != null && categoryAllocationAmount != null
+          ? allocationAmount.ratio(categoryAllocationAmount)
+          : 0.0,
       color: colorScheme.surface,
       onPressed: onPressed,
       child: Row(
@@ -51,9 +55,9 @@ class BudgetCategoryPlanTile extends StatelessWidget {
               ],
             ),
           ),
-          if (allocation != null && categoryAllocationAmount != null)
+          if (allocationAmount != null && categoryAllocationAmount != null)
             AmountRatioItem(
-              allocationAmount: allocation,
+              allocationAmount: allocationAmount,
               baseAmount: categoryAllocationAmount,
             ),
         ],

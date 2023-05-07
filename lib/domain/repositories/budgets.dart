@@ -17,9 +17,11 @@ abstract class BudgetsRepository {
 
   Stream<BudgetEntity?> fetchActiveBudget(String userId);
 
+  Future<bool> activateBudget(ReferenceEntity reference);
+
   Future<bool> deactivateBudget({
-    required String budgetPath,
-    required DateTime endedAt,
+    required ReferenceEntity reference,
+    required DateTime? endedAt,
   });
 
   Stream<BudgetEntity> fetchOne({

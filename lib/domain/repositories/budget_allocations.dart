@@ -5,7 +5,7 @@ import '../entities/update_budget_allocation_data.dart';
 abstract class BudgetAllocationsRepository {
   Future<String> create(String userId, CreateBudgetAllocationData allocation);
 
-  Future<List<String>> createAll(String userId, List<CreateBudgetAllocationData> allocations);
+  Future<bool> createAll(String userId, List<CreateBudgetAllocationData> allocations);
 
   Future<bool> update(UpdateBudgetAllocationData allocation);
 

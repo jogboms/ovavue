@@ -89,8 +89,7 @@ class BudgetPlanProvider {
         path: plan.path,
         title: plan.title,
         description: plan.description,
-        categoryId: category.id,
-        categoryPath: category.path,
+        category: (id: category.id, path: category.path),
       ),
     );
   }

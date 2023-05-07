@@ -7,6 +7,8 @@ class UpdateBudgetData with EquatableMixin {
     required this.title,
     required this.amount,
     required this.description,
+    required this.active,
+    required this.startedAt,
     required this.endedAt,
   });
 
@@ -15,8 +17,10 @@ class UpdateBudgetData with EquatableMixin {
   final String title;
   final int amount;
   final String description;
+  final bool active;
+  final DateTime startedAt;
   final DateTime? endedAt;
 
   @override
-  List<Object?> get props => <Object?>[id, path, title, amount, description, endedAt];
+  List<Object?> get props => <Object?>[id, path, title, amount, description, active, startedAt, endedAt];
 }

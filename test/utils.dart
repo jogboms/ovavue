@@ -29,6 +29,7 @@ class MockUseCases {
   final CreateBudgetPlanUseCase createBudgetPlanUseCase = MockCreateBudgetPlanUseCase();
   final CreateBudgetUseCase createBudgetUseCase = MockCreateBudgetUseCase();
   final CreateUserUseCase createUserUseCase = MockCreateUserUseCase();
+  final ActivateBudgetUseCase activateBudgetUseCase = MockActivateBudgetUseCase();
   final UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase = MockUpdateBudgetAllocationUseCase();
   final UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase = MockUpdateBudgetCategoryUseCase();
   final UpdateBudgetPlanUseCase updateBudgetPlanUseCase = MockUpdateBudgetPlanUseCase();
@@ -56,6 +57,7 @@ class MockUseCases {
         createBudgetPlanUseCase,
         createBudgetUseCase,
         createUserUseCase,
+        activateBudgetUseCase,
         updateBudgetAllocationUseCase,
         updateBudgetCategoryUseCase,
         updateBudgetPlanUseCase,
@@ -93,6 +95,7 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
+      ..factory((RegistryFactory di) => ActivateBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
@@ -190,6 +193,7 @@ extension MockUseCasesExtensions on Registry {
     ..replace<CreateBudgetPlanUseCase>(mockUseCases.createBudgetPlanUseCase)
     ..replace<CreateBudgetUseCase>(mockUseCases.createBudgetUseCase)
     ..replace<CreateUserUseCase>(mockUseCases.createUserUseCase)
+    ..replace<ActivateBudgetUseCase>(mockUseCases.activateBudgetUseCase)
     ..replace<UpdateBudgetPlanUseCase>(mockUseCases.updateBudgetPlanUseCase)
     ..replace<DeleteBudgetAllocationUseCase>(mockUseCases.deleteBudgetAllocationUseCase)
     ..replace<DeleteBudgetCategoryUseCase>(mockUseCases.deleteBudgetCategoryUseCase)

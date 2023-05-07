@@ -22,6 +22,9 @@ class AnalyticsEvent with EquatableMixin {
   static AnalyticsEvent createBudgetAllocation(String userId) =>
       AnalyticsEvent._('create_budget_allocation', <String, dynamic>{'user_id': userId});
 
+  static AnalyticsEvent activateBudget(String path) =>
+      AnalyticsEvent._('activate_budget', <String, dynamic>{'path': path});
+
   static AnalyticsEvent updateBudget(String path) => AnalyticsEvent._('update_budget', <String, dynamic>{'path': path});
 
   static AnalyticsEvent updateBudgetCategory(String path) =>

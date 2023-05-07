@@ -20,6 +20,9 @@ class BudgetEntryForm extends StatefulWidget {
     required this.title,
     required this.description,
     required this.amount,
+    required this.active,
+    required this.startedAt,
+    required this.endedAt,
     required this.createdAt,
   });
 
@@ -29,6 +32,9 @@ class BudgetEntryForm extends StatefulWidget {
   final String? title;
   final String? description;
   final Money? amount;
+  final bool? active;
+  final DateTime? startedAt;
+  final DateTime? endedAt;
   final DateTime createdAt;
 
   @override
@@ -46,8 +52,9 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
   late final TextEditingController _amountController = TextEditingController(
     text: widget.amount?.editableTextValue ?? '',
   );
-  DateTime _startedAt = clock.now();
-  bool _activeState = true;
+  late DateTime _startedAt = widget.startedAt ?? clock.now();
+  late DateTime? _endedAt = widget.endedAt;
+  late bool _activeState = widget.active ?? true;
 
   @override
   void dispose() {
@@ -80,36 +87,28 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
               children: <Widget>[
                 spacing,
                 if (creating && initialBudgetId == null && budgets.isNotEmpty) ...<Widget>[
-                  Builder(
-                    builder: (BuildContext context) => budgets.length == 1
-                        ? Builder(
-                            builder: (_) {
-                              _handleSelection(budgets.first);
-                              return const SizedBox.shrink();
-                            },
-                          )
-                        : DropdownButtonFormField<String>(
-                            key: _budgetsFieldKey,
-                            value: selectedBudgetId,
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              prefixIcon: selectedBudgetId != null ? null : const Icon(AppIcons.budget),
-                              hintText: context.l10n.selectBudgetTemplateCaption,
-                            ),
-                            items: <DropdownMenuItem<String>>[
-                              for (final BudgetViewModel budget in budgets)
-                                DropdownMenuItem<String>(
-                                  key: Key(budget.id),
-                                  value: budget.id,
-                                  child: _BudgetItem(title: budget.title, amount: budget.amount),
-                                ),
-                            ],
-                            onChanged: (String? id) => _handleIdSelection(budgets, id),
-                          ),
+                  DropdownButtonFormField<String>(
+                    key: _budgetsFieldKey,
+                    value: selectedBudgetId,
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      prefixIcon: selectedBudgetId != null ? null : const Icon(AppIcons.budget),
+                      hintText: context.l10n.selectBudgetTemplateCaption,
+                    ),
+                    items: <DropdownMenuItem<String>>[
+                      for (final BudgetViewModel budget in budgets)
+                        DropdownMenuItem<String>(
+                          key: Key(budget.id),
+                          value: budget.id,
+                          child: _BudgetItem(title: budget.title, amount: budget.amount),
+                        ),
+                    ],
+                    onChanged: (String? id) => _handleIdSelection(budgets, id),
                   ),
                   spacing,
                 ],
                 TextFormField(
+                  autofocus: creating,
                   controller: _titleController,
                   maxLength: kTitleMaxCharacterLength,
                   decoration: InputDecoration(
@@ -147,20 +146,25 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                   validator: (String? value) =>
                       value == null || Money.parse(value) <= Money.zero ? context.l10n.nonZeroAmountErrorMessage : null,
                 ),
-                if (creating) ...<Widget>[
+                spacing,
+                DatePickerField(
+                  initialValue: _startedAt,
+                  hintText: l10n.startDateLabel,
+                  onChanged: (DateTime date) => setState(() => _startedAt = date),
+                ),
+                spacing,
+                DatePickerField(
+                  initialValue: _endedAt,
+                  hintText: l10n.endDateLabel,
+                  onChanged: (DateTime date) => setState(() => _endedAt = date),
+                ),
+                if (creating && budgets.isNotEmpty) ...<Widget>[
                   spacing,
-                  DatePickerField(
-                    initialValue: clock.now(),
-                    hintText: l10n.startDateLabel,
-                    onChanged: (DateTime date) => setState(() => _startedAt = date),
+                  SwitchListTile.adaptive(
+                    value: _activeState,
+                    onChanged: (bool state) => setState(() => _activeState = !_activeState),
+                    title: Text(l10n.makeActiveLabel),
                   ),
-                  spacing,
-                  if (budgets.isNotEmpty)
-                    SwitchListTile.adaptive(
-                      value: _activeState,
-                      onChanged: (bool state) => setState(() => _activeState = !_activeState),
-                      title: Text(l10n.makeActiveLabel),
-                    ),
                 ],
                 spacing,
                 PrimaryButton(
@@ -207,6 +211,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
           description: _descriptionController.text,
           amount: Money.parse(_amountController.text),
           startedAt: _startedAt,
+          endedAt: _endedAt,
           active: _activeState,
         ),
       );
@@ -254,6 +259,9 @@ Future<BudgetEntryResult?> showBudgetEntryForm({
   required String? title,
   required Money? amount,
   required String? description,
+  required bool? active,
+  required DateTime? startedAt,
+  required DateTime? endedAt,
   required DateTime createdAt,
 }) =>
     showDialogPage(
@@ -265,6 +273,9 @@ Future<BudgetEntryResult?> showBudgetEntryForm({
         title: title,
         description: description,
         amount: amount,
+        active: active,
+        startedAt: startedAt,
+        endedAt: endedAt,
         createdAt: createdAt,
       ),
     );
@@ -277,6 +288,7 @@ class BudgetEntryResult {
     required this.description,
     required this.amount,
     required this.startedAt,
+    required this.endedAt,
     required this.active,
   });
 
@@ -286,5 +298,6 @@ class BudgetEntryResult {
   final String description;
   final Money amount;
   final DateTime startedAt;
+  final DateTime? endedAt;
   final bool active;
 }

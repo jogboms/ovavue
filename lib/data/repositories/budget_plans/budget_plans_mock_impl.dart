@@ -115,7 +115,7 @@ extension on BudgetPlanReferenceEntity {
         path: path,
         title: update.title,
         description: update.description,
-        category: (id: update.categoryId, path: update.categoryPath),
+        category: (id: update.category.id, path: update.category.path),
         createdAt: createdAt,
         updatedAt: clock.now(),
       );

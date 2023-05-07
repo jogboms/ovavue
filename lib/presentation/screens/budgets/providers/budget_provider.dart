@@ -16,10 +16,10 @@ BudgetProvider budget(BudgetRef ref) {
 
   return BudgetProvider(
     fetchUser: () => ref.read(userProvider.future),
-    fetchActiveBudgetPath: () => ref.read(
+    fetchActiveBudgetReference: () => ref.read(
       activeBudgetProvider.selectAsync(
         (BaseBudgetState state) => switch (state) {
-          BudgetState() => state.budget.path,
+          BudgetState() => (id: state.budget.id, path: state.budget.path),
           EmptyBudgetState() => null,
         },
       ),
@@ -44,6 +44,7 @@ BudgetProvider budget(BudgetRef ref) {
       ),
     ),
     createBudgetUseCase: di(),
+    activateBudgetUseCase: di(),
     updateBudgetUseCase: di(),
   );
 }
@@ -52,20 +53,23 @@ class BudgetProvider {
   @visibleForTesting
   BudgetProvider({
     required AsyncValueGetter<UserEntity> fetchUser,
-    required AsyncValueGetter<String?> fetchActiveBudgetPath,
+    required AsyncValueGetter<ReferenceEntity?> fetchActiveBudgetReference,
     required Future<PlanToAllocationMap> Function(String id) fetchBudgetAllocations,
     required CreateBudgetUseCase createBudgetUseCase,
+    required ActivateBudgetUseCase activateBudgetUseCase,
     required UpdateBudgetUseCase updateBudgetUseCase,
   })  : _updateBudgetUseCase = updateBudgetUseCase,
+        _activateBudgetUseCase = activateBudgetUseCase,
         _createBudgetUseCase = createBudgetUseCase,
         _fetchBudgetAllocations = fetchBudgetAllocations,
-        _fetchActiveBudgetPath = fetchActiveBudgetPath,
+        _fetchActiveBudgetReference = fetchActiveBudgetReference,
         _fetchUser = fetchUser;
 
   final AsyncValueGetter<UserEntity> _fetchUser;
-  final AsyncValueGetter<String?> _fetchActiveBudgetPath;
+  final AsyncValueGetter<ReferenceEntity?> _fetchActiveBudgetReference;
   final Future<PlanToAllocationMap> Function(String id) _fetchBudgetAllocations;
   final CreateBudgetUseCase _createBudgetUseCase;
+  final ActivateBudgetUseCase _activateBudgetUseCase;
   final UpdateBudgetUseCase _updateBudgetUseCase;
 
   Future<String> create({
@@ -75,23 +79,40 @@ class BudgetProvider {
     required int amount,
     required String description,
     required DateTime startedAt,
+    required DateTime? endedAt,
     required bool active,
   }) async {
     final String userId = (await _fetchUser()).id;
-    final String? activeBudgetPath = await _fetchActiveBudgetPath();
+    final ReferenceEntity? activeBudgetReference = await _fetchActiveBudgetReference();
     final PlanToAllocationMap? allocations = fromBudgetId != null ? await _fetchBudgetAllocations(fromBudgetId) : null;
 
     return _createBudgetUseCase.call(
       userId: userId,
-      activeBudgetPath: activeBudgetPath,
+      activeBudgetReference: activeBudgetReference,
       allocations: allocations,
       budget: CreateBudgetData(
         index: index,
         title: title,
         amount: amount,
         description: description,
+        active: active,
         startedAt: startedAt,
+        endedAt: endedAt,
       ),
+    );
+  }
+
+  Future<bool> activate({
+    required String id,
+    required String path,
+  }) async {
+    final String userId = (await _fetchUser()).id;
+    final ReferenceEntity? activeBudgetReference = await _fetchActiveBudgetReference();
+
+    return _activateBudgetUseCase.call(
+      userId: userId,
+      reference: (id: id, path: path),
+      activeBudgetReference: activeBudgetReference,
     );
   }
 
@@ -101,6 +122,9 @@ class BudgetProvider {
     required String title,
     required int amount,
     required String description,
+    required bool active,
+    required DateTime startedAt,
+    required DateTime? endedAt,
   }) async {
     return _updateBudgetUseCase.call(
       UpdateBudgetData(
@@ -109,7 +133,9 @@ class BudgetProvider {
         title: title,
         amount: amount,
         description: description,
-        endedAt: null,
+        active: active,
+        startedAt: startedAt,
+        endedAt: endedAt,
       ),
     );
   }

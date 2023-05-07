@@ -36,7 +36,7 @@ BudgetState _deriveState(
   BudgetAllocationEntityList allocations,
 ) {
   final Map<String, BudgetAllocationEntity> allocationByPlan = allocations.foldToMap((_) => _.plan.id);
-  final BudgetPlanEntityList budgetPlans = allocations.map((_) => _.plan).toList(growable: false);
+  final Iterable<BudgetPlanEntity> budgetPlans = allocations.map((_) => _.plan);
   final Map<String, int> allocationByCategory = budgetPlans.groupFoldBy(
     (_) => _.category.id,
     (int? previous, BudgetPlanEntity plan) => (previous ?? 0) + (allocationByPlan[plan.id]?.amount ?? 0),

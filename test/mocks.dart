@@ -31,6 +31,8 @@ class MockUpdateBudgetUseCase extends Mock implements UpdateBudgetUseCase {}
 
 class MockCreateUserUseCase extends Mock implements CreateUserUseCase {}
 
+class MockActivateBudgetUseCase extends Mock implements ActivateBudgetUseCase {}
+
 class MockUpdateBudgetPlanUseCase extends Mock implements UpdateBudgetPlanUseCase {}
 
 class MockDeleteBudgetAllocationUseCase extends Mock implements DeleteBudgetAllocationUseCase {}

@@ -53,6 +53,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
           children: <Widget>[
             spacing,
             TextFormField(
+              autofocus: true,
               controller: _titleController,
               maxLength: kTitleMaxCharacterLength,
               decoration: InputDecoration(

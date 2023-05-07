@@ -17,8 +17,7 @@ void main() {
       path: 'path',
       title: 'title',
       description: 'description',
-      categoryId: 'id',
-      categoryPath: 'path',
+      category: (id: '1', path: 'path'),
     );
 
     setUpAll(() {

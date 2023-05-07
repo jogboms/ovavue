@@ -62,7 +62,7 @@ class _ContentDataView extends StatelessWidget {
     final ColorScheme colorScheme = theme.colorScheme;
 
     final BudgetViewModel? budget = state.budget;
-    final BudgetPlanAllocationViewModel? allocation = state.allocation;
+    final BudgetAllocationViewModel? allocation = state.allocation;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -118,10 +118,10 @@ class _ContentDataView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (allocation != null)
+                    if (allocation != null && budget != null)
                       AmountRatioItem.large(
                         allocationAmount: allocation.amount,
-                        baseAmount: allocation.budget.amount,
+                        baseAmount: budget.amount,
                       )
                   ],
                 ),
@@ -202,8 +202,8 @@ class _ContentDataView extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
-                  final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
-                  final BudgetPlanAllocationBudgetViewModel budget = allocation.budget;
+                  final (BudgetAllocationViewModel allocation, BudgetViewModel budget) =
+                      state.previousAllocations[index];
 
                   return BudgetListTile(
                     key: Key(budget.id),
@@ -211,6 +211,7 @@ class _ContentDataView extends StatelessWidget {
                     title: budget.title,
                     budgetAmount: budget.amount,
                     allocationAmount: allocation.amount,
+                    active: budget.active,
                     startedAt: budget.startedAt,
                     endedAt: budget.endedAt,
                   );
@@ -228,7 +229,7 @@ class _ContentDataView extends StatelessWidget {
     required WidgetRef ref,
     required BudgetViewModel budget,
     required BudgetPlanViewModel plan,
-    required BudgetPlanAllocationViewModel? allocation,
+    required BudgetAllocationViewModel? allocation,
   }) async {
     final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
       context: context,
@@ -293,7 +294,7 @@ class _ContentDataView extends StatelessWidget {
   void _handleDeleteAllocationAction(
     BuildContext context, {
     required WidgetRef ref,
-    required BudgetPlanAllocationViewModel allocation,
+    required BudgetAllocationViewModel allocation,
   }) async {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = context.snackBar;
@@ -341,8 +342,7 @@ class _ContentDataView extends StatelessWidget {
             path: plan.path,
             title: result.title,
             description: result.description,
-            categoryId: plan.category.id,
-            categoryPath: plan.category.path,
+            category: (id: plan.category.id, path: plan.category.path),
           ),
         );
     if (successful) {
