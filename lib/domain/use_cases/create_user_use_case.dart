@@ -1,6 +1,7 @@
 import '../analytics/analytics.dart';
 import '../analytics/analytics_event.dart';
 import '../entities/account_entity.dart';
+import '../entities/user_entity.dart';
 import '../repositories/users.dart';
 
 class CreateUserUseCase {
@@ -13,7 +14,7 @@ class CreateUserUseCase {
   final UsersRepository _users;
   final Analytics _analytics;
 
-  Future<String> call(AccountEntity account) {
+  Future<UserEntity> call(AccountEntity account) {
     _analytics.log(AnalyticsEvent.createUser(account.id)).ignore();
     return _users.create(account);
   }

@@ -11,7 +11,7 @@ class UsersMockImpl implements UsersRepository {
   );
 
   @override
-  Future<String> create(AccountEntity account) async => user.id;
+  Future<UserEntity> create(AccountEntity account) async => user;
 
   @override
   Future<bool> update(UpdateUserData user) async => true;

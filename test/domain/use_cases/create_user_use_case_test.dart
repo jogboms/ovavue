@@ -14,9 +14,11 @@ void main() {
     );
 
     final AccountEntity dummyAccountModel = AuthMockImpl.generateAccount();
+    final UserEntity dummyModel = dummyAccountModel.toUserEntity();
 
     setUpAll(() {
       registerFallbackValue(dummyAccountModel);
+      registerFallbackValue(dummyModel);
     });
 
     tearDown(() {
@@ -25,10 +27,10 @@ void main() {
     });
 
     test('should create a user', () async {
-      when(() => mockRepositories.users.create(any())).thenAnswer((_) async => dummyAccountModel.id);
+      when(() => mockRepositories.users.create(any())).thenAnswer((_) async => dummyModel);
 
-      await expectLater(useCase(dummyAccountModel), completion(dummyAccountModel.id));
-      expect(analytics.events, containsOnce(AnalyticsEvent.createUser(dummyAccountModel.id)));
+      await expectLater(useCase(dummyAccountModel), completion(dummyModel));
+      expect(analytics.events, containsOnce(AnalyticsEvent.createUser(dummyModel.id)));
     });
 
     test('should bubble create errors', () {
@@ -37,4 +39,8 @@ void main() {
       expect(() => useCase(dummyAccountModel), throwsException);
     });
   });
+}
+
+extension on AccountEntity {
+  UserEntity toUserEntity() => UserEntity(id: id, path: 'path', createdAt: DateTime(0));
 }
