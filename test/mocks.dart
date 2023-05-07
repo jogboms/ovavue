@@ -61,8 +61,6 @@ class MockFetchActiveBudgetUseCase extends Mock implements FetchActiveBudgetUseC
 
 class MockFetchUserUseCase extends Mock implements FetchUserUseCase {}
 
-class MockUpdateUserUseCase extends Mock implements UpdateUserUseCase {}
-
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 class MockValueChangedCallback<T> extends Mock {

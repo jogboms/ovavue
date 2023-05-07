@@ -207,9 +207,9 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
         BudgetEntryResult(
           fromBudgetId: _budgetId,
           index: _index,
-          title: _titleController.text,
-          description: _descriptionController.text,
-          amount: Money.parse(_amountController.text),
+          title: _titleController.text.trim(),
+          description: _descriptionController.text.trim(),
+          amount: Money.parse(_amountController.text.trim()),
           startedAt: _startedAt,
           endedAt: _endedAt,
           active: _activeState,

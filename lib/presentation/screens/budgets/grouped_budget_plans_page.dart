@@ -95,6 +95,11 @@ class _ContentDataView extends StatelessWidget {
                 expanded: expandAllGroups,
               ),
             ),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: MediaQuery.paddingOf(context).bottom,
+          ),
+        ),
       ],
     );
   }

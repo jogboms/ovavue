@@ -49,7 +49,6 @@ class MockUseCases {
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
-  final UpdateUserUseCase updateUserUseCase = MockUpdateUserUseCase();
 
   void reset() => <Object>[
         createBudgetAllocationUseCase,
@@ -74,7 +73,6 @@ class MockUseCases {
         fetchBudgetsUseCase,
         fetchActiveBudgetUseCase,
         fetchUserUseCase,
-        updateUserUseCase,
       ].forEach(mt.reset);
 }
 
@@ -114,7 +112,6 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
-      ..factory((RegistryFactory di) => UpdateUserUseCase(users: di()))
       ..set(environment);
 
 ProviderContainer createProviderContainer({
@@ -210,8 +207,7 @@ extension MockUseCasesExtensions on Registry {
     ..replace<FetchBudgetUseCase>(mockUseCases.fetchBudgetUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)
-    ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
-    ..replace<UpdateUserUseCase>(mockUseCases.updateUserUseCase);
+    ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase);
 }
 
 extension FinderExtensions on Finder {

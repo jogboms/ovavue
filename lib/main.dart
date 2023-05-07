@@ -3,6 +3,7 @@ import 'dart:async' as async;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 import 'package:registry/registry.dart';
 import 'package:universal_io/io.dart' as io;
@@ -17,13 +18,19 @@ void main() async {
 
   await findSystemLocale();
 
-  final _Repository repository = _Repository.mock();
+  final _Repository repository;
   final ReporterClient reporterClient;
+  final Analytics analytics;
   final NavigatorObserver navigationObserver = NavigatorObserver();
-  const Analytics analytics = _PrintAnalytics();
   switch (environment) {
     case Environment.dev:
+      analytics = const _PrintAnalytics();
+      repository = _Repository.local(Database.memory());
+      reporterClient = const _NoopReporterClient();
+      break;
     case Environment.prod:
+      analytics = _InMemoryAnalytics();
+      repository = _Repository.local(Database('db.sqlite'));
       final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
       reporterClient = _ReporterClient(
         deviceInformation: deviceInformation,
@@ -33,6 +40,8 @@ void main() async {
     case Environment.testing:
     case Environment.mock:
       seedMockData();
+      analytics = const _PrintAnalytics();
+      repository = _Repository.mock();
       reporterClient = const _NoopReporterClient();
       break;
   }
@@ -92,7 +101,6 @@ void main() async {
     ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
-    ..factory((RegistryFactory di) => UpdateUserUseCase(users: di()))
 
     /// Environment.
     ..set(environment);
@@ -117,6 +125,14 @@ void main() async {
 }
 
 class _Repository {
+  _Repository.local(Database db)
+      : auth = AuthLocalImpl(db, const _SecureStorageAuthIdentityStorage(FlutterSecureStorage())),
+        users = UsersLocalImpl(db),
+        budgets = BudgetsLocalImpl(db),
+        budgetPlans = BudgetPlansLocalImpl(db),
+        budgetCategories = BudgetCategoriesLocalImpl(db),
+        budgetAllocations = BudgetAllocationsLocalImpl(db);
+
   _Repository.mock()
       : auth = AuthMockImpl(),
         users = UsersMockImpl(),
@@ -199,4 +215,35 @@ class _PrintAnalytics implements Analytics {
 
   @override
   async.Future<void> setUserId(String id) async {}
+}
+
+class _InMemoryAnalytics implements Analytics {
+  // ignore: unused_field, use_late_for_private_fields_and_variables
+  String? _screenName;
+  final Set<AnalyticsEvent> _events = <AnalyticsEvent>{};
+
+  @override
+  Future<void> log(AnalyticsEvent event) async => _events.add(event);
+
+  @override
+  Future<void> setCurrentScreen(String name) async => _screenName = name;
+
+  @override
+  async.Future<void> removeUserId() async {}
+
+  @override
+  async.Future<void> setUserId(String id) async {}
+}
+
+class _SecureStorageAuthIdentityStorage implements AuthIdentityStorage {
+  const _SecureStorageAuthIdentityStorage(this._storage);
+
+  final FlutterSecureStorage _storage;
+  static const String _key = 'ovavue.app.auth.identity';
+
+  @override
+  async.FutureOr<String?> get() => _storage.read(key: _key);
+
+  @override
+  async.FutureOr<void> set(String id) => _storage.write(key: _key, value: id);
 }

@@ -114,8 +114,8 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
       Navigator.pop(
         context,
         BudgetCategoryEntryResult(
-          title: _titleController.text,
-          description: _descriptionController.text,
+          title: _titleController.text.trim(),
+          description: _descriptionController.text.trim(),
           icon: _icon,
           colorScheme: _colorScheme,
         ),

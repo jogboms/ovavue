@@ -137,7 +137,7 @@ extension on BudgetPlanEntity {
         path: path,
         title: title,
         description: description,
-        category: category.reference,
+        category: (id: category.id, path: category.path),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );

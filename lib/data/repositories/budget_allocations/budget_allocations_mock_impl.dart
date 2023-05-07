@@ -171,8 +171,8 @@ extension on BudgetAllocationEntity {
         id: id,
         path: path,
         amount: amount,
-        budget: budget.reference,
-        plan: plan.reference,
+        budget: (id: budget.id, path: budget.path),
+        plan: (id: plan.id, path: plan.path),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );
