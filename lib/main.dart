@@ -185,7 +185,7 @@ class _NoopReporterClient implements ReporterClient {
   void log(Object object) {}
 }
 
-class _PrintAnalytics extends NoopAnalytics {
+class _PrintAnalytics implements Analytics {
   const _PrintAnalytics();
 
   @override
@@ -193,4 +193,10 @@ class _PrintAnalytics extends NoopAnalytics {
 
   @override
   Future<void> setCurrentScreen(String name) async => AppLog.i('screen_view: $name');
+
+  @override
+  async.Future<void> removeUserId() async {}
+
+  @override
+  async.Future<void> setUserId(String id) async {}
 }

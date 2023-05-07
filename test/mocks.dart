@@ -93,6 +93,20 @@ class FakeCreateBudgetAllocationData extends Fake implements CreateBudgetAllocat
 
 class FakeUpdateBudgetAllocationData extends Fake implements UpdateBudgetAllocationData {}
 
+class FakeAnalytics extends Fake implements Analytics {
+  @override
+  Future<void> log(AnalyticsEvent event) async {}
+
+  @override
+  Future<void> removeUserId() async {}
+
+  @override
+  Future<void> setUserId(String id) async {}
+
+  @override
+  Future<void> setCurrentScreen(String name) async {}
+}
+
 class FakeRoute extends Fake implements Route<dynamic> {}
 
 class FakeStackTrace extends Fake implements StackTrace {}

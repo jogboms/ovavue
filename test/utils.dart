@@ -84,7 +84,7 @@ Registry createRegistry({
   Environment environment = Environment.testing,
 }) =>
     Registry()
-      ..set<Analytics>(const NoopAnalytics())
+      ..set<Analytics>(FakeAnalytics())
       ..set(mockRepositories.auth)
       ..set(mockRepositories.users)
       ..set(mockRepositories.budgets)
@@ -167,7 +167,7 @@ class ProviderListener<T> {
   void reset() => log.clear();
 }
 
-class LogAnalytics extends NoopAnalytics {
+class LogAnalytics implements Analytics {
   final List<AnalyticsEvent> events = <AnalyticsEvent>[];
   String? userId;
 
@@ -184,6 +184,9 @@ class LogAnalytics extends NoopAnalytics {
     events.clear();
     removeUserId();
   }
+
+  @override
+  Future<void> setCurrentScreen(String name) async {}
 }
 
 extension MockUseCasesExtensions on Registry {
