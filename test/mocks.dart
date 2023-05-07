@@ -59,10 +59,6 @@ class MockFetchActiveBudgetUseCase extends Mock implements FetchActiveBudgetUseC
 
 class MockFetchUserUseCase extends Mock implements FetchUserUseCase {}
 
-class MockSignInUseCase extends Mock implements SignInUseCase {}
-
-class MockSignOutUseCase extends Mock implements SignOutUseCase {}
-
 class MockUpdateUserUseCase extends Mock implements UpdateUserUseCase {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}

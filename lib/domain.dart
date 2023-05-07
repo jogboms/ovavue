@@ -1,7 +1,6 @@
 export 'domain/analytics/analytics.dart';
 export 'domain/analytics/analytics_event.dart';
 export 'domain/entities/account_entity.dart';
-export 'domain/entities/auth_exception.dart';
 export 'domain/entities/budget_allocation_entity.dart';
 export 'domain/entities/budget_category_entity.dart';
 export 'domain/entities/budget_entity.dart';
@@ -41,8 +40,6 @@ export 'domain/use_cases/fetch_budget_plans_use_case.dart';
 export 'domain/use_cases/fetch_budget_use_case.dart';
 export 'domain/use_cases/fetch_budgets_use_case.dart';
 export 'domain/use_cases/fetch_user_use_case.dart';
-export 'domain/use_cases/sign_in_use_case.dart';
-export 'domain/use_cases/sign_out_use_case.dart';
 export 'domain/use_cases/update_budget_allocation_use_case.dart';
 export 'domain/use_cases/update_budget_category_use_case.dart';
 export 'domain/use_cases/update_budget_plan_use_case.dart';

@@ -95,8 +95,6 @@ void main() async {
     ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
-    ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
-    ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateUserUseCase(users: di()))
 
     /// Environment.

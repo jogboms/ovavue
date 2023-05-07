@@ -48,8 +48,6 @@ class MockUseCases {
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
-  final SignInUseCase signInUseCase = MockSignInUseCase();
-  final SignOutUseCase signOutUseCase = MockSignOutUseCase();
   final UpdateUserUseCase updateUserUseCase = MockUpdateUserUseCase();
 
   void reset() => <Object>[
@@ -74,8 +72,6 @@ class MockUseCases {
         fetchBudgetsUseCase,
         fetchActiveBudgetUseCase,
         fetchUserUseCase,
-        signInUseCase,
-        signOutUseCase,
         updateUserUseCase,
       ].forEach(mt.reset);
 }
@@ -115,8 +111,6 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
-      ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
-      ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateUserUseCase(users: di()))
       ..set(environment);
 
@@ -210,8 +204,6 @@ extension MockUseCasesExtensions on Registry {
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)
     ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
-    ..replace<SignInUseCase>(mockUseCases.signInUseCase)
-    ..replace<SignOutUseCase>(mockUseCases.signOutUseCase)
     ..replace<UpdateUserUseCase>(mockUseCases.updateUserUseCase);
 }
 
