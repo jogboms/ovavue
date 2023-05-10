@@ -3,15 +3,19 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $AccountsTable extends Accounts with TableInfo<$AccountsTable, AccountDataModel> {
+class $AccountsTable extends Accounts
+    with TableInfo<$AccountsTable, AccountDataModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $AccountsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: false, clientDefault: () => _uuid.v4());
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v4());
   @override
   List<GeneratedColumn> get $columns => [id];
   @override
@@ -19,7 +23,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, AccountData
   @override
   String get actualTableName => 'accounts';
   @override
-  VerificationContext validateIntegrity(Insertable<AccountDataModel> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(Insertable<AccountDataModel> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -34,7 +39,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, AccountData
   AccountDataModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return AccountDataModel(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
     );
   }
 
@@ -44,7 +50,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, AccountData
   }
 }
 
-class AccountDataModel extends DataClass implements Insertable<AccountDataModel> {
+class AccountDataModel extends DataClass
+    implements Insertable<AccountDataModel> {
   final String id;
   const AccountDataModel({required this.id});
   @override
@@ -60,7 +67,8 @@ class AccountDataModel extends DataClass implements Insertable<AccountDataModel>
     );
   }
 
-  factory AccountDataModel.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory AccountDataModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AccountDataModel(
       id: serializer.fromJson<String>(json['id']),
@@ -88,7 +96,9 @@ class AccountDataModel extends DataClass implements Insertable<AccountDataModel>
   @override
   int get hashCode => id.hashCode;
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is AccountDataModel && other.id == this.id);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AccountDataModel && other.id == this.id);
 }
 
 class AccountsCompanion extends UpdateCompanion<AccountDataModel> {
@@ -148,11 +158,16 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDataModel> {
   $UsersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: false, clientDefault: () => _uuid.v4());
-  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v4());
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>('created_at', aliasedName, false,
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, createdAt];
@@ -161,14 +176,16 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDataModel> {
   @override
   String get actualTableName => 'users';
   @override
-  VerificationContext validateIntegrity(Insertable<UserDataModel> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(Insertable<UserDataModel> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
@@ -181,8 +198,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDataModel> {
   UserDataModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return UserDataModel(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
   }
 
@@ -211,7 +230,8 @@ class UserDataModel extends DataClass implements Insertable<UserDataModel> {
     );
   }
 
-  factory UserDataModel.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory UserDataModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UserDataModel(
       id: serializer.fromJson<String>(json['id']),
@@ -244,7 +264,10 @@ class UserDataModel extends DataClass implements Insertable<UserDataModel> {
   int get hashCode => Object.hash(id, createdAt);
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || (other is UserDataModel && other.id == this.id && other.createdAt == this.createdAt);
+      identical(this, other) ||
+      (other is UserDataModel &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt);
 }
 
 class UsersCompanion extends UpdateCompanion<UserDataModel> {
@@ -273,7 +296,8 @@ class UsersCompanion extends UpdateCompanion<UserDataModel> {
     });
   }
 
-  UsersCompanion copyWith({Value<String>? id, Value<DateTime>? createdAt, Value<int>? rowid}) {
+  UsersCompanion copyWith(
+      {Value<String>? id, Value<DateTime>? createdAt, Value<int>? rowid}) {
     return UsersCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
@@ -307,111 +331,151 @@ class UsersCompanion extends UpdateCompanion<UserDataModel> {
   }
 }
 
-class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, BudgetDataModel> {
+class $BudgetsTable extends Budgets
+    with TableInfo<$BudgetsTable, BudgetDataModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $BudgetsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: false, clientDefault: () => _uuid.v4());
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v4());
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
-  late final GeneratedColumn<String> title =
-      GeneratedColumn<String>('title', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionMeta = const VerificationMeta('description');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
   @override
-  late final GeneratedColumn<String> description =
-      GeneratedColumn<String>('description', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>('created_at', aliasedName, false,
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>('updated_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _indexMeta = const VerificationMeta('index');
   @override
-  late final GeneratedColumn<int> index =
-      GeneratedColumn<int>('index', aliasedName, false, type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<int> index = GeneratedColumn<int>(
+      'index', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<int> amount =
-      GeneratedColumn<int>('amount', aliasedName, false, type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+      'amount', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _activeMeta = const VerificationMeta('active');
   @override
-  late final GeneratedColumn<bool> active = GeneratedColumn<bool>('active', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-        SqlDialect.sqlite: 'CHECK ("active" IN (0, 1))',
-        SqlDialect.mysql: '',
-        SqlDialect.postgres: '',
-      }));
-  static const VerificationMeta _startedAtMeta = const VerificationMeta('startedAt');
+  late final GeneratedColumn<bool> active =
+      GeneratedColumn<bool>('active', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("active" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _startedAtMeta =
+      const VerificationMeta('startedAt');
   @override
-  late final GeneratedColumn<DateTime> startedAt = GeneratedColumn<DateTime>('started_at', aliasedName, false,
+  late final GeneratedColumn<DateTime> startedAt = GeneratedColumn<DateTime>(
+      'started_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _endedAtMeta = const VerificationMeta('endedAt');
+  static const VerificationMeta _endedAtMeta =
+      const VerificationMeta('endedAt');
   @override
-  late final GeneratedColumn<DateTime> endedAt = GeneratedColumn<DateTime>('ended_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> endedAt = GeneratedColumn<DateTime>(
+      'ended_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, title, description, createdAt, updatedAt, index, amount, active, startedAt, endedAt];
+  List<GeneratedColumn> get $columns => [
+        id,
+        title,
+        description,
+        createdAt,
+        updatedAt,
+        index,
+        amount,
+        active,
+        startedAt,
+        endedAt
+      ];
   @override
   String get aliasedName => _alias ?? 'budgets';
   @override
   String get actualTableName => 'budgets';
   @override
-  VerificationContext validateIntegrity(Insertable<BudgetDataModel> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(Insertable<BudgetDataModel> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('title')) {
-      context.handle(_titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
     if (data.containsKey('description')) {
-      context.handle(_descriptionMeta, description.isAcceptableOrUnknown(data['description']!, _descriptionMeta));
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
     } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta, updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     }
     if (data.containsKey('index')) {
-      context.handle(_indexMeta, index.isAcceptableOrUnknown(data['index']!, _indexMeta));
+      context.handle(
+          _indexMeta, index.isAcceptableOrUnknown(data['index']!, _indexMeta));
     } else if (isInserting) {
       context.missing(_indexMeta);
     }
     if (data.containsKey('amount')) {
-      context.handle(_amountMeta, amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+      context.handle(_amountMeta,
+          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
     } else if (isInserting) {
       context.missing(_amountMeta);
     }
     if (data.containsKey('active')) {
-      context.handle(_activeMeta, active.isAcceptableOrUnknown(data['active']!, _activeMeta));
+      context.handle(_activeMeta,
+          active.isAcceptableOrUnknown(data['active']!, _activeMeta));
     } else if (isInserting) {
       context.missing(_activeMeta);
     }
     if (data.containsKey('started_at')) {
-      context.handle(_startedAtMeta, startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta));
+      context.handle(_startedAtMeta,
+          startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta));
     } else if (isInserting) {
       context.missing(_startedAtMeta);
     }
     if (data.containsKey('ended_at')) {
-      context.handle(_endedAtMeta, endedAt.isAcceptableOrUnknown(data['ended_at']!, _endedAtMeta));
+      context.handle(_endedAtMeta,
+          endedAt.isAcceptableOrUnknown(data['ended_at']!, _endedAtMeta));
     }
     return context;
   }
@@ -422,16 +486,26 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, BudgetDataMode
   BudgetDataModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return BudgetDataModel(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      description: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}description'])!,
-      createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      updatedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
-      index: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}index'])!,
-      amount: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
-      active: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}active'])!,
-      startedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}started_at'])!,
-      endedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}ended_at']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
+      index: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}index'])!,
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
+      active: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}active'])!,
+      startedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}started_at'])!,
+      endedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}ended_at']),
     );
   }
 
@@ -489,16 +563,21 @@ class BudgetDataModel extends DataClass implements Insertable<BudgetDataModel> {
       title: Value(title),
       description: Value(description),
       createdAt: Value(createdAt),
-      updatedAt: updatedAt == null && nullToAbsent ? const Value.absent() : Value(updatedAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
       index: Value(index),
       amount: Value(amount),
       active: Value(active),
       startedAt: Value(startedAt),
-      endedAt: endedAt == null && nullToAbsent ? const Value.absent() : Value(endedAt),
+      endedAt: endedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endedAt),
     );
   }
 
-  factory BudgetDataModel.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory BudgetDataModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return BudgetDataModel(
       id: serializer.fromJson<String>(json['id']),
@@ -571,8 +650,8 @@ class BudgetDataModel extends DataClass implements Insertable<BudgetDataModel> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, title, description, createdAt, updatedAt, index, amount, active, startedAt, endedAt);
+  int get hashCode => Object.hash(id, title, description, createdAt, updatedAt,
+      index, amount, active, startedAt, endedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -746,78 +825,112 @@ class BudgetsCompanion extends UpdateCompanion<BudgetDataModel> {
   }
 }
 
-class $BudgetCategoriesTable extends BudgetCategories with TableInfo<$BudgetCategoriesTable, BudgetCategoryDataModel> {
+class $BudgetCategoriesTable extends BudgetCategories
+    with TableInfo<$BudgetCategoriesTable, BudgetCategoryDataModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $BudgetCategoriesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: false, clientDefault: () => _uuid.v4());
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v4());
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
-  late final GeneratedColumn<String> title =
-      GeneratedColumn<String>('title', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionMeta = const VerificationMeta('description');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
   @override
-  late final GeneratedColumn<String> description =
-      GeneratedColumn<String>('description', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>('created_at', aliasedName, false,
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>('updated_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _iconIndexMeta = const VerificationMeta('iconIndex');
+  static const VerificationMeta _iconIndexMeta =
+      const VerificationMeta('iconIndex');
   @override
-  late final GeneratedColumn<int> iconIndex =
-      GeneratedColumn<int>('icon_index', aliasedName, false, type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _colorSchemeIndexMeta = const VerificationMeta('colorSchemeIndex');
+  late final GeneratedColumn<int> iconIndex = GeneratedColumn<int>(
+      'icon_index', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _colorSchemeIndexMeta =
+      const VerificationMeta('colorSchemeIndex');
   @override
-  late final GeneratedColumn<int> colorSchemeIndex = GeneratedColumn<int>('color_scheme_index', aliasedName, false,
+  late final GeneratedColumn<int> colorSchemeIndex = GeneratedColumn<int>(
+      'color_scheme_index', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, title, description, createdAt, updatedAt, iconIndex, colorSchemeIndex];
+  List<GeneratedColumn> get $columns => [
+        id,
+        title,
+        description,
+        createdAt,
+        updatedAt,
+        iconIndex,
+        colorSchemeIndex
+      ];
   @override
   String get aliasedName => _alias ?? 'budget_categories';
   @override
   String get actualTableName => 'budget_categories';
   @override
-  VerificationContext validateIntegrity(Insertable<BudgetCategoryDataModel> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+      Insertable<BudgetCategoryDataModel> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('title')) {
-      context.handle(_titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
     if (data.containsKey('description')) {
-      context.handle(_descriptionMeta, description.isAcceptableOrUnknown(data['description']!, _descriptionMeta));
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
     } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta, updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     }
     if (data.containsKey('icon_index')) {
-      context.handle(_iconIndexMeta, iconIndex.isAcceptableOrUnknown(data['icon_index']!, _iconIndexMeta));
+      context.handle(_iconIndexMeta,
+          iconIndex.isAcceptableOrUnknown(data['icon_index']!, _iconIndexMeta));
     } else if (isInserting) {
       context.missing(_iconIndexMeta);
     }
     if (data.containsKey('color_scheme_index')) {
-      context.handle(_colorSchemeIndexMeta,
-          colorSchemeIndex.isAcceptableOrUnknown(data['color_scheme_index']!, _colorSchemeIndexMeta));
+      context.handle(
+          _colorSchemeIndexMeta,
+          colorSchemeIndex.isAcceptableOrUnknown(
+              data['color_scheme_index']!, _colorSchemeIndexMeta));
     } else if (isInserting) {
       context.missing(_colorSchemeIndexMeta);
     }
@@ -827,17 +940,24 @@ class $BudgetCategoriesTable extends BudgetCategories with TableInfo<$BudgetCate
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  BudgetCategoryDataModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  BudgetCategoryDataModel map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return BudgetCategoryDataModel(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      description: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}description'])!,
-      createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      updatedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
-      iconIndex: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}icon_index'])!,
-      colorSchemeIndex:
-          attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}color_scheme_index'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
+      iconIndex: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}icon_index'])!,
+      colorSchemeIndex: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}color_scheme_index'])!,
     );
   }
 
@@ -847,7 +967,8 @@ class $BudgetCategoriesTable extends BudgetCategories with TableInfo<$BudgetCate
   }
 }
 
-class BudgetCategoryDataModel extends DataClass implements Insertable<BudgetCategoryDataModel> {
+class BudgetCategoryDataModel extends DataClass
+    implements Insertable<BudgetCategoryDataModel> {
   final String id;
   final String title;
   final String description;
@@ -884,13 +1005,16 @@ class BudgetCategoryDataModel extends DataClass implements Insertable<BudgetCate
       title: Value(title),
       description: Value(description),
       createdAt: Value(createdAt),
-      updatedAt: updatedAt == null && nullToAbsent ? const Value.absent() : Value(updatedAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
       iconIndex: Value(iconIndex),
       colorSchemeIndex: Value(colorSchemeIndex),
     );
   }
 
-  factory BudgetCategoryDataModel.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory BudgetCategoryDataModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return BudgetCategoryDataModel(
       id: serializer.fromJson<String>(json['id']),
@@ -948,7 +1072,8 @@ class BudgetCategoryDataModel extends DataClass implements Insertable<BudgetCate
   }
 
   @override
-  int get hashCode => Object.hash(id, title, description, createdAt, updatedAt, iconIndex, colorSchemeIndex);
+  int get hashCode => Object.hash(id, title, description, createdAt, updatedAt,
+      iconIndex, colorSchemeIndex);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -962,7 +1087,8 @@ class BudgetCategoryDataModel extends DataClass implements Insertable<BudgetCate
           other.colorSchemeIndex == this.colorSchemeIndex);
 }
 
-class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategoryDataModel> {
+class BudgetCategoriesCompanion
+    extends UpdateCompanion<BudgetCategoryDataModel> {
   final Value<String> id;
   final Value<String> title;
   final Value<String> description;
@@ -1084,70 +1210,94 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategoryDataModel>
   }
 }
 
-class $BudgetPlansTable extends BudgetPlans with TableInfo<$BudgetPlansTable, BudgetPlanDataModel> {
+class $BudgetPlansTable extends BudgetPlans
+    with TableInfo<$BudgetPlansTable, BudgetPlanDataModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $BudgetPlansTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: false, clientDefault: () => _uuid.v4());
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v4());
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
-  late final GeneratedColumn<String> title =
-      GeneratedColumn<String>('title', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionMeta = const VerificationMeta('description');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
   @override
-  late final GeneratedColumn<String> description =
-      GeneratedColumn<String>('description', aliasedName, false, type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>('created_at', aliasedName, false,
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>('updated_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _categoryMeta = const VerificationMeta('category');
+  static const VerificationMeta _categoryMeta =
+      const VerificationMeta('category');
   @override
-  late final GeneratedColumn<String> category = GeneratedColumn<String>('category', aliasedName, false,
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+      'category', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES budget_categories (id)'));
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES budget_categories (id)'));
   @override
-  List<GeneratedColumn> get $columns => [id, title, description, createdAt, updatedAt, category];
+  List<GeneratedColumn> get $columns =>
+      [id, title, description, createdAt, updatedAt, category];
   @override
   String get aliasedName => _alias ?? 'budget_plans';
   @override
   String get actualTableName => 'budget_plans';
   @override
-  VerificationContext validateIntegrity(Insertable<BudgetPlanDataModel> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+      Insertable<BudgetPlanDataModel> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('title')) {
-      context.handle(_titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
     if (data.containsKey('description')) {
-      context.handle(_descriptionMeta, description.isAcceptableOrUnknown(data['description']!, _descriptionMeta));
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
     } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta, updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     }
     if (data.containsKey('category')) {
-      context.handle(_categoryMeta, category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
+      context.handle(_categoryMeta,
+          category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
     } else if (isInserting) {
       context.missing(_categoryMeta);
     }
@@ -1160,12 +1310,18 @@ class $BudgetPlansTable extends BudgetPlans with TableInfo<$BudgetPlansTable, Bu
   BudgetPlanDataModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return BudgetPlanDataModel(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      description: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}description'])!,
-      createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      updatedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
-      category: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}category'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
+      category: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}category'])!,
     );
   }
 
@@ -1175,7 +1331,8 @@ class $BudgetPlansTable extends BudgetPlans with TableInfo<$BudgetPlansTable, Bu
   }
 }
 
-class BudgetPlanDataModel extends DataClass implements Insertable<BudgetPlanDataModel> {
+class BudgetPlanDataModel extends DataClass
+    implements Insertable<BudgetPlanDataModel> {
   final String id;
   final String title;
   final String description;
@@ -1209,12 +1366,15 @@ class BudgetPlanDataModel extends DataClass implements Insertable<BudgetPlanData
       title: Value(title),
       description: Value(description),
       createdAt: Value(createdAt),
-      updatedAt: updatedAt == null && nullToAbsent ? const Value.absent() : Value(updatedAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
       category: Value(category),
     );
   }
 
-  factory BudgetPlanDataModel.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory BudgetPlanDataModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return BudgetPlanDataModel(
       id: serializer.fromJson<String>(json['id']),
@@ -1267,7 +1427,8 @@ class BudgetPlanDataModel extends DataClass implements Insertable<BudgetPlanData
   }
 
   @override
-  int get hashCode => Object.hash(id, title, description, createdAt, updatedAt, category);
+  int get hashCode =>
+      Object.hash(id, title, description, createdAt, updatedAt, category);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1398,65 +1559,85 @@ class $BudgetAllocationsTable extends BudgetAllocations
   $BudgetAllocationsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>('id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: false, clientDefault: () => _uuid.v4());
-  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v4());
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>('created_at', aliasedName, false,
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>('updated_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<int> amount =
-      GeneratedColumn<int>('amount', aliasedName, false, type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+      'amount', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _budgetMeta = const VerificationMeta('budget');
   @override
-  late final GeneratedColumn<String> budget = GeneratedColumn<String>('budget', aliasedName, false,
+  late final GeneratedColumn<String> budget = GeneratedColumn<String>(
+      'budget', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES budgets (id)'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES budgets (id)'));
   static const VerificationMeta _planMeta = const VerificationMeta('plan');
   @override
-  late final GeneratedColumn<String> plan = GeneratedColumn<String>('plan', aliasedName, false,
+  late final GeneratedColumn<String> plan = GeneratedColumn<String>(
+      'plan', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES budget_plans (id)'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES budget_plans (id)'));
   @override
-  List<GeneratedColumn> get $columns => [id, createdAt, updatedAt, amount, budget, plan];
+  List<GeneratedColumn> get $columns =>
+      [id, createdAt, updatedAt, amount, budget, plan];
   @override
   String get aliasedName => _alias ?? 'budget_allocations';
   @override
   String get actualTableName => 'budget_allocations';
   @override
-  VerificationContext validateIntegrity(Insertable<BudgetAllocationDataModel> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+      Insertable<BudgetAllocationDataModel> instance,
+      {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta, updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     }
     if (data.containsKey('amount')) {
-      context.handle(_amountMeta, amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+      context.handle(_amountMeta,
+          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
     } else if (isInserting) {
       context.missing(_amountMeta);
     }
     if (data.containsKey('budget')) {
-      context.handle(_budgetMeta, budget.isAcceptableOrUnknown(data['budget']!, _budgetMeta));
+      context.handle(_budgetMeta,
+          budget.isAcceptableOrUnknown(data['budget']!, _budgetMeta));
     } else if (isInserting) {
       context.missing(_budgetMeta);
     }
     if (data.containsKey('plan')) {
-      context.handle(_planMeta, plan.isAcceptableOrUnknown(data['plan']!, _planMeta));
+      context.handle(
+          _planMeta, plan.isAcceptableOrUnknown(data['plan']!, _planMeta));
     } else if (isInserting) {
       context.missing(_planMeta);
     }
@@ -1466,15 +1647,22 @@ class $BudgetAllocationsTable extends BudgetAllocations
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  BudgetAllocationDataModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  BudgetAllocationDataModel map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return BudgetAllocationDataModel(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      updatedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
-      amount: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
-      budget: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}budget'])!,
-      plan: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}plan'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
+      budget: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}budget'])!,
+      plan: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}plan'])!,
     );
   }
 
@@ -1484,7 +1672,8 @@ class $BudgetAllocationsTable extends BudgetAllocations
   }
 }
 
-class BudgetAllocationDataModel extends DataClass implements Insertable<BudgetAllocationDataModel> {
+class BudgetAllocationDataModel extends DataClass
+    implements Insertable<BudgetAllocationDataModel> {
   final String id;
   final DateTime createdAt;
   final DateTime? updatedAt;
@@ -1516,14 +1705,17 @@ class BudgetAllocationDataModel extends DataClass implements Insertable<BudgetAl
     return BudgetAllocationsCompanion(
       id: Value(id),
       createdAt: Value(createdAt),
-      updatedAt: updatedAt == null && nullToAbsent ? const Value.absent() : Value(updatedAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
       amount: Value(amount),
       budget: Value(budget),
       plan: Value(plan),
     );
   }
 
-  factory BudgetAllocationDataModel.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory BudgetAllocationDataModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return BudgetAllocationDataModel(
       id: serializer.fromJson<String>(json['id']),
@@ -1576,7 +1768,8 @@ class BudgetAllocationDataModel extends DataClass implements Insertable<BudgetAl
   }
 
   @override
-  int get hashCode => Object.hash(id, createdAt, updatedAt, amount, budget, plan);
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, amount, budget, plan);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1589,7 +1782,8 @@ class BudgetAllocationDataModel extends DataClass implements Insertable<BudgetAl
           other.plan == this.plan);
 }
 
-class BudgetAllocationsCompanion extends UpdateCompanion<BudgetAllocationDataModel> {
+class BudgetAllocationsCompanion
+    extends UpdateCompanion<BudgetAllocationDataModel> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime?> updatedAt;
@@ -1704,20 +1898,31 @@ abstract class _$Database extends GeneratedDatabase {
   late final $AccountsTable accounts = $AccountsTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $BudgetsTable budgets = $BudgetsTable(this);
-  late final $BudgetCategoriesTable budgetCategories = $BudgetCategoriesTable(this);
+  late final $BudgetCategoriesTable budgetCategories =
+      $BudgetCategoriesTable(this);
   late final $BudgetPlansTable budgetPlans = $BudgetPlansTable(this);
-  late final $BudgetAllocationsTable budgetAllocations = $BudgetAllocationsTable(this);
+  late final $BudgetAllocationsTable budgetAllocations =
+      $BudgetAllocationsTable(this);
   late final AccountsDao accountsDao = AccountsDao(this as Database);
   late final UsersDao usersDao = UsersDao(this as Database);
   late final BudgetsDao budgetsDao = BudgetsDao(this as Database);
   late final BudgetPlansDao budgetPlansDao = BudgetPlansDao(this as Database);
-  late final BudgetCategoriesDao budgetCategoriesDao = BudgetCategoriesDao(this as Database);
-  late final BudgetAllocationsDao budgetAllocationsDao = BudgetAllocationsDao(this as Database);
+  late final BudgetCategoriesDao budgetCategoriesDao =
+      BudgetCategoriesDao(this as Database);
+  late final BudgetAllocationsDao budgetAllocationsDao =
+      BudgetAllocationsDao(this as Database);
   @override
-  Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [accounts, users, budgets, budgetCategories, budgetPlans, budgetAllocations];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        accounts,
+        users,
+        budgets,
+        budgetCategories,
+        budgetPlans,
+        budgetAllocations
+      ];
 }
 
 mixin _$AccountsDaoMixin on DatabaseAccessor<Database> {
@@ -1730,15 +1935,19 @@ mixin _$BudgetsDaoMixin on DatabaseAccessor<Database> {
   $BudgetsTable get budgets => attachedDatabase.budgets;
 }
 mixin _$BudgetPlansDaoMixin on DatabaseAccessor<Database> {
-  $BudgetCategoriesTable get budgetCategories => attachedDatabase.budgetCategories;
+  $BudgetCategoriesTable get budgetCategories =>
+      attachedDatabase.budgetCategories;
   $BudgetPlansTable get budgetPlans => attachedDatabase.budgetPlans;
 }
 mixin _$BudgetCategoriesDaoMixin on DatabaseAccessor<Database> {
-  $BudgetCategoriesTable get budgetCategories => attachedDatabase.budgetCategories;
+  $BudgetCategoriesTable get budgetCategories =>
+      attachedDatabase.budgetCategories;
 }
 mixin _$BudgetAllocationsDaoMixin on DatabaseAccessor<Database> {
   $BudgetsTable get budgets => attachedDatabase.budgets;
-  $BudgetCategoriesTable get budgetCategories => attachedDatabase.budgetCategories;
+  $BudgetCategoriesTable get budgetCategories =>
+      attachedDatabase.budgetCategories;
   $BudgetPlansTable get budgetPlans => attachedDatabase.budgetPlans;
-  $BudgetAllocationsTable get budgetAllocations => attachedDatabase.budgetAllocations;
+  $BudgetAllocationsTable get budgetAllocations =>
+      attachedDatabase.budgetAllocations;
 }

@@ -15,6 +15,8 @@ class MockBudgetCategoriesRepository extends Mock implements BudgetCategoriesRep
 
 class MockBudgetAllocationsRepository extends Mock implements BudgetAllocationsRepository {}
 
+class MockPreferencesRepository extends Mock implements PreferencesRepository {}
+
 class MockCreateBudgetAllocationUseCase extends Mock implements CreateBudgetAllocationUseCase {}
 
 class MockUpdateBudgetAllocationUseCase extends Mock implements UpdateBudgetAllocationUseCase {}
@@ -60,6 +62,8 @@ class MockFetchBudgetsUseCase extends Mock implements FetchBudgetsUseCase {}
 class MockFetchActiveBudgetUseCase extends Mock implements FetchActiveBudgetUseCase {}
 
 class MockFetchUserUseCase extends Mock implements FetchUserUseCase {}
+
+class MockFetchDatabaseLocationUseCase extends Mock implements FetchDatabaseLocationUseCase {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 

@@ -6,8 +6,6 @@ import 'package:drift/native.dart';
 import 'package:meta/meta.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/transformers.dart';
 import 'package:uuid/uuid.dart';
 
@@ -35,14 +33,7 @@ part 'tables.dart';
   ],
 )
 class Database extends _$Database {
-  Database(String dbName)
-      : super(
-          LazyDatabase(() async {
-            final Directory dbFolder = await getApplicationDocumentsDirectory();
-
-            return NativeDatabase.createInBackground(File(p.join(dbFolder.path, dbName)));
-          }),
-        );
+  Database(String path) : super(LazyDatabase(() => NativeDatabase.createInBackground(File(path))));
 
   Database.memory() : super(NativeDatabase.memory(logStatements: true));
 

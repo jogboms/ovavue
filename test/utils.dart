@@ -17,8 +17,10 @@ class MockRepositories {
   final BudgetPlansRepository budgetPlans = MockBudgetPlansRepository();
   final BudgetCategoriesRepository budgetCategories = MockBudgetCategoriesRepository();
   final BudgetAllocationsRepository budgetAllocations = MockBudgetAllocationsRepository();
+  final PreferencesRepository preferences = MockPreferencesRepository();
 
-  void reset() => <Object>[auth, users, budgets, budgetPlans, budgetCategories, budgetAllocations].forEach(mt.reset);
+  void reset() =>
+      <Object>[auth, users, budgets, budgetPlans, budgetCategories, budgetAllocations, preferences].forEach(mt.reset);
 }
 
 final MockRepositories mockRepositories = MockRepositories();
@@ -49,6 +51,7 @@ class MockUseCases {
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
+  final FetchDatabaseLocationUseCase fetchDatabaseLocationUseCase = MockFetchDatabaseLocationUseCase();
 
   void reset() => <Object>[
         createBudgetAllocationUseCase,
@@ -73,6 +76,7 @@ class MockUseCases {
         fetchBudgetsUseCase,
         fetchActiveBudgetUseCase,
         fetchUserUseCase,
+        fetchDatabaseLocationUseCase,
       ].forEach(mt.reset);
 }
 
@@ -89,6 +93,7 @@ Registry createRegistry({
       ..set(mockRepositories.budgetPlans)
       ..set(mockRepositories.budgetCategories)
       ..set(mockRepositories.budgetAllocations)
+      ..set(mockRepositories.preferences)
       ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
@@ -112,6 +117,7 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
+      ..factory((RegistryFactory di) => FetchDatabaseLocationUseCase(preferences: di()))
       ..set(environment);
 
 ProviderContainer createProviderContainer({
@@ -207,7 +213,8 @@ extension MockUseCasesExtensions on Registry {
     ..replace<FetchBudgetUseCase>(mockUseCases.fetchBudgetUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)
-    ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase);
+    ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
+    ..replace<FetchDatabaseLocationUseCase>(mockUseCases.fetchDatabaseLocationUseCase);
 }
 
 extension FinderExtensions on Finder {

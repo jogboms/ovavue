@@ -1,10 +1,13 @@
 import 'dart:async' as async;
+import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:registry/registry.dart';
 import 'package:universal_io/io.dart' as io;
 
@@ -24,18 +27,28 @@ void main() async {
   final NavigatorObserver navigationObserver = NavigatorObserver();
   switch (environment) {
     case Environment.dev:
-      analytics = const _PrintAnalytics();
-      repository = _Repository.local(Database.memory());
+      repository = _Repository.local(
+        Database.memory(),
+        authIdentityStorage: const _InMemoryAuthIdentityStorage(),
+        preferencesStorage: _InMemoryPreferencesStorage(),
+      );
       reporterClient = const _NoopReporterClient();
+      analytics = const _PrintAnalytics();
       break;
     case Environment.prod:
-      analytics = _InMemoryAnalytics();
-      repository = _Repository.local(Database('db.sqlite'));
+      const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
+      const PreferencesStorage preferencesStorage = _SecureStoragePreferencesStorage(flutterSecureStorage);
+      repository = _Repository.local(
+        Database(await preferencesStorage.getDatabaseLocation()),
+        authIdentityStorage: const _SecureStorageAuthIdentityStorage(flutterSecureStorage),
+        preferencesStorage: preferencesStorage,
+      );
       final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
       reporterClient = _ReporterClient(
         deviceInformation: deviceInformation,
         environment: environment,
       );
+      analytics = _InMemoryAnalytics();
       break;
     case Environment.testing:
     case Environment.mock:
@@ -75,6 +88,7 @@ void main() async {
     ..set(repository.budgetPlans)
     ..set(repository.budgetCategories)
     ..set(repository.budgetAllocations)
+    ..set(repository.preferences)
 
     /// UseCases.
     /// Callable classes that may contain logic or else route directly to repositories.
@@ -101,6 +115,7 @@ void main() async {
     ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
+    ..factory((RegistryFactory di) => FetchDatabaseLocationUseCase(preferences: di()))
 
     /// Environment.
     ..set(environment);
@@ -125,13 +140,17 @@ void main() async {
 }
 
 class _Repository {
-  _Repository.local(Database db)
-      : auth = AuthLocalImpl(db, const _SecureStorageAuthIdentityStorage(FlutterSecureStorage())),
+  _Repository.local(
+    Database db, {
+    required AuthIdentityStorage authIdentityStorage,
+    required PreferencesStorage preferencesStorage,
+  })  : auth = AuthLocalImpl(db, authIdentityStorage),
         users = UsersLocalImpl(db),
         budgets = BudgetsLocalImpl(db),
         budgetPlans = BudgetPlansLocalImpl(db),
         budgetCategories = BudgetCategoriesLocalImpl(db),
-        budgetAllocations = BudgetAllocationsLocalImpl(db);
+        budgetAllocations = BudgetAllocationsLocalImpl(db),
+        preferences = PreferencesLocalImpl(preferencesStorage);
 
   _Repository.mock()
       : auth = AuthMockImpl(),
@@ -139,7 +158,8 @@ class _Repository {
         budgets = BudgetsMockImpl(),
         budgetPlans = BudgetPlansMockImpl(),
         budgetCategories = BudgetCategoriesMockImpl(),
-        budgetAllocations = BudgetAllocationsMockImpl();
+        budgetAllocations = BudgetAllocationsMockImpl(),
+        preferences = PreferencesMockImpl();
 
   final AuthRepository auth;
   final UsersRepository users;
@@ -147,6 +167,7 @@ class _Repository {
   final BudgetPlansRepository budgetPlans;
   final BudgetCategoriesRepository budgetCategories;
   final BudgetAllocationsRepository budgetAllocations;
+  final PreferencesRepository preferences;
 }
 
 class _ReporterClient implements ReporterClient {
@@ -246,4 +267,49 @@ class _SecureStorageAuthIdentityStorage implements AuthIdentityStorage {
 
   @override
   async.FutureOr<void> set(String id) => _storage.write(key: _key, value: id);
+}
+
+class _InMemoryAuthIdentityStorage implements AuthIdentityStorage {
+  const _InMemoryAuthIdentityStorage();
+
+  @override
+  async.FutureOr<String?> get() => 'id';
+
+  @override
+  async.FutureOr<void> set(String id) {}
+}
+
+class _SecureStoragePreferencesStorage implements PreferencesStorage {
+  const _SecureStoragePreferencesStorage(this._storage);
+
+  static const String _dbName = 'db.sqlite';
+  static const String _databaseLocationKey = 'ovavue.app.preferences.databaseLocation';
+
+  final FlutterSecureStorage _storage;
+
+  @override
+  async.FutureOr<String> getDatabaseLocation() async {
+    final String? directoryPath = await _storage.read(key: _databaseLocationKey);
+    if (directoryPath != null) {
+      final String path = _deriveDbFilePath(directoryPath);
+      if (io.File(path).existsSync()) {
+        return path;
+      } else {
+        await _storage.delete(key: _databaseLocationKey);
+      }
+    }
+
+    final io.Directory directory =
+        io.Platform.isIOS ? await getLibraryDirectory() : await getApplicationDocumentsDirectory();
+    await _storage.write(key: _databaseLocationKey, value: directory.path);
+
+    return _deriveDbFilePath(directory.path);
+  }
+
+  String _deriveDbFilePath(String directoryPath) => p.join(directoryPath, _dbName);
+}
+
+class _InMemoryPreferencesStorage implements PreferencesStorage {
+  @override
+  async.FutureOr<String> getDatabaseLocation() => 'in-memory/db.sqlite';
 }
