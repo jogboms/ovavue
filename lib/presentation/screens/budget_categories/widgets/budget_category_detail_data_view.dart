@@ -89,7 +89,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
             ),
           ),
         ),
-        SliverPinnedTitleCountHeader(
+        SliverPinnedTitleCountHeader.count(
           title: context.l10n.associatedPlansTitle,
           count: state.plans.length,
         ),

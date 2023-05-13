@@ -180,7 +180,7 @@ class _ContentDataView extends StatelessWidget {
             const SizedBox(height: 8.0),
           ],
         ),
-        SliverPinnedTitleCountHeader(
+        SliverPinnedTitleCountHeader.count(
           title: context.l10n.previousAllocationsTitle,
           count: state.previousAllocations.length,
         ),

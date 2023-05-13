@@ -117,9 +117,9 @@ class BudgetDetailDataView extends StatelessWidget {
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 8)),
-        SliverPinnedTitleCountHeader(
+        SliverPinnedTitleCountHeader.amount(
           title: context.l10n.associatedPlansTitle,
-          count: state.plans.length,
+          amount: state.allocation,
         ),
         if (state.plans.isEmpty)
           const SliverFillRemaining(child: EmptyView())
