@@ -21,5 +21,29 @@ Future<void> main() async {
         completion(expectedState),
       );
     });
+
+    test('should import database', () {
+      when(mockUseCases.importDatabaseUseCase.call).thenAnswer((_) async => true);
+
+      final ProviderContainer container = createProviderContainer();
+      addTearDown(container.dispose);
+
+      expect(
+        container.read(preferencesProvider.notifier).importDatabase(),
+        completion(true),
+      );
+    });
+
+    test('should export database', () {
+      when(mockUseCases.exportDatabaseUseCase.call).thenAnswer((_) async => true);
+
+      final ProviderContainer container = createProviderContainer();
+      addTearDown(container.dispose);
+
+      expect(
+        container.read(preferencesProvider.notifier).exportDatabase(),
+        completion(true),
+      );
+    });
   });
 }

@@ -1,13 +1,10 @@
 import 'dart:async' as async;
-import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:registry/registry.dart';
 import 'package:universal_io/io.dart' as io;
 
@@ -30,18 +27,17 @@ void main() async {
       repository = _Repository.local(
         Database.memory(),
         authIdentityStorage: const _InMemoryAuthIdentityStorage(),
-        preferencesStorage: _InMemoryPreferencesStorage(),
+        preferences: const PreferencesLocalImpl(),
       );
       reporterClient = const _NoopReporterClient();
       analytics = const _PrintAnalytics();
       break;
     case Environment.prod:
-      const FlutterSecureStorage flutterSecureStorage = FlutterSecureStorage();
-      const PreferencesStorage preferencesStorage = _SecureStoragePreferencesStorage(flutterSecureStorage);
+      const PreferencesRepository preferences = PreferencesLocalImpl();
       repository = _Repository.local(
-        Database(await preferencesStorage.getDatabaseLocation()),
-        authIdentityStorage: const _SecureStorageAuthIdentityStorage(flutterSecureStorage),
-        preferencesStorage: preferencesStorage,
+        Database(await preferences.fetchDatabaseLocation()),
+        authIdentityStorage: const _SecureStorageAuthIdentityStorage(FlutterSecureStorage()),
+        preferences: preferences,
       );
       final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
       reporterClient = _ReporterClient(
@@ -116,6 +112,8 @@ void main() async {
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
     ..factory((RegistryFactory di) => FetchDatabaseLocationUseCase(preferences: di()))
+    ..factory((RegistryFactory di) => ImportDatabaseUseCase(preferences: di()))
+    ..factory((RegistryFactory di) => ExportDatabaseUseCase(preferences: di()))
 
     /// Environment.
     ..set(environment);
@@ -143,14 +141,13 @@ class _Repository {
   _Repository.local(
     Database db, {
     required AuthIdentityStorage authIdentityStorage,
-    required PreferencesStorage preferencesStorage,
+    required this.preferences,
   })  : auth = AuthLocalImpl(db, authIdentityStorage),
         users = UsersLocalImpl(db),
         budgets = BudgetsLocalImpl(db),
         budgetPlans = BudgetPlansLocalImpl(db),
         budgetCategories = BudgetCategoriesLocalImpl(db),
-        budgetAllocations = BudgetAllocationsLocalImpl(db),
-        preferences = PreferencesLocalImpl(preferencesStorage);
+        budgetAllocations = BudgetAllocationsLocalImpl(db);
 
   _Repository.mock()
       : auth = AuthMockImpl(),
@@ -277,39 +274,4 @@ class _InMemoryAuthIdentityStorage implements AuthIdentityStorage {
 
   @override
   async.FutureOr<void> set(String id) {}
-}
-
-class _SecureStoragePreferencesStorage implements PreferencesStorage {
-  const _SecureStoragePreferencesStorage(this._storage);
-
-  static const String _dbName = 'db.sqlite';
-  static const String _databaseLocationKey = 'ovavue.app.preferences.databaseLocation';
-
-  final FlutterSecureStorage _storage;
-
-  @override
-  async.FutureOr<String> getDatabaseLocation() async {
-    final String? directoryPath = await _storage.read(key: _databaseLocationKey);
-    if (directoryPath != null) {
-      final String path = _deriveDbFilePath(directoryPath);
-      if (io.File(path).existsSync()) {
-        return path;
-      } else {
-        await _storage.delete(key: _databaseLocationKey);
-      }
-    }
-
-    final io.Directory directory =
-        io.Platform.isIOS ? await getLibraryDirectory() : await getApplicationDocumentsDirectory();
-    await _storage.write(key: _databaseLocationKey, value: directory.path);
-
-    return _deriveDbFilePath(directory.path);
-  }
-
-  String _deriveDbFilePath(String directoryPath) => p.join(directoryPath, _dbName);
-}
-
-class _InMemoryPreferencesStorage implements PreferencesStorage {
-  @override
-  async.FutureOr<String> getDatabaseLocation() => 'in-memory/db.sqlite';
 }

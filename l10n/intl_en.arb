@@ -59,5 +59,8 @@
   },
   "preferencesTitle": "Preferences",
   "databaseLocationLabel": "DATABASE LOCATION",
-  "copiedDatabaseLocationMessage": "Copied database location to the clipboard"
+  "backupRestoreLabel": "BACKUP / RESTORE",
+  "copiedDatabaseLocationMessage": "Copied database location to the clipboard",
+  "exitAppMessage": "You would need to restart Ovavue to continue",
+  "continueCaption": "Continue"
 }

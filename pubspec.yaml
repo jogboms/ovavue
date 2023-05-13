@@ -14,6 +14,7 @@ dependencies:
   drift: ^2.7.0
   equatable: ^2.0.5
   faker: ^2.1.0
+  file_picker: ^5.3.0
   fl_chart: ^0.62.0
   flutter:
     sdk: flutter

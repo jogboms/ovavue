@@ -17,6 +17,10 @@ class Preferences extends _$Preferences {
       databaseLocation: await di<FetchDatabaseLocationUseCase>().call(),
     );
   }
+
+  Future<bool?> importDatabase() async => ref.read(registryProvider).get<ImportDatabaseUseCase>().call();
+
+  Future<bool?> exportDatabase() async => ref.read(registryProvider).get<ExportDatabaseUseCase>().call();
 }
 
 class PreferencesState with EquatableMixin {

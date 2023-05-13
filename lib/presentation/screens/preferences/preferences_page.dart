@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:universal_io/io.dart' as io;
 
 import '../../constants.dart';
 import '../../utils.dart';
@@ -26,7 +26,11 @@ class _PreferencesPageState extends State<PreferencesPage> {
     return Scaffold(
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(preferencesProvider).when(
-              data: (PreferencesState data) => _ContentDataView(key: dataViewKey, state: data),
+              data: (PreferencesState data) => _ContentDataView(
+                key: dataViewKey,
+                preferences: ref.read(preferencesProvider.notifier),
+                state: data,
+              ),
               error: ErrorView.new,
               loading: () => child!,
             ),
@@ -37,16 +41,23 @@ class _PreferencesPageState extends State<PreferencesPage> {
 }
 
 class _ContentDataView extends StatelessWidget {
-  const _ContentDataView({super.key, required this.state});
+  const _ContentDataView({
+    super.key,
+    required this.preferences,
+    required this.state,
+  });
 
+  final Preferences preferences;
   final PreferencesState state;
 
   @override
   Widget build(BuildContext context) {
+    final L10n l10n = context.l10n;
+
     return CustomScrollView(
       slivers: <Widget>[
         CustomAppBar(
-          title: Text(context.l10n.preferencesTitle),
+          title: Text(l10n.preferencesTitle),
           asSliver: true,
           centerTitle: true,
         ),
@@ -56,9 +67,26 @@ class _ContentDataView extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             sliver: SliverList.list(
               children: <Widget>[
-                _DatabaseLocation(
+                _Item(
                   key: Key(state.databaseLocation),
-                  path: state.databaseLocation,
+                  leading: AppIcons.budget,
+                  actions: <_ItemAction>[
+                    (AppIcons.copyToClipboard, () => _handleCopyToClipboard(context)),
+                  ],
+                  label: l10n.databaseLocationLabel,
+                  child: Text(
+                    state.databaseLocation.truncateLeft(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _Item(
+                  actions: <_ItemAction>[
+                    (AppIcons.export, _handleDatabaseExport),
+                    (AppIcons.import, () => _handleDatabaseImport(context))
+                  ],
+                  child: Text(l10n.backupRestoreLabel),
                 ),
               ],
             ),
@@ -67,16 +95,52 @@ class _ContentDataView extends StatelessWidget {
       ],
     );
   }
+
+  void _handleCopyToClipboard(BuildContext context) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = AppSnackBar.of(context);
+    await Clipboard.setData(ClipboardData(text: state.databaseLocation));
+    snackBar.info(l10n.copiedDatabaseLocationMessage);
+  }
+
+  void _handleDatabaseImport(BuildContext context) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = AppSnackBar.of(context);
+
+    final bool? successful = await preferences.importDatabase();
+    if (successful == true && context.mounted) {
+      await showModalBottomSheet<void>(
+        context: context,
+        isDismissible: false,
+        builder: (_) => const _ExitDialog(),
+      );
+    } else if (successful == false) {
+      snackBar.error(l10n.genericErrorMessage);
+    }
+  }
+
+  void _handleDatabaseExport() => preferences.exportDatabase();
 }
 
-class _DatabaseLocation extends StatelessWidget {
-  const _DatabaseLocation({super.key, required this.path});
+typedef _ItemAction = (IconData, VoidCallback);
 
-  final String path;
+class _Item extends StatelessWidget {
+  const _Item({
+    super.key,
+    this.leading,
+    this.label,
+    required this.child,
+    required this.actions,
+  });
+
+  final IconData? leading;
+  final String? label;
+  final Widget child;
+
+  final List<_ItemAction> actions;
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
 
@@ -84,38 +148,58 @@ class _DatabaseLocation extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          l10n.databaseLocationLabel,
-          style: textTheme.labelLarge,
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: <Widget>[
-            const Icon(AppIcons.budget),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                path.truncateLeft(),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+        if (label case final String label?) ...<Widget>[
+          Text(label, style: textTheme.labelLarge),
+          const SizedBox(height: 2),
+        ],
+        Container(
+          color: theme.colorScheme.surfaceVariant,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          child: Row(
+            children: <Widget>[
+              if (leading case final IconData leading?) ...<Widget>[
+                Icon(leading),
+                const SizedBox(width: 8),
+              ],
+              Expanded(
+                child: DefaultTextStyle(
+                  style: label == null ? textTheme.labelLarge! : textTheme.bodyMedium!,
+                  child: child,
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            IconButton(
-              onPressed: () async {
-                final AppSnackBar snackbar = AppSnackBar.of(context);
-                await Clipboard.setData(ClipboardData(text: path));
-                snackbar.info(l10n.copiedDatabaseLocationMessage);
-              },
-              icon: const Icon(AppIcons.copyToClipboard),
-            ),
-            IconButton(
-              onPressed: () => Share.shareXFiles(<XFile>[XFile(path)]),
-              icon: const Icon(AppIcons.share),
-            ),
-          ],
+              for (final _ItemAction action in actions) ...<Widget>[
+                const SizedBox(width: 6),
+                IconButton(onPressed: action.$2, icon: Icon(action.$1)),
+              ]
+            ],
+          ),
         ),
       ],
+    );
+  }
+}
+
+class _ExitDialog extends StatelessWidget {
+  const _ExitDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final L10n l10n = context.l10n;
+    final ThemeData theme = Theme.of(context);
+
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(l10n.exitAppMessage, style: theme.textTheme.bodyLarge),
+            const SizedBox(height: 8),
+            PrimaryButton(caption: l10n.continueCaption, onPressed: () => io.exit(1)),
+          ],
+        ),
+      ),
     );
   }
 }

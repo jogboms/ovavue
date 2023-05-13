@@ -65,6 +65,10 @@ class MockFetchUserUseCase extends Mock implements FetchUserUseCase {}
 
 class MockFetchDatabaseLocationUseCase extends Mock implements FetchDatabaseLocationUseCase {}
 
+class MockImportDatabaseUseCase extends Mock implements ImportDatabaseUseCase {}
+
+class MockExportDatabaseUseCase extends Mock implements ExportDatabaseUseCase {}
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 class MockValueChangedCallback<T> extends Mock {
