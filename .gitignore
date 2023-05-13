@@ -52,4 +52,3 @@ app.*.map.json
 
 .fvm/flutter_sdk
 .last_build_id
-!/lib/data/local_database/database.g.dart
