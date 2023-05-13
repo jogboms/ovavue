@@ -56,9 +56,8 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
               return router.goToBudgetPlans();
             case _BottomSheetChoice.categories:
               return router.goToBudgetCategories();
-            case _BottomSheetChoice.settings:
-              // TODO(Jogboms): Not implemented
-              break;
+            case _BottomSheetChoice.preferences:
+              return router.goToPreferences();
           }
         },
       ),
@@ -108,7 +107,7 @@ enum _BottomSheetChoice {
   budgets(AppIcons.budget),
   plans(AppIcons.plans),
   categories(AppIcons.categories),
-  settings(AppIcons.settings);
+  preferences(AppIcons.preferences);
 
   const _BottomSheetChoice(this._icon);
 
