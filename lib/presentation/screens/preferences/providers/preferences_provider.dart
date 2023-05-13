@@ -7,13 +7,15 @@ import '../../../state.dart';
 
 part 'preferences_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry])
+@Riverpod(dependencies: <Object>[registry, account])
 class Preferences extends _$Preferences {
   @override
   Future<PreferencesState> build() async {
     final RegistryFactory di = ref.read(registryProvider).get;
+    final AccountEntity account = await ref.watch(accountProvider.future);
 
     return PreferencesState(
+      accountKey: account.id,
       databaseLocation: await di<FetchDatabaseLocationUseCase>().call(),
     );
   }
@@ -25,11 +27,13 @@ class Preferences extends _$Preferences {
 
 class PreferencesState with EquatableMixin {
   const PreferencesState({
+    required this.accountKey,
     required this.databaseLocation,
   });
 
+  final String accountKey;
   final String databaseLocation;
 
   @override
-  List<Object> get props => <Object>[databaseLocation];
+  List<Object> get props => <Object>[accountKey, databaseLocation];
 }

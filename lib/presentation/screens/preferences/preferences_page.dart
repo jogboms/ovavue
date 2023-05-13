@@ -68,10 +68,20 @@ class _ContentDataView extends StatelessWidget {
             sliver: SliverList.list(
               children: <Widget>[
                 _Item(
+                  key: Key(state.accountKey),
+                  leading: AppIcons.accountKey,
+                  actions: <_ItemAction>[
+                    (AppIcons.copyToClipboard, () => _handleCopyToClipboard(context, state.accountKey)),
+                  ],
+                  label: l10n.accountKeyLabel,
+                  child: Text(state.accountKey, overflow: TextOverflow.ellipsis),
+                ),
+                const SizedBox(height: 16),
+                _Item(
                   key: Key(state.databaseLocation),
                   leading: AppIcons.budget,
                   actions: <_ItemAction>[
-                    (AppIcons.copyToClipboard, () => _handleCopyToClipboard(context)),
+                    (AppIcons.copyToClipboard, () => _handleCopyToClipboard(context, state.databaseLocation)),
                   ],
                   label: l10n.databaseLocationLabel,
                   child: Text(
@@ -96,11 +106,11 @@ class _ContentDataView extends StatelessWidget {
     );
   }
 
-  void _handleCopyToClipboard(BuildContext context) async {
+  void _handleCopyToClipboard(BuildContext context, String value) async {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = AppSnackBar.of(context);
-    await Clipboard.setData(ClipboardData(text: state.databaseLocation));
-    snackBar.info(l10n.copiedDatabaseLocationMessage);
+    await Clipboard.setData(ClipboardData(text: value));
+    snackBar.info(l10n.copiedToClipboardMessage);
   }
 
   void _handleDatabaseImport(BuildContext context) async {

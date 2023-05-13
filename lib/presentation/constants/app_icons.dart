@@ -32,6 +32,7 @@ abstract class AppIcons {
   static const IconData copyToClipboard = TablerIcons.clipboard_text;
   static const IconData import = TablerIcons.database_import;
   static const IconData export = TablerIcons.database_export;
+  static const IconData accountKey = TablerIcons.key;
 
   /// Would be great not to change the index of the icons. Append-only and/or Replace-only
   static final Map<int, IconData> categoryIcons = <IconData>{

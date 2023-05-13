@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:ovavue/data.dart';
+import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -10,10 +12,18 @@ Future<void> main() async {
 
   group('PreferencesProvider', () {
     test('should get current location', () {
-      const PreferencesState expectedState = PreferencesState(databaseLocation: 'location');
+      final AccountEntity dummyAccount = AuthMockImpl.generateAccount();
+      final PreferencesState expectedState = PreferencesState(
+        accountKey: dummyAccount.id,
+        databaseLocation: 'location',
+      );
       when(mockUseCases.fetchDatabaseLocationUseCase.call).thenAnswer((_) async => expectedState.databaseLocation);
 
-      final ProviderContainer container = createProviderContainer();
+      final ProviderContainer container = createProviderContainer(
+        overrides: <Override>[
+          accountProvider.overrideWith((_) async => dummyAccount),
+        ],
+      );
       addTearDown(container.dispose);
 
       expect(
