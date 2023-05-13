@@ -19,6 +19,8 @@ void main() {
       title: 'title',
       description: 'description',
       amount: 1,
+      active: true,
+      startedAt: clock.now(),
       endedAt: clock.now(),
     );
 

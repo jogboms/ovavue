@@ -46,13 +46,10 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
     return CustomScrollView(
       slivers: <Widget>[
         CustomAppBar(
           title: Text(context.l10n.budgetsPageTitle),
-          backgroundColor: theme.scaffoldBackgroundColor,
           asSliver: true,
           centerTitle: true,
         ),
@@ -92,6 +89,7 @@ class _ContentDataView extends StatelessWidget {
                     title: budget.title,
                     budgetAmount: budget.amount,
                     allocationAmount: null,
+                    active: budget.active,
                     startedAt: budget.startedAt,
                     endedAt: budget.endedAt,
                     onTap: () => context.router.goToBudgetDetail(id: budget.id),

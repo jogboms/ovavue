@@ -17,8 +17,10 @@ class MockRepositories {
   final BudgetPlansRepository budgetPlans = MockBudgetPlansRepository();
   final BudgetCategoriesRepository budgetCategories = MockBudgetCategoriesRepository();
   final BudgetAllocationsRepository budgetAllocations = MockBudgetAllocationsRepository();
+  final PreferencesRepository preferences = MockPreferencesRepository();
 
-  void reset() => <Object>[auth, users, budgets, budgetPlans, budgetCategories, budgetAllocations].forEach(mt.reset);
+  void reset() =>
+      <Object>[auth, users, budgets, budgetPlans, budgetCategories, budgetAllocations, preferences].forEach(mt.reset);
 }
 
 final MockRepositories mockRepositories = MockRepositories();
@@ -29,6 +31,7 @@ class MockUseCases {
   final CreateBudgetPlanUseCase createBudgetPlanUseCase = MockCreateBudgetPlanUseCase();
   final CreateBudgetUseCase createBudgetUseCase = MockCreateBudgetUseCase();
   final CreateUserUseCase createUserUseCase = MockCreateUserUseCase();
+  final ActivateBudgetUseCase activateBudgetUseCase = MockActivateBudgetUseCase();
   final UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase = MockUpdateBudgetAllocationUseCase();
   final UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase = MockUpdateBudgetCategoryUseCase();
   final UpdateBudgetPlanUseCase updateBudgetPlanUseCase = MockUpdateBudgetPlanUseCase();
@@ -48,9 +51,9 @@ class MockUseCases {
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
-  final SignInUseCase signInUseCase = MockSignInUseCase();
-  final SignOutUseCase signOutUseCase = MockSignOutUseCase();
-  final UpdateUserUseCase updateUserUseCase = MockUpdateUserUseCase();
+  final FetchDatabaseLocationUseCase fetchDatabaseLocationUseCase = MockFetchDatabaseLocationUseCase();
+  final ImportDatabaseUseCase importDatabaseUseCase = MockImportDatabaseUseCase();
+  final ExportDatabaseUseCase exportDatabaseUseCase = MockExportDatabaseUseCase();
 
   void reset() => <Object>[
         createBudgetAllocationUseCase,
@@ -58,6 +61,7 @@ class MockUseCases {
         createBudgetPlanUseCase,
         createBudgetUseCase,
         createUserUseCase,
+        activateBudgetUseCase,
         updateBudgetAllocationUseCase,
         updateBudgetCategoryUseCase,
         updateBudgetPlanUseCase,
@@ -74,9 +78,9 @@ class MockUseCases {
         fetchBudgetsUseCase,
         fetchActiveBudgetUseCase,
         fetchUserUseCase,
-        signInUseCase,
-        signOutUseCase,
-        updateUserUseCase,
+        fetchDatabaseLocationUseCase,
+        importDatabaseUseCase,
+        exportDatabaseUseCase,
       ].forEach(mt.reset);
 }
 
@@ -86,17 +90,19 @@ Registry createRegistry({
   Environment environment = Environment.testing,
 }) =>
     Registry()
-      ..set<Analytics>(const NoopAnalytics())
+      ..set<Analytics>(FakeAnalytics())
       ..set(mockRepositories.auth)
       ..set(mockRepositories.users)
       ..set(mockRepositories.budgets)
       ..set(mockRepositories.budgetPlans)
       ..set(mockRepositories.budgetCategories)
       ..set(mockRepositories.budgetAllocations)
+      ..set(mockRepositories.preferences)
       ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
+      ..factory((RegistryFactory di) => ActivateBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
@@ -115,9 +121,9 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
-      ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
-      ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
-      ..factory((RegistryFactory di) => UpdateUserUseCase(users: di()))
+      ..factory((RegistryFactory di) => FetchDatabaseLocationUseCase(preferences: di()))
+      ..factory((RegistryFactory di) => ImportDatabaseUseCase(preferences: di()))
+      ..factory((RegistryFactory di) => ExportDatabaseUseCase(preferences: di()))
       ..set(environment);
 
 ProviderContainer createProviderContainer({
@@ -170,7 +176,7 @@ class ProviderListener<T> {
   void reset() => log.clear();
 }
 
-class LogAnalytics extends NoopAnalytics {
+class LogAnalytics implements Analytics {
   final List<AnalyticsEvent> events = <AnalyticsEvent>[];
   String? userId;
 
@@ -187,6 +193,9 @@ class LogAnalytics extends NoopAnalytics {
     events.clear();
     removeUserId();
   }
+
+  @override
+  Future<void> setCurrentScreen(String name) async {}
 }
 
 extension MockUseCasesExtensions on Registry {
@@ -196,6 +205,7 @@ extension MockUseCasesExtensions on Registry {
     ..replace<CreateBudgetPlanUseCase>(mockUseCases.createBudgetPlanUseCase)
     ..replace<CreateBudgetUseCase>(mockUseCases.createBudgetUseCase)
     ..replace<CreateUserUseCase>(mockUseCases.createUserUseCase)
+    ..replace<ActivateBudgetUseCase>(mockUseCases.activateBudgetUseCase)
     ..replace<UpdateBudgetPlanUseCase>(mockUseCases.updateBudgetPlanUseCase)
     ..replace<DeleteBudgetAllocationUseCase>(mockUseCases.deleteBudgetAllocationUseCase)
     ..replace<DeleteBudgetCategoryUseCase>(mockUseCases.deleteBudgetCategoryUseCase)
@@ -210,9 +220,9 @@ extension MockUseCasesExtensions on Registry {
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)
     ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
-    ..replace<SignInUseCase>(mockUseCases.signInUseCase)
-    ..replace<SignOutUseCase>(mockUseCases.signOutUseCase)
-    ..replace<UpdateUserUseCase>(mockUseCases.updateUserUseCase);
+    ..replace<FetchDatabaseLocationUseCase>(mockUseCases.fetchDatabaseLocationUseCase)
+    ..replace<ImportDatabaseUseCase>(mockUseCases.importDatabaseUseCase)
+    ..replace<ExportDatabaseUseCase>(mockUseCases.exportDatabaseUseCase);
 }
 
 extension FinderExtensions on Finder {

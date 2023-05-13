@@ -32,7 +32,7 @@ build_runner_build:
 	fvm flutter packages pub run build_runner build -d --enable-experiment=records,patterns,sealed-class
 
 build_runner_watch:
-	fvm flutter packages pub run build_runner watch -d
+	fvm flutter packages pub run build_runner watch -d --enable-experiment=records,patterns,sealed-class
 
 # iOS
 mock_ios:

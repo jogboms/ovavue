@@ -80,8 +80,8 @@ class BudgetAllocationsMockImpl implements BudgetAllocationsRepository {
   }
 
   @override
-  Future<List<String>> createAll(String userId, List<CreateBudgetAllocationData> allocations) =>
-      Future.wait(allocations.map((_) => create(userId, _)));
+  Future<bool> createAll(String userId, List<CreateBudgetAllocationData> allocations) =>
+      Future.wait(allocations.map((_) => create(userId, _))).then((_) => true);
 
   @override
   Future<bool> update(UpdateBudgetAllocationData allocation) async {
@@ -171,8 +171,8 @@ extension on BudgetAllocationEntity {
         id: id,
         path: path,
         amount: amount,
-        budget: budget.reference,
-        plan: plan.reference,
+        budget: (id: budget.id, path: budget.path),
+        plan: (id: plan.id, path: plan.path),
         createdAt: createdAt,
         updatedAt: updatedAt,
       );

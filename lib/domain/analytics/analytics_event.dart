@@ -7,17 +7,6 @@ class AnalyticsEvent with EquatableMixin {
 
   const AnalyticsEvent._(String name, [this.parameters]) : name = '${_eventNamePrefix}_$name';
 
-  static AnalyticsEvent login(String email, String uid) =>
-      AnalyticsEvent._('login', <String, dynamic>{'email': email, 'user_id': uid});
-
-  static const AnalyticsEvent logout = AnalyticsEvent._('logout');
-
-  static AnalyticsEvent tooManyRequests(String? email) =>
-      AnalyticsEvent._('too_many_requests', <String, dynamic>{'email': email});
-
-  static AnalyticsEvent userDisabled(String? email) =>
-      AnalyticsEvent._('user_disabled', <String, dynamic>{'email': email});
-
   static AnalyticsEvent createUser(String userId) =>
       AnalyticsEvent._('create_user', <String, dynamic>{'user_id': userId});
 
@@ -32,6 +21,9 @@ class AnalyticsEvent with EquatableMixin {
 
   static AnalyticsEvent createBudgetAllocation(String userId) =>
       AnalyticsEvent._('create_budget_allocation', <String, dynamic>{'user_id': userId});
+
+  static AnalyticsEvent activateBudget(String path) =>
+      AnalyticsEvent._('activate_budget', <String, dynamic>{'path': path});
 
   static AnalyticsEvent updateBudget(String path) => AnalyticsEvent._('update_budget', <String, dynamic>{'path': path});
 

@@ -1,18 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
-import 'budget_plan_entity.dart';
-import 'reference_entity.dart';
-
-@visibleForTesting
-class BaseBudgetEntity<T> with EquatableMixin {
-  const BaseBudgetEntity({
+class BudgetEntity with EquatableMixin {
+  const BudgetEntity({
     required this.id,
     required this.path,
     required this.index,
     required this.title,
     required this.amount,
     required this.description,
+    required this.active,
     required this.startedAt,
     required this.endedAt,
     required this.createdAt,
@@ -25,6 +21,7 @@ class BaseBudgetEntity<T> with EquatableMixin {
   final String title;
   final int amount;
   final String description;
+  final bool active;
   final DateTime startedAt;
   final DateTime? endedAt;
   final DateTime createdAt;
@@ -32,15 +29,7 @@ class BaseBudgetEntity<T> with EquatableMixin {
 
   @override
   List<Object?> get props =>
-      <Object?>[id, path, index, title, amount, description, startedAt, endedAt, createdAt, updatedAt];
+      <Object?>[id, path, index, title, amount, description, active, startedAt, endedAt, createdAt, updatedAt];
 }
 
-typedef BudgetReferenceEntity = BaseBudgetEntity<ReferenceEntity>;
-typedef BudgetEntity = BaseBudgetEntity<BudgetPlanEntity>;
-
-typedef BudgetEntityReferenceList = List<BudgetReferenceEntity>;
 typedef BudgetEntityList = List<BudgetEntity>;
-
-extension BudgetEntityExtension<T> on BaseBudgetEntity<T> {
-  ReferenceEntity get reference => (id: id, path: path);
-}

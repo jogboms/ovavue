@@ -13,21 +13,23 @@ class DatePickerField extends FormField<DateTime> {
     String? selectButtonText,
   }) : super(
           builder: (FormFieldState<DateTime> fieldState) {
-            final DateTime date = fieldState.value ?? clock.now();
+            final DateTime? date = fieldState.value;
             final BuildContext context = fieldState.context;
             final ThemeData theme = Theme.of(context);
             final MaterialLocalizations materialL10n = MaterialLocalizations.of(context);
 
+            hintText ??= materialL10n.dateInputLabel;
+
             return InputDecorator(
               decoration: InputDecoration(
-                hintText: hintText ?? materialL10n.dateInputLabel,
+                hintText: hintText,
                 prefixIcon: const Icon(AppIcons.date),
               ),
               child: Row(
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      date.format(DateTimeFormat.yearMonthDate),
+                      date != null ? date.format(DateTimeFormat.yearMonthDate) : hintText!,
                       style: theme.textTheme.bodyLarge,
                     ),
                   ),
@@ -41,9 +43,9 @@ class DatePickerField extends FormField<DateTime> {
                     onPressed: () async {
                       final DateTime? value = await showDatePicker(
                         context: context,
-                        initialDate: date,
+                        initialDate: date ?? clock.now(),
                         firstDate: DateTime(0),
-                        lastDate: DateTime(clock.now().year + 1),
+                        lastDate: DateTime(clock.now().year + 10),
                       );
                       fieldState.didChange(value);
                     },

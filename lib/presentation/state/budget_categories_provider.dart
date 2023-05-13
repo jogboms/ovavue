@@ -17,5 +17,5 @@ Stream<List<BudgetCategoryViewModel>> budgetCategories(BudgetCategoriesRef ref) 
   yield* registry
       .get<FetchBudgetCategoriesUseCase>()
       .call(user.id)
-      .map((_) => _.map(BudgetCategoryViewModel.fromEntity).toList());
+      .map((_) => _.map(BudgetCategoryViewModel.fromEntity).toList(growable: false));
 }

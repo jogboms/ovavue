@@ -3,9 +3,9 @@ import 'dart:async' as async;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 import 'package:registry/registry.dart';
-import 'package:sentry/sentry.dart';
 import 'package:universal_io/io.dart' as io;
 
 import 'core.dart';
@@ -13,30 +13,44 @@ import 'data.dart';
 import 'domain.dart';
 import 'presentation.dart';
 
-const String _sentryDns = String.fromEnvironment('env.sentryDns');
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await findSystemLocale();
 
-  final _Repository repository = _Repository.mock();
+  final _Repository repository;
   final ReporterClient reporterClient;
+  final Analytics analytics;
   final NavigatorObserver navigationObserver = NavigatorObserver();
-  const Analytics analytics = _PrintAnalytics();
   switch (environment) {
     case Environment.dev:
+      repository = _Repository.local(
+        Database.memory(),
+        authIdentityStorage: const _InMemoryAuthIdentityStorage(),
+        preferences: const PreferencesLocalImpl(),
+      );
+      reporterClient = const _NoopReporterClient();
+      analytics = const _PrintAnalytics();
+      break;
     case Environment.prod:
+      const PreferencesRepository preferences = PreferencesLocalImpl();
+      repository = _Repository.local(
+        Database(await preferences.fetchDatabaseLocation()),
+        authIdentityStorage: const _SecureStorageAuthIdentityStorage(FlutterSecureStorage()),
+        preferences: preferences,
+      );
       final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
       reporterClient = _ReporterClient(
-        SentryClient(SentryOptions(dsn: _sentryDns)),
         deviceInformation: deviceInformation,
         environment: environment,
       );
+      analytics = _InMemoryAnalytics();
       break;
     case Environment.testing:
     case Environment.mock:
       seedMockData();
+      analytics = const _PrintAnalytics();
+      repository = _Repository.mock();
       reporterClient = const _NoopReporterClient();
       break;
   }
@@ -70,6 +84,7 @@ void main() async {
     ..set(repository.budgetPlans)
     ..set(repository.budgetCategories)
     ..set(repository.budgetAllocations)
+    ..set(repository.preferences)
 
     /// UseCases.
     /// Callable classes that may contain logic or else route directly to repositories.
@@ -78,6 +93,7 @@ void main() async {
     ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
+    ..factory((RegistryFactory di) => ActivateBudgetUseCase(budgets: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
@@ -95,9 +111,9 @@ void main() async {
     ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
-    ..factory((RegistryFactory di) => SignInUseCase(auth: di(), analytics: di()))
-    ..factory((RegistryFactory di) => SignOutUseCase(auth: di(), analytics: di()))
-    ..factory((RegistryFactory di) => UpdateUserUseCase(users: di()))
+    ..factory((RegistryFactory di) => FetchDatabaseLocationUseCase(preferences: di()))
+    ..factory((RegistryFactory di) => ImportDatabaseUseCase(preferences: di()))
+    ..factory((RegistryFactory di) => ExportDatabaseUseCase(preferences: di()))
 
     /// Environment.
     ..set(environment);
@@ -122,13 +138,25 @@ void main() async {
 }
 
 class _Repository {
+  _Repository.local(
+    Database db, {
+    required AuthIdentityStorage authIdentityStorage,
+    required this.preferences,
+  })  : auth = AuthLocalImpl(db, authIdentityStorage),
+        users = UsersLocalImpl(db),
+        budgets = BudgetsLocalImpl(db),
+        budgetPlans = BudgetPlansLocalImpl(db),
+        budgetCategories = BudgetCategoriesLocalImpl(db),
+        budgetAllocations = BudgetAllocationsLocalImpl(db);
+
   _Repository.mock()
       : auth = AuthMockImpl(),
         users = UsersMockImpl(),
         budgets = BudgetsMockImpl(),
         budgetPlans = BudgetPlansMockImpl(),
         budgetCategories = BudgetCategoriesMockImpl(),
-        budgetAllocations = BudgetAllocationsMockImpl();
+        budgetAllocations = BudgetAllocationsMockImpl(),
+        preferences = PreferencesMockImpl();
 
   final AuthRepository auth;
   final UsersRepository users;
@@ -136,42 +164,47 @@ class _Repository {
   final BudgetPlansRepository budgetPlans;
   final BudgetCategoriesRepository budgetCategories;
   final BudgetAllocationsRepository budgetAllocations;
+  final PreferencesRepository preferences;
 }
 
 class _ReporterClient implements ReporterClient {
-  const _ReporterClient(
-    this.client, {
+  _ReporterClient({
     required this.deviceInformation,
     required this.environment,
   });
 
-  final SentryClient client;
   final DeviceInformation deviceInformation;
   final Environment environment;
+  final Set<_ReporterErrorEvent> _events = <_ReporterErrorEvent>{};
 
   @override
   async.FutureOr<void> report({required StackTrace stackTrace, required Object error, Object? extra}) async {
-    final SentryEvent event = SentryEvent(
-      throwable: error,
-      environment: environment.name.toUpperCase(),
-      release: deviceInformation.appVersion,
-      tags: deviceInformation.toMap(),
-      user: SentryUser(
-        id: deviceInformation.deviceId,
+    _events.add(
+      (
+        error: error,
+        stackTrace: stackTrace,
+        environment: environment.name.toUpperCase(),
+        deviceInformation: deviceInformation.toMap(),
+        extra: extra is Map ? extra as Map<String, dynamic>? : <String, dynamic>{'extra': extra},
       ),
-      extra: extra is Map ? extra as Map<String, dynamic>? : <String, dynamic>{'extra': extra},
     );
-
-    await client.captureEvent(event, stackTrace: stackTrace);
   }
 
   @override
-  async.FutureOr<void> reportCrash(FlutterErrorDetails details) =>
-      client.captureException(details.exception, stackTrace: details.stack);
+  // TODO(Jogboms): handle crash
+  async.FutureOr<void> reportCrash(FlutterErrorDetails details) {}
 
   @override
   void log(Object object) => AppLog.i(object);
 }
+
+typedef _ReporterErrorEvent = ({
+  Object error,
+  StackTrace stackTrace,
+  String environment,
+  Map<String, String> deviceInformation,
+  Map<String, dynamic>? extra,
+});
 
 class _NoopReporterClient implements ReporterClient {
   const _NoopReporterClient();
@@ -186,7 +219,7 @@ class _NoopReporterClient implements ReporterClient {
   void log(Object object) {}
 }
 
-class _PrintAnalytics extends NoopAnalytics {
+class _PrintAnalytics implements Analytics {
   const _PrintAnalytics();
 
   @override
@@ -194,4 +227,51 @@ class _PrintAnalytics extends NoopAnalytics {
 
   @override
   Future<void> setCurrentScreen(String name) async => AppLog.i('screen_view: $name');
+
+  @override
+  async.Future<void> removeUserId() async {}
+
+  @override
+  async.Future<void> setUserId(String id) async {}
+}
+
+class _InMemoryAnalytics implements Analytics {
+  // ignore: unused_field, use_late_for_private_fields_and_variables
+  String? _screenName;
+  final Set<AnalyticsEvent> _events = <AnalyticsEvent>{};
+
+  @override
+  Future<void> log(AnalyticsEvent event) async => _events.add(event);
+
+  @override
+  Future<void> setCurrentScreen(String name) async => _screenName = name;
+
+  @override
+  async.Future<void> removeUserId() async {}
+
+  @override
+  async.Future<void> setUserId(String id) async {}
+}
+
+class _SecureStorageAuthIdentityStorage implements AuthIdentityStorage {
+  const _SecureStorageAuthIdentityStorage(this._storage);
+
+  final FlutterSecureStorage _storage;
+  static const String _key = 'ovavue.app.auth.identity';
+
+  @override
+  async.FutureOr<String?> get() => _storage.read(key: _key);
+
+  @override
+  async.FutureOr<void> set(String id) => _storage.write(key: _key, value: id);
+}
+
+class _InMemoryAuthIdentityStorage implements AuthIdentityStorage {
+  const _InMemoryAuthIdentityStorage();
+
+  @override
+  async.FutureOr<String?> get() => 'id';
+
+  @override
+  async.FutureOr<void> set(String id) {}
 }

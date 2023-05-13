@@ -16,6 +16,9 @@ void createBudgetAction(
   int? index,
   Money? amount,
   String? description,
+  bool? active,
+  DateTime? startedAt,
+  DateTime? endedAt,
   DateTime? createdAt,
 }) async {
   final L10n l10n = context.l10n;
@@ -30,6 +33,9 @@ void createBudgetAction(
     title: null,
     amount: amount,
     description: description,
+    active: active,
+    startedAt: startedAt,
+    endedAt: endedAt,
     createdAt: createdAt ?? clock.now(),
   );
   if (result == null) {
@@ -43,6 +49,7 @@ void createBudgetAction(
         amount: result.amount.rawValue,
         description: result.description,
         startedAt: result.startedAt,
+        endedAt: result.endedAt,
         active: result.active,
       );
   snackBar.success(l10n.successfulMessage);

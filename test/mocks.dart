@@ -15,6 +15,8 @@ class MockBudgetCategoriesRepository extends Mock implements BudgetCategoriesRep
 
 class MockBudgetAllocationsRepository extends Mock implements BudgetAllocationsRepository {}
 
+class MockPreferencesRepository extends Mock implements PreferencesRepository {}
+
 class MockCreateBudgetAllocationUseCase extends Mock implements CreateBudgetAllocationUseCase {}
 
 class MockUpdateBudgetAllocationUseCase extends Mock implements UpdateBudgetAllocationUseCase {}
@@ -30,6 +32,8 @@ class MockCreateBudgetUseCase extends Mock implements CreateBudgetUseCase {}
 class MockUpdateBudgetUseCase extends Mock implements UpdateBudgetUseCase {}
 
 class MockCreateUserUseCase extends Mock implements CreateUserUseCase {}
+
+class MockActivateBudgetUseCase extends Mock implements ActivateBudgetUseCase {}
 
 class MockUpdateBudgetPlanUseCase extends Mock implements UpdateBudgetPlanUseCase {}
 
@@ -59,11 +63,11 @@ class MockFetchActiveBudgetUseCase extends Mock implements FetchActiveBudgetUseC
 
 class MockFetchUserUseCase extends Mock implements FetchUserUseCase {}
 
-class MockSignInUseCase extends Mock implements SignInUseCase {}
+class MockFetchDatabaseLocationUseCase extends Mock implements FetchDatabaseLocationUseCase {}
 
-class MockSignOutUseCase extends Mock implements SignOutUseCase {}
+class MockImportDatabaseUseCase extends Mock implements ImportDatabaseUseCase {}
 
-class MockUpdateUserUseCase extends Mock implements UpdateUserUseCase {}
+class MockExportDatabaseUseCase extends Mock implements ExportDatabaseUseCase {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -94,6 +98,20 @@ class FakeUpdateBudgetPlanData extends Fake implements UpdateBudgetPlanData {}
 class FakeCreateBudgetAllocationData extends Fake implements CreateBudgetAllocationData {}
 
 class FakeUpdateBudgetAllocationData extends Fake implements UpdateBudgetAllocationData {}
+
+class FakeAnalytics extends Fake implements Analytics {
+  @override
+  Future<void> log(AnalyticsEvent event) async {}
+
+  @override
+  Future<void> removeUserId() async {}
+
+  @override
+  Future<void> setUserId(String id) async {}
+
+  @override
+  Future<void> setCurrentScreen(String name) async {}
+}
 
 class FakeRoute extends Fake implements Route<dynamic> {}
 

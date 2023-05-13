@@ -43,13 +43,7 @@ Future<void> main() async {
         completion(
           BudgetCategoryState(
             plans: <BudgetCategoryPlanViewModel>[
-              BudgetCategoryPlanViewModel(
-                id: expectedPlan.id,
-                path: expectedPlan.path,
-                title: expectedPlan.title,
-                description: expectedPlan.description,
-                allocation: null,
-              )
+              (BudgetPlanViewModel.fromEntity(expectedPlan), null),
             ],
             category: BudgetCategoryViewModel.fromEntity(expectedCategory),
             allocation: null,

@@ -44,6 +44,7 @@
   "descriptionLabel": "Description",
   "amountLabel": "Amount",
   "startDateLabel": "Starting date",
+  "endDateLabel": "Ending date?",
   "makeActiveLabel": "Make this active?",
   "submitCaption": "Submit",
   "selectIconCaption": "Select icon",
@@ -55,5 +56,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "preferencesTitle": "Preferences",
+  "databaseLocationLabel": "DATABASE LOCATION",
+  "backupRestoreLabel": "BACKUP / RESTORE",
+  "copiedToClipboardMessage": "Copied to the clipboard",
+  "exitAppMessage": "You would need to restart Ovavue to continue",
+  "continueCaption": "Continue",
+  "accountKeyLabel": "ACCOUNT KEY"
 }

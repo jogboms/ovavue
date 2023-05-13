@@ -69,12 +69,9 @@ Future<void> main() async {
             budget: BudgetViewModel.fromEntity(expectedBudget),
             plans: expectedPlans
                 .map(
-                  (BudgetPlanEntity plan) => BudgetCategoryPlanViewModel(
-                    id: plan.id,
-                    path: plan.path,
-                    title: plan.title,
-                    description: plan.description,
-                    allocation: expectedBudgetAllocations
+                  (BudgetPlanEntity plan) => (
+                    BudgetPlanViewModel.fromEntity(plan),
+                    expectedBudgetAllocations
                         .firstWhere((_) => _.plan.id == plan.id && _.budget.id == expectedBudget.id)
                         .amount
                         .asMoney,

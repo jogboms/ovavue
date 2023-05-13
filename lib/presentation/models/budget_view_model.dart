@@ -11,6 +11,7 @@ class BudgetViewModel with EquatableMixin {
     required this.index,
     required this.amount,
     required this.description,
+    required this.active,
     required this.startedAt,
     required this.endedAt,
     required this.createdAt,
@@ -25,6 +26,7 @@ class BudgetViewModel with EquatableMixin {
       path: entity.path,
       amount: entity.amount.asMoney,
       description: entity.description,
+      active: entity.active,
       startedAt: entity.startedAt,
       endedAt: entity.endedAt,
       createdAt: entity.createdAt,
@@ -38,14 +40,13 @@ class BudgetViewModel with EquatableMixin {
   final String title;
   final Money amount;
   final String description;
+  final bool active;
   final DateTime startedAt;
   final DateTime? endedAt;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
-  bool get active => endedAt == null;
-
   @override
   List<Object?> get props =>
-      <Object?>[id, path, index, title, amount, description, startedAt, endedAt, createdAt, updatedAt];
+      <Object?>[id, path, index, title, amount, description, active, startedAt, endedAt, createdAt, updatedAt];
 }

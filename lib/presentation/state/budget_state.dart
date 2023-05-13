@@ -21,7 +21,7 @@ class BudgetState with EquatableMixin implements BaseBudgetState {
   final List<SelectedBudgetCategoryViewModel> categories;
 
   @override
-  List<Object> get props => <Object>[budget, allocation, categories];
+  List<Object> get props => <Object>[budget, plans, allocation, categories];
 }
 
 class EmptyBudgetState implements BaseBudgetState {

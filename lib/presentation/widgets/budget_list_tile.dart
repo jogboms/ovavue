@@ -10,6 +10,7 @@ class BudgetListTile extends StatelessWidget {
     required this.title,
     required this.budgetAmount,
     required this.allocationAmount,
+    required this.active,
     required this.startedAt,
     required this.endedAt,
     this.onTap,
@@ -19,6 +20,7 @@ class BudgetListTile extends StatelessWidget {
   final String title;
   final Money budgetAmount;
   final Money? allocationAmount;
+  final bool active;
   final DateTime startedAt;
   final DateTime? endedAt;
   final VoidCallback? onTap;
@@ -29,7 +31,6 @@ class BudgetListTile extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colorScheme = theme.colorScheme;
 
-    final bool active = endedAt == null;
     final Money? allocationAmount = this.allocationAmount;
 
     final Color? foregroundColor = active ? colorScheme.onSurfaceVariant : null;

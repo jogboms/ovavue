@@ -19,7 +19,9 @@ void main() {
       title: 'title',
       amount: 1,
       description: 'description',
+      active: true,
       startedAt: DateTime(0),
+      endedAt: null,
     );
 
     setUpAll(() {
@@ -38,7 +40,7 @@ void main() {
         useCase(
           userId: '1',
           budget: dummyData,
-          activeBudgetPath: null,
+          activeBudgetReference: null,
           allocations: null,
         ),
         completion('1'),
@@ -48,14 +50,18 @@ void main() {
 
     test('should create a budget and deactivate active budget', () async {
       when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyReference);
-      when(() => mockRepositories.budgets.deactivateBudget(budgetPath: 'path', endedAt: any(named: 'endedAt')))
-          .thenAnswer((_) async => true);
+      when(
+        () => mockRepositories.budgets.deactivateBudget(
+          reference: (id: '1', path: 'path'),
+          endedAt: any(named: 'endedAt'),
+        ),
+      ).thenAnswer((_) async => true);
 
       await expectLater(
         useCase(
           userId: '1',
           budget: dummyData,
-          activeBudgetPath: 'path',
+          activeBudgetReference: (id: '1', path: 'path'),
           allocations: null,
         ),
         completion('1'),
@@ -65,13 +71,13 @@ void main() {
 
     test('should create a budget and duplicate allocations', () async {
       when(() => mockRepositories.budgets.create(any(), any())).thenAnswer((_) async => dummyReference);
-      when(() => mockRepositories.budgetAllocations.createAll('1', any())).thenAnswer((_) async => <String>['1']);
+      when(() => mockRepositories.budgetAllocations.createAll('1', any())).thenAnswer((_) async => true);
 
       await expectLater(
         useCase(
           userId: '1',
           budget: dummyData,
-          activeBudgetPath: null,
+          activeBudgetReference: null,
           allocations: <ReferenceEntity, int>{
             const (id: '2', path: 'path'): 1,
           },
@@ -100,7 +106,7 @@ void main() {
       expect(
         () => useCase(
           userId: '1',
-          activeBudgetPath: 'path',
+          activeBudgetReference: (id: '1', path: 'path'),
           allocations: <ReferenceEntity, int>{},
           budget: dummyData,
         ),

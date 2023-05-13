@@ -5,7 +5,7 @@ abstract class AppIcons {
   static const IconData budget = TablerIcons.businessplan;
   static const IconData plans = TablerIcons.database;
   static const IconData categories = TablerIcons.category;
-  static const IconData settings = TablerIcons.settings;
+  static const IconData preferences = TablerIcons.settings;
   static const IconData addBudget = TablerIcons.square_rounded_plus;
   static const IconData addPlan = TablerIcons.coins;
   static const IconData addCategory = TablerIcons.layout_grid_add;
@@ -13,6 +13,7 @@ abstract class AppIcons {
   static const IconData modifyAllocation =
       TablerIcons.adjustments; // TODO(jogboms): update to `adjustments_dollar` when available
   static const IconData removeAllocation = TablerIcons.coin_off;
+  static const IconData activateBudget = TablerIcons.bookmark;
   static const IconData duplicateBudget = TablerIcons.copy;
   static const IconData excessPlan = TablerIcons.fire_hydrant;
   static const IconData edit = TablerIcons.pencil;
@@ -28,6 +29,10 @@ abstract class AppIcons {
   static const IconData date = TablerIcons.calendar_event;
   static const IconData title = TablerIcons.heading;
   static const IconData description = TablerIcons.letter_case;
+  static const IconData copyToClipboard = TablerIcons.clipboard_text;
+  static const IconData import = TablerIcons.database_import;
+  static const IconData export = TablerIcons.database_export;
+  static const IconData accountKey = TablerIcons.key;
 
   /// Would be great not to change the index of the icons. Append-only and/or Replace-only
   static final Map<int, IconData> categoryIcons = <IconData>{

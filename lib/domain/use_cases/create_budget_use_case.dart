@@ -22,7 +22,7 @@ class CreateBudgetUseCase {
   Future<String> call({
     required String userId,
     required CreateBudgetData budget,
-    required String? activeBudgetPath,
+    required ReferenceEntity? activeBudgetReference,
     required PlanToAllocationMap? allocations,
   }) {
     _analytics.log(AnalyticsEvent.createBudget(userId)).ignore();
@@ -30,8 +30,11 @@ class CreateBudgetUseCase {
       (ReferenceEntity ref) async {
         await Future.wait(
           <Future<Object>>[
-            if (activeBudgetPath != null)
-              _budgets.deactivateBudget(budgetPath: activeBudgetPath, endedAt: budget.startedAt),
+            if (activeBudgetReference != null)
+              _budgets.deactivateBudget(
+                reference: activeBudgetReference,
+                endedAt: budget.startedAt,
+              ),
             if (allocations != null)
               _allocations.createAll(
                 userId,

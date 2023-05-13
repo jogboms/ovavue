@@ -1,7 +1,16 @@
+export 'data/local_database.dart';
+export 'data/repositories/auth/auth_local_impl.dart';
 export 'data/repositories/auth/auth_mock_impl.dart';
+export 'data/repositories/budget_allocations/budget_allocations_local_impl.dart';
 export 'data/repositories/budget_allocations/budget_allocations_mock_impl.dart';
+export 'data/repositories/budget_categories/budget_categories_local_impl.dart';
 export 'data/repositories/budget_categories/budget_categories_mock_impl.dart';
+export 'data/repositories/budget_plans/budget_plans_local_impl.dart';
 export 'data/repositories/budget_plans/budget_plans_mock_impl.dart';
+export 'data/repositories/budgets/budgets_local_impl.dart';
 export 'data/repositories/budgets/budgets_mock_impl.dart';
+export 'data/repositories/preferences/preferences_local_impl.dart';
+export 'data/repositories/preferences/preferences_mock_impl.dart';
 export 'data/repositories/seed_mock_data.dart';
+export 'data/repositories/users/users_local_impl.dart';
 export 'data/repositories/users/users_mock_impl.dart';

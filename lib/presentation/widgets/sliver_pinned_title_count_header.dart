@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import '../theme.dart';
+import '../utils.dart';
 
 class SliverPinnedTitleCountHeader extends StatelessWidget {
-  const SliverPinnedTitleCountHeader({super.key, required this.title, required this.count});
+  const SliverPinnedTitleCountHeader.count({super.key, required this.title, required int count}) : value = count;
+
+  const SliverPinnedTitleCountHeader.amount({super.key, required this.title, required Money amount}) : value = amount;
 
   final String title;
-  final int count;
+  final Object value;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class SliverPinnedTitleCountHeader extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Expanded(child: Text(title)),
-              Text('($count)'),
+              Text('($value)'),
             ],
           ),
         ),

@@ -8,6 +8,7 @@ import '../screens/budget_plans/budget_plans_page.dart';
 import '../screens/budgets/budget_detail_page.dart';
 import '../screens/budgets/budgets_page.dart';
 import '../screens/budgets/grouped_budget_plans_page.dart';
+import '../screens/preferences/preferences_page.dart';
 import 'app_routes.dart';
 
 class AppRouter {
@@ -42,6 +43,8 @@ class AppRouter {
         (_) => GroupedBudgetPlansPage(budgetId: budgetId),
         AppRoutes.groupedBudgetPlans,
       );
+
+  Future<void> goToPreferences() => _goTo((_) => const PreferencesPage(), AppRoutes.preferences);
 
   Future<T?> _goTo<T>(WidgetBuilder builder, String name) => Navigator.of(_context).push<T>(
         MaterialPageRoute<T>(

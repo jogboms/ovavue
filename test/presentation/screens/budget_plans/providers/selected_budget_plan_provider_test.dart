@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
-import 'package:ovavue/presentation.dart' hide BudgetAllocationViewModelExtension;
+import 'package:ovavue/presentation.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../../../../utils.dart';
@@ -63,11 +63,11 @@ Future<void> main() async {
             plan: BudgetPlanViewModel.fromEntity(expectedPlan),
             budget: BudgetViewModel.fromEntity(expectedBudget),
             previousAllocations: expectedBudgetAllocations
-                .map((_) => _.toViewModel())
+                .map((_) => _.toViewModelPair())
                 .skip(1)
                 .sorted(
                   (BudgetPlanAllocationViewModel a, BudgetPlanAllocationViewModel b) =>
-                      b.budget.startedAt.compareTo(a.budget.startedAt),
+                      b.$2.startedAt.compareTo(a.$2.startedAt),
                 )
                 .toList(),
           ),

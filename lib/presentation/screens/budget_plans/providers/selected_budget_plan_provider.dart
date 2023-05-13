@@ -4,9 +4,8 @@ import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../models.dart' hide BudgetAllocationViewModelExtension;
+import '../../../models.dart';
 import '../../../state.dart';
-import '../../../utils.dart';
 
 part 'models.dart';
 part 'selected_budget_plan_provider.g.dart';
@@ -43,15 +42,12 @@ Stream<BudgetPlanState> selectedBudgetPlan(
             allocation: allocations.firstWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
             previousAllocations: allocations
                 .where((_) => _.budget.id != budgetId)
-                .map((_) => _.toViewModel())
+                .map((_) => (_.toViewModel(), BudgetViewModel.fromEntity(_.budget)))
                 .sorted(
-                  (
-                    BudgetPlanAllocationViewModel a,
-                    BudgetPlanAllocationViewModel b,
-                  ) =>
-                      b.budget.startedAt.compareTo(a.budget.startedAt),
+                  (BudgetPlanAllocationViewModel a, BudgetPlanAllocationViewModel b) =>
+                      b.$2.startedAt.compareTo(a.$2.startedAt),
                 )
-                .toList(),
+                .toList(growable: false),
           ),
         )
         .distinct();
@@ -68,7 +64,7 @@ class BudgetPlanState with EquatableMixin {
 
   final BudgetPlanViewModel plan;
   final BudgetViewModel? budget;
-  final BudgetPlanAllocationViewModel? allocation;
+  final BudgetAllocationViewModel? allocation;
   final List<BudgetPlanAllocationViewModel> previousAllocations;
 
   @override

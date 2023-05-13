@@ -62,132 +62,125 @@ class _ContentDataView extends StatelessWidget {
     final ColorScheme colorScheme = theme.colorScheme;
 
     final BudgetViewModel? budget = state.budget;
-    final BudgetPlanAllocationViewModel? allocation = state.allocation;
+    final BudgetAllocationViewModel? allocation = state.allocation;
 
     return CustomScrollView(
       slivers: <Widget>[
-        CustomAppBar(
-          title: const Text(''),
-          asSliver: true,
-          centerTitle: true,
-          backgroundColor: theme.scaffoldBackgroundColor,
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            <Widget>[
-              const SizedBox(height: 18.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            state.plan.title.sentence(),
-                            style: textTheme.titleLarge?.copyWith(
-                              fontWeight: AppFontWeight.semibold,
-                            ),
+        const CustomAppBar(title: Text(''), asSliver: true, centerTitle: true),
+        SliverList.list(
+          children: <Widget>[
+            const SizedBox(height: 18.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          state.plan.title.sentence(),
+                          style: textTheme.titleLarge?.copyWith(
+                            fontWeight: AppFontWeight.semibold,
                           ),
-                          const SizedBox(height: 2.0),
-                          Text(
-                            state.plan.description.capitalize(),
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.outline,
-                            ),
+                        ),
+                        const SizedBox(height: 2.0),
+                        Text(
+                          state.plan.description.capitalize(),
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.outline,
                           ),
-                          _CategoryChip(
-                            key: Key(state.plan.category.id),
-                            category: state.plan.category,
-                            onPressed: () {
-                              final String? budgetId = this.budgetId;
-                              if (budgetId != null) {
-                                context.router.goToBudgetCategoryDetailForBudget(
-                                  id: state.plan.category.id,
-                                  budgetId: budgetId,
-                                );
-                              } else {
-                                context.router.goToBudgetCategoryDetail(
-                                  id: state.plan.category.id,
-                                );
-                              }
-                            },
-                          ),
-                        ],
+                        ),
+                        _CategoryChip(
+                          key: Key(state.plan.category.id),
+                          category: state.plan.category,
+                          onPressed: () {
+                            final String? budgetId = this.budgetId;
+                            if (budgetId != null) {
+                              context.router.goToBudgetCategoryDetailForBudget(
+                                id: state.plan.category.id,
+                                budgetId: budgetId,
+                              );
+                            } else {
+                              context.router.goToBudgetCategoryDetail(
+                                id: state.plan.category.id,
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (allocation != null && budget != null)
+                    AmountRatioItem.large(
+                      allocationAmount: allocation.amount,
+                      baseAmount: budget.amount,
+                    )
+                ],
+              ),
+            ),
+            const SizedBox(height: 2.0),
+            Consumer(
+              builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+                actions: <ActionButton>[
+                  if (budget != null && budget.active)
+                    ActionButton(
+                      icon: AppIcons.modifyAllocation,
+                      onPressed: () => _handleAllocationAction(
+                        context,
+                        ref: ref,
+                        budget: budget,
+                        plan: state.plan,
+                        allocation: allocation,
                       ),
                     ),
-                    if (allocation != null)
-                      AmountRatioItem.large(
-                        allocationAmount: allocation.amount,
-                        baseAmount: allocation.budget.amount,
-                      )
-                  ],
-                ),
-              ),
-              const SizedBox(height: 2.0),
-              Consumer(
-                builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
-                  actions: <ActionButton>[
-                    if (budget != null && budget.active)
-                      ActionButton(
-                        icon: AppIcons.modifyAllocation,
-                        onPressed: () => _handleAllocationAction(
-                          context,
-                          ref: ref,
-                          budget: budget,
-                          plan: state.plan,
-                          allocation: allocation,
-                        ),
-                      ),
+                  ActionButton(
+                    icon: AppIcons.addCategory,
+                    onPressed: () => _handleUpdateCategoryAction(
+                      context,
+                      ref: ref,
+                      plan: state.plan,
+                    ),
+                  ),
+                  ActionButton(
+                    icon: AppIcons.edit,
+                    onPressed: () => _handleUpdateAction(
+                      context,
+                      ref: ref,
+                      plan: state.plan,
+                    ),
+                  ),
+                  if (budget == null || !budget.active)
                     ActionButton(
-                      icon: AppIcons.addCategory,
-                      onPressed: () => _handleUpdateCategoryAction(
+                      icon: AppIcons.delete,
+                      backgroundColor: colorScheme.surfaceVariant,
+                      foregroundColor: colorScheme.onSurfaceVariant,
+                      onPressed: () => deleteBudgetPlanAction(
                         context,
                         ref: ref,
                         plan: state.plan,
+                        dismissOnComplete: true,
                       ),
-                    ),
+                    )
+                  else if (allocation != null)
                     ActionButton(
-                      icon: AppIcons.edit,
-                      onPressed: () => _handleUpdateAction(
+                      icon: AppIcons.removeAllocation,
+                      backgroundColor: colorScheme.surfaceVariant,
+                      foregroundColor: colorScheme.onSurfaceVariant,
+                      onPressed: () => _handleDeleteAllocationAction(
                         context,
                         ref: ref,
-                        plan: state.plan,
+                        allocation: allocation,
                       ),
                     ),
-                    if (budget == null || !budget.active)
-                      ActionButton(
-                        icon: AppIcons.delete,
-                        backgroundColor: colorScheme.surfaceVariant,
-                        foregroundColor: colorScheme.onSurfaceVariant,
-                        onPressed: () => deleteBudgetPlanAction(
-                          context,
-                          ref: ref,
-                          plan: state.plan,
-                          dismissOnComplete: true,
-                        ),
-                      )
-                    else if (allocation != null)
-                      ActionButton(
-                        icon: AppIcons.removeAllocation,
-                        backgroundColor: colorScheme.surfaceVariant,
-                        foregroundColor: colorScheme.onSurfaceVariant,
-                        onPressed: () => _handleDeleteAllocationAction(
-                          context,
-                          ref: ref,
-                          allocation: allocation,
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               ),
-              const SizedBox(height: 8.0),
-            ],
-          ),
+            ),
+            const SizedBox(height: 8.0),
+          ],
         ),
-        SliverPinnedTitleCountHeader(
+        SliverPinnedTitleCountHeader.count(
           title: context.l10n.previousAllocationsTitle,
           count: state.previousAllocations.length,
         ),
@@ -199,24 +192,22 @@ class _ContentDataView extends StatelessWidget {
               top: 8.0,
               bottom: MediaQuery.paddingOf(context).bottom,
             ),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  final BudgetPlanAllocationViewModel allocation = state.previousAllocations[index];
-                  final BudgetPlanAllocationBudgetViewModel budget = allocation.budget;
+            sliver: SliverList.builder(
+              itemBuilder: (BuildContext context, int index) {
+                final (BudgetAllocationViewModel allocation, BudgetViewModel budget) = state.previousAllocations[index];
 
-                  return BudgetListTile(
-                    key: Key(budget.id),
-                    id: budget.id,
-                    title: budget.title,
-                    budgetAmount: budget.amount,
-                    allocationAmount: allocation.amount,
-                    startedAt: budget.startedAt,
-                    endedAt: budget.endedAt,
-                  );
-                },
-                childCount: state.previousAllocations.length,
-              ),
+                return BudgetListTile(
+                  key: Key(budget.id),
+                  id: budget.id,
+                  title: budget.title,
+                  budgetAmount: budget.amount,
+                  allocationAmount: allocation.amount,
+                  active: budget.active,
+                  startedAt: budget.startedAt,
+                  endedAt: budget.endedAt,
+                );
+              },
+              itemCount: state.previousAllocations.length,
             ),
           ),
       ],
@@ -228,7 +219,7 @@ class _ContentDataView extends StatelessWidget {
     required WidgetRef ref,
     required BudgetViewModel budget,
     required BudgetPlanViewModel plan,
-    required BudgetPlanAllocationViewModel? allocation,
+    required BudgetAllocationViewModel? allocation,
   }) async {
     final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
       context: context,
@@ -293,7 +284,7 @@ class _ContentDataView extends StatelessWidget {
   void _handleDeleteAllocationAction(
     BuildContext context, {
     required WidgetRef ref,
-    required BudgetPlanAllocationViewModel allocation,
+    required BudgetAllocationViewModel allocation,
   }) async {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = context.snackBar;
@@ -341,8 +332,7 @@ class _ContentDataView extends StatelessWidget {
             path: plan.path,
             title: result.title,
             description: result.description,
-            categoryId: plan.category.id,
-            categoryPath: plan.category.path,
+            category: (id: plan.category.id, path: plan.category.path),
           ),
         );
     if (successful) {

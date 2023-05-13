@@ -25,15 +25,12 @@ class BudgetDetailDataView extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final AppRouter router = context.router;
 
-    final bool active = state.budget.endedAt == null;
-
     return CustomScrollView(
       slivers: <Widget>[
         CustomAppBar(
           title: _AppBarText(budget: state.budget),
           asSliver: true,
           centerTitle: true,
-          backgroundColor: theme.scaffoldBackgroundColor,
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -64,7 +61,7 @@ class BudgetDetailDataView extends StatelessWidget {
               alignment: Alignment.center,
               backgroundColor: theme.scaffoldBackgroundColor,
               actions: <ActionButton>[
-                if (active) ...<ActionButton>[
+                if (state.budget.active) ...<ActionButton>[
                   ActionButton(
                     icon: AppIcons.addAllocation,
                     onPressed: () => _handleAllocationAction(
@@ -98,7 +95,15 @@ class BudgetDetailDataView extends StatelessWidget {
                       budget: state.budget,
                     ),
                   ),
-                ],
+                ] else
+                  ActionButton(
+                    icon: AppIcons.activateBudget,
+                    onPressed: () => _handleActivateAction(
+                      context,
+                      ref: ref,
+                      budget: state.budget,
+                    ),
+                  ),
                 ActionButton(
                   icon: AppIcons.duplicateBudget,
                   onPressed: () => _handleDuplicateAction(
@@ -112,9 +117,9 @@ class BudgetDetailDataView extends StatelessWidget {
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 8)),
-        SliverPinnedTitleCountHeader(
+        SliverPinnedTitleCountHeader.amount(
           title: context.l10n.associatedPlansTitle,
-          count: state.plans.length,
+          amount: state.allocation,
         ),
         if (state.plans.isEmpty)
           const SliverFillRemaining(child: EmptyView())
@@ -187,6 +192,9 @@ class BudgetDetailDataView extends StatelessWidget {
       title: budget.title,
       amount: budget.amount,
       description: budget.description,
+      active: budget.active,
+      startedAt: budget.startedAt,
+      endedAt: budget.endedAt,
       createdAt: budget.createdAt,
     );
     if (result == null) {
@@ -199,8 +207,18 @@ class BudgetDetailDataView extends StatelessWidget {
           title: result.title,
           amount: result.amount.rawValue,
           description: result.description,
+          active: result.active,
+          startedAt: result.startedAt,
+          endedAt: result.endedAt,
         );
   }
+
+  void _handleActivateAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetViewModel budget,
+  }) async =>
+      ref.read(budgetProvider).activate(id: budget.id, path: budget.path);
 
   void _handleDuplicateAction(
     BuildContext context, {

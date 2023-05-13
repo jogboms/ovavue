@@ -49,13 +49,13 @@ Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
               BudgetCategoryPlanViewModel a,
               BudgetCategoryPlanViewModel b,
             ) =>
-                (b.allocation ?? Money.zero).compareTo(a.allocation ?? Money.zero),
+                (b.$2 ?? Money.zero).compareTo(a.$2 ?? Money.zero),
           )
           .toList(growable: false);
 
       return BudgetCategoryState(
         category: category,
-        allocation: plans.map((_) => _.allocation).whereNotNull().sum(),
+        allocation: plans.map((_) => _.$2).whereNotNull().sum(),
         budget: budget,
         plans: plans,
       );

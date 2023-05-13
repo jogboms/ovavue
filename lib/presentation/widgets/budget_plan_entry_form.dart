@@ -68,6 +68,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
               children: <Widget>[
                 spacing,
                 TextFormField(
+                  autofocus: creating,
                   controller: _titleController,
                   maxLength: kTitleMaxCharacterLength,
                   decoration: InputDecoration(
@@ -193,8 +194,8 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
       Navigator.pop(
         context,
         BudgetPlanEntryResult(
-          title: _titleController.text,
-          description: _descriptionController.text,
+          title: _titleController.text.trim(),
+          description: _descriptionController.text.trim(),
           category: category,
         ),
       );

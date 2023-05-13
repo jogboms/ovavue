@@ -45,13 +45,10 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
     return CustomScrollView(
       slivers: <Widget>[
         CustomAppBar(
           title: Text(context.l10n.categoriesPageTitle),
-          backgroundColor: theme.scaffoldBackgroundColor,
           asSliver: true,
           centerTitle: true,
         ),
