@@ -75,7 +75,6 @@ class _ContentDataView extends StatelessWidget {
               ),
             ],
           ),
-          backgroundColor: theme.scaffoldBackgroundColor,
           asSliver: true,
           centerTitle: true,
         ),

@@ -31,7 +31,6 @@ class BudgetDetailDataView extends StatelessWidget {
           title: _AppBarText(budget: state.budget),
           asSliver: true,
           centerTitle: true,
-          backgroundColor: theme.scaffoldBackgroundColor,
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),

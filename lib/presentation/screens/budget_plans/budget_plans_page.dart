@@ -55,7 +55,6 @@ class _ContentDataView extends StatelessWidget {
       slivers: <Widget>[
         CustomAppBar(
           title: Text(context.l10n.plansPageTitle),
-          backgroundColor: theme.scaffoldBackgroundColor,
           asSliver: true,
           centerTitle: true,
         ),
