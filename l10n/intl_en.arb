@@ -56,5 +56,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "preferencesTitle": "Preferences",
+  "databaseLocationLabel": "DATABASE LOCATION",
+  "copiedDatabaseLocationMessage": "Copied database location to the clipboard"
 }

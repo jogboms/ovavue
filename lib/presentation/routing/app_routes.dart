@@ -7,4 +7,5 @@ abstract class AppRoutes {
   static const String budgetPlanDetail = '/budget_plan_detail';
   static const String budgetCategories = '/budget_categories';
   static const String budgetCategoryDetail = '/budget_category_detail';
+  static const String preferences = '/preferences';
 }

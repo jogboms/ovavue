@@ -29,6 +29,8 @@ abstract class AppIcons {
   static const IconData date = TablerIcons.calendar_event;
   static const IconData title = TablerIcons.heading;
   static const IconData description = TablerIcons.letter_case;
+  static const IconData copyToClipboard = TablerIcons.clipboard_text;
+  static const IconData share = TablerIcons.share_2;
 
   /// Would be great not to change the index of the icons. Append-only and/or Replace-only
   static final Map<int, IconData> categoryIcons = <IconData>{

@@ -35,6 +35,7 @@ dependencies:
   riverpod: ^2.3.6
   riverpod_annotation: ^2.1.1
   rxdart: ^0.27.7
+  share_plus: ^7.0.0
   sliver_tools: ^0.2.10
   sqlite3_flutter_libs: ^0.5.13
   tabler_icons: ^2.5.0+1
