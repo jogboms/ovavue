@@ -34,18 +34,11 @@ class BudgetDurationText extends StatelessWidget {
     final ColorScheme colorScheme = theme.colorScheme;
 
     final DateTime? endedAt = this.endedAt;
-    final TextStyle? textStyle;
-    switch (type) {
-      case BudgetDurationTextType.small:
-        textStyle = textTheme.bodySmall;
-        break;
-      case BudgetDurationTextType.medium:
-        textStyle = textTheme.titleSmall;
-        break;
-      case BudgetDurationTextType.large:
-        textStyle = textTheme.titleMedium;
-        break;
-    }
+    final TextStyle? textStyle = switch (type) {
+      BudgetDurationTextType.small => textTheme.bodySmall,
+      BudgetDurationTextType.medium => textTheme.titleSmall,
+      BudgetDurationTextType.large => textTheme.titleMedium,
+    };
 
     return Text.rich(
       TextSpan(

@@ -45,20 +45,14 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
             context: context,
             builder: (_) => const _BottomSheetOptions(),
           );
-          if (result == null) {
-            return;
-          }
 
-          switch (result) {
-            case _BottomSheetChoice.budgets:
-              return router.goToBudgets();
-            case _BottomSheetChoice.plans:
-              return router.goToBudgetPlans();
-            case _BottomSheetChoice.categories:
-              return router.goToBudgetCategories();
-            case _BottomSheetChoice.preferences:
-              return router.goToPreferences();
-          }
+          return switch (result) {
+            _BottomSheetChoice.budgets => router.goToBudgets(),
+            _BottomSheetChoice.plans => router.goToBudgetPlans(),
+            _BottomSheetChoice.categories => router.goToBudgetCategories(),
+            _BottomSheetChoice.preferences => router.goToPreferences(),
+            null => null,
+          };
         },
       ),
     );

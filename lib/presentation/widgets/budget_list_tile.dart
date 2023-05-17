@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme.dart';
 import '../utils.dart';
 import '../widgets.dart';
 
@@ -44,7 +45,7 @@ class BudgetListTile extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: colorScheme.inverseSurface,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: AppBorderRadius.c4,
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
                 margin: const EdgeInsets.only(right: 2),

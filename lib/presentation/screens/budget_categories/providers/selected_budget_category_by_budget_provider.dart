@@ -42,22 +42,17 @@ Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
   yield* registry.get<FetchBudgetAllocationsByBudgetUseCase>().call(userId: user.id, budgetId: budgetId).map(
     (BudgetAllocationEntityList allocations) {
       final Map<String, BudgetAllocationEntity> allocationsByPlan = allocations.foldToMap((_) => _.plan.id);
-      final List<BudgetCategoryPlanViewModel> plans = budgetPlans
-          .map((_) => _.toViewModel(allocationsByPlan[_.id]?.amount.asMoney))
-          .sorted(
-            (
-              BudgetCategoryPlanViewModel a,
-              BudgetCategoryPlanViewModel b,
-            ) =>
-                (b.$2 ?? Money.zero).compareTo(a.$2 ?? Money.zero),
-          )
-          .toList(growable: false);
+      final Iterable<BudgetCategoryPlanViewModel> plans =
+          budgetPlans.map((_) => _.toViewModel(allocationsByPlan[_.id]?.amount.asMoney)).sorted(
+                (BudgetCategoryPlanViewModel a, BudgetCategoryPlanViewModel b) =>
+                    (b.$2 ?? Money.zero).compareTo(a.$2 ?? Money.zero),
+              );
 
       return BudgetCategoryState(
         category: category,
         allocation: plans.map((_) => _.$2).whereNotNull().sum(),
         budget: budget,
-        plans: plans,
+        plans: plans.toList(growable: false),
       );
     },
   ).distinct();

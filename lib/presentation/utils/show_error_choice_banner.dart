@@ -10,24 +10,24 @@ Future<bool> showErrorChoiceBanner(
   final ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(context)
     ..removeCurrentMaterialBanner(reason: MaterialBannerClosedReason.dismiss);
 
+  final Color backgroundColor = theme.colorScheme.onError;
+
   final Future<MaterialBannerClosedReason> result = scaffoldMessengerState
       .showMaterialBanner(
         MaterialBanner(
           backgroundColor: theme.colorScheme.error,
           content: Text(message),
-          contentTextStyle: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.colorScheme.onError,
-          ),
+          contentTextStyle: theme.textTheme.bodyLarge?.copyWith(color: backgroundColor),
           actions: <Widget>[
             IconButton(
               onPressed: scaffoldMessengerState.removeCurrentMaterialBanner,
               icon: const Icon(Icons.check_outlined),
-              color: theme.colorScheme.onError,
+              color: backgroundColor,
             ),
             IconButton(
               onPressed: scaffoldMessengerState.hideCurrentMaterialBanner,
               icon: const Icon(Icons.close_outlined),
-              color: theme.colorScheme.onError,
+              color: backgroundColor,
             ),
           ],
         ),

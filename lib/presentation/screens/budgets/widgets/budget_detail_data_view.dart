@@ -34,25 +34,23 @@ class BudgetDetailDataView extends StatelessWidget {
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              <Widget>[
-                _HeaderText(budgetAmount: state.budget.amount),
-                _CategoryView(
-                  categories: state.categories,
-                  budgetAmount: state.budget.amount,
-                  allocationAmount: state.allocation,
-                  onPressed: (String id) => router.goToBudgetCategoryDetailForBudget(
-                    id: id,
-                    budgetId: state.budget.id,
-                  ),
-                  onExpand: () => router.goToGroupedBudgetPlans(
-                    budgetId: state.budget.id,
-                  ),
+          sliver: SliverList.list(
+            children: <Widget>[
+              _HeaderText(budgetAmount: state.budget.amount),
+              _CategoryView(
+                categories: state.categories,
+                budgetAmount: state.budget.amount,
+                allocationAmount: state.allocation,
+                onPressed: (String id) => router.goToBudgetCategoryDetailForBudget(
+                  id: id,
+                  budgetId: state.budget.id,
                 ),
-                const SizedBox(height: 8),
-              ],
-            ),
+                onExpand: () => router.goToGroupedBudgetPlans(
+                  budgetId: state.budget.id,
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
           ),
         ),
         SliverPinnedHeader(
@@ -129,24 +127,22 @@ class BudgetDetailDataView extends StatelessWidget {
               top: 16.0,
               bottom: MediaQuery.paddingOf(context).bottom + 72,
             ),
-            sliver: SliverList(
-              delegate: SliverSeparatorBuilderDelegate(
-                builder: (BuildContext context, int index) {
-                  final BudgetPlanViewModel plan = state.plans[index];
+            sliver: SliverList.separated(
+              itemBuilder: (BuildContext context, int index) {
+                final BudgetPlanViewModel plan = state.plans[index];
 
-                  return _PlanTile(
-                    key: Key(plan.id),
-                    plan: plan,
-                    budgetAmount: state.budget.amount,
-                    onPressed: () => router.goToBudgetPlanDetail(
-                      id: plan.id,
-                      budgetId: state.budget.id,
-                    ),
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(height: 4),
-                childCount: state.plans.length,
-              ),
+                return _PlanTile(
+                  key: Key(plan.id),
+                  plan: plan,
+                  budgetAmount: state.budget.amount,
+                  onPressed: () => router.goToBudgetPlanDetail(
+                    id: plan.id,
+                    budgetId: state.budget.id,
+                  ),
+                );
+              },
+              separatorBuilder: (_, __) => const SizedBox(height: 4),
+              itemCount: state.plans.length,
             ),
           ),
       ],
@@ -458,7 +454,7 @@ class _CategoryChip extends StatelessWidget {
       onPressed: onPressed,
       color: backgroundColor,
       ratio: allocationAmount.ratio(budgetAmount),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: AppBorderRadius.c8,
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       child: Row(
         mainAxisSize: MainAxisSize.min,

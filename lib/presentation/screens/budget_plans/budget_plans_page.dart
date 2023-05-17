@@ -84,39 +84,37 @@ class _ContentDataView extends StatelessWidget {
                 top: 8.0,
                 bottom: MediaQuery.paddingOf(context).bottom,
               ),
-              sliver: SliverList(
-                delegate: SliverSeparatorBuilderDelegate(
-                  builder: (BuildContext context, int index) {
-                    final BudgetPlanViewModel plan = data[index];
+              sliver: SliverList.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  final BudgetPlanViewModel plan = data[index];
 
-                    return Slidable(
-                      key: Key(plan.id),
-                      endActionPane: ActionPane(
-                        motion: const BehindMotion(),
-                        children: <SlidableAction>[
-                          SlidableAction(
-                            onPressed: (BuildContext context) => deleteBudgetPlanAction(
-                              context,
-                              ref: ref,
-                              plan: plan,
-                              dismissOnComplete: false,
-                            ),
-                            backgroundColor: colorScheme.error,
-                            foregroundColor: colorScheme.onError,
-                            icon: AppIcons.delete,
-                            label: context.l10n.deleteLabel,
+                  return Slidable(
+                    key: Key(plan.id),
+                    endActionPane: ActionPane(
+                      motion: const BehindMotion(),
+                      children: <SlidableAction>[
+                        SlidableAction(
+                          onPressed: (BuildContext context) => deleteBudgetPlanAction(
+                            context,
+                            ref: ref,
+                            plan: plan,
+                            dismissOnComplete: false,
                           ),
-                        ],
-                      ),
-                      child: BudgetPlanListTile(
-                        plan: plan,
-                        onTap: () => context.router.goToBudgetPlanDetail(id: plan.id),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(height: 4),
-                  childCount: data.length,
-                ),
+                          backgroundColor: colorScheme.error,
+                          foregroundColor: colorScheme.onError,
+                          icon: AppIcons.delete,
+                          label: context.l10n.deleteLabel,
+                        ),
+                      ],
+                    ),
+                    child: BudgetPlanListTile(
+                      plan: plan,
+                      onTap: () => context.router.goToBudgetPlanDetail(id: plan.id),
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 4),
+                itemCount: data.length,
               ),
             ),
           ),

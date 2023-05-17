@@ -101,25 +101,23 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
               top: 8.0,
               bottom: MediaQuery.paddingOf(context).bottom,
             ),
-            sliver: SliverList(
-              delegate: SliverSeparatorBuilderDelegate(
-                builder: (BuildContext context, int index) {
-                  final (BudgetPlanViewModel plan, Money? allocationAmount) = state.plans[index];
+            sliver: SliverList.separated(
+              itemBuilder: (BuildContext context, int index) {
+                final (BudgetPlanViewModel plan, Money? allocationAmount) = state.plans[index];
 
-                  return BudgetCategoryPlanTile(
-                    key: Key(plan.id),
-                    plan: plan,
-                    allocationAmount: allocationAmount,
-                    categoryAllocationAmount: state.allocation,
-                    onPressed: () => context.router.goToBudgetPlanDetail(
-                      id: plan.id,
-                      budgetId: state.budget?.id,
-                    ),
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(height: 4),
-                childCount: state.plans.length,
-              ),
+                return BudgetCategoryPlanTile(
+                  key: Key(plan.id),
+                  plan: plan,
+                  allocationAmount: allocationAmount,
+                  categoryAllocationAmount: state.allocation,
+                  onPressed: () => context.router.goToBudgetPlanDetail(
+                    id: plan.id,
+                    budgetId: state.budget?.id,
+                  ),
+                );
+              },
+              separatorBuilder: (_, __) => const SizedBox(height: 4),
+              itemCount: state.plans.length,
             ),
           ),
       ],

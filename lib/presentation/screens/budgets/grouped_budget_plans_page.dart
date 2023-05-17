@@ -167,24 +167,22 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
       sliver: _expanded
           ? SliverPadding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              sliver: SliverList(
-                delegate: SliverSeparatorBuilderDelegate(
-                  builder: (BuildContext context, int index) {
-                    final BudgetPlanViewModel plan = widget.plans[index];
+              sliver: SliverList.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  final BudgetPlanViewModel plan = widget.plans[index];
 
-                    return _PlanTile(
-                      key: Key(plan.id),
-                      plan: plan,
-                      categoryAllocationAmount: widget.allocationAmount,
-                      onPressed: () => context.router.goToBudgetPlanDetail(
-                        id: plan.id,
-                        budgetId: widget.budget.id,
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(height: 4),
-                  childCount: widget.plans.length,
-                ),
+                  return _PlanTile(
+                    key: Key(plan.id),
+                    plan: plan,
+                    categoryAllocationAmount: widget.allocationAmount,
+                    onPressed: () => context.router.goToBudgetPlanDetail(
+                      id: plan.id,
+                      budgetId: widget.budget.id,
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 4),
+                itemCount: widget.plans.length,
               ),
             )
           : const SliverToBoxAdapter(child: SizedBox.shrink()),

@@ -78,25 +78,23 @@ class _ContentDataView extends StatelessWidget {
               top: 8.0,
               bottom: MediaQuery.paddingOf(context).bottom,
             ),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  final BudgetViewModel budget = data[index];
+            sliver: SliverList.builder(
+              itemBuilder: (BuildContext context, int index) {
+                final BudgetViewModel budget = data[index];
 
-                  return BudgetListTile(
-                    key: Key(budget.id),
-                    id: budget.id,
-                    title: budget.title,
-                    budgetAmount: budget.amount,
-                    allocationAmount: null,
-                    active: budget.active,
-                    startedAt: budget.startedAt,
-                    endedAt: budget.endedAt,
-                    onTap: () => context.router.goToBudgetDetail(id: budget.id),
-                  );
-                },
-                childCount: data.length,
-              ),
+                return BudgetListTile(
+                  key: Key(budget.id),
+                  id: budget.id,
+                  title: budget.title,
+                  budgetAmount: budget.amount,
+                  allocationAmount: null,
+                  active: budget.active,
+                  startedAt: budget.startedAt,
+                  endedAt: budget.endedAt,
+                  onTap: () => context.router.goToBudgetDetail(id: budget.id),
+                );
+              },
+              itemCount: data.length,
             ),
           )
       ],

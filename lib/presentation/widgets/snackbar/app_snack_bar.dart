@@ -155,27 +155,17 @@ enum SnackBarType {
   success,
   error;
 
-  Color toForegroundColor(ThemeData theme) {
-    switch (this) {
-      case SnackBarType.info:
-        return theme.colorScheme.onSurface;
-      case SnackBarType.success:
-        return theme.appTheme.color.onSuccess;
-      case SnackBarType.error:
-        return theme.appTheme.color.onDanger;
-    }
-  }
+  Color toForegroundColor(ThemeData theme) => switch (this) {
+        SnackBarType.info => theme.colorScheme.onSurface,
+        SnackBarType.success => theme.appTheme.color.onSuccess,
+        SnackBarType.error => theme.appTheme.color.onDanger,
+      };
 
-  Color toBackgroundColor(ThemeData theme) {
-    switch (this) {
-      case SnackBarType.info:
-        return theme.colorScheme.surface;
-      case SnackBarType.success:
-        return theme.appTheme.color.success;
-      case SnackBarType.error:
-        return theme.appTheme.color.danger;
-    }
-  }
+  Color toBackgroundColor(ThemeData theme) => switch (this) {
+        SnackBarType.info => theme.colorScheme.surface,
+        SnackBarType.success => theme.appTheme.color.success,
+        SnackBarType.error => theme.appTheme.color.danger,
+      };
 }
 
 extension AppSnackBarBuildContextExtensions on BuildContext {
