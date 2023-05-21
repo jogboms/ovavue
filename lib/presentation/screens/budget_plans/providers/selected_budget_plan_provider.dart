@@ -10,7 +10,7 @@ import '../../../state.dart';
 part 'models.dart';
 part 'selected_budget_plan_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans])
+@Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans, selectedBudgetMetadataByPlan])
 Stream<BudgetPlanState> selectedBudgetPlan(
   SelectedBudgetPlanRef ref, {
   required String id,
@@ -32,12 +32,17 @@ Stream<BudgetPlanState> selectedBudgetPlan(
       ),
     );
 
+    final List<BudgetMetadataValueViewModel> metadata = await ref.watch(
+      selectedBudgetMetadataByPlanProvider(id: plan.id).future,
+    );
+
     yield* registry
         .get<FetchBudgetAllocationsByPlanUseCase>()
         .call(userId: user.id, planId: id)
         .map(
           (BudgetAllocationEntityList allocations) => BudgetPlanState(
             plan: plan,
+            metadata: metadata,
             budget: budget,
             allocation: allocations.firstWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
             previousAllocations: allocations
@@ -57,16 +62,18 @@ Stream<BudgetPlanState> selectedBudgetPlan(
 class BudgetPlanState with EquatableMixin {
   const BudgetPlanState({
     required this.plan,
+    required this.metadata,
     required this.budget,
     required this.allocation,
     required this.previousAllocations,
   });
 
   final BudgetPlanViewModel plan;
+  final List<BudgetMetadataValueViewModel> metadata;
   final BudgetViewModel? budget;
   final BudgetAllocationViewModel? allocation;
   final List<BudgetPlanAllocationViewModel> previousAllocations;
 
   @override
-  List<Object?> get props => <Object?>[plan, budget, allocation, previousAllocations];
+  List<Object?> get props => <Object?>[plan, metadata, budget, allocation, previousAllocations];
 }

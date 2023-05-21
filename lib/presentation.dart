@@ -15,6 +15,7 @@ export 'presentation/screens/budgets/grouped_budget_plans_page.dart';
 export 'presentation/screens/budgets/providers/active_budget_id_provider.dart';
 export 'presentation/screens/budgets/providers/active_budget_provider.dart';
 export 'presentation/screens/budgets/providers/budget_provider.dart';
+export 'presentation/screens/budgets/providers/filter_plans_by_budget_metadata.dart';
 export 'presentation/screens/preferences/providers/preferences_provider.dart';
 export 'presentation/state.dart';
 export 'presentation/theme.dart';
