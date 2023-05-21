@@ -8,10 +8,7 @@ abstract class BudgetsRepository {
 
   Future<bool> update(UpdateBudgetData budget);
 
-  Future<bool> delete({
-    required String id,
-    required String path,
-  });
+  Future<bool> delete(ReferenceEntity reference);
 
   Stream<BudgetEntityList> fetchAll(String userId);
 

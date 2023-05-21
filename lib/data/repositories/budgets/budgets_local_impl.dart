@@ -19,7 +19,7 @@ class BudgetsLocalImpl implements BudgetsRepository {
       _db.budgetsDao.deactivateBudget(reference.id, endedAt);
 
   @override
-  Future<bool> delete({required String id, required String path}) => _db.budgetsDao.deleteBudget(id);
+  Future<bool> delete(ReferenceEntity reference) => _db.budgetsDao.deleteBudget(reference.id);
 
   @override
   Stream<BudgetEntity?> fetchActiveBudget(String userId) => _db.budgetsDao.watchActiveBudget();

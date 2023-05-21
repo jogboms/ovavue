@@ -1,5 +1,6 @@
 import '../entities/budget_plan_entity.dart';
 import '../entities/create_budget_plan_data.dart';
+import '../entities/reference_entity.dart';
 import '../entities/update_budget_plan_data.dart';
 
 abstract class BudgetPlansRepository {
@@ -7,10 +8,7 @@ abstract class BudgetPlansRepository {
 
   Future<bool> update(UpdateBudgetPlanData plan);
 
-  Future<bool> delete({
-    required String id,
-    required String path,
-  });
+  Future<bool> delete(ReferenceEntity reference);
 
   Stream<BudgetPlanEntityList> fetchAll(String userId);
 

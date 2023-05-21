@@ -22,16 +22,14 @@ void main() {
     });
 
     test('should delete a budget allocation', () async {
-      when(() => mockRepositories.budgetAllocations.delete(id: any(named: 'id'), path: any(named: 'path')))
-          .thenAnswer((_) async => true);
+      when(() => mockRepositories.budgetAllocations.delete(any())).thenAnswer((_) async => true);
 
       await expectLater(useCase(id: '1', path: 'path'), completion(true));
       expect(analytics.events, containsOnce(AnalyticsEvent.deleteBudgetAllocation('path')));
     });
 
     test('should bubble delete errors', () {
-      when(() => mockRepositories.budgetAllocations.delete(id: any(named: 'id'), path: any(named: 'path')))
-          .thenThrow(Exception('an error'));
+      when(() => mockRepositories.budgetAllocations.delete(any())).thenThrow(Exception('an error'));
 
       expect(() => useCase(id: '1', path: 'path'), throwsException);
     });

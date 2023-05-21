@@ -17,6 +17,6 @@ class DeleteBudgetUseCase {
     required String path,
   }) {
     _analytics.log(AnalyticsEvent.deleteBudget(path)).ignore();
-    return _budgets.delete(id: id, path: path);
+    return _budgets.delete((id: id, path: path));
   }
 }

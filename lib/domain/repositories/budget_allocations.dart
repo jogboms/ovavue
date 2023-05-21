@@ -1,5 +1,6 @@
 import '../entities/budget_allocation_entity.dart';
 import '../entities/create_budget_allocation_data.dart';
+import '../entities/reference_entity.dart';
 import '../entities/update_budget_allocation_data.dart';
 
 abstract class BudgetAllocationsRepository {
@@ -9,10 +10,7 @@ abstract class BudgetAllocationsRepository {
 
   Future<bool> update(UpdateBudgetAllocationData allocation);
 
-  Future<bool> delete({
-    required String id,
-    required String path,
-  });
+  Future<bool> delete(ReferenceEntity reference);
 
   Future<bool> deleteByPlan({
     required String userId,

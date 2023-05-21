@@ -16,7 +16,7 @@ class BudgetAllocationsLocalImpl implements BudgetAllocationsRepository {
       _db.budgetAllocationsDao.createAllocations(allocations);
 
   @override
-  Future<bool> delete({required String id, required String path}) => _db.budgetAllocationsDao.deleteAllocation(id);
+  Future<bool> delete(ReferenceEntity reference) => _db.budgetAllocationsDao.deleteAllocation(reference.id);
 
   @override
   Future<bool> deleteByPlan({required String userId, required String planId}) =>

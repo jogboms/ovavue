@@ -20,7 +20,7 @@ class DeleteBudgetPlanUseCase {
     _analytics.log(AnalyticsEvent.deleteBudgetPlan(path)).ignore();
     return _allocations.deleteByPlan(userId: userId, planId: id).then((bool successful) {
       if (successful) {
-        return _plans.delete(id: id, path: path);
+        return _plans.delete((id: id, path: path));
       }
       return successful;
     });

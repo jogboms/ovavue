@@ -11,7 +11,7 @@ class BudgetPlansLocalImpl implements BudgetPlansRepository {
   Future<String> create(String userId, CreateBudgetPlanData plan) => _db.budgetPlansDao.createPlan(plan);
 
   @override
-  Future<bool> delete({required String id, required String path}) => _db.budgetPlansDao.deletePlan(id);
+  Future<bool> delete(ReferenceEntity reference) => _db.budgetPlansDao.deletePlan(reference.id);
 
   @override
   Stream<BudgetPlanEntityList> fetchAll(String userId) => _db.budgetPlansDao.watchAllBudgetPlans();
