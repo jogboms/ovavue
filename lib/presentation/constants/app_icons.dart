@@ -5,6 +5,7 @@ abstract class AppIcons {
   static const IconData budget = TablerIcons.businessplan;
   static const IconData plans = TablerIcons.database;
   static const IconData categories = TablerIcons.category;
+  static const IconData metadata = TablerIcons.layers_linked;
   static const IconData preferences = TablerIcons.settings;
   static const IconData addBudget = TablerIcons.square_rounded_plus;
   static const IconData addPlan = TablerIcons.coins;

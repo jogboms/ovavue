@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/budget_categories/budget_categories_page.dart';
 import '../screens/budget_categories/budget_category_detail_for_budget_page.dart';
 import '../screens/budget_categories/budget_category_detail_page.dart';
+import '../screens/budget_metadata/budget_metadata_page.dart';
 import '../screens/budget_plans/budget_plan_detail_page.dart';
 import '../screens/budget_plans/budget_plans_page.dart';
 import '../screens/budgets/budget_detail_page.dart';
@@ -43,6 +44,8 @@ class AppRouter {
         (_) => GroupedBudgetPlansPage(budgetId: budgetId),
         AppRoutes.groupedBudgetPlans,
       );
+
+  Future<void> goToBudgetMetadata() => _goTo((_) => const BudgetMetadataPage(), AppRoutes.metadata);
 
   Future<void> goToPreferences() => _goTo((_) => const PreferencesPage(), AppRoutes.preferences);
 

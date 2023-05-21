@@ -57,7 +57,7 @@ class _ContentDataView extends StatelessWidget {
     return CustomScrollView(
       slivers: <Widget>[
         CustomAppBar(
-          title: Text(l10n.preferencesTitle),
+          title: Text(l10n.preferencesPageTitle),
           asSliver: true,
           centerTitle: true,
         ),

@@ -57,11 +57,12 @@
       }
     }
   },
-  "preferencesTitle": "Preferences",
+  "preferencesPageTitle": "Preferences",
   "databaseLocationLabel": "DATABASE LOCATION",
   "backupRestoreLabel": "BACKUP / RESTORE",
   "copiedToClipboardMessage": "Copied to the clipboard",
   "exitAppMessage": "You would need to restart Ovavue to continue",
   "continueCaption": "Continue",
-  "accountKeyLabel": "ACCOUNT KEY"
+  "accountKeyLabel": "ACCOUNT KEY",
+  "metadataPageTitle": "Metadata"
 }
