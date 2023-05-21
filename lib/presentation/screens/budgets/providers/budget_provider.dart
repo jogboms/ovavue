@@ -5,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models.dart';
 import '../../../state.dart';
-import 'active_budget_id_provider.dart';
 import 'active_budget_provider.dart';
 
 part 'budget_provider.g.dart';

@@ -7,7 +7,6 @@ import 'package:rxdart/transformers.dart';
 
 import '../models.dart';
 import '../utils.dart';
-import 'account_provider.dart';
 import 'budget_state.dart';
 import 'registry_provider.dart';
 import 'user_provider.dart';

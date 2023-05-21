@@ -145,7 +145,7 @@ class _DeviceInfo {
       return _DeviceInfo(
         id: ios.identifierForVendor,
         isPhysicalDevice: ios.isPhysicalDevice,
-        os: ios.systemName!,
+        os: ios.systemName,
         brand: ios.model,
         model: ios.name,
         version: ios.systemVersion,
