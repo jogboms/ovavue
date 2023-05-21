@@ -84,6 +84,7 @@ void main() async {
     ..set(repository.budgetPlans)
     ..set(repository.budgetCategories)
     ..set(repository.budgetAllocations)
+    ..set(repository.budgetMetadata)
     ..set(repository.preferences)
 
     /// UseCases.
@@ -91,22 +92,29 @@ void main() async {
     ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
+    ..factory((RegistryFactory di) => CreateBudgetMetadataUseCase(metadata: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
     ..factory((RegistryFactory di) => ActivateBudgetUseCase(budgets: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
+    ..factory((RegistryFactory di) => UpdateBudgetMetadataUseCase(metadata: di(), analytics: di()))
     ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), allocations: di(), analytics: di()))
     ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
+    ..factory((RegistryFactory di) => AddMetadataToPlanUseCase(metadata: di(), analytics: di()))
+    ..factory((RegistryFactory di) => RemoveMetadataFromPlanUseCase(metadata: di(), analytics: di()))
     ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
     ..factory((RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(allocations: di()))
     ..factory((RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(allocations: di()))
     ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
     ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di()))
+    ..factory((RegistryFactory di) => FetchBudgetPlansByMetadataUseCase(plans: di(), metadata: di()))
+    ..factory((RegistryFactory di) => FetchBudgetMetadataUseCase(metadata: di()))
+    ..factory((RegistryFactory di) => FetchBudgetMetadataByPlanUseCase(metadata: di()))
     ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
@@ -147,7 +155,8 @@ class _Repository {
         budgets = BudgetsLocalImpl(db),
         budgetPlans = BudgetPlansLocalImpl(db),
         budgetCategories = BudgetCategoriesLocalImpl(db),
-        budgetAllocations = BudgetAllocationsLocalImpl(db);
+        budgetAllocations = BudgetAllocationsLocalImpl(db),
+        budgetMetadata = BudgetMetadataLocalImpl(db);
 
   _Repository.mock()
       : auth = AuthMockImpl(),
@@ -156,6 +165,7 @@ class _Repository {
         budgetPlans = BudgetPlansMockImpl(),
         budgetCategories = BudgetCategoriesMockImpl(),
         budgetAllocations = BudgetAllocationsMockImpl(),
+        budgetMetadata = BudgetMetadataMockImpl(),
         preferences = PreferencesMockImpl();
 
   final AuthRepository auth;
@@ -164,6 +174,7 @@ class _Repository {
   final BudgetPlansRepository budgetPlans;
   final BudgetCategoriesRepository budgetCategories;
   final BudgetAllocationsRepository budgetAllocations;
+  final BudgetMetadataRepository budgetMetadata;
   final PreferencesRepository preferences;
 }
 

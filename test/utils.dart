@@ -17,10 +17,19 @@ class MockRepositories {
   final BudgetPlansRepository budgetPlans = MockBudgetPlansRepository();
   final BudgetCategoriesRepository budgetCategories = MockBudgetCategoriesRepository();
   final BudgetAllocationsRepository budgetAllocations = MockBudgetAllocationsRepository();
+  final BudgetMetadataRepository budgetMetadata = MockBudgetMetadataRepository();
   final PreferencesRepository preferences = MockPreferencesRepository();
 
-  void reset() =>
-      <Object>[auth, users, budgets, budgetPlans, budgetCategories, budgetAllocations, preferences].forEach(mt.reset);
+  void reset() => <Object>[
+        auth,
+        users,
+        budgets,
+        budgetPlans,
+        budgetCategories,
+        budgetAllocations,
+        budgetMetadata,
+        preferences
+      ].forEach(mt.reset);
 }
 
 final MockRepositories mockRepositories = MockRepositories();
@@ -29,17 +38,21 @@ class MockUseCases {
   final CreateBudgetAllocationUseCase createBudgetAllocationUseCase = MockCreateBudgetAllocationUseCase();
   final CreateBudgetCategoryUseCase createBudgetCategoryUseCase = MockCreateBudgetCategoryUseCase();
   final CreateBudgetPlanUseCase createBudgetPlanUseCase = MockCreateBudgetPlanUseCase();
+  final CreateBudgetMetadataUseCase createBudgetMetadataUseCase = MockCreateBudgetMetadataUseCase();
   final CreateBudgetUseCase createBudgetUseCase = MockCreateBudgetUseCase();
   final CreateUserUseCase createUserUseCase = MockCreateUserUseCase();
   final ActivateBudgetUseCase activateBudgetUseCase = MockActivateBudgetUseCase();
   final UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase = MockUpdateBudgetAllocationUseCase();
   final UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase = MockUpdateBudgetCategoryUseCase();
   final UpdateBudgetPlanUseCase updateBudgetPlanUseCase = MockUpdateBudgetPlanUseCase();
+  final UpdateBudgetMetadataUseCase updateBudgetMetadataUseCase = MockUpdateBudgetMetadataUseCase();
   final UpdateBudgetUseCase updateBudgetUseCase = MockUpdateBudgetUseCase();
   final DeleteBudgetAllocationUseCase deleteBudgetAllocationUseCase = MockDeleteBudgetAllocationUseCase();
   final DeleteBudgetCategoryUseCase deleteBudgetCategoryUseCase = MockDeleteBudgetCategoryUseCase();
   final DeleteBudgetPlanUseCase deleteBudgetPlanUseCase = MockDeleteBudgetPlanUseCase();
   final DeleteBudgetUseCase deleteBudgetUseCase = MockDeleteBudgetUseCase();
+  final AddMetadataToPlanUseCase addMetadataToPlanUseCase = MockAddMetadataToPlanUseCase();
+  final RemoveMetadataFromPlanUseCase removeMetadataFromPlanUseCase = MockRemoveMetadataFromPlanUseCase();
   final FetchAccountUseCase fetchAccountUseCase = MockFetchAccountUseCase();
   final FetchBudgetAllocationsByBudgetUseCase fetchBudgetAllocationsByBudgetUseCase =
       MockFetchBudgetAllocationsByBudgetUseCase();
@@ -47,6 +60,9 @@ class MockUseCases {
       MockFetchBudgetAllocationsByPlanUseCase();
   final FetchBudgetCategoriesUseCase fetchBudgetCategoriesUseCase = MockFetchBudgetCategoriesUseCase();
   final FetchBudgetPlansUseCase fetchBudgetPlansUseCase = MockFetchBudgetPlansUseCase();
+  final FetchBudgetPlansByMetadataUseCase fetchBudgetPlansByMetadataUseCase = MockFetchBudgetPlansByMetadataUseCase();
+  final FetchBudgetMetadataUseCase fetchBudgetMetadataUseCase = MockFetchBudgetMetadataUseCase();
+  final FetchBudgetMetadataByPlanUseCase fetchBudgetMetadataByPlanUseCase = MockFetchBudgetMetadataByPlanUseCase();
   final FetchBudgetUseCase fetchBudgetUseCase = MockFetchBudgetUseCase();
   final FetchBudgetsUseCase fetchBudgetsUseCase = MockFetchBudgetsUseCase();
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
@@ -59,21 +75,28 @@ class MockUseCases {
         createBudgetAllocationUseCase,
         createBudgetCategoryUseCase,
         createBudgetPlanUseCase,
+        createBudgetMetadataUseCase,
         createBudgetUseCase,
         createUserUseCase,
         activateBudgetUseCase,
         updateBudgetAllocationUseCase,
         updateBudgetCategoryUseCase,
         updateBudgetPlanUseCase,
+        updateBudgetMetadataUseCase,
         updateBudgetUseCase,
         deleteBudgetAllocationUseCase,
         deleteBudgetCategoryUseCase,
         deleteBudgetPlanUseCase,
         deleteBudgetUseCase,
+        addMetadataToPlanUseCase,
+        removeMetadataFromPlanUseCase,
         fetchAccountUseCase,
         fetchBudgetAllocationsByPlanUseCase,
         fetchBudgetCategoriesUseCase,
         fetchBudgetPlansUseCase,
+        fetchBudgetPlansByMetadataUseCase,
+        fetchBudgetMetadataUseCase,
+        fetchBudgetMetadataByPlanUseCase,
         fetchBudgetUseCase,
         fetchBudgetsUseCase,
         fetchActiveBudgetUseCase,
@@ -101,22 +124,29 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
+      ..factory((RegistryFactory di) => CreateBudgetMetadataUseCase(metadata: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => ActivateBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
+      ..factory((RegistryFactory di) => UpdateBudgetMetadataUseCase(metadata: di(), analytics: di()))
       ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
       ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), allocations: di(), analytics: di()))
       ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
+      ..factory((RegistryFactory di) => AddMetadataToPlanUseCase(metadata: di(), analytics: di()))
+      ..factory((RegistryFactory di) => RemoveMetadataFromPlanUseCase(metadata: di(), analytics: di()))
       ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
       ..factory((RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(allocations: di()))
       ..factory((RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(allocations: di()))
       ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
       ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di()))
+      ..factory((RegistryFactory di) => FetchBudgetPlansByMetadataUseCase(plans: di(), metadata: di()))
+      ..factory((RegistryFactory di) => FetchBudgetMetadataUseCase(metadata: di()))
+      ..factory((RegistryFactory di) => FetchBudgetMetadataByPlanUseCase(metadata: di()))
       ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
@@ -203,19 +233,26 @@ extension MockUseCasesExtensions on Registry {
     ..replace<CreateBudgetAllocationUseCase>(mockUseCases.createBudgetAllocationUseCase)
     ..replace<CreateBudgetCategoryUseCase>(mockUseCases.createBudgetCategoryUseCase)
     ..replace<CreateBudgetPlanUseCase>(mockUseCases.createBudgetPlanUseCase)
+    ..replace<CreateBudgetMetadataUseCase>(mockUseCases.createBudgetMetadataUseCase)
     ..replace<CreateBudgetUseCase>(mockUseCases.createBudgetUseCase)
     ..replace<CreateUserUseCase>(mockUseCases.createUserUseCase)
     ..replace<ActivateBudgetUseCase>(mockUseCases.activateBudgetUseCase)
     ..replace<UpdateBudgetPlanUseCase>(mockUseCases.updateBudgetPlanUseCase)
+    ..replace<UpdateBudgetMetadataUseCase>(mockUseCases.updateBudgetMetadataUseCase)
     ..replace<DeleteBudgetAllocationUseCase>(mockUseCases.deleteBudgetAllocationUseCase)
     ..replace<DeleteBudgetCategoryUseCase>(mockUseCases.deleteBudgetCategoryUseCase)
     ..replace<DeleteBudgetPlanUseCase>(mockUseCases.deleteBudgetPlanUseCase)
     ..replace<DeleteBudgetUseCase>(mockUseCases.deleteBudgetUseCase)
+    ..replace<AddMetadataToPlanUseCase>(mockUseCases.addMetadataToPlanUseCase)
+    ..replace<RemoveMetadataFromPlanUseCase>(mockUseCases.removeMetadataFromPlanUseCase)
     ..replace<FetchAccountUseCase>(mockUseCases.fetchAccountUseCase)
     ..replace<FetchBudgetAllocationsByBudgetUseCase>(mockUseCases.fetchBudgetAllocationsByBudgetUseCase)
     ..replace<FetchBudgetAllocationsByPlanUseCase>(mockUseCases.fetchBudgetAllocationsByPlanUseCase)
     ..replace<FetchBudgetCategoriesUseCase>(mockUseCases.fetchBudgetCategoriesUseCase)
     ..replace<FetchBudgetPlansUseCase>(mockUseCases.fetchBudgetPlansUseCase)
+    ..replace<FetchBudgetPlansByMetadataUseCase>(mockUseCases.fetchBudgetPlansByMetadataUseCase)
+    ..replace<FetchBudgetMetadataUseCase>(mockUseCases.fetchBudgetMetadataUseCase)
+    ..replace<FetchBudgetMetadataByPlanUseCase>(mockUseCases.fetchBudgetMetadataByPlanUseCase)
     ..replace<FetchBudgetUseCase>(mockUseCases.fetchBudgetUseCase)
     ..replace<FetchBudgetsUseCase>(mockUseCases.fetchBudgetsUseCase)
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)

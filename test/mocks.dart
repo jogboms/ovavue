@@ -15,6 +15,8 @@ class MockBudgetCategoriesRepository extends Mock implements BudgetCategoriesRep
 
 class MockBudgetAllocationsRepository extends Mock implements BudgetAllocationsRepository {}
 
+class MockBudgetMetadataRepository extends Mock implements BudgetMetadataRepository {}
+
 class MockPreferencesRepository extends Mock implements PreferencesRepository {}
 
 class MockCreateBudgetAllocationUseCase extends Mock implements CreateBudgetAllocationUseCase {}
@@ -27,6 +29,8 @@ class MockUpdateBudgetCategoryUseCase extends Mock implements UpdateBudgetCatego
 
 class MockCreateBudgetPlanUseCase extends Mock implements CreateBudgetPlanUseCase {}
 
+class MockCreateBudgetMetadataUseCase extends Mock implements CreateBudgetMetadataUseCase {}
+
 class MockCreateBudgetUseCase extends Mock implements CreateBudgetUseCase {}
 
 class MockUpdateBudgetUseCase extends Mock implements UpdateBudgetUseCase {}
@@ -37,6 +41,8 @@ class MockActivateBudgetUseCase extends Mock implements ActivateBudgetUseCase {}
 
 class MockUpdateBudgetPlanUseCase extends Mock implements UpdateBudgetPlanUseCase {}
 
+class MockUpdateBudgetMetadataUseCase extends Mock implements UpdateBudgetMetadataUseCase {}
+
 class MockDeleteBudgetAllocationUseCase extends Mock implements DeleteBudgetAllocationUseCase {}
 
 class MockDeleteBudgetCategoryUseCase extends Mock implements DeleteBudgetCategoryUseCase {}
@@ -44,6 +50,10 @@ class MockDeleteBudgetCategoryUseCase extends Mock implements DeleteBudgetCatego
 class MockDeleteBudgetPlanUseCase extends Mock implements DeleteBudgetPlanUseCase {}
 
 class MockDeleteBudgetUseCase extends Mock implements DeleteBudgetUseCase {}
+
+class MockAddMetadataToPlanUseCase extends Mock implements AddMetadataToPlanUseCase {}
+
+class MockRemoveMetadataFromPlanUseCase extends Mock implements RemoveMetadataFromPlanUseCase {}
 
 class MockFetchAccountUseCase extends Mock implements FetchAccountUseCase {}
 
@@ -54,6 +64,12 @@ class MockFetchBudgetAllocationsByPlanUseCase extends Mock implements FetchBudge
 class MockFetchBudgetCategoriesUseCase extends Mock implements FetchBudgetCategoriesUseCase {}
 
 class MockFetchBudgetPlansUseCase extends Mock implements FetchBudgetPlansUseCase {}
+
+class MockFetchBudgetPlansByMetadataUseCase extends Mock implements FetchBudgetPlansByMetadataUseCase {}
+
+class MockFetchBudgetMetadataUseCase extends Mock implements FetchBudgetMetadataUseCase {}
+
+class MockFetchBudgetMetadataByPlanUseCase extends Mock implements FetchBudgetMetadataByPlanUseCase {}
 
 class MockFetchBudgetUseCase extends Mock implements FetchBudgetUseCase {}
 
