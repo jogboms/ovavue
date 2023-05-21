@@ -5,6 +5,8 @@ export 'data/repositories/budget_allocations/budget_allocations_local_impl.dart'
 export 'data/repositories/budget_allocations/budget_allocations_mock_impl.dart';
 export 'data/repositories/budget_categories/budget_categories_local_impl.dart';
 export 'data/repositories/budget_categories/budget_categories_mock_impl.dart';
+export 'data/repositories/budget_metadata/budget_metadata_local_impl.dart';
+export 'data/repositories/budget_metadata/budget_metadata_mock_impl.dart';
 export 'data/repositories/budget_plans/budget_plans_local_impl.dart';
 export 'data/repositories/budget_plans/budget_plans_mock_impl.dart';
 export 'data/repositories/budgets/budgets_local_impl.dart';
