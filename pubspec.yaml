@@ -52,6 +52,7 @@ dev_dependencies:
   device_info_plus_platform_interface: ^7.0.0
   drift_dev: ^2.7.0
   fake_async: ^1.3.1
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
   mfsao: ^3.0.0
@@ -78,3 +79,11 @@ flutter:
           weight: 500
         - asset: assets/fonts/Poppins-SemiBold.ttf
           weight: 600
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path_android: "assets/ic_launcher_android.png"
+  image_path_ios: "assets/ic_launcher_ios.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
