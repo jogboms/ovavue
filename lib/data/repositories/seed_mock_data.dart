@@ -14,10 +14,10 @@ void seedMockData() {
   final String userId = AuthMockImpl.id;
   final BudgetCategoryEntityList categories = BudgetCategoriesMockImpl().seed(10, userId: userId);
   final BudgetPlanEntityList plans = BudgetPlansMockImpl().seed(
-    5,
+    15,
     (_) => BudgetPlansMockImpl.generatePlan(userId: userId, category: categories.random()),
   );
-  final BudgetEntityList budgets = BudgetsMockImpl().seed(2, userId: userId);
+  final BudgetEntityList budgets = BudgetsMockImpl().seed(5, userId: userId);
   final Map<String, BudgetEntity> budgetById = budgets.foldToMap((_) => _.id);
   final Map<String, int> budgetToAmount = budgetById.map(
     (String key, BudgetEntity value) => MapEntry<String, int>(key, value.amount),
