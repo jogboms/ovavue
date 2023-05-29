@@ -10,17 +10,6 @@ const Color _kBackgroundDarkColor = Color(0xFF010101);
 const double _kIconSize = 28.0;
 
 @visibleForTesting
-class AppTextTheme {
-  const AppTextTheme._();
-
-  final TextStyle button = const TextStyle(
-    fontSize: 15.0,
-    fontWeight: AppFontWeight.semibold,
-    fontFamily: kAppFontFamily,
-  );
-}
-
-@visibleForTesting
 class AppColorTheme {
   const AppColorTheme._();
 
@@ -34,7 +23,6 @@ class AppColorTheme {
 class AppTheme extends ThemeExtension<AppTheme> {
   const AppTheme._();
 
-  final AppTextTheme text = const AppTextTheme._();
   final AppColorTheme color = const AppColorTheme._();
 
   final BorderRadius textFieldBorderRadius = AppBorderRadius.c8;
@@ -69,8 +57,11 @@ ThemeData themeBuilder(
 
   final TextTheme textTheme = defaultTheme.textTheme.apply(fontFamily: kAppFontFamily);
 
+  final TextStyle? buttonTextStyle = textTheme.bodyMedium?.copyWith(
+    fontWeight: AppFontWeight.semibold,
+  );
   final ButtonStyle buttonStyle = ButtonStyle(
-    textStyle: MaterialStateProperty.all(appTheme.text.button),
+    textStyle: MaterialStateProperty.all(buttonTextStyle),
     elevation: MaterialStateProperty.all(0),
   );
 

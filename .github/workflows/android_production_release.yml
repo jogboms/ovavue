@@ -1,0 +1,76 @@
+name: (Internal) Android Production Release
+
+on:
+  repository_dispatch:
+    types: [ deploy ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  branch: "master"
+  java_version: "12.x"
+  ruby_path: "./vendor/bundle"
+
+jobs:
+  deploy_android:
+    name: Deploy to Play Store
+    runs-on: ubuntu-latest
+    steps:
+      # Set up
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ env.branch }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.java_version }}
+      - name: Initialize environment variables from FVM config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+      - name: Cache ruby dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.ruby_path }}
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      # Flutter actions
+      - run: flutter doctor
+      - run: flutter pub get
+      - run: flutter packages pub run build_runner build --delete-conflicting-outputs
+      - run: flutter build appbundle --flavor prod --dart-define=env.mode=prod
+
+      # Fastlane deploy
+      - name: Deploy Android Beta to Play Store via Fastlane
+        uses: maierj/fastlane-action@v2.0.1
+        with:
+          lane: beta
+          subdirectory: android
+          bundle-install-path: ${{ env.ruby_path }}
+
+      # Clean up unnecessary gradle cache
+      - name: Cleanup Gradle Cache
+        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties

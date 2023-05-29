@@ -1,0 +1,5 @@
+git_url("https://github.com/jogboms/ovavue-certificates")
+
+storage_mode("git")
+
+type("appstore")
