@@ -34,7 +34,7 @@ packages:
     source: hosted
     version: "3.3.7"
   args:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: args
       sha256: "4cab82a83ffef80b262ddedf47a0a8e56ee6fbf7fe21e6e768b02792034dd440"
@@ -273,6 +273,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  dotenv:
+    dependency: "direct dev"
+    description:
+      name: dotenv
+      sha256: e169b516bc7b88801919e1c508772bcb8e3d0d1776a43f74ab692c57e741cd8a
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   drift:
     dependency: "direct main"
     description:
