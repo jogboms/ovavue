@@ -1,0 +1,136 @@
+name: Production Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump_type:
+        type: choice
+        required: true
+        options:
+          - major
+          - minor
+          - patch
+          - build
+        default: "patch"
+        description: Version bump type
+      skip_analysis_checks:
+        type: boolean
+        required: false
+        default: false
+        description: Skip running analysis checks
+      skip_tests:
+        type: boolean
+        required: false
+        default: false
+        description: Skip running tests
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  branch: "master"
+  java_version: "12.x"
+
+jobs:
+  sanity_check:
+    name: Format, Analyse & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ env.branch }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.java_version }}
+      - name: Initialize environment variables from FVM config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+      - run: flutter doctor
+      - run: flutter pub get
+
+      - if: ${{ !inputs.skip_analysis_checks }}
+        run: flutter format --set-exit-if-changed -l 120 lib
+
+      - run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      - if: ${{ !inputs.skip_analysis_checks }}
+        run: |
+          flutter analyze lib
+          flutter pub run dart_code_metrics:metrics analyze lib --fatal-warnings --fatal-style --set-exit-on-violation-level=warning
+          flutter pub run dart_code_metrics:metrics check-unused-code lib --fatal-unused
+          flutter pub run dart_code_metrics:metrics check-unused-files lib --fatal-unused
+          flutter pub run dart_code_metrics:metrics check-unnecessary-nullable lib --fatal-found
+
+      - if: ${{ !inputs.skip_tests }}
+        run: flutter test --no-pub
+
+  release:
+    needs: [sanity_check]
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+      # Set up
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ env.branch }}
+          token: ${{ secrets.API_TOKEN_GITHUB }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.java_version }}
+      - name: Initialize environment variables from FVM config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+      - run: flutter doctor
+      - run: flutter pub get
+
+      # Bump version
+      - name: Bump package version
+        run: |
+          TAG="v$(dart run ./bin/bump_package_version.dart --versionBumpType '${{ inputs.version_bump_type }}' | tail -n1)"
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
+      # Commit version changes
+      - name: Commit Release Changes
+        working-directory: .github/scripts
+        run: sh ./commit_release_changes.sh
+        env:
+          TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
+          BRANCH: ${{ env.branch }}
+
+      # Create release entry & Trigger deployment
+      - name: Create Release Entry
+        id: create_release
+        uses: ncipollo/release-action@v1
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          tag: ${{ env.TAG }}
+          commit: master
+          generateReleaseNotes: true
+
+      # Dispatch deployment
+      - name: Deploy Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ steps.create_release.outcome == 'success' }}
+        with:
+          token: ${{ secrets.API_TOKEN_GITHUB }}
+          event-type: deploy
+          client-payload: '{"tag_name": "${{ env.TAG }}"}'
