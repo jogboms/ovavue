@@ -60,7 +60,7 @@ jobs:
       - if: ${{ !inputs.skip_analysis_checks }}
         run: flutter format --set-exit-if-changed -l 120 lib
 
-      - run: flutter packages pub run build_runner build --delete-conflicting-outputs
+      - run: flutter packages pub run build_runner build --enable-experiment=records,patterns,sealed-class
 
       - if: ${{ !inputs.skip_analysis_checks }}
         run: |
