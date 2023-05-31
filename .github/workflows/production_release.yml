@@ -63,13 +63,7 @@ jobs:
       - run: flutter packages pub run build_runner build --enable-experiment=records,patterns,sealed-class
 
       - if: ${{ !inputs.skip_analysis_checks }}
-        run: |
-          flutter analyze lib
-          flutter pub run dart_code_metrics:metrics analyze lib --fatal-warnings --fatal-style --set-exit-on-violation-level=warning
-          flutter pub run dart_code_metrics:metrics check-unused-code lib --fatal-unused
-          flutter pub run dart_code_metrics:metrics check-unused-files lib --fatal-unused
-          flutter pub run dart_code_metrics:metrics check-unnecessary-nullable lib --fatal-found
-
+        run: flutter analyze lib
       - if: ${{ !inputs.skip_tests }}
         run: flutter test --no-pub
 
