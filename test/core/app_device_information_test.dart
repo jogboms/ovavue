@@ -90,7 +90,20 @@ void main() {
 
     test('should work normally for ios', () async {
       when(deviceInfoPlatform.deviceInfo).thenAnswer(
-        (_) async => IosDeviceInfo.fromMap(<String, String>{'name': 'iPhone XS Max', 'systemName': 'iPadOS'}),
+        (_) async => IosDeviceInfo.fromMap(<String, Object>{
+          'name': 'iPhone XS Max',
+          'systemName': 'iPadOS',
+          'systemVersion': '1',
+          'model': '1',
+          'localizedModel': '1',
+          'utsname': <String, Object>{
+            'sysname': 'sysname',
+            'nodename': 'nodename',
+            'release': 'release',
+            'version': 'version',
+            'machine': 'machine',
+          },
+        }),
       );
       final AppDeviceInformation info = await AppDeviceInformation.initialize(
         platformOverride: DevicePlatform.ios,
