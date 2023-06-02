@@ -153,16 +153,6 @@ class BudgetMetadataMockImpl implements BudgetMetadataRepository {
   }
 
   @override
-  Future<bool> deleteKey(ReferenceEntity reference) async {
-    _metadata$.add(_metadata..remove(reference.id));
-    _metadataAssociations$.add(
-      _metadataAssociations
-        ..removeWhere((_, BudgetMetadataAssociationEntity value) => value.metadata.id == reference.id),
-    );
-    return true;
-  }
-
-  @override
   Stream<BudgetMetadataValueEntityList> fetchAll(String userId) =>
       _metadata$.stream.map((Map<String, BudgetMetadataValueEntity> event) => event.values.toList());
 

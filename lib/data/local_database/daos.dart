@@ -291,3 +291,118 @@ class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAlloc
     );
   }
 }
+
+@DriftAccessor(tables: <Type>[BudgetMetadataKeys, BudgetMetadataValues, BudgetMetadataAssociations])
+class BudgetMetadataDao extends DatabaseAccessor<Database> with _$BudgetMetadataDaoMixin {
+  BudgetMetadataDao(super.db);
+
+  Stream<BudgetMetadataValueEntityList> watchAllBudgetMetadataValues() => select(budgetMetadataValues)
+      .join(<DBJoin>[
+        innerJoin(budgetMetadataKeys, budgetMetadataKeys.id.equalsExp(budgetMetadataValues.key)),
+      ])
+      .map(_mapValueRowToEntity)
+      .watch();
+
+  Stream<BudgetMetadataValueEntityList> watchAllBudgetMetadataValuesByPlan(String planId) =>
+      (select(budgetMetadataAssociations)..where((_) => _.plan.equals(planId)))
+          .join(<DBJoin>[
+            innerJoin(budgetMetadataValues, budgetMetadataValues.id.equalsExp(budgetMetadataAssociations.metadata)),
+            innerJoin(budgetMetadataKeys, budgetMetadataKeys.id.equalsExp(budgetMetadataValues.key)),
+          ])
+          .map(_mapValueRowToEntity)
+          .watch();
+
+  Stream<List<ReferenceEntity>> watchAllBudgetPlansByMetadata(String metadataId) =>
+      (select(budgetMetadataAssociations)..where((_) => _.metadata.equals(metadataId)))
+          .map((_) => _.toPlanReferenceEntity(budgetPlans.actualTableName))
+          .watch();
+
+  Future<String> createMetadata(CreateBudgetMetadataData metadata) => transaction(() async {
+        final BudgetMetadataKeyDataModel key = await into(budgetMetadataKeys).insertReturning(
+          BudgetMetadataKeysCompanion.insert(
+            title: metadata.title,
+            description: metadata.description,
+            createdAt: clock.now(),
+          ),
+        );
+
+        await _runOperations(key, metadata.operations);
+
+        return key.id;
+      });
+
+  Future<bool> updateMetadata(UpdateBudgetMetadataData metadata) => transaction(() async {
+        final BudgetMetadataKeyDataModel key =
+            await (update(budgetMetadataKeys)..where((_) => _.id.equals(metadata.id)))
+                .writeReturning(
+                  BudgetMetadataKeysCompanion(
+                    title: DBValue(metadata.title),
+                    description: DBValue(metadata.description),
+                    updatedAt: DBValue(clock.now()),
+                  ),
+                )
+                .then((_) => _.single);
+
+        await _runOperations(key, metadata.operations);
+
+        return true;
+      });
+
+  Future<bool> addMetadataToPlan({
+    required ReferenceEntity plan,
+    required ReferenceEntity metadata,
+  }) async {
+    await into(budgetMetadataAssociations).insert(
+      BudgetMetadataAssociationsCompanion.insert(
+        plan: plan.id,
+        metadata: metadata.id,
+        createdAt: clock.now(),
+      ),
+    );
+    return true;
+  }
+
+  Future<bool> removeMetadataFromPlan({
+    required ReferenceEntity plan,
+    required ReferenceEntity metadata,
+  }) async {
+    await (delete(budgetMetadataAssociations)..where((_) => _.plan.equals(plan.id) & _.metadata.equals(metadata.id)))
+        .go();
+    return true;
+  }
+
+  Future<void> _runOperations(BudgetMetadataKeyDataModel key, Set<BudgetMetadataValueOperation> operations) =>
+      Future.wait(<Future<void>>[
+        for (final BudgetMetadataValueOperation item in operations)
+          switch (item) {
+            BudgetMetadataValueCreationOperation() => into(budgetMetadataValues).insertReturning(
+                BudgetMetadataValuesCompanion.insert(
+                  title: item.title,
+                  value: item.value,
+                  key: key.id,
+                  createdAt: clock.now(),
+                ),
+              ),
+            BudgetMetadataValueModificationOperation() =>
+              (update(budgetMetadataValues)..where((_) => _.id.equals(item.reference.id))).write(
+                BudgetMetadataValuesCompanion(
+                  title: DBValue(item.title),
+                  value: DBValue(item.value),
+                  updatedAt: DBValue(clock.now()),
+                ),
+              ),
+            BudgetMetadataValueRemovalOperation() =>
+              (delete(budgetMetadataValues)..where((_) => _.id.equals(item.reference.id))).go(),
+          }
+      ]);
+
+  BudgetMetadataValueEntity _mapValueRowToEntity(TypedResult row) {
+    final BudgetMetadataValueDataModel metadataValue = row.readTable(budgetMetadataValues);
+    final BudgetMetadataKeyDataModel metadataKey = row.readTable(budgetMetadataKeys);
+
+    return metadataValue.toEntity(
+      tableName: budgetMetadataValues.actualTableName,
+      key: (budgetMetadataKeys.actualTableName, metadataKey),
+    );
+  }
+}

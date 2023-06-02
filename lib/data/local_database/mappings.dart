@@ -77,4 +77,38 @@ extension BudgetAllocationEntityExtension on BudgetAllocationDataModel {
   }
 }
 
+extension BudgetMetadataKeyEntityExtension on BudgetMetadataKeyDataModel {
+  BudgetMetadataKeyEntity toEntity(String tableName) {
+    return BudgetMetadataKeyEntity(
+      id: id,
+      path: '/$tableName/$id',
+      title: title,
+      description: description,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+extension BudgetMetadataValueEntityExtension on BudgetMetadataValueDataModel {
+  BudgetMetadataValueEntity toEntity({
+    required String tableName,
+    required TableNameModelPair<BudgetMetadataKeyDataModel> key,
+  }) {
+    return BudgetMetadataValueEntity(
+      id: id,
+      path: '/$tableName/$id',
+      title: title,
+      value: value,
+      key: key.$2.toEntity(key.$1),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+extension BudgetPlanReferenceEntityExtension on BudgetMetadataAssociationDataModel {
+  ReferenceEntity toPlanReferenceEntity(String tableName) => (id: plan, path: '/$tableName/$id');
+}
+
 typedef TableNameModelPair<T> = (String, T);

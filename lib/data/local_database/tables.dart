@@ -46,6 +46,25 @@ class BudgetAllocations extends Table with _UniquePrimaryKey, _CreatedAtKey, _Up
   TextColumn get plan => text().references(BudgetPlans, #id)();
 }
 
+@DataClassName('BudgetMetadataKeyDataModel')
+class BudgetMetadataKeys extends Table with _UniquePrimaryKey, _TitleDescriptionKeys, _CreatedAtKey, _UpdatedAtKey {}
+
+@DataClassName('BudgetMetadataValueDataModel')
+class BudgetMetadataValues extends Table with _UniquePrimaryKey, _CreatedAtKey, _UpdatedAtKey {
+  TextColumn get title => text()();
+
+  TextColumn get key => text().references(BudgetMetadataKeys, #id)();
+
+  TextColumn get value => text()();
+}
+
+@DataClassName('BudgetMetadataAssociationDataModel')
+class BudgetMetadataAssociations extends Table with _UniquePrimaryKey, _CreatedAtKey, _UpdatedAtKey {
+  TextColumn get plan => text().references(BudgetPlans, #id)();
+
+  TextColumn get metadata => text().references(BudgetMetadataValues, #id)();
+}
+
 mixin _UniquePrimaryKey on Table {
   TextColumn get id => text().clientDefault(() => _uuid.v4())();
 

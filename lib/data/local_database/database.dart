@@ -22,6 +22,9 @@ part 'tables.dart';
     BudgetPlans,
     BudgetCategories,
     BudgetAllocations,
+    BudgetMetadataKeys,
+    BudgetMetadataValues,
+    BudgetMetadataAssociations,
   ],
   daos: <Type>[
     AccountsDao,
@@ -30,6 +33,7 @@ part 'tables.dart';
     BudgetPlansDao,
     BudgetCategoriesDao,
     BudgetAllocationsDao,
+    BudgetMetadataDao,
   ],
 )
 class Database extends _$Database {

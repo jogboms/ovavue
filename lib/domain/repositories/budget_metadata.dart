@@ -8,8 +8,6 @@ abstract class BudgetMetadataRepository {
 
   Future<bool> update(String userId, UpdateBudgetMetadataData metadata);
 
-  Future<bool> deleteKey(ReferenceEntity reference);
-
   Stream<BudgetMetadataValueEntityList> fetchAll(String userId);
 
   Stream<BudgetMetadataValueEntityList> fetchAllByPlan({
