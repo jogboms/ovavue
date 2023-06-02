@@ -141,9 +141,12 @@ class _BottomSheetOptions extends StatelessWidget {
                     Text(
                       choice.name.capitalize(),
                       textAlign: TextAlign.center,
-                      style: textTheme.labelLarge?.copyWith(
+                      style: textTheme.bodySmall?.copyWith(
+                        fontSize: 10,
                         color: colorScheme.outline,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

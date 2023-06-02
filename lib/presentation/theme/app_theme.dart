@@ -57,7 +57,7 @@ ThemeData themeBuilder(
 
   final TextTheme textTheme = defaultTheme.textTheme.apply(fontFamily: kAppFontFamily);
 
-  final TextStyle? buttonTextStyle = textTheme.bodyMedium?.copyWith(
+  final TextStyle? buttonTextStyle = textTheme.labelMedium?.copyWith(
     fontWeight: AppFontWeight.semibold,
   );
   final ButtonStyle buttonStyle = ButtonStyle(

@@ -23,6 +23,14 @@
   "categoriesPageTitle": "Categories",
   "nonZeroAmountErrorMessage": "You would need an amount higher than zero",
   "notEnoughBudgetAmountErrorMessage": "You do not have up to that amount left",
+  "atLeastNCharactersShortErrorMessage": "At least {count} characters",
+  "@atLeastNCharactersShortErrorMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "atLeastNCharactersErrorMessage": "This needs to be at least {count} characters",
   "@atLeastNCharactersErrorMessage": {
     "placeholders": {
@@ -43,6 +51,7 @@
   "titleLabel": "Title",
   "descriptionLabel": "Description",
   "amountLabel": "Amount",
+  "valueLabel": "Value",
   "startDateLabel": "Starting date",
   "endDateLabel": "Ending date?",
   "makeActiveLabel": "Make this active?",
@@ -64,5 +73,10 @@
   "exitAppMessage": "You would need to restart Ovavue to continue",
   "continueCaption": "Continue",
   "accountKeyLabel": "ACCOUNT KEY",
-  "metadataPageTitle": "Metadata"
+  "metadataPageTitle": "Metadata",
+  "modifyCaption": "Modify metadata",
+  "createNewMetadataValueType": "Add metadata value",
+  "selectMetadataCaption": "Select metadata",
+  "selectMetadataValueCaption": "Select value",
+  "aggregateAllocationCaption": "Aggregate allocation"
 }

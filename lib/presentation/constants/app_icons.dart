@@ -30,6 +30,7 @@ abstract class AppIcons {
   static const IconData date = TablerIcons.calendar_event;
   static const IconData title = TablerIcons.heading;
   static const IconData description = TablerIcons.letter_case;
+  static const IconData value = TablerIcons.code_asterix;
   static const IconData copyToClipboard = TablerIcons.clipboard_text;
   static const IconData import = TablerIcons.database_import;
   static const IconData export = TablerIcons.database_export;

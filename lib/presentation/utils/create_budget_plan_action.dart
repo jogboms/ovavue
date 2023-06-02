@@ -5,6 +5,7 @@ import 'package:ovavue/domain.dart';
 import '../routing.dart';
 import '../state.dart';
 import '../widgets.dart';
+import 'budget_plan_detail_page_entrypoint.dart';
 
 Future<String?> createBudgetPlanAction({
   required BuildContext context,
@@ -32,7 +33,10 @@ Future<String?> createBudgetPlanAction({
         ),
       );
   if (navigateOnComplete) {
-    await router.goToBudgetPlanDetail(id: id);
+    await router.goToBudgetPlanDetail(
+      id: id,
+      entrypoint: BudgetPlanDetailPageEntrypoint.budget,
+    );
   }
 
   return id;

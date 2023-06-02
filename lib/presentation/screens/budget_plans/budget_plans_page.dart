@@ -109,7 +109,10 @@ class _ContentDataView extends StatelessWidget {
                     ),
                     child: BudgetPlanListTile(
                       plan: plan,
-                      onTap: () => context.router.goToBudgetPlanDetail(id: plan.id),
+                      onTap: () => context.router.goToBudgetPlanDetail(
+                        id: plan.id,
+                        entrypoint: BudgetPlanDetailPageEntrypoint.list,
+                      ),
                     ),
                   );
                 },
