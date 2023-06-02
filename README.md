@@ -28,7 +28,7 @@ Install local `flutter` version.
 fvm install
 ```
 
-### Install, L10n & Riverpod code generation
+### Install, L10n, Riverpod & Drift code generation
 
 ```bash
 fvm flutter pub get 
@@ -38,9 +38,10 @@ fvm flutter pub run build_runner build
 ## Running
 
 There are three (3) available environments:
+
 - `mock`: Demo mode with non-persistent data
-- `dev`: Development mode connected to firebase dev instance
-- `prod`: Production mode connected to firebase production instance
+- `dev`: Development mode connected to [pkg:drift](https://pub.dev/packages/drift) in-memory instance
+- `prod`: Production mode connected to [pkg:drift](https://pub.dev/packages/drift) production instance
 
 To run in `mock` mode,
 
