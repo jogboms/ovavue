@@ -49,6 +49,35 @@ To run in `mock` mode,
 fvm flutter run --flavor mock --dart-define=env.mode=mock
 ```
 
+## UI Shots
+
+<div style="text-align: center">
+  <table>
+    <tr>
+      <td style="text-align: center">
+        <img src="./screenshots/1.png" width="200" />
+      </td>
+      <td style="text-align: center">
+        <img src="./screenshots/2.png" width="200" />
+      </td>
+      <td style="text-align: center">
+        <img src="./screenshots/3.png" width="200" />
+      </td>
+      <td style="text-align: center">
+        <img src="./screenshots/4.png" width="200" />
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">
+        <img src="./screenshots/5.png" width="200" />
+      </td>
+      <td style="text-align: center">
+        <img src="./screenshots/6.png" width="200" />
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## License
 
 MIT License
