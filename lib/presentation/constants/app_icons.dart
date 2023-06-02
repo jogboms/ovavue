@@ -5,6 +5,7 @@ abstract class AppIcons {
   static const IconData budget = TablerIcons.businessplan;
   static const IconData plans = TablerIcons.database;
   static const IconData categories = TablerIcons.category;
+  static const IconData metadata = TablerIcons.layers_linked;
   static const IconData preferences = TablerIcons.settings;
   static const IconData addBudget = TablerIcons.square_rounded_plus;
   static const IconData addPlan = TablerIcons.coins;
@@ -29,6 +30,7 @@ abstract class AppIcons {
   static const IconData date = TablerIcons.calendar_event;
   static const IconData title = TablerIcons.heading;
   static const IconData description = TablerIcons.letter_case;
+  static const IconData value = TablerIcons.code_asterix;
   static const IconData copyToClipboard = TablerIcons.clipboard_text;
   static const IconData import = TablerIcons.database_import;
   static const IconData export = TablerIcons.database_export;

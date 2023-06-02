@@ -113,6 +113,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                   onPressed: () => context.router.goToBudgetPlanDetail(
                     id: plan.id,
                     budgetId: state.budget?.id,
+                    entrypoint: BudgetPlanDetailPageEntrypoint.category,
                   ),
                 );
               },

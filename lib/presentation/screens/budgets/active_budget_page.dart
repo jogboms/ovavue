@@ -50,6 +50,7 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
             _BottomSheetChoice.budgets => router.goToBudgets(),
             _BottomSheetChoice.plans => router.goToBudgetPlans(),
             _BottomSheetChoice.categories => router.goToBudgetCategories(),
+            _BottomSheetChoice.metadata => router.goToBudgetMetadata(),
             _BottomSheetChoice.preferences => router.goToPreferences(),
             null => null,
           };
@@ -101,6 +102,7 @@ enum _BottomSheetChoice {
   budgets(AppIcons.budget),
   plans(AppIcons.plans),
   categories(AppIcons.categories),
+  metadata(AppIcons.metadata),
   preferences(AppIcons.preferences);
 
   const _BottomSheetChoice(this._icon);
@@ -139,9 +141,12 @@ class _BottomSheetOptions extends StatelessWidget {
                     Text(
                       choice.name.capitalize(),
                       textAlign: TextAlign.center,
-                      style: textTheme.labelLarge?.copyWith(
+                      style: textTheme.bodySmall?.copyWith(
+                        fontSize: 10,
                         color: colorScheme.outline,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

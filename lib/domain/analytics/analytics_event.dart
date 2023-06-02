@@ -19,6 +19,9 @@ class AnalyticsEvent with EquatableMixin {
   static AnalyticsEvent createBudgetPlan(String userId) =>
       AnalyticsEvent._('create_budget_plan', <String, dynamic>{'user_id': userId});
 
+  static AnalyticsEvent createBudgetMetadata(String userId) =>
+      AnalyticsEvent._('create_budget_metadata', <String, dynamic>{'user_id': userId});
+
   static AnalyticsEvent createBudgetAllocation(String userId) =>
       AnalyticsEvent._('create_budget_allocation', <String, dynamic>{'user_id': userId});
 
@@ -33,6 +36,9 @@ class AnalyticsEvent with EquatableMixin {
   static AnalyticsEvent updateBudgetPlan(String path) =>
       AnalyticsEvent._('update_budget_plan', <String, dynamic>{'path': path});
 
+  static AnalyticsEvent updateBudgetMetadata(String path) =>
+      AnalyticsEvent._('update_budget_metadata', <String, dynamic>{'path': path});
+
   static AnalyticsEvent updateBudgetAllocation(String path) =>
       AnalyticsEvent._('update_budget_allocation', <String, dynamic>{'path': path});
 
@@ -46,6 +52,12 @@ class AnalyticsEvent with EquatableMixin {
 
   static AnalyticsEvent deleteBudgetAllocation(String path) =>
       AnalyticsEvent._('delete_budget_allocation', <String, dynamic>{'path': path});
+
+  static AnalyticsEvent addMetadataToPlan(String path) =>
+      AnalyticsEvent._('add_metadata_to_plan', <String, dynamic>{'path': path});
+
+  static AnalyticsEvent removeMetadataFromPlan(String path) =>
+      AnalyticsEvent._('remove_metadata_from_plan', <String, dynamic>{'path': path});
 
   static const String _eventNamePrefix = 'app';
 

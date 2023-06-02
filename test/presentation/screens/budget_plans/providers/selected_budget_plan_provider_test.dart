@@ -49,11 +49,19 @@ Future<void> main() async {
           plan: expectedPlans.first,
         ),
       );
+      final List<BudgetMetadataValueEntity> expectedBudgetMetadata = BudgetMetadataValueEntityList.generate(
+        3,
+        (_) => BudgetMetadataMockImpl.generateMetadataValue(),
+      );
 
       when(
         () => mockUseCases.fetchBudgetAllocationsByPlanUseCase
             .call(userId: any(named: 'userId'), planId: any(named: 'planId')),
       ).thenAnswer((_) => Stream<BudgetAllocationEntityList>.value(expectedBudgetAllocations));
+      when(
+        () => mockUseCases.fetchBudgetMetadataByPlanUseCase
+            .call(userId: any(named: 'userId'), planId: any(named: 'planId')),
+      ).thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(expectedBudgetMetadata));
 
       expect(
         createProviderStream(),
@@ -62,6 +70,7 @@ Future<void> main() async {
             allocation: expectedBudgetAllocations.firstWhere((_) => _.plan.id == expectedPlan.id).toViewModel(),
             plan: BudgetPlanViewModel.fromEntity(expectedPlan),
             budget: BudgetViewModel.fromEntity(expectedBudget),
+            metadata: expectedBudgetMetadata.map(BudgetMetadataValueViewModel.fromEntity).toList(growable: false),
             previousAllocations: expectedBudgetAllocations
                 .map((_) => _.toViewModelPair())
                 .skip(1)

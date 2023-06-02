@@ -178,6 +178,7 @@ class _SliverPlansGroupState extends State<_SliverPlansGroup> {
                     onPressed: () => context.router.goToBudgetPlanDetail(
                       id: plan.id,
                       budgetId: widget.budget.id,
+                      entrypoint: BudgetPlanDetailPageEntrypoint.budget,
                     ),
                   );
                 },

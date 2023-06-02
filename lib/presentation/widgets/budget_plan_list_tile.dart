@@ -5,10 +5,16 @@ import '../utils.dart';
 import 'budget_category_avatar.dart';
 
 class BudgetPlanListTile extends StatelessWidget {
-  const BudgetPlanListTile({super.key, required this.plan, required this.onTap});
+  const BudgetPlanListTile({
+    super.key,
+    required this.plan,
+    required this.onTap,
+    this.trailing,
+  });
 
   final BudgetPlanViewModel plan;
   final VoidCallback onTap;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +29,7 @@ class BudgetPlanListTile extends StatelessWidget {
         colorScheme: plan.category.colorScheme,
         icon: plan.category.icon.data,
       ),
+      trailing: trailing,
       onTap: onTap,
     );
   }

@@ -25,8 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final Widget? leading =
         ModalRoute.of(context)?.canPop == true ? BackButton(color: theme.colorScheme.onSurface) : null;
     final DefaultTextStyle title = DefaultTextStyle(
-      style: theme.textTheme.titleMedium!.copyWith(
-        height: 1,
+      style: theme.textTheme.titleLarge!.copyWith(
         fontWeight: AppFontWeight.semibold,
       ),
       child: this.title,

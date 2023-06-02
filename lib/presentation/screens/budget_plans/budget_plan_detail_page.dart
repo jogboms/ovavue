@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
@@ -12,11 +13,13 @@ import '../../widgets.dart';
 import 'providers/selected_budget_plan_provider.dart';
 import 'utils/delete_budget_plan_action.dart';
 import 'widgets/budget_category_selection_picker.dart';
+import 'widgets/budget_metadata_selection_picker.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
-  const BudgetPlanDetailPage({super.key, required this.id, this.budgetId});
+  const BudgetPlanDetailPage({super.key, required this.id, required this.entrypoint, this.budgetId});
 
   final String id;
+  final BudgetPlanDetailPageEntrypoint entrypoint;
   final String? budgetId;
 
   @override
@@ -36,6 +39,7 @@ class BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
             ref.watch(selectedBudgetPlanProvider(id: widget.id, budgetId: widget.budgetId)).when(
                   data: (BudgetPlanState data) => _ContentDataView(
                     key: dataViewKey,
+                    entrypoint: widget.entrypoint,
                     state: data,
                     budgetId: widget.budgetId,
                   ),
@@ -50,8 +54,14 @@ class BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
 }
 
 class _ContentDataView extends StatelessWidget {
-  const _ContentDataView({super.key, required this.state, required this.budgetId});
+  const _ContentDataView({
+    super.key,
+    required this.entrypoint,
+    required this.state,
+    required this.budgetId,
+  });
 
+  final BudgetPlanDetailPageEntrypoint entrypoint;
   final BudgetPlanState state;
   final String? budgetId;
 
@@ -92,23 +102,24 @@ class _ContentDataView extends StatelessWidget {
                             color: colorScheme.outline,
                           ),
                         ),
-                        _CategoryChip(
-                          key: Key(state.plan.category.id),
-                          category: state.plan.category,
-                          onPressed: () {
-                            final String? budgetId = this.budgetId;
-                            if (budgetId != null) {
-                              context.router.goToBudgetCategoryDetailForBudget(
-                                id: state.plan.category.id,
-                                budgetId: budgetId,
-                              );
-                            } else {
-                              context.router.goToBudgetCategoryDetail(
-                                id: state.plan.category.id,
-                              );
-                            }
-                          },
-                        ),
+                        if (entrypoint != BudgetPlanDetailPageEntrypoint.category)
+                          _CategoryChip(
+                            key: Key(state.plan.category.id),
+                            category: state.plan.category,
+                            onPressed: () {
+                              final String? budgetId = this.budgetId;
+                              if (budgetId != null) {
+                                context.router.goToBudgetCategoryDetailForBudget(
+                                  id: state.plan.category.id,
+                                  budgetId: budgetId,
+                                );
+                              } else {
+                                context.router.goToBudgetCategoryDetail(
+                                  id: state.plan.category.id,
+                                );
+                              }
+                            },
+                          ),
                       ],
                     ),
                   ),
@@ -120,6 +131,14 @@ class _ContentDataView extends StatelessWidget {
                 ],
               ),
             ),
+            if (entrypoint != BudgetPlanDetailPageEntrypoint.metadata)
+              _MetadataSection(
+                metadata: state.metadata,
+                onPressed: (BudgetMetadataValueViewModel metadata) => _handleMetadataPressed(
+                  context,
+                  metadata: metadata,
+                ),
+              ),
             const SizedBox(height: 2.0),
             Consumer(
               builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
@@ -138,6 +157,14 @@ class _ContentDataView extends StatelessWidget {
                   ActionButton(
                     icon: AppIcons.addCategory,
                     onPressed: () => _handleUpdateCategoryAction(
+                      context,
+                      ref: ref,
+                      plan: state.plan,
+                    ),
+                  ),
+                  ActionButton(
+                    icon: AppIcons.metadata,
+                    onPressed: () => _handleUpdateMetadataAction(
                       context,
                       ref: ref,
                       plan: state.plan,
@@ -214,6 +241,13 @@ class _ContentDataView extends StatelessWidget {
     );
   }
 
+  void _handleMetadataPressed(
+    BuildContext context, {
+    required BudgetMetadataValueViewModel metadata,
+  }) {
+    context.router.goToBudgetMetadataDetail(id: metadata.id, budgetId: budgetId);
+  }
+
   void _handleAllocationAction(
     BuildContext context, {
     required WidgetRef ref,
@@ -280,6 +314,16 @@ class _ContentDataView extends StatelessWidget {
       await ref.read(budgetPlanProvider).updateCategory(plan: plan, category: category);
     }
   }
+
+  void _handleUpdateMetadataAction(
+    BuildContext context, {
+    required WidgetRef ref,
+    required BudgetPlanViewModel plan,
+  }) async =>
+      showModalBottomSheet<void>(
+        context: context,
+        builder: (_) => BudgetMetadataSelectionPicker(plan: plan),
+      );
 
   void _handleDeleteAllocationAction(
     BuildContext context, {
@@ -362,6 +406,46 @@ class _CategoryChip extends StatelessWidget {
         color: category.colorScheme.foreground,
       ),
       onPressed: onPressed,
+    );
+  }
+}
+
+class _MetadataSection extends StatelessWidget {
+  const _MetadataSection({required this.metadata, required this.onPressed});
+
+  final List<BudgetMetadataValueViewModel> metadata;
+  final ValueChanged<BudgetMetadataValueViewModel> onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
+    if (metadata.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      child: Wrap(
+        runSpacing: 4.0,
+        spacing: 4.0,
+        children: <Widget>[
+          for (final BudgetMetadataValueViewModel item in metadata)
+            CupertinoButton(
+              onPressed: () => onPressed(item),
+              padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 6.0),
+              minSize: 0,
+              child: Text(
+                '#${item.title}',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: AppFontWeight.semibold,
+                  color: colorScheme.primary,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

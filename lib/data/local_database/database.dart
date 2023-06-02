@@ -22,6 +22,9 @@ part 'tables.dart';
     BudgetPlans,
     BudgetCategories,
     BudgetAllocations,
+    BudgetMetadataKeys,
+    BudgetMetadataValues,
+    BudgetMetadataAssociations,
   ],
   daos: <Type>[
     AccountsDao,
@@ -30,6 +33,7 @@ part 'tables.dart';
     BudgetPlansDao,
     BudgetCategoriesDao,
     BudgetAllocationsDao,
+    BudgetMetadataDao,
   ],
 )
 class Database extends _$Database {
@@ -38,10 +42,20 @@ class Database extends _$Database {
   Database.memory() : super(NativeDatabase.memory(logStatements: true));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         beforeOpen: (OpeningDetails details) async => customStatement('PRAGMA foreign_keys = ON'),
+        onCreate: (Migrator m) async => m.createAll(),
+        onUpgrade: (Migrator m, int from, int to) async {
+          if (from < 2) {
+            await Future.wait(<Future<void>>[
+              m.createTable(budgetMetadataKeys),
+              m.createTable(budgetMetadataValues),
+              m.createTable(budgetMetadataAssociations),
+            ]);
+          }
+        },
       );
 }

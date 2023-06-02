@@ -48,6 +48,9 @@ class BudgetDetailDataView extends StatelessWidget {
                 onExpand: () => router.goToGroupedBudgetPlans(
                   budgetId: state.budget.id,
                 ),
+                onFilterByMetadata: () => router.goToFilterPlansByBudgetMetadata(
+                  budgetId: state.budget.id,
+                ),
               ),
               const SizedBox(height: 8),
             ],
@@ -138,6 +141,7 @@ class BudgetDetailDataView extends StatelessWidget {
                   onPressed: () => router.goToBudgetPlanDetail(
                     id: plan.id,
                     budgetId: state.budget.id,
+                    entrypoint: BudgetPlanDetailPageEntrypoint.budget,
                   ),
                 );
               },
@@ -293,6 +297,7 @@ class _CategoryView extends StatefulWidget {
     required this.allocationAmount,
     required this.onPressed,
     required this.onExpand,
+    required this.onFilterByMetadata,
   });
 
   final List<SelectedBudgetCategoryViewModel> categories;
@@ -300,6 +305,7 @@ class _CategoryView extends StatefulWidget {
   final Money allocationAmount;
   final ValueChanged<String> onPressed;
   final VoidCallback onExpand;
+  final VoidCallback onFilterByMetadata;
 
   @override
   State<_CategoryView> createState() => _CategoryViewState();
@@ -385,6 +391,10 @@ class _CategoryViewState extends State<_CategoryView> {
               IconButton(
                 icon: const Icon(AppIcons.expand),
                 onPressed: widget.onExpand,
+              ),
+              IconButton(
+                icon: const Icon(AppIcons.metadata),
+                onPressed: widget.onFilterByMetadata,
               ),
               IconButton(
                 icon: const Icon(AppIcons.toggle),
