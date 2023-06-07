@@ -78,5 +78,6 @@
   "createNewMetadataValueType": "Add metadata value",
   "selectMetadataCaption": "Select metadata",
   "selectMetadataValueCaption": "Select value",
-  "aggregateAllocationCaption": "Aggregate allocation"
+  "aggregateAllocationCaption": "Aggregate allocation",
+  "getInTouchLabel": "GET IN TOUCH"
 }

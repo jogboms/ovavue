@@ -3,7 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ovavue/core.dart';
 import 'package:universal_io/io.dart' as io;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants.dart';
 import '../../utils.dart';
@@ -98,6 +100,19 @@ class _ContentDataView extends StatelessWidget {
                   ],
                   child: Text(l10n.backupRestoreLabel),
                 ),
+                const SizedBox(height: 16),
+                _Item(
+                  label: l10n.getInTouchLabel,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      IconButton(onPressed: _handleSendEmail, icon: const Icon(AppIcons.email)),
+                      IconButton(onPressed: _handleOpenTwitter, icon: const Icon(AppIcons.twitter)),
+                      IconButton(onPressed: _handleOpenGithubIssue, icon: const Icon(AppIcons.github)),
+                      IconButton(onPressed: _handleOpenWebsite, icon: const Icon(AppIcons.website)),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -130,6 +145,32 @@ class _ContentDataView extends StatelessWidget {
   }
 
   void _handleDatabaseExport() => preferences.exportDatabase();
+
+  void _handleSendEmail() => _handleOpenUrl(
+        Uri(
+          scheme: 'mailto',
+          path: 'jeremiahogbomo@gmail.com',
+          query: <String, String>{
+            'subject': 'Hello from Ovavue',
+          }.entries.map((_) => '${Uri.encodeComponent(_.key)}=${Uri.encodeComponent(_.value)}').join('&'),
+        ),
+      );
+
+  void _handleOpenTwitter() => _handleOpenUrl(Uri.https('twitter.com', 'jogboms'));
+
+  void _handleOpenGithubIssue() => _handleOpenUrl(Uri.https('github.com', 'jogboms/ovavue/issues/new'));
+
+  void _handleOpenWebsite() => _handleOpenUrl(Uri.https('jogboms.github.io'));
+
+  void _handleOpenUrl(Uri url) async {
+    try {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } catch (e, stackTrace) {
+      if (e is PlatformException) {
+        AppLog.e(AppException(e.message ?? '$e'), stackTrace);
+      }
+    }
+  }
 }
 
 typedef _ItemAction = (IconData, VoidCallback);
@@ -140,14 +181,13 @@ class _Item extends StatelessWidget {
     this.leading,
     this.label,
     required this.child,
-    required this.actions,
+    this.actions,
   });
 
   final IconData? leading;
   final String? label;
   final Widget child;
-
-  final List<_ItemAction> actions;
+  final List<_ItemAction>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -177,10 +217,11 @@ class _Item extends StatelessWidget {
                   child: child,
                 ),
               ),
-              for (final _ItemAction action in actions) ...<Widget>[
-                const SizedBox(width: 6),
-                IconButton(onPressed: action.$2, icon: Icon(action.$1)),
-              ]
+              if (actions case final List<_ItemAction> actions)
+                for (final _ItemAction action in actions) ...<Widget>[
+                  const SizedBox(width: 6),
+                  IconButton(onPressed: action.$2, icon: Icon(action.$1)),
+                ]
             ],
           ),
         ),

@@ -35,6 +35,10 @@ abstract class AppIcons {
   static const IconData import = TablerIcons.database_import;
   static const IconData export = TablerIcons.database_export;
   static const IconData accountKey = TablerIcons.key;
+  static const IconData github = TablerIcons.brand_github;
+  static const IconData email = TablerIcons.mail;
+  static const IconData twitter = TablerIcons.brand_twitter;
+  static const IconData website = TablerIcons.world_www;
 
   /// Would be great not to change the index of the icons. Append-only and/or Replace-only
   static final Map<int, IconData> categoryIcons = <IconData>{
