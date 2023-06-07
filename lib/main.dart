@@ -22,6 +22,7 @@ void main() async {
   final ReporterClient reporterClient;
   final Analytics analytics;
   final NavigatorObserver navigationObserver = NavigatorObserver();
+  final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
   switch (environment) {
     case Environment.dev:
       repository = _Repository.local(
@@ -39,7 +40,6 @@ void main() async {
         authIdentityStorage: const _SecureStorageAuthIdentityStorage(FlutterSecureStorage()),
         preferences: preferences,
       );
-      final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
       reporterClient = _ReporterClient(
         deviceInformation: deviceInformation,
         environment: environment,
@@ -130,6 +130,7 @@ void main() async {
     ProviderScope(
       overrides: <Override>[
         registryProvider.overrideWithValue(registry),
+        appVersionProvider.overrideWithValue(deviceInformation.appVersion),
       ],
       child: ErrorBoundary(
         isReleaseMode: !environment.isDebugging,

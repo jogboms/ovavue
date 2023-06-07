@@ -168,6 +168,7 @@ ProviderContainer createProviderContainer({
       registryProvider.overrideWithValue(
         registry ?? createRegistry().withMockedUseCases(),
       ),
+      appVersionProvider.overrideWithValue('0.0.0'),
       ...?overrides,
     ],
     observers: observers,
@@ -188,6 +189,7 @@ Widget createApp({
   return ProviderScope(
     overrides: <Override>[
       registryProvider.overrideWithValue(registry),
+      appVersionProvider.overrideWithValue('0.0.0'),
       ...?overrides,
     ],
     child: App(

@@ -8,6 +8,7 @@ import 'package:universal_io/io.dart' as io;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants.dart';
+import '../../state.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
 import 'providers/preferences_provider.dart';
@@ -25,7 +26,13 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final L10n l10n = context.l10n;
+
     return Scaffold(
+      appBar: CustomAppBar(
+        title: Text(l10n.preferencesPageTitle),
+        centerTitle: true,
+      ),
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(preferencesProvider).when(
               data: (PreferencesState data) => _ContentDataView(
@@ -55,19 +62,14 @@ class _ContentDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final L10n l10n = context.l10n;
+    final ThemeData theme = Theme.of(context);
 
-    return CustomScrollView(
-      slivers: <Widget>[
-        CustomAppBar(
-          title: Text(l10n.preferencesPageTitle),
-          asSliver: true,
-          centerTitle: true,
-        ),
-        SliverSafeArea(
-          top: false,
-          sliver: SliverPadding(
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            sliver: SliverList.list(
+            child: Column(
               children: <Widget>[
                 _Item(
                   key: Key(state.accountKey),
@@ -114,6 +116,19 @@ class _ContentDataView extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+        Consumer(
+          builder: (BuildContext context, WidgetRef ref, _) => SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'v${ref.watch(appVersionProvider)}',
+                style: theme.textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),
