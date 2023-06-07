@@ -16,6 +16,7 @@ import 'presentation.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  enrichDefaultIntlSymbols();
   await findSystemLocale();
 
   final _Repository repository;
