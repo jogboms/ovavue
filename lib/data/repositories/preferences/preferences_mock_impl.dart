@@ -1,7 +1,11 @@
 import 'package:ovavue/domain.dart';
 
+import 'theme_mode_storage.dart';
+
 class PreferencesMockImpl implements PreferencesRepository {
-  int? _themeMode;
+  PreferencesMockImpl(this._themeModeStorage);
+
+  final ThemeModeStorage _themeModeStorage;
 
   @override
   Future<String> fetchDatabaseLocation() async => 'db.sqlite';
@@ -13,11 +17,11 @@ class PreferencesMockImpl implements PreferencesRepository {
   Future<bool> exportDatabase() async => true;
 
   @override
-  Future<int?> fetchThemeMode() async => _themeMode;
+  Future<int?> fetchThemeMode() async => _themeModeStorage.get();
 
   @override
   Future<bool> updateThemeMode(int themeMode) async {
-    _themeMode = themeMode;
+    await _themeModeStorage.set(themeMode);
     return true;
   }
 }

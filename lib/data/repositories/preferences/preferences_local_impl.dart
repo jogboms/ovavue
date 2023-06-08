@@ -8,6 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_io/io.dart' as io;
 
+import 'theme_mode_storage.dart';
+
 class PreferencesLocalImpl implements PreferencesRepository {
   const PreferencesLocalImpl(this._themeModeStorage);
 
@@ -65,10 +67,4 @@ class PreferencesLocalImpl implements PreferencesRepository {
     await _themeModeStorage.set(themeMode);
     return true;
   }
-}
-
-abstract class ThemeModeStorage {
-  FutureOr<int?> get();
-
-  FutureOr<void> set(int themeMode);
 }

@@ -13,6 +13,7 @@ export 'data/repositories/budgets/budgets_local_impl.dart';
 export 'data/repositories/budgets/budgets_mock_impl.dart';
 export 'data/repositories/preferences/preferences_local_impl.dart';
 export 'data/repositories/preferences/preferences_mock_impl.dart';
+export 'data/repositories/preferences/theme_mode_storage.dart';
 export 'data/repositories/seed_mock_data.dart';
 export 'data/repositories/users/users_local_impl.dart';
 export 'data/repositories/users/users_mock_impl.dart';

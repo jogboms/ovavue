@@ -1,7 +1,7 @@
 import 'dart:async' as async;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
@@ -25,20 +25,19 @@ void main() async {
   final Analytics analytics;
   final NavigatorObserver navigationObserver = NavigatorObserver();
   final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
+  final _ThemeModeStorage themeModeStorage = _ThemeModeStorage(await SharedPreferences.getInstance());
   switch (environment) {
     case Environment.dev:
       repository = _Repository.local(
         Database.memory(),
         authIdentityStorage: const _InMemoryAuthIdentityStorage(),
-        preferences: PreferencesLocalImpl(_ThemeModeStorage(await SharedPreferences.getInstance())),
+        preferences: PreferencesLocalImpl(themeModeStorage),
       );
       reporterClient = const _NoopReporterClient();
       analytics = const _PrintAnalytics();
       break;
     case Environment.prod:
-      final PreferencesRepository preferences = PreferencesLocalImpl(
-        _ThemeModeStorage(await SharedPreferences.getInstance()),
-      );
+      final PreferencesRepository preferences = PreferencesLocalImpl(themeModeStorage);
       repository = _Repository.local(
         Database(await preferences.fetchDatabaseLocation()),
         authIdentityStorage: const _SecureStorageAuthIdentityStorage(FlutterSecureStorage()),
@@ -54,7 +53,7 @@ void main() async {
     case Environment.mock:
       seedMockData();
       analytics = const _PrintAnalytics();
-      repository = _Repository.mock();
+      repository = _Repository.mock(themeModeStorage: themeModeStorage);
       reporterClient = const _NoopReporterClient();
       break;
   }
@@ -145,6 +144,7 @@ void main() async {
         onCrash: errorReporter.reportCrash,
         child: App(
           registry: registry,
+          themeMode: (await themeModeStorage.get())?.themeMode,
           navigatorObservers: <NavigatorObserver>[navigationObserver],
         ),
       ),
@@ -165,15 +165,16 @@ class _Repository {
         budgetAllocations = BudgetAllocationsLocalImpl(db),
         budgetMetadata = BudgetMetadataLocalImpl(db);
 
-  _Repository.mock()
-      : auth = AuthMockImpl(),
+  _Repository.mock({
+    required ThemeModeStorage themeModeStorage,
+  })  : auth = AuthMockImpl(),
         users = UsersMockImpl(),
         budgets = BudgetsMockImpl(),
         budgetPlans = BudgetPlansMockImpl(),
         budgetCategories = BudgetCategoriesMockImpl(),
         budgetAllocations = BudgetAllocationsMockImpl(),
         budgetMetadata = BudgetMetadataMockImpl(),
-        preferences = PreferencesMockImpl();
+        preferences = PreferencesMockImpl(themeModeStorage);
 
   final AuthRepository auth;
   final UsersRepository users;
@@ -305,4 +306,8 @@ class _ThemeModeStorage implements ThemeModeStorage {
 
   @override
   async.FutureOr<void> set(int themeMode) => _storage.setInt(_key, themeMode);
+}
+
+extension on int {
+  ThemeMode get themeMode => ThemeMode.values[this];
 }
