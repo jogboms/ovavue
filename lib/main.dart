@@ -121,6 +121,8 @@ void main() async {
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
     ..factory((RegistryFactory di) => FetchDatabaseLocationUseCase(preferences: di()))
+    ..factory((RegistryFactory di) => FetchThemeModeUseCase(preferences: di()))
+    ..factory((RegistryFactory di) => UpdateThemeModeUseCase(preferences: di()))
     ..factory((RegistryFactory di) => ImportDatabaseUseCase(preferences: di()))
     ..factory((RegistryFactory di) => ExportDatabaseUseCase(preferences: di()))
 

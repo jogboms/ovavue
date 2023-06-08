@@ -81,6 +81,10 @@ class MockFetchUserUseCase extends Mock implements FetchUserUseCase {}
 
 class MockFetchDatabaseLocationUseCase extends Mock implements FetchDatabaseLocationUseCase {}
 
+class MockFetchThemeModeUseCase extends Mock implements FetchThemeModeUseCase {}
+
+class MockUpdateThemeModeUseCase extends Mock implements UpdateThemeModeUseCase {}
+
 class MockImportDatabaseUseCase extends Mock implements ImportDatabaseUseCase {}
 
 class MockExportDatabaseUseCase extends Mock implements ExportDatabaseUseCase {}
