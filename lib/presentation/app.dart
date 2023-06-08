@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ovavue/core.dart';
 import 'package:registry/registry.dart';
 
 import 'screens/budgets/active_budget_page.dart';
+import 'state.dart';
 import 'theme.dart';
 import 'utils.dart';
 import 'widgets.dart';
@@ -12,11 +14,13 @@ class App extends StatefulWidget {
   const App({
     super.key,
     required this.registry,
+    this.themeMode,
     this.home,
     this.navigatorObservers,
   });
 
   final Registry registry;
+  final ThemeMode? themeMode;
   final Widget? home;
   final List<NavigatorObserver>? navigatorObservers;
 
@@ -36,20 +40,24 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
       key: Key(bannerMessage),
       visible: !environment.isProduction,
       message: bannerMessage,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        navigatorKey: navigatorKey,
-        theme: themeBuilder(ThemeData.light()),
-        darkTheme: themeBuilder(ThemeData.dark()),
-        onGenerateTitle: (BuildContext context) => context.l10n.appName,
-        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-          ...L10n.localizationsDelegates,
-          _ResetIntlUtilLocaleLocalizationDelegate(),
-        ],
-        supportedLocales: L10n.supportedLocales,
-        builder: (_, Widget? child) => SnackBarProvider(navigatorKey: navigatorKey, child: child!),
-        home: widget.home ?? const ActiveBudgetPage(),
-        navigatorObservers: widget.navigatorObservers ?? <NavigatorObserver>[],
+      child: Consumer(
+        builder: (BuildContext context, WidgetRef ref, Widget? child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          navigatorKey: navigatorKey,
+          theme: themeBuilder(ThemeData.light()),
+          darkTheme: themeBuilder(ThemeData.dark()),
+          themeMode: ref.watch(preferencesProvider.select((_) => _.value?.themeMode)) ?? widget.themeMode,
+          onGenerateTitle: (BuildContext context) => context.l10n.appName,
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            ...L10n.localizationsDelegates,
+            _ResetIntlUtilLocaleLocalizationDelegate(),
+          ],
+          supportedLocales: L10n.supportedLocales,
+          builder: (_, Widget? child) => SnackBarProvider(navigatorKey: navigatorKey, child: child!),
+          home: child,
+          navigatorObservers: widget.navigatorObservers ?? <NavigatorObserver>[],
+        ),
+        child: widget.home ?? const ActiveBudgetPage(),
       ),
     );
   }

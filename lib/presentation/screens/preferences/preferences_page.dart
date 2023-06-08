@@ -3,12 +3,14 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ovavue/core.dart';
 import 'package:universal_io/io.dart' as io;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants.dart';
+import '../../state.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
-import 'providers/preferences_provider.dart';
 
 class PreferencesPage extends StatefulWidget {
   const PreferencesPage({super.key});
@@ -23,7 +25,13 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final L10n l10n = context.l10n;
+
     return Scaffold(
+      appBar: CustomAppBar(
+        title: Text(l10n.preferencesPageTitle),
+        centerTitle: true,
+      ),
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(preferencesProvider).when(
               data: (PreferencesState data) => _ContentDataView(
@@ -53,19 +61,14 @@ class _ContentDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final L10n l10n = context.l10n;
+    final ThemeData theme = Theme.of(context);
 
-    return CustomScrollView(
-      slivers: <Widget>[
-        CustomAppBar(
-          title: Text(l10n.preferencesPageTitle),
-          asSliver: true,
-          centerTitle: true,
-        ),
-        SliverSafeArea(
-          top: false,
-          sliver: SliverPadding(
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            sliver: SliverList.list(
+            child: Column(
               children: <Widget>[
                 _Item(
                   key: Key(state.accountKey),
@@ -75,6 +78,16 @@ class _ContentDataView extends StatelessWidget {
                   ],
                   label: l10n.accountKeyLabel,
                   child: Text(state.accountKey, overflow: TextOverflow.ellipsis),
+                ),
+                const SizedBox(height: 16),
+                _Item(
+                  key: Key(state.themeMode.name),
+                  leading: AppIcons.themeMode,
+                  actions: <_ItemAction>[
+                    (AppIcons.edit, () => _handleThemeModeUpdate(context, state.themeMode)),
+                  ],
+                  label: l10n.themeModeLabel,
+                  child: Text(state.themeMode.name.capitalize()),
                 ),
                 const SizedBox(height: 16),
                 _Item(
@@ -98,7 +111,33 @@ class _ContentDataView extends StatelessWidget {
                   ],
                   child: Text(l10n.backupRestoreLabel),
                 ),
+                const SizedBox(height: 16),
+                _Item(
+                  label: l10n.getInTouchLabel,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      IconButton(onPressed: _handleSendEmail, icon: const Icon(AppIcons.email)),
+                      IconButton(onPressed: _handleOpenTwitter, icon: const Icon(AppIcons.twitter)),
+                      IconButton(onPressed: _handleOpenGithubIssue, icon: const Icon(AppIcons.github)),
+                      IconButton(onPressed: _handleOpenWebsite, icon: const Icon(AppIcons.website)),
+                    ],
+                  ),
+                ),
               ],
+            ),
+          ),
+        ),
+        Consumer(
+          builder: (BuildContext context, WidgetRef ref, _) => SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'v${ref.watch(appVersionProvider)}',
+                style: theme.textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),
@@ -113,11 +152,21 @@ class _ContentDataView extends StatelessWidget {
     snackBar.info(l10n.copiedToClipboardMessage);
   }
 
+  void _handleThemeModeUpdate(BuildContext context, ThemeMode value) async {
+    final ThemeMode? themeMode = await showModalBottomSheet<ThemeMode>(
+      context: context,
+      builder: (_) => _BottomSheetOptions(initialValue: value),
+    );
+    if (themeMode != null && context.mounted) {
+      await preferences.updateThemeMode(themeMode);
+    }
+  }
+
   void _handleDatabaseImport(BuildContext context) async {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = AppSnackBar.of(context);
 
-    final bool? successful = await preferences.importDatabase();
+    final bool successful = await preferences.importDatabase();
     if (successful == true && context.mounted) {
       await showModalBottomSheet<void>(
         context: context,
@@ -130,6 +179,32 @@ class _ContentDataView extends StatelessWidget {
   }
 
   void _handleDatabaseExport() => preferences.exportDatabase();
+
+  void _handleSendEmail() => _handleOpenUrl(
+        Uri(
+          scheme: 'mailto',
+          path: 'jeremiahogbomo@gmail.com',
+          query: <String, String>{
+            'subject': 'Hello from Ovavue',
+          }.entries.map((_) => '${Uri.encodeComponent(_.key)}=${Uri.encodeComponent(_.value)}').join('&'),
+        ),
+      );
+
+  void _handleOpenTwitter() => _handleOpenUrl(Uri.https('twitter.com', 'jogboms'));
+
+  void _handleOpenGithubIssue() => _handleOpenUrl(Uri.https('github.com', 'jogboms/ovavue/issues/new'));
+
+  void _handleOpenWebsite() => _handleOpenUrl(Uri.https('jogboms.github.io'));
+
+  void _handleOpenUrl(Uri url) async {
+    try {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } catch (e, stackTrace) {
+      if (e is PlatformException) {
+        AppLog.e(AppException(e.message ?? '$e'), stackTrace);
+      }
+    }
+  }
 }
 
 typedef _ItemAction = (IconData, VoidCallback);
@@ -140,14 +215,13 @@ class _Item extends StatelessWidget {
     this.leading,
     this.label,
     required this.child,
-    required this.actions,
+    this.actions,
   });
 
   final IconData? leading;
   final String? label;
   final Widget child;
-
-  final List<_ItemAction> actions;
+  final List<_ItemAction>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -177,10 +251,11 @@ class _Item extends StatelessWidget {
                   child: child,
                 ),
               ),
-              for (final _ItemAction action in actions) ...<Widget>[
-                const SizedBox(width: 6),
-                IconButton(onPressed: action.$2, icon: Icon(action.$1)),
-              ]
+              if (actions case final List<_ItemAction> actions)
+                for (final _ItemAction action in actions) ...<Widget>[
+                  const SizedBox(width: 6),
+                  IconButton(onPressed: action.$2, icon: Icon(action.$1)),
+                ]
             ],
           ),
         ),
@@ -212,6 +287,71 @@ class _ExitDialog extends StatelessWidget {
       ),
     );
   }
+}
+
+class _BottomSheetOptions extends StatelessWidget {
+  const _BottomSheetOptions({
+    required this.initialValue,
+  });
+
+  final ThemeMode initialValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
+
+    final Color activeColor = colorScheme.primary;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        8.0,
+        12.0,
+        8.0,
+        MediaQuery.paddingOf(context).bottom + 8.0,
+      ),
+      child: Row(
+        children: <Widget>[
+          for (final ThemeMode choice in ThemeMode.values)
+            Expanded(
+              key: Key(choice.name),
+              child: InkWell(
+                onTap: () => Navigator.of(context).pop(choice),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      choice.icon,
+                      color: choice == initialValue ? activeColor : colorScheme.onBackground,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      choice.name.capitalize(),
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodySmall?.copyWith(
+                        fontSize: 10,
+                        color: choice == initialValue ? activeColor : colorScheme.outline,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+extension on ThemeMode {
+  IconData get icon => switch (this) {
+        ThemeMode.system => AppIcons.autoThemeMode,
+        ThemeMode.dark => AppIcons.darkThemeMode,
+        ThemeMode.light => AppIcons.lightThemeMode,
+      };
 }
 
 extension on String {

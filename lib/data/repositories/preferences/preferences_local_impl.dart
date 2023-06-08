@@ -8,24 +8,28 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_io/io.dart' as io;
 
+import 'theme_mode_storage.dart';
+
 class PreferencesLocalImpl implements PreferencesRepository {
-  const PreferencesLocalImpl();
+  const PreferencesLocalImpl(this._themeModeStorage);
 
   static const String _dbName = 'db.sqlite';
   static const String _backupDbName = 'backup.sqlite';
+
+  final ThemeModeStorage _themeModeStorage;
 
   @override
   Future<String> fetchDatabaseLocation() async => _deriveDbFilePath(await _deriveDbDirectoryPath());
 
   @override
-  Future<bool?> importDatabase() async {
+  Future<bool> importDatabase() async {
     final FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result == null) {
-      return null;
+      return false;
     }
     final String? newDbFilePath = result.files.first.path;
     if (newDbFilePath == null) {
-      return null;
+      return false;
     }
 
     try {
@@ -54,4 +58,13 @@ class PreferencesLocalImpl implements PreferencesRepository {
       (io.Platform.isIOS ? getLibraryDirectory() : getApplicationDocumentsDirectory()).then((_) => _.path);
 
   String _deriveDbFilePath(String directoryPath) => p.join(directoryPath, _dbName);
+
+  @override
+  Future<int?> fetchThemeMode() async => _themeModeStorage.get();
+
+  @override
+  Future<bool> updateThemeMode(int themeMode) async {
+    await _themeModeStorage.set(themeMode);
+    return true;
+  }
 }

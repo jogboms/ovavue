@@ -20,6 +20,7 @@ export 'widgets/error_view.dart';
 export 'widgets/loading_spinner.dart';
 export 'widgets/loading_view.dart';
 export 'widgets/primary_button.dart';
+export 'widgets/sliver_expandable_group.dart';
 export 'widgets/sliver_pinned_title_count_header.dart';
 export 'widgets/snackbar/app_snack_bar.dart';
 export 'widgets/snackbar/snack_bar_provider.dart';

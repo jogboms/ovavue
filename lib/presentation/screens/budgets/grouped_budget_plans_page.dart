@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import '../../constants.dart';
 import '../../models.dart';
@@ -85,13 +84,21 @@ class _ContentDataView extends StatelessWidget {
           for (final (BudgetCategoryViewModel category, Money allocation) in state.categories)
             SliverPadding(
               padding: const EdgeInsets.only(top: 4),
-              sliver: _SliverPlansGroup(
+              sliver: SliverExpandableGroup<BudgetPlanViewModel>(
                 key: Key(category.id),
-                budget: state.budget,
-                category: category,
-                allocationAmount: allocation,
-                plans: plansByCategory[category.id]!,
                 expanded: expandAllGroups,
+                header: _Header(category: category, allocationAmount: allocation),
+                values: plansByCategory[category.id]!,
+                itemBuilder: (BudgetPlanViewModel plan) => _PlanTile(
+                  key: Key(plan.id),
+                  plan: plan,
+                  categoryAllocationAmount: allocation,
+                  onPressed: () => context.router.goToBudgetPlanDetail(
+                    id: plan.id,
+                    budgetId: state.budget.id,
+                    entrypoint: BudgetPlanDetailPageEntrypoint.budget,
+                  ),
+                ),
               ),
             ),
         SliverToBoxAdapter(
@@ -104,95 +111,8 @@ class _ContentDataView extends StatelessWidget {
   }
 }
 
-class _SliverPlansGroup extends StatefulWidget {
-  const _SliverPlansGroup({
-    super.key,
-    required this.budget,
-    required this.category,
-    required this.allocationAmount,
-    required this.plans,
-    required this.expanded,
-  });
-
-  final BudgetViewModel budget;
-  final BudgetCategoryViewModel category;
-  final Money allocationAmount;
-  final List<BudgetPlanViewModel> plans;
-  final bool expanded;
-
-  @override
-  State<_SliverPlansGroup> createState() => _SliverPlansGroupState();
-}
-
-class _SliverPlansGroupState extends State<_SliverPlansGroup> {
-  late bool _expanded = widget.expanded;
-
-  @override
-  void didUpdateWidget(covariant _SliverPlansGroup oldWidget) {
-    if (widget.expanded != _expanded) {
-      setState(() => _expanded = widget.expanded);
-    }
-
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    return SliverStickyHeader(
-      header: Material(
-        child: InkWell(
-          child: Ink(
-            color: colorScheme.surface,
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: <Widget>[
-                _Header(
-                  key: Key(widget.category.id),
-                  category: widget.category,
-                  allocationAmount: widget.allocationAmount,
-                ),
-                AnimatedRotation(
-                  turns: _expanded ? 0 : 0.5,
-                  duration: kThemeChangeDuration,
-                  child: const Icon(AppIcons.arrowDown),
-                ),
-              ],
-            ),
-          ),
-          onTap: () => setState(() => _expanded = !_expanded),
-        ),
-      ),
-      sliver: _expanded
-          ? SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              sliver: SliverList.separated(
-                itemBuilder: (BuildContext context, int index) {
-                  final BudgetPlanViewModel plan = widget.plans[index];
-
-                  return _PlanTile(
-                    key: Key(plan.id),
-                    plan: plan,
-                    categoryAllocationAmount: widget.allocationAmount,
-                    onPressed: () => context.router.goToBudgetPlanDetail(
-                      id: plan.id,
-                      budgetId: widget.budget.id,
-                      entrypoint: BudgetPlanDetailPageEntrypoint.budget,
-                    ),
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(height: 4),
-                itemCount: widget.plans.length,
-              ),
-            )
-          : const SliverToBoxAdapter(child: SizedBox.shrink()),
-    );
-  }
-}
-
 class _Header extends StatelessWidget {
-  const _Header({super.key, required this.category, required this.allocationAmount});
+  const _Header({required this.category, required this.allocationAmount});
 
   final BudgetCategoryViewModel category;
   final Money allocationAmount;
@@ -201,24 +121,22 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return Expanded(
-      child: Row(
-        children: <Widget>[
-          BudgetCategoryAvatar.small(
-            colorScheme: category.colorScheme,
-            icon: category.icon.data,
-          ),
-          const SizedBox(width: 12.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(category.title.sentence(), style: textTheme.bodyMedium, maxLines: 1),
-              const SizedBox(height: 2.0),
-              Text('$allocationAmount', style: textTheme.titleMedium),
-            ],
-          ),
-        ],
-      ),
+    return Row(
+      children: <Widget>[
+        BudgetCategoryAvatar.small(
+          colorScheme: category.colorScheme,
+          icon: category.icon.data,
+        ),
+        const SizedBox(width: 12.0),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(category.title.sentence(), style: textTheme.bodyMedium, maxLines: 1),
+            const SizedBox(height: 2.0),
+            Text('$allocationAmount', style: textTheme.titleMedium),
+          ],
+        ),
+      ],
     );
   }
 }

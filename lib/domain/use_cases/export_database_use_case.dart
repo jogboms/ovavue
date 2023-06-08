@@ -7,5 +7,5 @@ class ExportDatabaseUseCase {
 
   final PreferencesRepository _preferences;
 
-  Future<bool?> call() async => _preferences.exportDatabase();
+  Future<bool> call() async => _preferences.exportDatabase();
 }

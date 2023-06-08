@@ -1,11 +1,11 @@
 import '../repositories/preferences.dart';
 
-class ImportDatabaseUseCase {
-  const ImportDatabaseUseCase({
+class UpdateThemeModeUseCase {
+  const UpdateThemeModeUseCase({
     required PreferencesRepository preferences,
   }) : _preferences = preferences;
 
   final PreferencesRepository _preferences;
 
-  Future<bool> call() async => _preferences.importDatabase();
+  Future<bool> call(int themeMode) async => _preferences.updateThemeMode(themeMode);
 }

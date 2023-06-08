@@ -1,6 +1,7 @@
 export 'core/app_device_information.dart';
 export 'core/app_exception.dart';
 export 'core/app_log.dart';
+export 'core/enrich_default_intl_symbols.dart';
 export 'core/environment.dart';
 export 'core/error_handling/error_boundary.dart';
 export 'core/error_handling/error_reporter.dart';

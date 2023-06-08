@@ -68,6 +68,8 @@ class MockUseCases {
   final FetchActiveBudgetUseCase fetchActiveBudgetUseCase = MockFetchActiveBudgetUseCase();
   final FetchUserUseCase fetchUserUseCase = MockFetchUserUseCase();
   final FetchDatabaseLocationUseCase fetchDatabaseLocationUseCase = MockFetchDatabaseLocationUseCase();
+  final FetchThemeModeUseCase fetchThemeModeUseCase = MockFetchThemeModeUseCase();
+  final UpdateThemeModeUseCase updateThemeModeUseCase = MockUpdateThemeModeUseCase();
   final ImportDatabaseUseCase importDatabaseUseCase = MockImportDatabaseUseCase();
   final ExportDatabaseUseCase exportDatabaseUseCase = MockExportDatabaseUseCase();
 
@@ -102,6 +104,8 @@ class MockUseCases {
         fetchActiveBudgetUseCase,
         fetchUserUseCase,
         fetchDatabaseLocationUseCase,
+        fetchThemeModeUseCase,
+        updateThemeModeUseCase,
         importDatabaseUseCase,
         exportDatabaseUseCase,
       ].forEach(mt.reset);
@@ -152,6 +156,8 @@ Registry createRegistry({
       ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
       ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
       ..factory((RegistryFactory di) => FetchDatabaseLocationUseCase(preferences: di()))
+      ..factory((RegistryFactory di) => FetchThemeModeUseCase(preferences: di()))
+      ..factory((RegistryFactory di) => UpdateThemeModeUseCase(preferences: di()))
       ..factory((RegistryFactory di) => ImportDatabaseUseCase(preferences: di()))
       ..factory((RegistryFactory di) => ExportDatabaseUseCase(preferences: di()))
       ..set(environment);
@@ -168,6 +174,7 @@ ProviderContainer createProviderContainer({
       registryProvider.overrideWithValue(
         registry ?? createRegistry().withMockedUseCases(),
       ),
+      appVersionProvider.overrideWithValue('0.0.0'),
       ...?overrides,
     ],
     observers: observers,
@@ -188,6 +195,7 @@ Widget createApp({
   return ProviderScope(
     overrides: <Override>[
       registryProvider.overrideWithValue(registry),
+      appVersionProvider.overrideWithValue('0.0.0'),
       ...?overrides,
     ],
     child: App(
@@ -258,6 +266,8 @@ extension MockUseCasesExtensions on Registry {
     ..replace<FetchActiveBudgetUseCase>(mockUseCases.fetchActiveBudgetUseCase)
     ..replace<FetchUserUseCase>(mockUseCases.fetchUserUseCase)
     ..replace<FetchDatabaseLocationUseCase>(mockUseCases.fetchDatabaseLocationUseCase)
+    ..replace<FetchThemeModeUseCase>(mockUseCases.fetchThemeModeUseCase)
+    ..replace<UpdateThemeModeUseCase>(mockUseCases.updateThemeModeUseCase)
     ..replace<ImportDatabaseUseCase>(mockUseCases.importDatabaseUseCase)
     ..replace<ExportDatabaseUseCase>(mockUseCases.exportDatabaseUseCase);
 }
