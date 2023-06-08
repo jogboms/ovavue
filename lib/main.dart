@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
 import 'package:registry/registry.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart' as io;
 
 import 'core.dart';
@@ -29,13 +30,15 @@ void main() async {
       repository = _Repository.local(
         Database.memory(),
         authIdentityStorage: const _InMemoryAuthIdentityStorage(),
-        preferences: const PreferencesLocalImpl(),
+        preferences: PreferencesLocalImpl(_ThemeModeStorage(await SharedPreferences.getInstance())),
       );
       reporterClient = const _NoopReporterClient();
       analytics = const _PrintAnalytics();
       break;
     case Environment.prod:
-      const PreferencesRepository preferences = PreferencesLocalImpl();
+      final PreferencesRepository preferences = PreferencesLocalImpl(
+        _ThemeModeStorage(await SharedPreferences.getInstance()),
+      );
       repository = _Repository.local(
         Database(await preferences.fetchDatabaseLocation()),
         authIdentityStorage: const _SecureStorageAuthIdentityStorage(FlutterSecureStorage()),
@@ -289,4 +292,17 @@ class _InMemoryAuthIdentityStorage implements AuthIdentityStorage {
 
   @override
   async.FutureOr<void> set(String id) {}
+}
+
+class _ThemeModeStorage implements ThemeModeStorage {
+  const _ThemeModeStorage(this._storage);
+
+  final SharedPreferences _storage;
+  static const String _key = 'ovavue.app.theme_mode';
+
+  @override
+  async.FutureOr<int?> get() => _storage.getInt(_key);
+
+  @override
+  async.FutureOr<void> set(int themeMode) => _storage.setInt(_key, themeMode);
 }
