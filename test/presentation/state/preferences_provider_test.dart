@@ -6,7 +6,7 @@ import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 import 'package:riverpod/riverpod.dart';
 
-import '../../../../utils.dart';
+import '../../utils.dart';
 
 Future<void> main() async {
   tearDown(mockUseCases.reset);

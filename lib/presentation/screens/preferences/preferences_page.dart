@@ -11,7 +11,6 @@ import '../../constants.dart';
 import '../../state.dart';
 import '../../utils.dart';
 import '../../widgets.dart';
-import 'providers/preferences_provider.dart';
 
 class PreferencesPage extends StatefulWidget {
   const PreferencesPage({super.key});

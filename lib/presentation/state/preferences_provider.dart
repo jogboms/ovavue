@@ -4,7 +4,7 @@ import 'package:ovavue/domain.dart';
 import 'package:registry/registry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../state.dart';
+import '../state.dart';
 
 part 'preferences_provider.g.dart';
 

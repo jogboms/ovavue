@@ -8,6 +8,7 @@ export 'state/budget_plans_by_metadata_state.dart';
 export 'state/budget_plans_provider.dart';
 export 'state/budget_state.dart';
 export 'state/budgets_provider.dart';
+export 'state/preferences_provider.dart';
 export 'state/registry_provider.dart';
 export 'state/selected_budget_metadata_by_plan_provider.dart';
 export 'state/selected_budget_plans_by_metadata_provider.dart';
