@@ -5,7 +5,7 @@ abstract class AppIcons {
   static const IconData budget = TablerIcons.businessplan;
   static const IconData plans = TablerIcons.database;
   static const IconData categories = TablerIcons.category;
-  static const IconData metadata = TablerIcons.layers_linked;
+  static const IconData metadata = TablerIcons.sitemap;
   static const IconData preferences = TablerIcons.settings;
   static const IconData addBudget = TablerIcons.square_rounded_plus;
   static const IconData addPlan = TablerIcons.coins;
@@ -35,6 +35,10 @@ abstract class AppIcons {
   static const IconData import = TablerIcons.database_import;
   static const IconData export = TablerIcons.database_export;
   static const IconData accountKey = TablerIcons.key;
+  static const IconData themeMode = TablerIcons.palette;
+  static const IconData autoThemeMode = TablerIcons.cpu;
+  static const IconData darkThemeMode = TablerIcons.moon;
+  static const IconData lightThemeMode = TablerIcons.sun;
   static const IconData github = TablerIcons.brand_github;
   static const IconData email = TablerIcons.mail;
   static const IconData twitter = TablerIcons.brand_twitter;

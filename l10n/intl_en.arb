@@ -79,5 +79,6 @@
   "selectMetadataCaption": "Select metadata",
   "selectMetadataValueCaption": "Select value",
   "aggregateAllocationCaption": "Aggregate allocation",
-  "getInTouchLabel": "GET IN TOUCH"
+  "getInTouchLabel": "GET IN TOUCH",
+  "themeModeLabel": "THEME"
 }

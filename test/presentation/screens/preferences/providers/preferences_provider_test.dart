@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
       final PreferencesState expectedState = PreferencesState(
         accountKey: dummyAccount.id,
         databaseLocation: 'location',
+        themeMode: ThemeMode.system,
       );
       when(mockUseCases.fetchDatabaseLocationUseCase.call).thenAnswer((_) async => expectedState.databaseLocation);
 

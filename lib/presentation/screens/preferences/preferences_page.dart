@@ -82,6 +82,16 @@ class _ContentDataView extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _Item(
+                  key: Key(state.themeMode.name),
+                  leading: AppIcons.themeMode,
+                  actions: <_ItemAction>[
+                    (AppIcons.edit, () => _handleThemeModeUpdate(context, state.themeMode)),
+                  ],
+                  label: l10n.themeModeLabel,
+                  child: Text(state.themeMode.name.capitalize()),
+                ),
+                const SizedBox(height: 16),
+                _Item(
                   key: Key(state.databaseLocation),
                   leading: AppIcons.budget,
                   actions: <_ItemAction>[
@@ -143,11 +153,21 @@ class _ContentDataView extends StatelessWidget {
     snackBar.info(l10n.copiedToClipboardMessage);
   }
 
+  void _handleThemeModeUpdate(BuildContext context, ThemeMode value) async {
+    final ThemeMode? themeMode = await showModalBottomSheet<ThemeMode>(
+      context: context,
+      builder: (_) => _BottomSheetOptions(initialValue: value),
+    );
+    if (themeMode != null && context.mounted) {
+      await preferences.updateThemeMode(themeMode);
+    }
+  }
+
   void _handleDatabaseImport(BuildContext context) async {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = AppSnackBar.of(context);
 
-    final bool? successful = await preferences.importDatabase();
+    final bool successful = await preferences.importDatabase();
     if (successful == true && context.mounted) {
       await showModalBottomSheet<void>(
         context: context,
@@ -268,6 +288,71 @@ class _ExitDialog extends StatelessWidget {
       ),
     );
   }
+}
+
+class _BottomSheetOptions extends StatelessWidget {
+  const _BottomSheetOptions({
+    required this.initialValue,
+  });
+
+  final ThemeMode initialValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
+
+    final Color activeColor = colorScheme.primary;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        8.0,
+        12.0,
+        8.0,
+        MediaQuery.paddingOf(context).bottom + 8.0,
+      ),
+      child: Row(
+        children: <Widget>[
+          for (final ThemeMode choice in ThemeMode.values)
+            Expanded(
+              key: Key(choice.name),
+              child: InkWell(
+                onTap: () => Navigator.of(context).pop(choice),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      choice.icon,
+                      color: choice == initialValue ? activeColor : colorScheme.onBackground,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      choice.name.capitalize(),
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodySmall?.copyWith(
+                        fontSize: 10,
+                        color: choice == initialValue ? activeColor : colorScheme.outline,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+extension on ThemeMode {
+  IconData get icon => switch (this) {
+        ThemeMode.system => AppIcons.autoThemeMode,
+        ThemeMode.dark => AppIcons.darkThemeMode,
+        ThemeMode.light => AppIcons.lightThemeMode,
+      };
 }
 
 extension on String {
