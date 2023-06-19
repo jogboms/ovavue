@@ -6,7 +6,11 @@
   <br /><br />
 
 [![Format, Analyze and Test](https://github.com/jogboms/ovavue/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/jogboms/ovavue/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/jogboms/ovavue/branch/master/graph/badge.svg)](https://codecov.io/gh/jogboms/ovavue)
+
+<a href='https://apps.apple.com/app/ovavue/id6449617480'><img alt='Get it from the App Store' src='./screenshots/app_store.png' height='36px'/></a>
+
 </div>
+
 
 ---
 
