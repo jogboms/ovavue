@@ -645,6 +645,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
+  money:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "78d6974e5052070759179cafbcb1f71d90cd1cbd"
+      url: "https://github.com/jogboms/money.dart.git"
+    source: git
+    version: "0.1.0"
   node_preamble:
     dependency: transitive
     description:

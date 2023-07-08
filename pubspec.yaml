@@ -27,6 +27,8 @@ dependencies:
   intl: ^0.18.1
   logging: ^1.1.1
   meta: ^1.9.1
+  money:
+    git: https://github.com/jogboms/money.dart.git
   package_info_plus: ^4.0.1
   path: ^1.8.3
   path_provider: ^2.0.15

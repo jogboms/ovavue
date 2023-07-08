@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:intl/intl.dart';
+import 'package:money/money.dart';
 
 import '../models.dart';
-import 'money.dart';
 
 export 'package:flutter_gen/gen_l10n/l10n.dart';
 
