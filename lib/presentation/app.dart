@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ovavue/core.dart';
 
 import 'screens/budgets/active_budget_page.dart';
@@ -44,10 +43,7 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
           darkTheme: themeBuilder(ThemeData.dark()),
           themeMode: ref.watch(preferencesProvider.select((_) => _.value?.themeMode)) ?? widget.themeMode,
           onGenerateTitle: (BuildContext context) => context.l10n.appName,
-          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-            ...L10n.localizationsDelegates,
-            _ResetIntlUtilLocaleLocalizationDelegate(),
-          ],
+          localizationsDelegates: L10n.localizationsDelegates,
           supportedLocales: L10n.supportedLocales,
           builder: (_, Widget? child) => SnackBarProvider(navigatorKey: _navigatorKey, child: child!),
           home: child,
@@ -89,22 +85,4 @@ class _Banner extends StatelessWidget {
       ],
     );
   }
-}
-
-// TODO(Jogboms): intl_util generates a delegate that always sets the defaultLocale to a wrong value. This was the way to go until recently.
-// This fix basically resets the defaultLocale and uses the one determined by findSystemLocale from intl found in main.dart
-// See
-// https://github.com/localizely/intl_utils/pull/18
-// https://github.com/flutter/website/pull/3013
-class _ResetIntlUtilLocaleLocalizationDelegate extends LocalizationsDelegate<void> {
-  const _ResetIntlUtilLocaleLocalizationDelegate();
-
-  @override
-  Future<void> load(Locale locale) => Future<void>.sync(() => Intl.defaultLocale = null);
-
-  @override
-  bool isSupported(Locale locale) => true;
-
-  @override
-  bool shouldReload(covariant LocalizationsDelegate<void> old) => false;
 }
