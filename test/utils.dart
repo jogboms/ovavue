@@ -199,7 +199,7 @@ Widget createApp({
       ...?overrides,
     ],
     child: App(
-      registry: registry,
+      environment: registry.get(),
       navigatorObservers: observers,
       home: includeMaterial ? Material(child: home) : home,
     ),

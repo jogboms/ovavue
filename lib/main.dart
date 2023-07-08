@@ -143,7 +143,7 @@ void main() async {
         onException: AppLog.e,
         onCrash: errorReporter.reportCrash,
         child: App(
-          registry: registry,
+          environment: environment,
           themeMode: (await themeModeStorage.get())?.themeMode,
           navigatorObservers: <NavigatorObserver>[navigationObserver],
         ),
