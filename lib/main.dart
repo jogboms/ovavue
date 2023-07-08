@@ -23,11 +23,19 @@ void main() async {
   final _Repository repository;
   final ReporterClient reporterClient;
   final Analytics analytics;
+  final AuthIdentityStorage authIdentityStorage;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final NavigatorObserver navigationObserver = NavigatorObserver();
   final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
-  final _ThemeModeStorage themeModeStorage = _ThemeModeStorage(await SharedPreferences.getInstance());
+  final SharedPreferences storage = await SharedPreferences.getInstance();
+  final _ThemeModeStorage themeModeStorage = _ThemeModeStorage(storage);
+  final _DefaultBackupClientController backupClientController = _DefaultBackupClientController(
+    navigatorKey: navigatorKey,
+    storage: storage,
+  );
   switch (environment) {
     case Environment.dev:
+      authIdentityStorage = const _InMemoryAuthIdentityStorage();
       repository = _Repository.local(
         Database.memory(),
         authIdentityStorage: const _InMemoryAuthIdentityStorage(),
@@ -38,9 +46,10 @@ void main() async {
       break;
     case Environment.prod:
       final PreferencesRepository preferences = PreferencesLocalImpl(themeModeStorage);
+      authIdentityStorage = const _SecureStorageAuthIdentityStorage(FlutterSecureStorage());
       repository = _Repository.local(
         Database(await preferences.fetchDatabaseLocation()),
-        authIdentityStorage: const _SecureStorageAuthIdentityStorage(FlutterSecureStorage()),
+        authIdentityStorage: authIdentityStorage,
         preferences: preferences,
       );
       reporterClient = _ReporterClient(
@@ -52,9 +61,10 @@ void main() async {
     case Environment.testing:
     case Environment.mock:
       seedMockData();
-      analytics = const _PrintAnalytics();
+      authIdentityStorage = const _InMemoryAuthIdentityStorage();
       repository = _Repository.mock(themeModeStorage: themeModeStorage);
       reporterClient = const _NoopReporterClient();
+      analytics = const _PrintAnalytics();
       break;
   }
 
@@ -131,11 +141,17 @@ void main() async {
     /// Environment.
     ..set(environment);
 
+  final String? id = await authIdentityStorage.get();
+  if (id != null) {
+    backupClientController.hydrate(id);
+  }
+
   runApp(
     ProviderScope(
       overrides: <Override>[
         registryProvider.overrideWithValue(registry),
         appVersionProvider.overrideWithValue(deviceInformation.appVersion),
+        backupClientControllerProvider.overrideWithValue(backupClientController),
       ],
       child: ErrorBoundary(
         isReleaseMode: !environment.isDebugging,
@@ -144,6 +160,7 @@ void main() async {
         onCrash: errorReporter.reportCrash,
         child: App(
           environment: environment,
+          navigatorKey: navigatorKey,
           themeMode: (await themeModeStorage.get())?.themeMode,
           navigatorObservers: <NavigatorObserver>[navigationObserver],
         ),
@@ -306,6 +323,63 @@ class _ThemeModeStorage implements ThemeModeStorage {
 
   @override
   async.FutureOr<void> set(int themeMode) => _storage.setInt(_key, themeMode);
+}
+
+class _DefaultBackupClientController implements BackupClientController {
+  _DefaultBackupClientController({
+    required GlobalKey<NavigatorState> navigatorKey,
+    required SharedPreferences storage,
+  })  : _navigatorKey = navigatorKey,
+        _storage = storage {
+    final String? clientName = storage.getString(_key);
+    final BackupClientProvider? client = clientName != null ? BackupClientProvider.from(clientName) : null;
+    if (client == null && clientName != null) {
+      AppLog.e('Could not find backup client with name: $clientName', StackTrace.current);
+    }
+
+    _client = client ?? BackupClientProvider.defaultClient;
+  }
+
+  final GlobalKey<NavigatorState> _navigatorKey;
+  final SharedPreferences _storage;
+  static const String _key = 'ovavue.app.backup_client';
+
+  @override
+  Set<BackupClientProvider> get clients => BackupClientProvider.clients;
+
+  @override
+  BackupClientProvider get client => _client;
+  late BackupClientProvider _client;
+
+  void hydrate(String id) => setup(client, id);
+
+  @override
+  Future<bool> setup(BackupClientProvider client, String id) async {
+    final async.Completer<bool> completer = async.Completer<bool>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final bool result = await client.setup(_navigatorKey.currentContext!, id);
+      if (result) {
+        _client = client;
+        await _storage.setString(_key, _client.name);
+      }
+      completer.complete(result);
+    });
+
+    return completer.future;
+  }
+
+  @override
+  String displayName(BackupClientProvider client) {
+    final Locale locale = Localizations.localeOf(_navigatorKey.currentContext!);
+    return client.displayName(BackupClientLocale.from(locale));
+  }
+
+  @override
+  Future<bool> export(BackupClientProvider client) => client.export();
+
+  @override
+  Future<bool> import(BackupClientProvider client) => client.import();
 }
 
 extension on int {

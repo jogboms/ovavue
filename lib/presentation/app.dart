@@ -12,12 +12,14 @@ class App extends StatefulWidget {
   const App({
     super.key,
     required this.environment,
+    required this.navigatorKey,
     this.themeMode,
     this.home,
     this.navigatorObservers,
   });
 
   final Environment environment;
+  final GlobalKey<NavigatorState> navigatorKey;
   final ThemeMode? themeMode;
   final Widget? home;
   final List<NavigatorObserver>? navigatorObservers;
@@ -27,7 +29,10 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with SingleTickerProviderStateMixin {
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +43,14 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
       child: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) => MaterialApp(
           debugShowCheckedModeBanner: false,
-          navigatorKey: _navigatorKey,
+          navigatorKey: widget.navigatorKey,
           theme: themeBuilder(ThemeData.light()),
           darkTheme: themeBuilder(ThemeData.dark()),
           themeMode: ref.watch(preferencesProvider.select((_) => _.value?.themeMode)) ?? widget.themeMode,
           onGenerateTitle: (BuildContext context) => context.l10n.appName,
           localizationsDelegates: L10n.localizationsDelegates,
           supportedLocales: L10n.supportedLocales,
-          builder: (_, Widget? child) => SnackBarProvider(navigatorKey: _navigatorKey, child: child!),
+          builder: (_, Widget? child) => SnackBarProvider(navigatorKey: widget.navigatorKey, child: child!),
           home: child,
           navigatorObservers: widget.navigatorObservers ?? <NavigatorObserver>[],
         ),

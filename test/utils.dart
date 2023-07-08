@@ -186,11 +186,13 @@ ProviderContainer createProviderContainer({
 Widget createApp({
   Widget? home,
   Registry? registry,
+  GlobalKey<NavigatorState>? navigatorKey,
   List<Override>? overrides,
   List<NavigatorObserver>? observers,
   bool includeMaterial = true,
 }) {
   registry ??= createRegistry();
+  navigatorKey ??= GlobalKey<NavigatorState>();
 
   return ProviderScope(
     overrides: <Override>[
@@ -200,6 +202,7 @@ Widget createApp({
     ],
     child: App(
       environment: registry.get(),
+      navigatorKey: navigatorKey,
       navigatorObservers: observers,
       home: includeMaterial ? Material(child: home) : home,
     ),
