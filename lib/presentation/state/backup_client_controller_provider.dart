@@ -17,7 +17,7 @@ abstract class BackupClientController {
 
   Future<bool> setup(covariant BackupClient client, String id);
 
-  Future<bool> import(covariant BackupClient client);
+  Future<bool> import();
 
-  Future<bool> export(covariant BackupClient client);
+  Future<bool> export();
 }

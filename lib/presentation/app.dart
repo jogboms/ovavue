@@ -28,16 +28,11 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> with SingleTickerProviderStateMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return _Banner(
-      key: Key(widget.environment.name),
+      key: ObjectKey(widget.environment),
       visible: !widget.environment.isProduction,
       message: widget.environment.name.toUpperCase(),
       child: Consumer(

@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +5,7 @@ import 'package:ovavue/core.dart';
 import 'package:universal_io/io.dart' as io;
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../backup_client/backup_client.dart';
 import '../../constants.dart';
 import '../../state.dart';
 import '../../utils.dart';
@@ -36,6 +35,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
         builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(preferencesProvider).when(
               data: (PreferencesState data) => _ContentDataView(
                 key: dataViewKey,
+                backupClientController: ref.read(backupClientControllerProvider),
                 preferences: ref.read(preferencesProvider.notifier),
                 state: data,
               ),
@@ -51,10 +51,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
 class _ContentDataView extends StatelessWidget {
   const _ContentDataView({
     super.key,
+    required this.backupClientController,
     required this.preferences,
     required this.state,
   });
 
+  final BackupClientController backupClientController;
   final Preferences preferences;
   final PreferencesState state;
 
@@ -90,26 +92,48 @@ class _ContentDataView extends StatelessWidget {
                   child: Text(state.themeMode.name.capitalize()),
                 ),
                 const SizedBox(height: 16),
-                _Item(
-                  key: Key(state.databaseLocation),
-                  leading: AppIcons.budget,
-                  actions: <_ItemAction>[
-                    (AppIcons.copyToClipboard, () => _handleCopyToClipboard(context, state.databaseLocation)),
-                  ],
-                  label: l10n.databaseLocationLabel,
-                  child: Text(
-                    state.databaseLocation.truncateLeft(),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                Consumer(
+                  builder: (BuildContext context, WidgetRef ref, _) => Column(
+                    children: <Widget>[
+                      _Item(
+                        label: l10n.backupClientProviderLabel,
+                        child: DropdownButtonFormField<BackupClient>(
+                          value: backupClientController.client,
+                          isExpanded: true,
+                          hint: Text(l10n.selectMetadataCaption, overflow: TextOverflow.ellipsis),
+                          items: <DropdownMenuItem<BackupClient>>[
+                            for (final BackupClient client in backupClientController.clients)
+                              DropdownMenuItem<BackupClient>(
+                                key: ObjectKey(client),
+                                value: client,
+                                child: Text(backupClientController.displayName(client)),
+                              ),
+                          ],
+                          onChanged: (BackupClient? client) {
+                            if (client != null) {
+                              _handleDatabaseBackupClientSetup(context, client);
+                            }
+                          },
+                        ),
+                      ),
+                      const Divider(height: 2),
+                      _Item(
+                        child: Row(
+                          children: <Widget>[
+                            TextButton(
+                              onPressed: () => _handleDatabaseImport(context),
+                              child: Text(l10n.backupClientImportLabel),
+                            ),
+                            const SizedBox(width: 8),
+                            TextButton(
+                              onPressed: _handleDatabaseExport,
+                              child: Text(l10n.backupClientExportLabel),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 12),
-                _Item(
-                  actions: <_ItemAction>[
-                    (AppIcons.export, _handleDatabaseExport),
-                    (AppIcons.import, () => _handleDatabaseImport(context))
-                  ],
-                  child: Text(l10n.backupRestoreLabel),
                 ),
                 const SizedBox(height: 16),
                 _Item(
@@ -162,11 +186,21 @@ class _ContentDataView extends StatelessWidget {
     }
   }
 
+  void _handleDatabaseBackupClientSetup(BuildContext context, BackupClient client) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = AppSnackBar.of(context);
+
+    final bool successful = await backupClientController.setup(client, state.accountKey);
+    if (successful == false) {
+      snackBar.error(l10n.genericErrorMessage);
+    }
+  }
+
   void _handleDatabaseImport(BuildContext context) async {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = AppSnackBar.of(context);
 
-    final bool successful = await preferences.importDatabase();
+    final bool successful = await backupClientController.import();
     if (successful == true && context.mounted) {
       await showModalBottomSheet<void>(
         context: context,
@@ -178,7 +212,7 @@ class _ContentDataView extends StatelessWidget {
     }
   }
 
-  void _handleDatabaseExport() => preferences.exportDatabase();
+  void _handleDatabaseExport() => backupClientController.export();
 
   void _handleSendEmail() => _handleOpenUrl(
         Uri(
@@ -214,14 +248,14 @@ class _Item extends StatelessWidget {
     super.key,
     this.leading,
     this.label,
-    required this.child,
     this.actions,
+    required this.child,
   });
 
   final IconData? leading;
   final String? label;
-  final Widget child;
   final List<_ItemAction>? actions;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +268,7 @@ class _Item extends StatelessWidget {
       children: <Widget>[
         if (label case final String label?) ...<Widget>[
           Text(label, style: textTheme.labelLarge),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
         ],
         Container(
           color: theme.colorScheme.surfaceVariant,
@@ -352,10 +386,4 @@ extension on ThemeMode {
         ThemeMode.dark => AppIcons.darkThemeMode,
         ThemeMode.light => AppIcons.lightThemeMode,
       };
-}
-
-extension on String {
-  static const int _maxLength = 40;
-
-  String truncateLeft() => length > _maxLength ? '...${substring(math.max(0, length - _maxLength), length)}' : this;
 }

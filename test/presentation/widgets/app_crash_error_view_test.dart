@@ -17,7 +17,6 @@ void main() {
     testWidgets('smoke test', (WidgetTester tester) async {
       when(mockUseCases.fetchAccountUseCase).thenAnswer((_) async => dummyAccount);
       when(mockUseCases.fetchThemeModeUseCase).thenAnswer((_) async => 1);
-      when(mockUseCases.fetchDatabaseLocationUseCase).thenAnswer((_) async => 'db.sqlite');
 
       await tester.pumpWidget(
         createApp(

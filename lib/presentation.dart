@@ -1,6 +1,7 @@
 export 'presentation/app.dart';
 export 'presentation/backup_client/backup_client.dart';
 export 'presentation/backup_client/backup_client_provider.dart';
+export 'presentation/backup_client/backup_client_providers.dart';
 export 'presentation/models.dart';
 export 'presentation/routing.dart';
 export 'presentation/screens/budget_categories/budget_categories_page.dart';

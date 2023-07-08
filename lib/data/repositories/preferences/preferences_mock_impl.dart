@@ -8,15 +8,6 @@ class PreferencesMockImpl implements PreferencesRepository {
   final ThemeModeStorage _themeModeStorage;
 
   @override
-  Future<String> fetchDatabaseLocation() async => 'db.sqlite';
-
-  @override
-  Future<bool> importDatabase() async => true;
-
-  @override
-  Future<bool> exportDatabase() async => true;
-
-  @override
   Future<int?> fetchThemeMode() async => _themeModeStorage.get();
 
   @override

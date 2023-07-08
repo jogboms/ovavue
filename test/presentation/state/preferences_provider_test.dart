@@ -16,10 +16,8 @@ Future<void> main() async {
       final AccountEntity dummyAccount = AuthMockImpl.generateAccount();
       final PreferencesState expectedState = PreferencesState(
         accountKey: dummyAccount.id,
-        databaseLocation: 'location',
         themeMode: ThemeMode.system,
       );
-      when(mockUseCases.fetchDatabaseLocationUseCase.call).thenAnswer((_) async => expectedState.databaseLocation);
       when(mockUseCases.fetchThemeModeUseCase.call).thenAnswer((_) async => 0);
 
       final ProviderContainer container = createProviderContainer(
@@ -32,30 +30,6 @@ Future<void> main() async {
       expect(
         container.read(preferencesProvider.future),
         completion(expectedState),
-      );
-    });
-
-    test('should import database', () {
-      when(mockUseCases.importDatabaseUseCase.call).thenAnswer((_) async => true);
-
-      final ProviderContainer container = createProviderContainer();
-      addTearDown(container.dispose);
-
-      expect(
-        container.read(preferencesProvider.notifier).importDatabase(),
-        completion(true),
-      );
-    });
-
-    test('should export database', () {
-      when(mockUseCases.exportDatabaseUseCase.call).thenAnswer((_) async => true);
-
-      final ProviderContainer container = createProviderContainer();
-      addTearDown(container.dispose);
-
-      expect(
-        container.read(preferencesProvider.notifier).exportDatabase(),
-        completion(true),
       );
     });
 

@@ -67,8 +67,9 @@
     }
   },
   "preferencesPageTitle": "Preferences",
-  "databaseLocationLabel": "DATABASE LOCATION",
-  "backupRestoreLabel": "BACKUP / RESTORE",
+  "backupClientProviderLabel": "DATABASE BACKUP PROVIDER",
+  "backupClientImportLabel": "Import",
+  "backupClientExportLabel": "Export",
   "copiedToClipboardMessage": "Copied to the clipboard",
   "exitAppMessage": "You would need to restart Ovavue to continue",
   "continueCaption": "Continue",
