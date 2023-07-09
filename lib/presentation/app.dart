@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ovavue/core.dart';
-import 'package:registry/registry.dart';
 
 import 'screens/budgets/active_budget_page.dart';
 import 'state.dart';
@@ -13,13 +11,15 @@ import 'widgets.dart';
 class App extends StatefulWidget {
   const App({
     super.key,
-    required this.registry,
+    required this.environment,
+    required this.navigatorKey,
     this.themeMode,
     this.home,
     this.navigatorObservers,
   });
 
-  final Registry registry;
+  final Environment environment;
+  final GlobalKey<NavigatorState> navigatorKey;
   final ThemeMode? themeMode;
   final Widget? home;
   final List<NavigatorObserver>? navigatorObservers;
@@ -28,32 +28,24 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> with SingleTickerProviderStateMixin {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-  late final Environment environment = widget.registry.get();
-  late final String bannerMessage = environment.name.toUpperCase();
-
+class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return _Banner(
-      key: Key(bannerMessage),
-      visible: !environment.isProduction,
-      message: bannerMessage,
+      key: ObjectKey(widget.environment),
+      visible: !widget.environment.isProduction,
+      message: widget.environment.name.toUpperCase(),
       child: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) => MaterialApp(
           debugShowCheckedModeBanner: false,
-          navigatorKey: navigatorKey,
+          navigatorKey: widget.navigatorKey,
           theme: themeBuilder(ThemeData.light()),
           darkTheme: themeBuilder(ThemeData.dark()),
           themeMode: ref.watch(preferencesProvider.select((_) => _.value?.themeMode)) ?? widget.themeMode,
           onGenerateTitle: (BuildContext context) => context.l10n.appName,
-          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-            ...L10n.localizationsDelegates,
-            _ResetIntlUtilLocaleLocalizationDelegate(),
-          ],
+          localizationsDelegates: L10n.localizationsDelegates,
           supportedLocales: L10n.supportedLocales,
-          builder: (_, Widget? child) => SnackBarProvider(navigatorKey: navigatorKey, child: child!),
+          builder: (_, Widget? child) => SnackBarProvider(navigatorKey: widget.navigatorKey, child: child!),
           home: child,
           navigatorObservers: widget.navigatorObservers ?? <NavigatorObserver>[],
         ),
@@ -93,22 +85,4 @@ class _Banner extends StatelessWidget {
       ],
     );
   }
-}
-
-// TODO(Jogboms): intl_util generates a delegate that always sets the defaultLocale to a wrong value. This was the way to go until recently.
-// This fix basically resets the defaultLocale and uses the one determined by findSystemLocale from intl found in main.dart
-// See
-// https://github.com/localizely/intl_utils/pull/18
-// https://github.com/flutter/website/pull/3013
-class _ResetIntlUtilLocaleLocalizationDelegate extends LocalizationsDelegate<void> {
-  const _ResetIntlUtilLocaleLocalizationDelegate();
-
-  @override
-  Future<void> load(Locale locale) => Future<void>.sync(() => Intl.defaultLocale = null);
-
-  @override
-  bool isSupported(Locale locale) => true;
-
-  @override
-  bool shouldReload(covariant LocalizationsDelegate<void> old) => false;
 }

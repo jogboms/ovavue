@@ -18,14 +18,9 @@ class Preferences extends _$Preferences {
 
     return PreferencesState(
       accountKey: account.id,
-      databaseLocation: await di<FetchDatabaseLocationUseCase>().call(),
       themeMode: themeMode != null ? ThemeMode.values[themeMode] : ThemeMode.system,
     );
   }
-
-  Future<bool> importDatabase() async => ref.read(registryProvider).get<ImportDatabaseUseCase>().call();
-
-  Future<bool> exportDatabase() async => ref.read(registryProvider).get<ExportDatabaseUseCase>().call();
 
   Future<bool> updateThemeMode(ThemeMode themeMode) async {
     ref.invalidateSelf();
@@ -36,14 +31,12 @@ class Preferences extends _$Preferences {
 class PreferencesState with EquatableMixin {
   const PreferencesState({
     required this.accountKey,
-    required this.databaseLocation,
     required this.themeMode,
   });
 
   final String accountKey;
-  final String databaseLocation;
   final ThemeMode themeMode;
 
   @override
-  List<Object> get props => <Object>[accountKey, databaseLocation, themeMode];
+  List<Object> get props => <Object>[accountKey, themeMode];
 }

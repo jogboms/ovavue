@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:ovavue/core.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
@@ -16,7 +17,6 @@ void main() {
     testWidgets('smoke test', (WidgetTester tester) async {
       when(mockUseCases.fetchAccountUseCase).thenAnswer((_) async => dummyAccount);
       when(mockUseCases.fetchThemeModeUseCase).thenAnswer((_) async => 1);
-      when(mockUseCases.fetchDatabaseLocationUseCase).thenAnswer((_) async => 'db.sqlite');
 
       await tester.pumpWidget(
         createApp(
@@ -27,7 +27,7 @@ void main() {
 
       await tester.pump();
 
-      expect(find.byKey(const Key('TESTING')), findsOneWidget);
+      expect(find.byKey(const ObjectKey(Environment.testing)), findsOneWidget);
       expect(find.byType(ActiveBudgetPage), findsOneWidget);
     });
   });

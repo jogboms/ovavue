@@ -1,5 +1,6 @@
 export 'state/account_provider.dart';
 export 'state/app_version_provider.dart';
+export 'state/backup_client_controller_provider.dart';
 export 'state/budget_categories_provider.dart';
 export 'state/budget_category_provider.dart';
 export 'state/budget_metadata_provider.dart';

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:registry/registry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart' as io;
@@ -23,11 +25,19 @@ void main() async {
   final _Repository repository;
   final ReporterClient reporterClient;
   final Analytics analytics;
+  final AuthIdentityStorage authIdentityStorage;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final NavigatorObserver navigationObserver = NavigatorObserver();
   final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
-  final _ThemeModeStorage themeModeStorage = _ThemeModeStorage(await SharedPreferences.getInstance());
+  final SharedPreferences storage = await SharedPreferences.getInstance();
+  final _ThemeModeStorage themeModeStorage = _ThemeModeStorage(storage);
+  final _DefaultBackupClientController backupClientController = _DefaultBackupClientController(
+    navigatorKey: navigatorKey,
+    storage: storage,
+  );
   switch (environment) {
     case Environment.dev:
+      authIdentityStorage = const _InMemoryAuthIdentityStorage();
       repository = _Repository.local(
         Database.memory(),
         authIdentityStorage: const _InMemoryAuthIdentityStorage(),
@@ -38,9 +48,10 @@ void main() async {
       break;
     case Environment.prod:
       final PreferencesRepository preferences = PreferencesLocalImpl(themeModeStorage);
+      authIdentityStorage = const _SecureStorageAuthIdentityStorage(FlutterSecureStorage());
       repository = _Repository.local(
-        Database(await preferences.fetchDatabaseLocation()),
-        authIdentityStorage: const _SecureStorageAuthIdentityStorage(FlutterSecureStorage()),
+        Database(await _LocalDatabaseUtility.location()),
+        authIdentityStorage: authIdentityStorage,
         preferences: preferences,
       );
       reporterClient = _ReporterClient(
@@ -52,9 +63,10 @@ void main() async {
     case Environment.testing:
     case Environment.mock:
       seedMockData();
-      analytics = const _PrintAnalytics();
+      authIdentityStorage = const _InMemoryAuthIdentityStorage();
       repository = _Repository.mock(themeModeStorage: themeModeStorage);
       reporterClient = const _NoopReporterClient();
+      analytics = const _PrintAnalytics();
       break;
   }
 
@@ -122,20 +134,23 @@ void main() async {
     ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
-    ..factory((RegistryFactory di) => FetchDatabaseLocationUseCase(preferences: di()))
     ..factory((RegistryFactory di) => FetchThemeModeUseCase(preferences: di()))
     ..factory((RegistryFactory di) => UpdateThemeModeUseCase(preferences: di()))
-    ..factory((RegistryFactory di) => ImportDatabaseUseCase(preferences: di()))
-    ..factory((RegistryFactory di) => ExportDatabaseUseCase(preferences: di()))
 
     /// Environment.
     ..set(environment);
+
+  final String? accountKey = await authIdentityStorage.get();
+  if (accountKey != null) {
+    backupClientController.hydrate(accountKey);
+  }
 
   runApp(
     ProviderScope(
       overrides: <Override>[
         registryProvider.overrideWithValue(registry),
         appVersionProvider.overrideWithValue(deviceInformation.appVersion),
+        backupClientControllerProvider.overrideWithValue(backupClientController),
       ],
       child: ErrorBoundary(
         isReleaseMode: !environment.isDebugging,
@@ -143,7 +158,8 @@ void main() async {
         onException: AppLog.e,
         onCrash: errorReporter.reportCrash,
         child: App(
-          registry: registry,
+          environment: environment,
+          navigatorKey: navigatorKey,
           themeMode: (await themeModeStorage.get())?.themeMode,
           navigatorObservers: <NavigatorObserver>[navigationObserver],
         ),
@@ -306,6 +322,74 @@ class _ThemeModeStorage implements ThemeModeStorage {
 
   @override
   async.FutureOr<void> set(int themeMode) => _storage.setInt(_key, themeMode);
+}
+
+class _DefaultBackupClientController implements BackupClientController {
+  _DefaultBackupClientController({
+    required GlobalKey<NavigatorState> navigatorKey,
+    required SharedPreferences storage,
+  })  : _navigatorKey = navigatorKey,
+        _storage = storage {
+    final String? clientName = storage.getString(_key);
+    final BackupClientProvider? client = clientName != null ? backupClientProviderByName(clientName) : null;
+    if (client == null && clientName != null) {
+      AppLog.e('Could not find backup client with name: $clientName', StackTrace.current);
+    }
+
+    _client = client ?? defaultBackupClientProvider;
+  }
+
+  final GlobalKey<NavigatorState> _navigatorKey;
+  final SharedPreferences _storage;
+  static const String _key = 'ovavue.app.backup_client';
+
+  @override
+  Set<BackupClientProvider> get clients => backupClientProviders;
+
+  @override
+  BackupClientProvider get client => _client;
+  late BackupClientProvider _client;
+
+  void hydrate(String accountKey) => setup(client, accountKey);
+
+  @override
+  String displayName(BackupClientProvider client) {
+    final Locale locale = Localizations.localeOf(_navigatorKey.currentContext!);
+    return client.displayName(BackupClientLocale.from(locale));
+  }
+
+  @override
+  Future<bool> setup(BackupClientProvider client, String accountKey) async {
+    final async.Completer<bool> completer = async.Completer<bool>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final bool result = await client.setup(_navigatorKey.currentContext!, accountKey);
+      if (result) {
+        _client = client;
+        await _storage.setString(_key, _client.name);
+      }
+      completer.complete(result);
+    });
+
+    return completer.future;
+  }
+
+  @override
+  Future<bool> import() async => client.import(await _databaseFile());
+
+  @override
+  Future<bool> export() async => client.export(await _databaseFile());
+
+  Future<io.File> _databaseFile() async => io.File(await _LocalDatabaseUtility.location());
+}
+
+class _LocalDatabaseUtility {
+  static const String _dbName = 'db.sqlite';
+
+  static Future<String> location() async => p.join(await _deriveDirectoryPath(), _dbName);
+
+  static Future<String> _deriveDirectoryPath() =>
+      (io.Platform.isIOS ? getLibraryDirectory() : getApplicationDocumentsDirectory()).then((_) => _.path);
 }
 
 extension on int {
