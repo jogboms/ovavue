@@ -68,7 +68,7 @@ jobs:
         run: flutter test --no-pub
 
   release:
-    needs: [sanity_check]
+    needs: [ sanity_check ]
     name: Create release
     runs-on: ubuntu-latest
     steps:

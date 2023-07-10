@@ -49,8 +49,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
       - name: Decrypt keys
-        working-directory: .github/scripts
-        run: sh ./decrypt_android_secrets.sh
+        run: sh ./.github/scripts/decrypt_android_secrets.sh
         env:
           ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
       - uses: subosito/flutter-action@v2
