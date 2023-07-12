@@ -82,5 +82,8 @@
   "selectMetadataValueCaption": "Select value",
   "aggregateAllocationCaption": "Aggregate allocation",
   "getInTouchLabel": "GET IN TOUCH",
-  "themeModeLabel": "THEME"
+  "themeModeLabel": "THEME",
+  "featureRequestsLabel": "FEATURE REQUESTS",
+  "translationFeatureRequestCaption": "New Translation",
+  "currencyFeatureRequestCaption": "New Currency"
 }

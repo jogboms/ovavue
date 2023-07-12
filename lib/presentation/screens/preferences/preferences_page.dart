@@ -138,6 +138,23 @@ class _ContentDataView extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _Item(
+                  label: l10n.featureRequestsLabel,
+                  child: Wrap(
+                    spacing: 8,
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: _handleTranslationRequest,
+                        child: Text(l10n.translationFeatureRequestCaption),
+                      ),
+                      TextButton(
+                        onPressed: _handleCurrencyRequest,
+                        child: Text(l10n.currencyFeatureRequestCaption),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _Item(
                   label: l10n.getInTouchLabel,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -235,12 +252,13 @@ class _ContentDataView extends StatelessWidget {
     };
   }
 
-  void _handleSendEmail() => _handleOpenUrl(
+  void _handleSendEmail({String subject = 'Hello from Ovavue', String? body}) => _handleOpenUrl(
         Uri(
           scheme: 'mailto',
           path: 'jeremiahogbomo@gmail.com',
           query: <String, String>{
-            'subject': 'Hello from Ovavue',
+            'subject': subject,
+            if (body != null) 'body': body,
           }.entries.map((_) => '${Uri.encodeComponent(_.key)}=${Uri.encodeComponent(_.value)}').join('&'),
         ),
       );
@@ -251,13 +269,21 @@ class _ContentDataView extends StatelessWidget {
 
   void _handleOpenWebsite() => _handleOpenUrl(Uri.https('jogboms.github.io'));
 
+  void _handleTranslationRequest() => _handleSendEmail(
+        subject: 'Translation request for Ovavue',
+        body: 'I would like to be able to use the application in my local language. My language is ',
+      );
+
+  void _handleCurrencyRequest() => _handleSendEmail(
+        subject: 'Currency request for Ovavue',
+        body: 'I would like to be able to use the application in my local currency. My currency is ',
+      );
+
   void _handleOpenUrl(Uri url) async {
     try {
       await launchUrl(url, mode: LaunchMode.externalApplication);
-    } catch (e, stackTrace) {
-      if (e is PlatformException) {
-        AppLog.e(AppException(e.message ?? '$e'), stackTrace);
-      }
+    } on PlatformException catch (e, stackTrace) {
+      AppLog.e(AppException(e.message ?? '$e'), stackTrace);
     }
   }
 }
