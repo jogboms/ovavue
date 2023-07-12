@@ -359,12 +359,12 @@ class _DefaultBackupClientController implements BackupClientController {
   }
 
   @override
-  Future<bool> setup(BackupClientProvider client, String accountKey) async {
-    final async.Completer<bool> completer = async.Completer<bool>();
+  Future<BackupClientResult> setup(BackupClientProvider client, String accountKey) async {
+    final async.Completer<BackupClientResult> completer = async.Completer<BackupClientResult>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final bool result = await client.setup(_navigatorKey.currentContext!, accountKey);
-      if (result) {
+      final BackupClientResult result = await client.setup(_navigatorKey.currentContext!, accountKey);
+      if (result == BackupClientResult.success) {
         _client = client;
         await _storage.setString(_key, _client.name);
       }
@@ -375,10 +375,10 @@ class _DefaultBackupClientController implements BackupClientController {
   }
 
   @override
-  Future<bool> import() async => client.import(await _databaseFile());
+  Future<BackupClientResult> import() async => client.import(await _databaseFile());
 
   @override
-  Future<bool> export() async => client.export(await _databaseFile());
+  Future<BackupClientResult> export() async => client.export(await _databaseFile());
 
   Future<io.File> _databaseFile() async => io.File(await _LocalDatabaseUtility.location());
 }

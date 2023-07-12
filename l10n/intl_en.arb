@@ -8,6 +8,7 @@
   "crashViewBugMessage2": "If there's more to it, you could also file a personal complaint with our customer service representative",
   "successfulMessage": "Successful",
   "genericErrorMessage": "An error occurred. Try again?",
+  "genericUnavailableMessage": "The action is currently not available. Try at a later time.",
   "loadingMessage": "Loading...",
   "tryAgainMessage": "Do try again after some time",
   "letsCreateMessage": "Lets create your first budget plan",

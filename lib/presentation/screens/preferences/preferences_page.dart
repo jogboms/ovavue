@@ -6,6 +6,7 @@ import 'package:universal_io/io.dart' as io;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backup_client/backup_client.dart';
+import '../../backup_client/backup_client_provider.dart';
 import '../../constants.dart';
 import '../../state.dart';
 import '../../utils.dart';
@@ -126,7 +127,7 @@ class _ContentDataView extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                              onPressed: _handleDatabaseExport,
+                              onPressed: () => _handleDatabaseExport(context),
                               child: Text(l10n.backupClientExportLabel),
                             ),
                           ],
@@ -190,29 +191,49 @@ class _ContentDataView extends StatelessWidget {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = AppSnackBar.of(context);
 
-    final bool successful = await backupClientController.setup(client, state.accountKey);
-    if (successful == false) {
-      snackBar.error(l10n.genericErrorMessage);
-    }
+    final BackupClientResult result = await backupClientController.setup(client, state.accountKey);
+    return switch (result) {
+      BackupClientResult.success => snackBar.success(l10n.successfulMessage),
+      BackupClientResult.failure => snackBar.error(l10n.genericErrorMessage),
+      BackupClientResult.unavailable => snackBar.info(l10n.genericUnavailableMessage),
+      BackupClientResult.dismissed => null,
+    };
   }
 
   void _handleDatabaseImport(BuildContext context) async {
     final L10n l10n = context.l10n;
     final AppSnackBar snackBar = AppSnackBar.of(context);
 
-    final bool successful = await backupClientController.import();
-    if (successful == true && context.mounted) {
-      await showModalBottomSheet<void>(
-        context: context,
-        isDismissible: false,
-        builder: (_) => const _ExitDialog(),
-      );
-    } else if (successful == false) {
-      snackBar.error(l10n.genericErrorMessage);
+    final BackupClientResult result = await backupClientController.import();
+    switch (result) {
+      case BackupClientResult.success:
+        if (context.mounted) {
+          await showModalBottomSheet<void>(
+            context: context,
+            isDismissible: false,
+            builder: (_) => const _ExitDialog(),
+          );
+        }
+      case BackupClientResult.failure:
+        snackBar.error(l10n.genericErrorMessage);
+      case BackupClientResult.unavailable:
+        snackBar.info(l10n.genericUnavailableMessage);
+      case BackupClientResult.dismissed:
     }
   }
 
-  void _handleDatabaseExport() => backupClientController.export();
+  void _handleDatabaseExport(BuildContext context) async {
+    final L10n l10n = context.l10n;
+    final AppSnackBar snackBar = AppSnackBar.of(context);
+
+    final BackupClientResult result = await backupClientController.export();
+    return switch (result) {
+      BackupClientResult.success => snackBar.success(l10n.successfulMessage),
+      BackupClientResult.failure => snackBar.error(l10n.genericErrorMessage),
+      BackupClientResult.unavailable => snackBar.info(l10n.genericUnavailableMessage),
+      BackupClientResult.dismissed => null,
+    };
+  }
 
   void _handleSendEmail() => _handleOpenUrl(
         Uri(

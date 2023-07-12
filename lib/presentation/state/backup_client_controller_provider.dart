@@ -1,6 +1,8 @@
 import 'package:ovavue/presentation/backup_client/backup_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../backup_client/backup_client_provider.dart';
+
 part 'backup_client_controller_provider.g.dart';
 
 /// Container for the backup client controller
@@ -15,9 +17,9 @@ abstract class BackupClientController {
 
   String displayName(covariant BackupClient client);
 
-  Future<bool> setup(covariant BackupClient client, String id);
+  Future<BackupClientResult> setup(covariant BackupClient client, String accountKey);
 
-  Future<bool> import();
+  Future<BackupClientResult> import();
 
-  Future<bool> export();
+  Future<BackupClientResult> export();
 }
