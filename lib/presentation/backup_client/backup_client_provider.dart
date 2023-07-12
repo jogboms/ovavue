@@ -8,11 +8,11 @@ abstract class BackupClientProvider implements BackupClient {
 
   String displayName(BackupClientLocale locale);
 
-  Future<bool> setup(BuildContext context, String accountKey);
+  Future<BackupClientResult> setup(BuildContext context, String accountKey);
 
-  Future<bool> import(io.File databaseFile);
+  Future<BackupClientResult> import(io.File databaseFile);
 
-  Future<bool> export(io.File databaseFile);
+  Future<BackupClientResult> export(io.File databaseFile);
 }
 
 enum BackupClientLocale {
@@ -24,4 +24,11 @@ enum BackupClientLocale {
       _ => en,
     };
   }
+}
+
+enum BackupClientResult {
+  success,
+  failure,
+  dismissed,
+  unavailable,
 }

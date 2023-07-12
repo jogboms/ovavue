@@ -28,8 +28,6 @@ BackupClientProvider? backupClientProviderByName(String name) {
 class _FileSystemClientProvider implements BackupClientProvider {
   const _FileSystemClientProvider();
 
-  static const String _backupDbName = 'backup.sqlite';
-
   @override
   String get name => 'fileSystem';
 
@@ -39,48 +37,51 @@ class _FileSystemClientProvider implements BackupClientProvider {
       };
 
   @override
-  async.Future<bool> setup(BuildContext context, String accountKey) async => true;
+  async.Future<BackupClientResult> setup(BuildContext context, String accountKey) async => BackupClientResult.success;
 
   @override
-  async.Future<bool> import(io.File databaseFile) async {
+  async.Future<BackupClientResult> import(io.File databaseFile) async {
     final FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result == null) {
-      return false;
+      return BackupClientResult.dismissed;
     }
     final String? newDbFilePath = result.files.first.path;
     if (newDbFilePath == null) {
-      return false;
+      return BackupClientResult.dismissed;
     }
 
     try {
-      final io.File newDbFile = io.File(newDbFilePath);
-
       final String directoryPath = p.dirname(databaseFile.path);
-      databaseFile.renameSync(p.join(directoryPath, _backupDbName));
-      newDbFile.copySync(databaseFile.path);
-      return true;
+      databaseFile.renameSync(p.join(directoryPath, 'backup${p.extension(databaseFile.path)}'));
+
+      io.File(newDbFilePath).copySync(databaseFile.path);
+      return BackupClientResult.success;
     } catch (error, stackTrace) {
       AppLog.e(error, stackTrace);
-      return false;
+      return BackupClientResult.failure;
     }
   }
 
   @override
-  async.Future<bool> export(io.File databaseFile) async {
+  async.Future<BackupClientResult> export(io.File databaseFile) async {
     try {
       final String tempPath = p.join(
         (await getTemporaryDirectory()).path,
-        clock.now().format(DateTimeFormat.dottedIntFull),
+        '${clock.now().format(DateTimeFormat.dottedIntFull)}${p.extension(databaseFile.path)}',
       );
       await databaseFile.copy(tempPath);
 
-      await Share.shareXFiles(<XFile>[
+      final ShareResult result = await Share.shareXFiles(<XFile>[
         XFile(tempPath),
       ]);
-      return true;
+      return switch (result.status) {
+        ShareResultStatus.success => BackupClientResult.success,
+        ShareResultStatus.unavailable => BackupClientResult.failure,
+        ShareResultStatus.dismissed => BackupClientResult.dismissed,
+      };
     } catch (error, stackTrace) {
       AppLog.e(error, stackTrace);
-      return false;
+      return BackupClientResult.failure;
     }
   }
 }
@@ -97,14 +98,14 @@ class _CloudClientProvider implements BackupClientProvider {
       };
 
   @override
-  async.Future<bool> setup(BuildContext context, String accountKey) async {
+  async.Future<BackupClientResult> setup(BuildContext context, String accountKey) async {
     // TODO(jogboms): implement cloud storage
-    return true;
+    return BackupClientResult.unavailable;
   }
 
   @override
-  async.Future<bool> import(io.File databaseFile) async => false;
+  async.Future<BackupClientResult> import(io.File databaseFile) async => BackupClientResult.unavailable;
 
   @override
-  async.Future<bool> export(io.File databaseFile) async => false;
+  async.Future<BackupClientResult> export(io.File databaseFile) async => BackupClientResult.unavailable;
 }
