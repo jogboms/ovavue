@@ -20,7 +20,6 @@ export 'presentation/screens/budgets/providers/active_budget_provider.dart';
 export 'presentation/screens/budgets/providers/budget_provider.dart';
 export 'presentation/screens/budgets/providers/filter_plans_by_budget_metadata.dart';
 export 'presentation/state.dart';
-export 'presentation/state/preferences_provider.dart';
 export 'presentation/theme.dart';
 export 'presentation/utils.dart';
 export 'presentation/widgets.dart';

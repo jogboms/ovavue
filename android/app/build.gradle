@@ -105,5 +105,5 @@ dependencies {
 
 private static Integer generateVersionCode(String versionName, Integer minimumSdkVersion) {
     def (major, minor, patch) = versionName.split('\\.').collect { it.toInteger() }
-    return minimumSdkVersion * 10000000 + major * 10000 + minor * 100 + patch
+    return minimumSdkVersion * 10000000 + major * 100000 + minor * 1000 + patch * 10
 }

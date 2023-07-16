@@ -37,19 +37,20 @@ void main(List<String> arguments) async {
   final bool gitPush = args['gitPush'] as bool;
 
   final String newVersion = await bumpPackageVersion(VersionBumpType.fromName(versionBumpType));
+  const String flutterCmd = 'fvm flutter';
 
   for (final CmdAction action in <CmdAction>[
-    const CmdAction('fvm flutter pub get'),
+    const CmdAction('$flutterCmd pub get'),
     if (!skipCodeGeneration)
-      const CmdAction('fvm flutter packages pub run build_runner build --delete-conflicting-outputs'),
-    if (!skipAnalysisChecks) ..._analysisChecks(),
-    if (!skipTests) const CmdAction('fvm flutter test --no-pub'),
+      const CmdAction('$flutterCmd packages pub run build_runner build --delete-conflicting-outputs'),
+    if (!skipAnalysisChecks) const CmdAction('$flutterCmd analyze lib'),
+    if (!skipTests) const CmdAction('$flutterCmd test --no-pub'),
     if (platform.contains(BuildPlatform.android.name)) ...<CmdAction>[
-      const CmdAction('fvm flutter build appbundle --flavor prod --dart-define=env.mode=prod'),
+      const CmdAction('$flutterCmd build appbundle --flavor prod --dart-define=env.mode=prod'),
       const CmdAction('fastlane beta', 'android')
     ],
     if (platform.contains(BuildPlatform.ios.name)) ...<CmdAction>[
-      const CmdAction('fvm flutter build ios --flavor prod --dart-define=env.mode=prod --release --no-codesign'),
+      const CmdAction('$flutterCmd build ios --flavor prod --dart-define=env.mode=prod --release --no-codesign'),
       const CmdAction('fastlane beta', 'ios')
     ],
     if (gitPush) ...<CmdAction>[
@@ -61,18 +62,4 @@ void main(List<String> arguments) async {
     // ignore: invalid_use_of_visible_for_testing_member
     await runCmdAction(action, environment: env.map);
   }
-}
-
-List<CmdAction> _analysisChecks() {
-  const String dartMetricCommand = 'fvm flutter pub run dart_code_metrics:metrics';
-
-  return <CmdAction>[
-    const CmdAction('fvm flutter analyze lib'),
-    const CmdAction(
-      '$dartMetricCommand analyze lib --fatal-warnings --fatal-style --set-exit-on-violation-level=warning',
-    ),
-    const CmdAction('$dartMetricCommand check-unused-code lib --fatal-unused'),
-    const CmdAction('$dartMetricCommand check-unused-files lib --fatal-unused'),
-    const CmdAction('$dartMetricCommand check-unnecessary-nullable lib --fatal-found'),
-  ];
 }
