@@ -83,7 +83,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
               spacing: 8,
               alignment: WrapAlignment.center,
               children: <Widget>[
-                for (BudgetCategoryColorScheme colorScheme in BudgetCategoryColorScheme.values)
+                for (final BudgetCategoryColorScheme colorScheme in BudgetCategoryColorScheme.values)
                   _ColorItem(
                     key: ObjectKey(colorScheme),
                     icon: _icon,
@@ -102,7 +102,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
             PrimaryButton(
               onPressed: _handleSubmit,
               caption: l10n.submitCaption,
-            )
+            ),
           ],
         ),
       ),

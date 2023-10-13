@@ -96,7 +96,7 @@ class _ContentDataView extends StatelessWidget {
               },
               itemCount: data.length,
             ),
-          )
+          ),
       ],
     );
   }

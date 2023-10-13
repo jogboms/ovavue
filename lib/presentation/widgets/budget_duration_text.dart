@@ -47,7 +47,7 @@ class BudgetDurationText extends StatelessWidget {
           if (endedAt != null) ...<TextSpan>[
             const TextSpan(text: ' — '),
             TextSpan(text: endedAt.format(DateTimeFormat.dottedInt)),
-          ]
+          ],
         ],
       ),
       style: textStyle?.copyWith(wordSpacing: 4, color: colorScheme.outline),

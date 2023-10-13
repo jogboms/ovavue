@@ -170,7 +170,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                 PrimaryButton(
                   onPressed: _handleSubmit,
                   caption: l10n.submitCaption,
-                )
+                ),
               ],
             );
           },

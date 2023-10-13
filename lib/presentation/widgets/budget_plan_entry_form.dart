@@ -154,7 +154,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                 PrimaryButton(
                   onPressed: _handleSubmit,
                   caption: l10n.submitCaption,
-                )
+                ),
               ],
             );
           },

@@ -28,7 +28,7 @@ Future<void> main() async {
         overrides: <Override>[
           selectedBudgetPlansByMetadataProvider(id: metadataId, budgetId: budgetId).overrideWith(
             (_) => Stream<BudgetPlansByMetadataState>.value(expectedState),
-          )
+          ),
         ],
       );
       addTearDown(container.dispose);

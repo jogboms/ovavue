@@ -28,7 +28,7 @@ class MockRepositories {
         budgetCategories,
         budgetAllocations,
         budgetMetadata,
-        preferences
+        preferences,
       ].forEach(mt.reset);
 }
 

@@ -47,11 +47,11 @@ void main(List<String> arguments) async {
     if (!skipTests) const CmdAction('$flutterCmd test --no-pub'),
     if (platform.contains(BuildPlatform.android.name)) ...<CmdAction>[
       const CmdAction('$flutterCmd build appbundle --flavor prod --dart-define=env.mode=prod'),
-      const CmdAction('fastlane beta', 'android')
+      const CmdAction('fastlane beta', 'android'),
     ],
     if (platform.contains(BuildPlatform.ios.name)) ...<CmdAction>[
       const CmdAction('$flutterCmd build ios --flavor prod --dart-define=env.mode=prod --release --no-codesign'),
-      const CmdAction('fastlane beta', 'ios')
+      const CmdAction('fastlane beta', 'ios'),
     ],
     if (gitPush) ...<CmdAction>[
       const CmdAction('git add pubspec.yaml'),

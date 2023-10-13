@@ -208,7 +208,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
                 itemCount: state.plans.length,
               ),
             ),
-          ]
+          ],
       ],
     );
   }

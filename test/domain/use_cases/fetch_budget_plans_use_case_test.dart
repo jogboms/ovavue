@@ -16,7 +16,7 @@ void main() {
     test('should fetch budget plans', () {
       final BudgetCategoryEntity category = BudgetCategoriesMockImpl.generateCategory();
       final BudgetPlanEntityList expectedPlans = <BudgetPlanEntity>[
-        BudgetPlansMockImpl.generatePlan(category: category)
+        BudgetPlansMockImpl.generatePlan(category: category),
       ];
 
       when(() => mockRepositories.budgetPlans.fetchAll(any()))

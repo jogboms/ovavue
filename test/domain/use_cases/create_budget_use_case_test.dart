@@ -93,7 +93,7 @@ void main() {
               amount: 1,
               budget: dummyReference,
               plan: (id: '2', path: 'path'),
-            )
+            ),
           ],
         ),
       );

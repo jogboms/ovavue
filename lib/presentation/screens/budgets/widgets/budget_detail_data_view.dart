@@ -401,7 +401,7 @@ class _CategoryViewState extends State<_CategoryView> {
                 onPressed: () => setState(() {
                   _type = _CategoryViewType.values[(_type.index + 1) % _CategoryViewType.values.length];
                 }),
-              )
+              ),
             ],
           ),
         ],
@@ -537,7 +537,7 @@ class _PlanTile extends StatelessWidget {
             AmountRatioItem(
               allocationAmount: allocation.amount,
               baseAmount: budgetAmount,
-            )
+            ),
         ],
       ),
     );

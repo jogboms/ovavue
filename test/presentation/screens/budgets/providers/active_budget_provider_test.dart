@@ -27,7 +27,7 @@ Future<void> main() async {
                   categories: <SelectedBudgetCategoryViewModel>[],
                 ),
               ),
-            )
+            ),
         ],
       );
 

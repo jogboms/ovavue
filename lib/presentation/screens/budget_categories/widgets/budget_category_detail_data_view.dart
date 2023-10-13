@@ -80,7 +80,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                             category: state.category,
                             dismissOnComplete: true,
                           ),
-                        )
+                        ),
                     ],
                   ),
                 ),

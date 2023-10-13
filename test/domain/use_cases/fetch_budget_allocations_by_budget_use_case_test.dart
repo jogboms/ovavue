@@ -18,7 +18,7 @@ void main() {
       final BudgetPlanEntity plan = BudgetPlansMockImpl.generatePlan(category: categories.first);
       final BudgetEntity budget = BudgetsMockImpl.generateBudget();
       final BudgetAllocationEntityList expectedAllocations = <BudgetAllocationEntity>[
-        BudgetAllocationsMockImpl.generateAllocation(budget: budget, plan: plan)
+        BudgetAllocationsMockImpl.generateAllocation(budget: budget, plan: plan),
       ];
 
       when(() => mockRepositories.budgetAllocations.fetchByBudget(userId: '1', budgetId: '1')).thenAnswer(

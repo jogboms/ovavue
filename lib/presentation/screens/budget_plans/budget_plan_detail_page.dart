@@ -127,7 +127,7 @@ class _ContentDataView extends StatelessWidget {
                     AmountRatioItem.large(
                       allocationAmount: allocation.amount,
                       baseAmount: budget.amount,
-                    )
+                    ),
                 ],
               ),
             ),

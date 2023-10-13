@@ -336,7 +336,7 @@ class _Item extends StatelessWidget {
                 for (final _ItemAction action in actions) ...<Widget>[
                   const SizedBox(width: 6),
                   IconButton(onPressed: action.$2, icon: Icon(action.$1)),
-                ]
+                ],
             ],
           ),
         ),

@@ -108,7 +108,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
                           plan: widget.plan,
                           metadata: metadata,
                         ),
-                      )
+                      ),
                   ],
                 ),
               ),

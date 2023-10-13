@@ -179,7 +179,7 @@ class _PlanTile extends StatelessWidget {
             AmountRatioItem(
               allocationAmount: allocation.amount,
               baseAmount: categoryAllocationAmount,
-            )
+            ),
         ],
       ),
     );

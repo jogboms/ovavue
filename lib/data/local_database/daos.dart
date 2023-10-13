@@ -393,7 +393,7 @@ class BudgetMetadataDao extends DatabaseAccessor<Database> with _$BudgetMetadata
               ),
             BudgetMetadataValueRemovalOperation() =>
               (delete(budgetMetadataValues)..where((_) => _.id.equals(item.reference.id))).go(),
-          }
+          },
       ]);
 
   BudgetMetadataValueEntity _mapValueRowToEntity(TypedResult row) {

@@ -71,7 +71,7 @@ void main() {
             'heightPx': 0.0,
             'xDpi': 0.0,
             'yDpi': 0.0,
-          }
+          },
         }),
       );
       final AppDeviceInformation info = await AppDeviceInformation.initialize(

@@ -139,7 +139,7 @@ class _ContentDataView extends StatelessWidget {
             BudgetMetadataValueEntryRemoveResult() => BudgetMetadataValueRemovalOperation(
                 reference: item.reference,
               ),
-          }
+          },
       };
       if (metadata != null) {
         await metadataNotifier.updateMetadata(
@@ -217,7 +217,7 @@ class _MetadataValueTile extends StatelessWidget {
                 ),
                 textAlign: TextAlign.right,
               ),
-            )
+            ),
           ],
         ),
       ),

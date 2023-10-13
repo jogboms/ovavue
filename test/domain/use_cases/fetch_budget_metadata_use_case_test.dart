@@ -16,7 +16,7 @@ void main() {
     test('should fetch budget metadata', () {
       final BudgetMetadataKeyEntity key = BudgetMetadataMockImpl.generateMetadataKey();
       final BudgetMetadataValueEntityList expectedMetadata = <BudgetMetadataValueEntity>[
-        BudgetMetadataMockImpl.generateMetadataValue(key: key)
+        BudgetMetadataMockImpl.generateMetadataValue(key: key),
       ];
 
       when(() => mockRepositories.budgetMetadata.fetchAll(any()))

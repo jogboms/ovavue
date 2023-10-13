@@ -26,7 +26,7 @@ class SnackBarProvider extends StatefulWidget with DiagnosticableTreeMixin {
         'This usually happens when the context provided is from the same StatefulWidget as that '
         'whose build function actually creates the App widget being sought.',
       ),
-      context.describeElement('The context used was')
+      context.describeElement('The context used was'),
     ]);
   }
 

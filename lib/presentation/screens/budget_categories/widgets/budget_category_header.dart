@@ -65,8 +65,8 @@ class BudgetCategoryHeader extends StatelessWidget {
               allocationAmount: allocationAmount,
               baseAmount: budgetAmount,
               foregroundColor: foregroundColor,
-            )
-          ]
+            ),
+          ],
         ],
       ),
     );
