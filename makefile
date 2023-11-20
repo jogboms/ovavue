@@ -29,10 +29,10 @@ generate_intl:
 	fvm flutter gen-l10n
 
 build_runner_build:
-	fvm flutter packages pub run build_runner build -d --enable-experiment=records,patterns,sealed-class
+	fvm flutter packages pub run build_runner build -d
 
 build_runner_watch:
-	fvm flutter packages pub run build_runner watch -d --enable-experiment=records,patterns,sealed-class
+	fvm flutter packages pub run build_runner watch -d
 
 # iOS
 mock_ios:
