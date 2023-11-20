@@ -19,7 +19,7 @@ class AppIcon extends StatelessWidget {
             color: backgroundColor ?? context.theme.colorScheme.onBackground,
             borderRadius: BorderRadius.circular(size.shortestSide / 4),
           ),
-          child: const FlutterLogo(),
+          child: const FlutterLogo(), // TODO(Jogboms): fix icon
         ),
       );
 }

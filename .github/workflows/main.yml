@@ -41,7 +41,7 @@ jobs:
       - run: flutter doctor
       - run: flutter pub get
       - run: dart format --set-exit-if-changed -l 120 lib
-      - run: flutter pub run build_runner build --enable-experiment=records,patterns,sealed-class
+      - run: flutter pub run build_runner build
       - run: flutter analyze lib
       - run: flutter test --no-pub --coverage --test-randomize-ordering-seed random
 

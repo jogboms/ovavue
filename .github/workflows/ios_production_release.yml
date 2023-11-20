@@ -52,7 +52,7 @@ jobs:
       # Flutter actions
       - run: flutter doctor
       - run: flutter pub get
-      - run: flutter packages pub run build_runner build --enable-experiment=records,patterns,sealed-class
+      - run: flutter packages pub run build_runner build
       - run: flutter build ios --flavor prod --dart-define=env.mode=prod --release --no-codesign
 
       # Fastlane deploy
