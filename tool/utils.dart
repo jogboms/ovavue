@@ -61,8 +61,7 @@ Future<String> bumpPackageVersion(
   final currentVersion = versionRegExp.firstMatch(pubspec)!.group(2)!;
   final newVersion = type.bump(currentVersion, override: valueOverride);
 
-  final updatedPubspec =
-      pubspec.replaceFirstMapped(versionRegExp, (match) => '${match[1]}$newVersion');
+  final updatedPubspec = pubspec.replaceFirstMapped(versionRegExp, (match) => '${match[1]}$newVersion');
   await pubspecFile.writeAsString(updatedPubspec);
 
   return newVersion;
@@ -74,8 +73,7 @@ enum VersionBumpType {
   patch,
   build;
 
-  static VersionBumpType fromName(String? name) =>
-      values.asNameMap()[name] ?? VersionBumpType.patch;
+  static VersionBumpType fromName(String? name) => values.asNameMap()[name] ?? VersionBumpType.patch;
 
   String bump(String current, {String? override}) {
     final split = RegExp(r'(\d+).(\d+).(\d+)\+?(\d)?')

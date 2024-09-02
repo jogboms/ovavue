@@ -66,7 +66,7 @@ class BudgetListTile extends StatelessWidget {
               foregroundColor: foregroundColor,
             ),
       selected: active,
-      selectedTileColor: colorScheme.surfaceVariant,
+      selectedTileColor: colorScheme.surfaceContainerHighest,
       selectedColor: foregroundColor,
       onTap: active ? null : onTap,
     );

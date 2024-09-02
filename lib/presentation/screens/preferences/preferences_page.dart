@@ -318,7 +318,7 @@ class _Item extends StatelessWidget {
           const SizedBox(height: 4),
         ],
         Container(
-          color: theme.colorScheme.surfaceVariant,
+          color: theme.colorScheme.surfaceContainerHighest,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: Row(
             children: <Widget>[
@@ -404,7 +404,7 @@ class _BottomSheetOptions extends StatelessWidget {
                   children: <Widget>[
                     Icon(
                       choice.icon,
-                      color: choice == initialValue ? activeColor : colorScheme.onBackground,
+                      color: choice == initialValue ? activeColor : colorScheme.onSurface,
                     ),
                     const SizedBox(height: 4),
                     Text(
