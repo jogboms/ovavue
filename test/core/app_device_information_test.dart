@@ -65,6 +65,7 @@ void main() {
           'tags': '',
           'type': '',
           'isPhysicalDevice': true,
+          'isLowRamDevice': false,
           'serialNumber': '',
           'displayMetrics': <String, dynamic>{
             'widthPx': 0.0,
@@ -96,6 +97,7 @@ void main() {
           'systemVersion': '1',
           'model': '1',
           'localizedModel': '1',
+          'isPhysicalDevice': false,
           'utsname': <String, Object>{
             'sysname': 'sysname',
             'nodename': 'nodename',

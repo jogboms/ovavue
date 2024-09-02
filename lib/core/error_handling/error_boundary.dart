@@ -43,7 +43,8 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
       }
     };
 
-// coverage:ignore-start, this still can't be covered in tests.
+// coverage:ignore-start
+// this still can't be covered in tests.
     widget.platformDispatcher.onError = (Object error, StackTrace stack) {
       widget.onException(error, stack);
       return true;
