@@ -54,3 +54,5 @@ app.*.map.json
 .fvm/
 
 .last_build_id
+
+.env
