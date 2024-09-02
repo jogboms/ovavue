@@ -37,7 +37,7 @@ dependencies:
     git: https://github.com/jogboms/registry.dart.git
   riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
-  rxdart: ^0.28.0
+  rxdart: ">=0.27.0 <0.28.0"
   share_plus: ^10.0.2
   shared_preferences: ^2.3.2
   sliver_tools: ^0.2.12
@@ -46,6 +46,10 @@ dependencies:
   universal_io: ^2.2.2
   url_launcher: ^6.3.0
   uuid: ^4.5.0
+
+dependency_overrides:
+  # Because of https://github.com/invertase/dart_custom_lint/issues/228
+  custom_lint: 0.6.4
 
 dev_dependencies:
   args:
@@ -61,8 +65,8 @@ dev_dependencies:
   mocktail: ^1.0.4
   package_info_plus_platform_interface: ^3.0.1
   plugin_platform_interface: ^2.1.8
-  riverpod_generator: ^2.4.3
-  riverpod_lint: ^2.3.13
+  riverpod_generator:
+  riverpod_lint:
   test:
 
 flutter:
