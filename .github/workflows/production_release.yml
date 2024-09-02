@@ -85,7 +85,7 @@ jobs:
       # Bump version
       - name: Bump package version
         run: |
-          TAG="v$(dart run ./bin/bump_package_version.dart --versionBumpType '${{ inputs.version_bump_type }}' | tail -n1)"
+          TAG="v$(./tool/bump_package_version.dart --versionBumpType '${{ inputs.version_bump_type }}' | tail -n1)"
           echo "TAG=$TAG" >> $GITHUB_ENV
 
       # Commit version changes
@@ -104,12 +104,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           tag: ${{ env.TAG }}
-          commit: master
+          commit: ${{ github.ref_name }}
           generateReleaseNotes: true
 
       # Dispatch deployment
       - name: Deploy Dispatch
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v3
         if: ${{ steps.create_release.outcome == 'success' }}
         with:
           token: ${{ secrets.API_TOKEN_GITHUB }}
