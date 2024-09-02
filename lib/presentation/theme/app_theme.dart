@@ -45,7 +45,7 @@ ThemeData themeBuilder(
     seedColor: isDark ? _kPrimaryDarkColor : _kPrimaryLightColor,
     brightness: brightness,
   );
-  final Color scaffoldBackgroundColor = isDark ? _kBackgroundDarkColor : colorScheme.background;
+  final Color scaffoldBackgroundColor = isDark ? _kBackgroundDarkColor : colorScheme.surface;
 
   final OutlineInputBorder textFieldBorder = OutlineInputBorder(
     borderSide: BorderSide.none,
@@ -61,8 +61,8 @@ ThemeData themeBuilder(
     fontWeight: AppFontWeight.semibold,
   );
   final ButtonStyle buttonStyle = ButtonStyle(
-    textStyle: MaterialStateProperty.all(buttonTextStyle),
-    elevation: MaterialStateProperty.all(0),
+    textStyle: WidgetStateProperty.all(buttonTextStyle),
+    elevation: WidgetStateProperty.all(0),
   );
 
   return ThemeData(

@@ -28,32 +28,24 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
-env:
-  branch: "master"
-  java_version: "12.x"
-
 jobs:
   sanity_check:
     name: Format, Analyse & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ env.branch }}
-      - uses: actions/setup-java@v1
-        with:
-          java-version: ${{ env.java_version }}
+      - uses: actions/checkout@v4
+
       - name: Initialize environment variables from FVM config
-        uses: kuhnroyal/flutter-fvm-config-action@v1
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v2
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+        uses: kuhnroyal/flutter-fvm-config-action@v2
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
           flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install tools
+        run: ./tool/install.sh
+
       - run: flutter doctor
       - run: flutter pub get
 
@@ -72,25 +64,21 @@ jobs:
     name: Create release
     runs-on: ubuntu-latest
     steps:
-      # Set up
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          ref: ${{ env.branch }}
           token: ${{ secrets.API_TOKEN_GITHUB }}
-      - uses: actions/setup-java@v1
-        with:
-          java-version: ${{ env.java_version }}
+
       - name: Initialize environment variables from FVM config
-        uses: kuhnroyal/flutter-fvm-config-action@v1
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v2
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+        uses: kuhnroyal/flutter-fvm-config-action@v2
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
           flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install tools
+        run: ./tool/install.sh
+
       - run: flutter doctor
       - run: flutter pub get
 
@@ -102,11 +90,10 @@ jobs:
 
       # Commit version changes
       - name: Commit Release Changes
-        working-directory: .github/scripts
-        run: sh ./commit_release_changes.sh
-        env:
-          TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
-          BRANCH: ${{ env.branch }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '[BUILD] ${{ env.TAG }} [skip ci]'
+          file_pattern: pubspec.yaml
 
       # Create release entry & Trigger deployment
       - name: Create Release Entry

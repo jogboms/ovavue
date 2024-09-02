@@ -28,7 +28,7 @@ class AppCrashErrorView extends StatelessWidget {
               style: textTheme.displaySmall!.copyWith(
                 height: 1.08,
                 fontWeight: AppFontWeight.light,
-                color: theme.colorScheme.onBackground,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 35),

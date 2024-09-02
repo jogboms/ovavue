@@ -50,5 +50,9 @@ app.*.map.json
 
 *.g.dart
 
-.fvm/flutter_sdk
+# FVM Version Cache
+.fvm/
+
 .last_build_id
+
+.env

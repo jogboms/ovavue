@@ -181,7 +181,7 @@ class _ContentDataView extends StatelessWidget {
                   if (budget == null || !budget.active)
                     ActionButton(
                       icon: AppIcons.delete,
-                      backgroundColor: colorScheme.surfaceVariant,
+                      backgroundColor: colorScheme.surfaceContainerHighest,
                       foregroundColor: colorScheme.onSurfaceVariant,
                       onPressed: () => deleteBudgetPlanAction(
                         context,
@@ -193,7 +193,7 @@ class _ContentDataView extends StatelessWidget {
                   else if (allocation != null)
                     ActionButton(
                       icon: AppIcons.removeAllocation,
-                      backgroundColor: colorScheme.surfaceVariant,
+                      backgroundColor: colorScheme.surfaceContainerHighest,
                       foregroundColor: colorScheme.onSurfaceVariant,
                       onPressed: () => _handleDeleteAllocationAction(
                         context,

@@ -9,31 +9,27 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  branch: "master"
-  java_version: "12.x"
-  ruby_path: "./vendor/bundle"
+  working_directory: android
+  java_version: "17.x"
+  java_distribution: "zulu"
+  ruby_version: "3.3.4"
 
 jobs:
   deploy_android:
     name: Deploy to Play Store
     runs-on: ubuntu-latest
     steps:
-      # Set up
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
         with:
-          ref: ${{ env.branch }}
-      - uses: actions/setup-java@v1
+          ruby-version: ${{ env.ruby_version }}
+          working-directory: ${{ env.working_directory }}
+          bundler-cache: true
+      - uses: actions/setup-java@v4
         with:
           java-version: ${{ env.java_version }}
-      - name: Initialize environment variables from FVM config
-        uses: kuhnroyal/flutter-fvm-config-action@v1
-      - name: Cache ruby dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.ruby_path }}
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
+          distribution: ${{ env.java_distribution }}
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
@@ -43,19 +39,24 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v2
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
-      - name: Decrypt keys
-        run: sh ./.github/scripts/decrypt_android_secrets.sh
-        env:
-          ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
-      - uses: subosito/flutter-action@v2
+
+      - name: Initialize environment variables from FVM config
+        uses: kuhnroyal/flutter-fvm-config-action@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
           flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install tools
+        run: ./tool/install.sh
+
+      # Decrypt secrets
+      - name: Decrypt secrets
+        run: ./tool/decrypt_android_secrets.sh
+        env:
+          ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
 
       # Flutter actions
       - run: flutter doctor
@@ -68,8 +69,7 @@ jobs:
         uses: maierj/fastlane-action@v2.0.1
         with:
           lane: beta
-          subdirectory: android
-          bundle-install-path: ${{ env.ruby_path }}
+          subdirectory: ${{ env.working_directory }}
 
       # Clean up unnecessary gradle cache
       - name: Cleanup Gradle Cache
