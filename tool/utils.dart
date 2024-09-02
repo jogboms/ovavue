@@ -46,7 +46,7 @@ void main() {
   });
 }
 
-final workingDirectory = '${Directory.current.path}/apps/mobile';
+final workingDirectory = Directory.current.path;
 
 Future<String> bumpPackageVersion(
   VersionBumpType type, {
