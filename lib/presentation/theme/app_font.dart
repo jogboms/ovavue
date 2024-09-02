@@ -1,1 +1,1 @@
-const String kAppFontFamily = 'Poppins';
+const String kAppFontFamily = 'Inter';
