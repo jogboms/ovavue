@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:universal_io/io.dart' as io;
 
 enum Environment {
@@ -6,18 +7,16 @@ enum Environment {
   prod,
   testing;
 
-  static const _envMode = String.fromEnvironment('env.mode', defaultValue: 'mock');
-
   static Environment _derive() {
     if (io.Platform.environment.containsKey('FLUTTER_TEST')) {
       return testing;
     }
 
-    try {
-      return Environment.values.byName(_envMode);
-    } on ArgumentError {
-      throw Exception("Invalid runtime environment: '$_envMode'. Available environments: ${values.join(', ')}");
+    if (Environment.values.asNameMap()[appFlavor] case final Environment env?) {
+      return env;
     }
+
+    throw UnimplementedError("Invalid runtime environment: '$appFlavor'. Available environments: ${values.join(', ')}");
   }
 
   bool get isMock => this == mock;
@@ -33,7 +32,7 @@ enum Environment {
     assert(() {
       condition = true;
       return condition;
-    }(), 'Not in debug mode');
+    }(), 'Debugging is not enabled in release mode');
     return condition;
   }
 }

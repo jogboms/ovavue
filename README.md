@@ -51,7 +51,7 @@ There are three (3) available environments:
 To run in `mock` mode,
 
 ```bash
-fvm flutter run --flavor mock --dart-define=env.mode=mock
+fvm flutter run --flavor mock
 ```
 
 ## UI Shots

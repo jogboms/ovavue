@@ -51,7 +51,7 @@ jobs:
 
       # Flutter actions
       - run: flutter pub get
-      - run: flutter build appbundle --flavor prod --dart-define=env.mode=prod
+      - run: flutter build appbundle --flavor prod
 
       # Fastlane deploy
       - name: Deploy Android Beta to Play Store via Fastlane

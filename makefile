@@ -36,36 +36,36 @@ build_runner_watch:
 
 # iOS
 mock_ios:
-	fvm flutter build ios --flavor mock --dart-define=env.mode=mock
+	fvm flutter build ios --flavor mock
 
 dev_ios:
-	fvm flutter build ios --flavor dev --dart-define=env.mode=dev
+	fvm flutter build ios --flavor dev
 
 prod_ios:
-	fvm flutter build ios --flavor prod --dart-define=env.mode=prod
+	fvm flutter build ios --flavor prod
 
 # Android
 mock_android:
-	fvm flutter build apk --flavor mock --dart-define=env.mode=mock
+	fvm flutter build apk --flavor mock
 
 dev_android:
-	fvm flutter build apk --flavor dev --dart-define=env.mode=dev
+	fvm flutter build apk --flavor dev
 
 prod_android:
-	fvm flutter build apk --flavor prod --dart-define=env.mode=prod
+	fvm flutter build apk --flavor prod
 
 prod_android_bundle:
-	fvm flutter build appbundle --flavor prod --dart-define=env.mode=prod
+	fvm flutter build appbundle --flavor prod
 
 # Web
 mock_web:
-	fvm flutter build web --release --dart-define=env.mode=mock
+	fvm flutter build web --release
 
 dev_web:
-	fvm flutter build web --release --dart-define=env.mode=dev
+	fvm flutter build web --release
 
 prod_web:
-	fvm flutter build web --release --dart-define=env.mode=prod
+	fvm flutter build web --release
 
 serve_web:
 	python3 -m http.server 8000 -d ./build/web/

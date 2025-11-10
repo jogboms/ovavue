@@ -37,7 +37,7 @@ jobs:
 
       # Flutter actions
       - run: flutter pub get
-      - run: flutter build ios --flavor prod --dart-define=env.mode=prod --release --no-codesign
+      - run: flutter build ios --flavor prod --release --no-codesign
 
       # Fastlane deploy
       - name: Deploy iOS Beta to TestFlight via Fastlane
