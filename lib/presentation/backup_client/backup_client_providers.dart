@@ -68,9 +68,11 @@ class _FileSystemClientProvider implements BackupClientProvider {
       );
       await databaseFile.copy(tempPath);
 
-      final result = await Share.shareXFiles(<XFile>[
-        XFile(tempPath),
-      ]);
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          files: <XFile>[XFile(tempPath)],
+        ),
+      );
       return switch (result.status) {
         ShareResultStatus.success => BackupClientResult.success,
         ShareResultStatus.unavailable => BackupClientResult.failure,

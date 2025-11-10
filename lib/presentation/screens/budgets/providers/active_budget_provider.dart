@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'active_budget_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[activeBudgetId, selectedBudget])
-Stream<BaseBudgetState> activeBudget(ActiveBudgetRef ref) async* {
+Stream<BaseBudgetState> activeBudget(Ref ref) async* {
   final budgetId = await ref.watch(activeBudgetIdProvider.future);
 
   if (budgetId == null) {

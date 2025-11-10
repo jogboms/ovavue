@@ -103,7 +103,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
               onTapOutside: (_) => FocusScope.of(context).unfocus(),
             ),
             spacing,
-            for (final _BudgetMetadataValueController controller in _values)
+            for (final controller in _values)
               if (controller.value case final BudgetMetadataValueEntryModifyResult value) ...<Widget>[
                 _BudgetMetadataValueField(
                   key: ObjectKey(value),
@@ -124,9 +124,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
             spacing,
             PrimaryButton(
               caption: l10n.submitCaption,
-              enabled: _values
-                  .where((_BudgetMetadataValueController e) => e.value is BudgetMetadataValueEntryModifyResult)
-                  .isNotEmpty,
+              enabled: _values.where((e) => e.value is BudgetMetadataValueEntryModifyResult).isNotEmpty,
               onPressed: _handleSubmit,
             ),
           ],
@@ -137,7 +135,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
 
   Set<_BudgetMetadataValueController> _generateControllers(List<BudgetMetadataValueViewModel>? values) =>
       <_BudgetMetadataValueController>{
-        for (final BudgetMetadataValueViewModel item in values ?? <BudgetMetadataValueViewModel>[])
+        for (final BudgetMetadataValueViewModel item in values ?? [])
           _BudgetMetadataValueController(
             BudgetMetadataValueEntryModifyResult(
               reference: (id: item.id, path: item.path),
@@ -165,7 +163,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
   void _handleRemoveValueType(BudgetMetadataValueEntryModifyResult item) {
     setState(() {
       _values = <_BudgetMetadataValueController>{
-        ..._values.where((_BudgetMetadataValueController e) => e.value != item),
+        ..._values.where((e) => e.value != item),
         if (item.reference case final ReferenceEntity reference)
           _BudgetMetadataValueController(
             BudgetMetadataValueEntryRemoveResult(
@@ -183,18 +181,15 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
         BudgetMetadataEntryResult(
           title: _titleController.text.trim(),
           description: _descriptionController.text.trim(),
-          values: _values.map((_BudgetMetadataValueController e) => e.value),
+          values: _values.map((e) => e.value),
         ),
       );
     }
   }
 }
 
-class _BudgetMetadataValueController extends ValueNotifier<BudgetMetadataValueEntryResult> with EquatableMixin {
+class _BudgetMetadataValueController extends ValueNotifier<BudgetMetadataValueEntryResult> {
   _BudgetMetadataValueController(super.value);
-
-  @override
-  List<Object> get props => <Object>[value];
 }
 
 class _BudgetMetadataValueField extends StatefulWidget {

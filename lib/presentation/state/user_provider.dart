@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, account])
-Future<UserEntity> user(UserRef ref) async {
+Future<UserEntity> user(Ref ref) async {
   final registry = ref.read(registryProvider);
   final account = await ref.watch(accountProvider.future);
 

@@ -6,7 +6,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart' hide BudgetPlanAllocationViewModelExtension;
-import 'package:riverpod/riverpod.dart';
 
 import '../../../../mocks.dart';
 import '../../../../utils.dart';
@@ -50,7 +49,7 @@ Future<void> main() async {
       mockUseCases.reset();
     });
 
-    BudgetProvider createProvider() => BudgetProvider(
+    BudgetProviderState createProvider() => BudgetProviderState(
       fetchUser: mockFetchUser.call,
       fetchActiveBudgetReference: mockFetchActiveBudgetReference.call,
       fetchBudgetAllocations: mockFetchBudgetAllocations.call,
@@ -77,7 +76,7 @@ Future<void> main() async {
       ).thenAnswer((_) async => '1');
 
       final container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           userProvider.overrideWith((_) async => dummyUser),
           activeBudgetProvider.overrideWith((_) => Stream<BudgetState>.value(dummyBudgetState)),
           selectedBudgetProvider('1').overrideWith((_) => Stream<BudgetState>.value(dummyBudgetState)),

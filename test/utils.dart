@@ -7,6 +7,7 @@ import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 import 'package:registry/registry.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'mocks.dart';
 
@@ -160,7 +161,7 @@ ProviderContainer createProviderContainer({
 }) {
   final container = ProviderContainer(
     parent: parent,
-    overrides: <Override>[
+    overrides: [
       registryProvider.overrideWithValue(
         registry ?? createRegistry().withMockedUseCases(),
       ),
@@ -185,7 +186,7 @@ Widget createApp({
   navigatorKey ??= GlobalKey<NavigatorState>();
 
   return ProviderScope(
-    overrides: <Override>[
+    overrides: [
       registryProvider.overrideWithValue(registry),
       appVersionProvider.overrideWithValue('0.0.0'),
       ...?overrides,

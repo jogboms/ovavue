@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/presentation.dart';
-import 'package:riverpod/riverpod.dart';
 
 import '../../../../utils.dart';
 
@@ -17,7 +16,7 @@ Future<void> main() async {
   group('SelectedBudgetCategoryProvider', () {
     Future<BudgetCategoryState> createProviderStream() {
       final container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           userProvider.overrideWith((_) async => dummyUser),
           budgetCategoriesProvider.overrideWith(
             (_) => Stream<List<BudgetCategoryViewModel>>.value(

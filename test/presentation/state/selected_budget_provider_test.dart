@@ -5,7 +5,6 @@ import 'package:ovavue/core.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart' hide BudgetPlanAllocationViewModelExtension;
-import 'package:riverpod/riverpod.dart';
 
 import '../../utils.dart';
 
@@ -18,7 +17,7 @@ Future<void> main() async {
   group('SelectedBudgetProvider', () {
     Future<BudgetState> createProviderStream() {
       final container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           userProvider.overrideWith((_) async => dummyUser),
         ],
       );

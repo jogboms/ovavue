@@ -2,7 +2,6 @@ import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:ovavue/presentation/constants.dart';
 import 'package:ovavue/presentation/models.dart';
 import 'package:ovavue/presentation/state.dart';
@@ -79,8 +78,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0).withKeyboardPadding(context),
         child: Consumer(
           builder: (BuildContext context, WidgetRef ref, _) {
-            final Iterable<BudgetViewModel> budgets =
-                ref.watch(budgetsProvider).valueOrNull ?? const <BudgetViewModel>[];
+            final Iterable<BudgetViewModel> budgets = ref.watch(budgetsProvider).value ?? const <BudgetViewModel>[];
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

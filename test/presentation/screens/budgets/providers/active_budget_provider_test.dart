@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
-import 'package:riverpod/riverpod.dart';
 
 import '../../../../utils.dart';
 
@@ -14,7 +13,7 @@ Future<void> main() async {
   group('ActiveBudgetProvider', () {
     Future<BaseBudgetState> createProviderStream(BudgetEntity? budget) {
       final container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           userProvider.overrideWith((_) async => dummyUser),
           activeBudgetIdProvider.overrideWith((_) => Stream<String?>.value(budget?.id)),
           if (budget != null)

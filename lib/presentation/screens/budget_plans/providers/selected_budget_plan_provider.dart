@@ -10,7 +10,7 @@ part 'selected_budget_plan_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans, selectedBudgetMetadataByPlan])
 Stream<BudgetPlanState> selectedBudgetPlan(
-  SelectedBudgetPlanRef ref, {
+  Ref ref, {
   required String id,
   required String? budgetId,
 }) async* {

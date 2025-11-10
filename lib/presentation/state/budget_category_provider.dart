@@ -9,10 +9,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'budget_category_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user])
-BudgetCategoryProvider budgetCategory(BudgetCategoryRef ref) {
+BudgetCategoryProviderState budgetCategory(Ref ref) {
   final di = ref.read(registryProvider).get;
 
-  return BudgetCategoryProvider(
+  return BudgetCategoryProviderState(
     fetchUser: () => ref.read(userProvider.future),
     createBudgetCategoryUseCase: di(),
     updateBudgetCategoryUseCase: di(),
@@ -21,8 +21,8 @@ BudgetCategoryProvider budgetCategory(BudgetCategoryRef ref) {
 }
 
 @visibleForTesting
-class BudgetCategoryProvider {
-  const BudgetCategoryProvider({
+class BudgetCategoryProviderState {
+  const BudgetCategoryProviderState({
     required AsyncValueGetter<UserEntity> fetchUser,
     required CreateBudgetCategoryUseCase createBudgetCategoryUseCase,
     required UpdateBudgetCategoryUseCase updateBudgetCategoryUseCase,

@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'budget_plans_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user])
-Stream<List<BudgetPlanViewModel>> budgetPlans(BudgetPlansRef ref) async* {
+Stream<List<BudgetPlanViewModel>> budgetPlans(Ref ref) async* {
   final registry = ref.read(registryProvider);
   final user = await ref.watch(userProvider.future);
 

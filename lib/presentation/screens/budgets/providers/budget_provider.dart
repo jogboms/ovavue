@@ -8,10 +8,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'budget_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user, activeBudget, selectedBudget])
-BudgetProvider budget(BudgetRef ref) {
+BudgetProviderState budget(Ref ref) {
   final di = ref.read(registryProvider).get;
 
-  return BudgetProvider(
+  return BudgetProviderState(
     fetchUser: () => ref.read(userProvider.future),
     fetchActiveBudgetReference: () => ref.read(
       activeBudgetProvider.selectAsync(
@@ -45,9 +45,9 @@ BudgetProvider budget(BudgetRef ref) {
   );
 }
 
-class BudgetProvider {
+class BudgetProviderState {
   @visibleForTesting
-  BudgetProvider({
+  BudgetProviderState({
     required AsyncValueGetter<UserEntity> fetchUser,
     required AsyncValueGetter<ReferenceEntity?> fetchActiveBudgetReference,
     required Future<PlanToAllocationMap> Function(String id) fetchBudgetAllocations,

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:ovavue/presentation/constants.dart';
 import 'package:ovavue/presentation/models.dart';
 import 'package:ovavue/presentation/state.dart';
@@ -79,7 +78,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
             final plans =
                 ref
                     .watch(budgetPlansProvider)
-                    .valueOrNull
+                    .value
                     ?.where((BudgetPlanViewModel e) => !widget.plansById.contains(e.id)) ??
                 const <BudgetPlanViewModel>[];
 

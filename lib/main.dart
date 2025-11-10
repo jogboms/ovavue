@@ -142,7 +142,7 @@ void main() async {
 
   runApp(
     ProviderScope(
-      overrides: <Override>[
+      overrides: [
         registryProvider.overrideWithValue(registry),
         appVersionProvider.overrideWithValue(deviceInformation.appVersion),
         backupClientControllerProvider.overrideWithValue(backupClientController),

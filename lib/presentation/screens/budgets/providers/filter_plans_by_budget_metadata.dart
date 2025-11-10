@@ -5,7 +5,7 @@ part 'filter_plans_by_budget_metadata.g.dart';
 
 @Riverpod(dependencies: <Object>[selectedBudgetPlansByMetadata])
 Future<BaseBudgetPlansByMetadataState> filterPlansByBudgetMetadata(
-  FilterPlansByBudgetMetadataRef ref, {
+  Ref ref, {
   required String budgetId,
 }) async {
   final metadataId = ref.watch(filterMetadataIdProvider);

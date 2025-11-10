@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'selected_budget_category_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[budgetPlans, budgetCategories])
-Stream<BudgetCategoryState> selectedBudgetCategory(SelectedBudgetCategoryRef ref, String id) async* {
+Stream<BudgetCategoryState> selectedBudgetCategory(Ref ref, String id) async* {
   final category = await ref.watch(
     budgetCategoriesProvider.selectAsync(
       (List<BudgetCategoryViewModel> categories) =>

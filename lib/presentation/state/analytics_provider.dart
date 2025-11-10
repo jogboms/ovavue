@@ -6,4 +6,4 @@ part 'analytics_provider.g.dart';
 
 /// Should only be used from the UI
 @Riverpod(dependencies: <Object>[registry])
-Analytics analytics(AnalyticsRef ref) => ref.watch(registryProvider).get();
+Analytics analytics(Ref ref) => ref.watch(registryProvider).get();

@@ -5,4 +5,4 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'account_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry])
-Future<AccountEntity> account(AccountRef ref) async => ref.read(registryProvider).get<FetchAccountUseCase>().call();
+Future<AccountEntity> account(Ref ref) async => ref.read(registryProvider).get<FetchAccountUseCase>().call();

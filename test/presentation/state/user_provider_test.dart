@@ -3,7 +3,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
-import 'package:riverpod/riverpod.dart';
 
 import '../../utils.dart';
 
@@ -21,7 +20,7 @@ Future<void> main() async {
 
     Future<UserEntity> createProviderFuture() {
       final container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           accountProvider.overrideWith((_) async => dummyAccount),
         ],
       );

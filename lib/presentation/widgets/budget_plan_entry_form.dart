@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:ovavue/presentation/constants.dart';
 import 'package:ovavue/presentation/models.dart';
 import 'package:ovavue/presentation/state.dart';
@@ -61,7 +60,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
         child: Consumer(
           builder: (BuildContext context, WidgetRef ref, _) {
             final Iterable<BudgetCategoryViewModel> categories =
-                ref.watch(budgetCategoriesProvider).valueOrNull ?? const <BudgetCategoryViewModel>[];
+                ref.watch(budgetCategoriesProvider).value ?? const <BudgetCategoryViewModel>[];
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

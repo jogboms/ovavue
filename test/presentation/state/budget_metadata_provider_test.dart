@@ -39,7 +39,7 @@ Future<void> main() async {
 
     setUp(() {
       container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           userProvider.overrideWith((_) async => dummyUser),
         ],
       );

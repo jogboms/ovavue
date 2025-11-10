@@ -12,7 +12,7 @@ import 'package:rxdart/transformers.dart';
 part 'selected_budget_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user])
-Stream<BudgetState> selectedBudget(SelectedBudgetRef ref, String id) async* {
+Stream<BudgetState> selectedBudget(Ref ref, String id) async* {
   final registry = ref.read(registryProvider);
   final user = await ref.watch(userProvider.future);
 

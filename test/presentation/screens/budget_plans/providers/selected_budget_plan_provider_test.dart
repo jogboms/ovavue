@@ -4,7 +4,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
-import 'package:riverpod/riverpod.dart';
 
 import '../../../../utils.dart';
 
@@ -22,7 +21,7 @@ Future<void> main() async {
   group('SelectedBudgetPlanProvider', () {
     Future<BudgetPlanState> createProviderStream() {
       final container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           userProvider.overrideWith((_) async => dummyUser),
           budgetsProvider.overrideWith(
             (_) => Stream<List<BudgetViewModel>>.value(

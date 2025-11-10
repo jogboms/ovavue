@@ -9,10 +9,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'budget_plan_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user])
-BudgetPlanProvider budgetPlan(BudgetPlanRef ref) {
+BudgetPlanProviderState budgetPlan(Ref ref) {
   final di = ref.read(registryProvider).get;
 
-  return BudgetPlanProvider(
+  return BudgetPlanProviderState(
     fetchUser: () => ref.read(userProvider.future),
     createBudgetPlanUseCase: di(),
     updateBudgetPlanUseCase: di(),
@@ -23,9 +23,9 @@ BudgetPlanProvider budgetPlan(BudgetPlanRef ref) {
   );
 }
 
-class BudgetPlanProvider {
+class BudgetPlanProviderState {
   @visibleForTesting
-  const BudgetPlanProvider({
+  const BudgetPlanProviderState({
     required AsyncValueGetter<UserEntity> fetchUser,
     required CreateBudgetPlanUseCase createBudgetPlanUseCase,
     required UpdateBudgetPlanUseCase updateBudgetPlanUseCase,

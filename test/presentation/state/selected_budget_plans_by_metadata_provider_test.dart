@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
-import 'package:riverpod/riverpod.dart';
 
 import '../../utils.dart';
 
@@ -23,7 +23,7 @@ Future<void> main() async {
 
     Future<BudgetPlansByMetadataState> createProviderStream() {
       final container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           userProvider.overrideWith((_) async => dummyUser),
           selectedBudgetProvider(expectedBudget.id).overrideWith(
             (_) => Stream<BudgetState>.value(
@@ -91,7 +91,7 @@ Future<void> main() async {
   });
 }
 
-class MockBudgetMetadata extends AutoDisposeStreamNotifier<List<BudgetMetadataViewModel>>
+class MockBudgetMetadata extends AnyNotifier<AsyncValue<List<BudgetMetadataViewModel>>, List<BudgetMetadataViewModel>>
     with Mock
     implements BudgetMetadata {
   MockBudgetMetadata([this._initialValue = const <BudgetMetadataViewModel>[]]);

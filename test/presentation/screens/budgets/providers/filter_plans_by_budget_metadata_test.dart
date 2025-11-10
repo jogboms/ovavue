@@ -24,7 +24,7 @@ Future<void> main() async {
 
     setUp(() {
       container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           selectedBudgetPlansByMetadataProvider(id: metadataId, budgetId: budgetId).overrideWith(
             (_) => Stream<BudgetPlansByMetadataState>.value(expectedState),
           ),

@@ -14,7 +14,7 @@ part 'selected_budget_category_by_budget_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans, budgetCategories])
 Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
-  SelectedBudgetCategoryByBudgetRef ref, {
+  Ref ref, {
   required String id,
   required String budgetId,
 }) async* {

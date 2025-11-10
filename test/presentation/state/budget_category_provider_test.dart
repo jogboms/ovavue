@@ -3,7 +3,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
-import 'package:riverpod/riverpod.dart';
 
 import '../../mocks.dart';
 import '../../utils.dart';
@@ -24,7 +23,7 @@ Future<void> main() async {
       mockUseCases.reset();
     });
 
-    BudgetCategoryProvider createProvider() => BudgetCategoryProvider(
+    BudgetCategoryProviderState createProvider() => BudgetCategoryProviderState(
       fetchUser: mockFetchUser.call,
       createBudgetCategoryUseCase: mockUseCases.createBudgetCategoryUseCase,
       updateBudgetCategoryUseCase: mockUseCases.updateBudgetCategoryUseCase,
@@ -47,7 +46,7 @@ Future<void> main() async {
       ).thenAnswer((_) async => '1');
 
       final container = createProviderContainer(
-        overrides: <Override>[
+        overrides: [
           userProvider.overrideWith((_) async => dummyUser),
         ],
       );
