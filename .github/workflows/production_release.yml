@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Initialize environment variables from FVM config
-        uses: kuhnroyal/flutter-fvm-config-action@v2
+        uses: kuhnroyal/flutter-fvm-config-action@v3
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
@@ -66,7 +66,7 @@ jobs:
           token: ${{ secrets.API_TOKEN_GITHUB }}
 
       - name: Initialize environment variables from FVM config
-        uses: kuhnroyal/flutter-fvm-config-action@v2
+        uses: kuhnroyal/flutter-fvm-config-action@v3
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
