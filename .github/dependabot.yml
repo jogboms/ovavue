@@ -7,7 +7,7 @@ updates:
       interval: "weekly"
   - package-ecosystem: "pub"
     directories:
-      - "**/*"
+      - "/"
     registries: "*"
     schedule:
       interval: "weekly"
