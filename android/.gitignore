@@ -16,4 +16,3 @@ service_account_key.json
 # Fastlane
 fastlane/report.xml
 fastlane/metadata
-Gemfile.lock

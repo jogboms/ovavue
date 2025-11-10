@@ -29,7 +29,6 @@ Runner/GeneratedPluginRegistrant.*
 
 # Fastlane
 fastlane/report.xml
-Gemfile.lock
 Runner.ipa
 Runner.app.dSYM.zip
 
