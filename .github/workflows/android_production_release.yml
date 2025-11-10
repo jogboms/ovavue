@@ -25,7 +25,7 @@ jobs:
           ruby-version: ${{ env.ruby_version }}
           working-directory: ${{ env.working_directory }}
           bundler-cache: true
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
