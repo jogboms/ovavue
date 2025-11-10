@@ -50,8 +50,6 @@ app.*.map.json
 /lib/generated
 /coverage
 
-*.g.dart
-
 # FVM Version Cache
 .fvm/
 
