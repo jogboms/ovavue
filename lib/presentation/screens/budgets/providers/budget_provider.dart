@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'budget_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user, activeBudget, selectedBudget])
+@Riverpod(dependencies: [registry, user, activeBudget, selectedBudget])
 BudgetProviderState budget(Ref ref) {
   final di = ref.read(registryProvider).get;
 

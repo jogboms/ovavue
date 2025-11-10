@@ -15,7 +15,7 @@ void main() {
 
     test('should fetch budget metadata', () {
       final key = BudgetMetadataMockImpl.generateMetadataKey();
-      final expectedMetadata = <BudgetMetadataValueEntity>[
+      final expectedMetadata = [
         BudgetMetadataMockImpl.generateMetadataValue(key: key),
       ];
 

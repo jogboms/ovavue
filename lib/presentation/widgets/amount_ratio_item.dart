@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/theme.dart';
 import 'package:ovavue/presentation/utils.dart';
 
@@ -32,7 +31,7 @@ class AmountRatioItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
+      children: [
         Text(
           '$allocationAmount',
           style: (isLarge ? textTheme.headlineSmall : textTheme.titleMedium)?.copyWith(

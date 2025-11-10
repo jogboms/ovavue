@@ -24,7 +24,7 @@ class ActiveBudgetPageState extends State<ActiveBudgetPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(activeBudgetProvider)
           .when(
             data: (BaseBudgetState state) => switch (state) {
@@ -74,7 +74,7 @@ class _EmptyBudgetView extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: [
           Icon(
             AppIcons.addBudget,
             size: 32,
@@ -126,7 +126,7 @@ class _BottomSheetOptions extends StatelessWidget {
         MediaQuery.paddingOf(context).bottom + 8.0,
       ),
       child: Row(
-        children: <Widget>[
+        children: [
           for (final _BottomSheetChoice choice in _BottomSheetChoice.values)
             Expanded(
               key: Key(choice.name),
@@ -134,7 +134,7 @@ class _BottomSheetOptions extends StatelessWidget {
                 onTap: () => Navigator.of(context).pop(choice),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+                  children: [
                     Icon(choice._icon),
                     const SizedBox(height: 4),
                     Text(

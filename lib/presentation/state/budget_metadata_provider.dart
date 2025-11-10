@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'budget_metadata_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user])
+@Riverpod(dependencies: [registry, user])
 class BudgetMetadata extends _$BudgetMetadata {
   @override
   Stream<List<BudgetMetadataViewModel>> build() async* {

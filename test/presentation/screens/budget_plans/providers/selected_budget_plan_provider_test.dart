@@ -13,7 +13,7 @@ Future<void> main() async {
   const budgetId = 'budget-id';
 
   final expectedPlan = BudgetPlansMockImpl.generatePlan(id: planId);
-  final expectedPlans = <BudgetPlanEntity>[expectedPlan];
+  final expectedPlans = [expectedPlan];
   final expectedBudget = BudgetsMockImpl.generateBudget(id: budgetId);
 
   tearDown(mockUseCases.reset);
@@ -25,12 +25,12 @@ Future<void> main() async {
           userProvider.overrideWith((_) async => dummyUser),
           budgetsProvider.overrideWith(
             (_) => Stream<List<BudgetViewModel>>.value(
-              <BudgetViewModel>[BudgetViewModel.fromEntity(expectedBudget)],
+              [BudgetViewModel.fromEntity(expectedBudget)],
             ),
           ),
           budgetPlansProvider.overrideWith(
             (_) => Stream<List<BudgetPlanViewModel>>.value(
-              <BudgetPlanViewModel>[BudgetPlanViewModel.fromEntity(expectedPlan)],
+              [BudgetPlanViewModel.fromEntity(expectedPlan)],
             ),
           ),
         ],

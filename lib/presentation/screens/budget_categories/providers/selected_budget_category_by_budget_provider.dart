@@ -12,7 +12,7 @@ export 'models.dart';
 
 part 'selected_budget_category_by_budget_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans, budgetCategories])
+@Riverpod(dependencies: [registry, user, budgets, budgetPlans, budgetCategories])
 Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
   Ref ref, {
   required String id,

@@ -26,7 +26,7 @@ class FilterPlansByBudgetMetadataPageState extends State<FilterPlansByBudgetMeta
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(budgetMetadataProvider)
           .when(
             skipLoadingOnRefresh: true,
@@ -69,7 +69,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
 
   final _selectedMetadata = ValueNotifier<BudgetMetadataViewModel?>(null);
   final _selectedMetadataValue = ValueNotifier<BudgetMetadataValueViewModel?>(null);
-  late final _formChanges = Listenable.merge(<Listenable>[
+  late final _formChanges = Listenable.merge([
     _selectedMetadata,
     _selectedMetadataValue,
   ]);
@@ -96,10 +96,10 @@ class _ContentDataViewState extends State<_ContentDataView> {
     }
 
     return CustomScrollView(
-      slivers: <Widget>[
+      slivers: [
         CustomAppBar(
           title: Column(
-            children: <Widget>[
+            children: [
               Text(l10n.aggregateAllocationCaption.toUpperCase(), style: textTheme.labelMedium),
               Text('$aggregateAmount', style: textTheme.titleLarge?.copyWith(fontWeight: AppFontWeight.semibold)),
             ],
@@ -114,12 +114,12 @@ class _ContentDataViewState extends State<_ContentDataView> {
             padding: const EdgeInsets.all(16),
             sliver: SliverToBoxAdapter(
               child: Consumer(
-                builder: (BuildContext context, WidgetRef ref, Widget? child) => Row(
-                  children: <Widget>[
+                builder: (context, ref, child) => Row(
+                  children: [
                     Expanded(
                       child: ValueListenableBuilder<BudgetMetadataViewModel?>(
                         valueListenable: _selectedMetadata,
-                        builder: (BuildContext context, BudgetMetadataViewModel? value, _) =>
+                        builder: (context, BudgetMetadataViewModel? value, _) =>
                             DropdownButtonFormField<BudgetMetadataViewModel>(
                               key: _metadataFieldKey,
                               initialValue: value,
@@ -145,7 +145,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
                     Expanded(
                       child: ListenableBuilder(
                         listenable: _formChanges,
-                        builder: (BuildContext context, _) => DropdownButtonFormField<BudgetMetadataValueViewModel>(
+                        builder: (context, _) => DropdownButtonFormField<BudgetMetadataValueViewModel>(
                           initialValue: _selectedMetadataValue.value,
                           isExpanded: true,
                           hint: Text(l10n.selectMetadataValueCaption, overflow: TextOverflow.ellipsis),
@@ -170,7 +170,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
         if (widget.state case final BudgetPlansByMetadataState state)
           if (state.plans.isEmpty)
             const SliverFillRemaining(child: EmptyView())
-          else ...<Widget>[
+          else ...[
             SliverPinnedTitleCountHeader.count(
               title: context.l10n.associatedPlansTitle,
               count: state.plans.length,
@@ -181,7 +181,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
                 bottom: MediaQuery.paddingOf(context).bottom,
               ),
               sliver: SliverList.separated(
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, int index) {
                   final plan = state.plans.elementAt(index);
                   final allocationAmount = plan.allocation?.amount;
                   final budgetAmount = state.budget?.amount;

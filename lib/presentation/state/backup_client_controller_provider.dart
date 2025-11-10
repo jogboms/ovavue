@@ -6,7 +6,7 @@ part 'backup_client_controller_provider.g.dart';
 
 /// Container for the backup client controller
 /// Should be overridden per [ProviderScope]
-@Riverpod(dependencies: <Object>[])
+@Riverpod(dependencies: [])
 BackupClientController backupClientController(Ref ref) => throw UnimplementedError();
 
 abstract class BackupClientController {

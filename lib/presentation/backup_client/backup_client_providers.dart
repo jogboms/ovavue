@@ -70,7 +70,7 @@ class _FileSystemClientProvider implements BackupClientProvider {
 
       final result = await SharePlus.instance.share(
         ShareParams(
-          files: <XFile>[XFile(tempPath)],
+          files: [XFile(tempPath)],
         ),
       );
       return switch (result.status) {

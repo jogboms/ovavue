@@ -12,5 +12,5 @@ class UserEntity with EquatableMixin {
   final DateTime createdAt;
 
   @override
-  List<Object> get props => <Object>[id, path, createdAt];
+  List<Object> get props => [id, path, createdAt];
 }

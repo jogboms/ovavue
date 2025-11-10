@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/utils.dart';
 
 enum BudgetDurationTextType { small, medium, large }
@@ -42,9 +41,9 @@ class BudgetDurationText extends StatelessWidget {
 
     return Text.rich(
       TextSpan(
-        children: <TextSpan>[
+        children: [
           TextSpan(text: startedAt.format(DateTimeFormat.dottedInt)),
-          if (endedAt != null) ...<TextSpan>[
+          if (endedAt != null) ...[
             const TextSpan(text: ' — '),
             TextSpan(text: endedAt.format(DateTimeFormat.dottedInt)),
           ],

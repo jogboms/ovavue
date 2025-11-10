@@ -19,7 +19,7 @@ class SnackBarProvider extends StatefulWidget with DiagnosticableTreeMixin {
     if (kReleaseMode) {
       return null;
     }
-    throw FlutterError.fromParts(<DiagnosticsNode>[
+    throw FlutterError.fromParts([
       ErrorSummary('SnackBarProvider.of() called with a context that does not contain a SnackBarProvider.'),
       ErrorDescription(
         'No App ancestor could be found starting from the context that was passed to SnackBarProvider.of(). '

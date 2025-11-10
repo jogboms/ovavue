@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'models.dart';
 part 'selected_budget_plan_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user, budgets, budgetPlans, selectedBudgetMetadataByPlan])
+@Riverpod(dependencies: [registry, user, budgets, budgetPlans, selectedBudgetMetadataByPlan])
 Stream<BudgetPlanState> selectedBudgetPlan(
   Ref ref, {
   required String id,

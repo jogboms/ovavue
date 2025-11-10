@@ -21,7 +21,7 @@ class MockRepositories {
   final BudgetMetadataRepository budgetMetadata = MockBudgetMetadataRepository();
   final PreferencesRepository preferences = MockPreferencesRepository();
 
-  void reset() => <Object>[
+  void reset() => [
     auth,
     users,
     budgets,
@@ -71,7 +71,7 @@ class MockUseCases {
   final FetchThemeModeUseCase fetchThemeModeUseCase = MockFetchThemeModeUseCase();
   final UpdateThemeModeUseCase updateThemeModeUseCase = MockUpdateThemeModeUseCase();
 
-  void reset() => <Object>[
+  void reset() => [
     createBudgetAllocationUseCase,
     createBudgetCategoryUseCase,
     createBudgetPlanUseCase,

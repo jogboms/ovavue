@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/core.dart';
-
 import 'package:ovavue/presentation/screens/budgets/active_budget_page.dart';
 import 'package:ovavue/presentation/state.dart';
 import 'package:ovavue/presentation/theme.dart';
@@ -35,7 +34,7 @@ class _AppState extends State<App> {
     visible: !widget.environment.isProduction,
     message: widget.environment.name.toUpperCase(),
     child: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => MaterialApp(
+      builder: (context, ref, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         navigatorKey: widget.navigatorKey,
         theme: themeBuilder(ThemeData.light()),
@@ -46,9 +45,9 @@ class _AppState extends State<App> {
         onGenerateTitle: (BuildContext context) => context.l10n.appName,
         localizationsDelegates: L10n.localizationsDelegates,
         supportedLocales: L10n.supportedLocales,
-        builder: (_, Widget? child) => SnackBarProvider(navigatorKey: widget.navigatorKey, child: child!),
+        builder: (_, child) => SnackBarProvider(navigatorKey: widget.navigatorKey, child: child!),
         home: child,
-        navigatorObservers: widget.navigatorObservers ?? <NavigatorObserver>[],
+        navigatorObservers: widget.navigatorObservers ?? [],
       ),
       child: widget.home ?? const ActiveBudgetPage(),
     ),
@@ -71,7 +70,7 @@ class _Banner extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       alignment: Alignment.topCenter,
-      children: <Widget>[
+      children: [
         child,
         CustomPaint(
           painter: BannerPainter(

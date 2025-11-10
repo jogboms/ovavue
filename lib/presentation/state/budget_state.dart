@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import 'package:ovavue/presentation/models.dart';
 import 'package:ovavue/presentation/utils.dart';
 
@@ -21,7 +20,7 @@ class BudgetState with EquatableMixin implements BaseBudgetState {
   final List<SelectedBudgetCategoryViewModel> categories;
 
   @override
-  List<Object> get props => <Object>[budget, plans, allocation, categories];
+  List<Object> get props => [budget, plans, allocation, categories];
 }
 
 class EmptyBudgetState implements BaseBudgetState {

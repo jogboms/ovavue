@@ -25,7 +25,7 @@ Future<void> main() async {
     test('should initialize with empty state', () {
       when(
         () => mockUseCases.fetchBudgetsUseCase.call(any()),
-      ).thenAnswer((_) => Stream<List<BudgetEntity>>.value(<BudgetEntity>[]));
+      ).thenAnswer((_) => Stream<List<BudgetEntity>>.value([]));
 
       expect(createProviderStream(), completes);
     });

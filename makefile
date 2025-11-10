@@ -8,7 +8,7 @@ ci:
 	make format && make analyze && make test_coverage
 
 format:
-	fvm dart format --set-exit-if-changed -l 120 lib
+	fvm dart format --set-exit-if-changed lib
 
 analyze:
 	fvm flutter analyze lib

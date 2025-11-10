@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_budget_plans_by_metadata_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user, BudgetMetadata, selectedBudget])
+@Riverpod(dependencies: [registry, user, BudgetMetadata, selectedBudget])
 Stream<BudgetPlansByMetadataState> selectedBudgetPlansByMetadata(
   Ref ref, {
   required String id,

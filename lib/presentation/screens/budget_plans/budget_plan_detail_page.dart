@@ -33,7 +33,7 @@ class BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(selectedBudgetPlanProvider(id: widget.id, budgetId: widget.budgetId))
           .when(
             data: (BudgetPlanState data) => _ContentDataView(
@@ -73,20 +73,20 @@ class _ContentDataView extends StatelessWidget {
     final allocation = state.allocation;
 
     return CustomScrollView(
-      slivers: <Widget>[
+      slivers: [
         const CustomAppBar(title: Text(''), asSliver: true, centerTitle: true),
         SliverList.list(
-          children: <Widget>[
+          children: [
             const SizedBox(height: 18.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
+                      children: [
                         Text(
                           state.plan.title.sentence(),
                           style: textTheme.titleLarge?.copyWith(
@@ -139,8 +139,8 @@ class _ContentDataView extends StatelessWidget {
               ),
             const SizedBox(height: 2.0),
             Consumer(
-              builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
-                actions: <ActionButton>[
+              builder: (context, ref, _) => ActionButtonRow(
+                actions: [
                   if (budget != null && budget.active)
                     ActionButton(
                       icon: AppIcons.modifyAllocation,
@@ -218,7 +218,7 @@ class _ContentDataView extends StatelessWidget {
               bottom: MediaQuery.paddingOf(context).bottom,
             ),
             sliver: SliverList.builder(
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, int index) {
                 final (BudgetAllocationViewModel allocation, BudgetViewModel budget) = state.previousAllocations[index];
 
                 return BudgetListTile(
@@ -258,7 +258,7 @@ class _ContentDataView extends StatelessWidget {
       allocation: allocation?.amount,
       plan: plan,
       budgetId: budget.id,
-      plansById: <String>[plan.id],
+      plansById: [plan.id],
     );
     if (result == null) {
       return;
@@ -431,7 +431,7 @@ class _MetadataSection extends StatelessWidget {
       child: Wrap(
         runSpacing: 4.0,
         spacing: 4.0,
-        children: <Widget>[
+        children: [
           for (final BudgetMetadataValueViewModel item in metadata)
             CupertinoButton(
               onPressed: () => onPressed(item),

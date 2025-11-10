@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import 'package:ovavue/domain/entities/reference_entity.dart';
 
 class CreateBudgetAllocationData with EquatableMixin {
@@ -14,5 +13,5 @@ class CreateBudgetAllocationData with EquatableMixin {
   final ReferenceEntity plan;
 
   @override
-  List<Object> get props => <Object>[amount, budget, plan];
+  List<Object> get props => [amount, budget, plan];
 }

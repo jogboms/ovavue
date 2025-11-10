@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/theme.dart';
 import 'package:ovavue/presentation/utils.dart';
 import 'package:ovavue/presentation/widgets/app_icon.dart';
@@ -19,7 +18,7 @@ class AppCrashErrorView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             const SizedBox(height: 40),
             const Align(alignment: Alignment.centerLeft, child: AppIcon()),
             const SizedBox(height: 38),
@@ -34,7 +33,7 @@ class AppCrashErrorView extends StatelessWidget {
             const SizedBox(height: 35),
             Text.rich(
               TextSpan(
-                children: <TextSpan>[
+                children: [
                   TextSpan(
                     text: l10n.crashViewQuoteMessage,
                     style: textTheme.headlineSmall!.copyWith(height: 1.5),

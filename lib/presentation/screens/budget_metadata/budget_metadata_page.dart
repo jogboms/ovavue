@@ -25,7 +25,7 @@ class _BudgetMetadataPageState extends State<BudgetMetadataPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(budgetMetadataProvider)
           .when(
             data: (List<BudgetMetadataViewModel> data) => _ContentDataView(
@@ -56,7 +56,7 @@ class _ContentDataView extends StatelessWidget {
     final l10n = context.l10n;
 
     return CustomScrollView(
-      slivers: <Widget>[
+      slivers: [
         CustomAppBar(
           title: Text(l10n.metadataPageTitle),
           asSliver: true,
@@ -64,9 +64,9 @@ class _ContentDataView extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: Consumer(
-            builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+            builder: (context, ref, _) => ActionButtonRow(
               alignment: Alignment.center,
-              actions: <ActionButton>[
+              actions: [
                 ActionButton(
                   icon: AppIcons.plus,
                   onPressed: () => _handleModifyMetadata(context, metadata: null),
@@ -171,9 +171,9 @@ class _Header extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+      children: [
         Text(title.sentence(), style: textTheme.titleMedium, maxLines: 1),
-        if (description.isNotEmpty) ...<Widget>[
+        if (description.isNotEmpty) ...[
           const SizedBox(height: 2.0),
           Text(description.capitalize(), style: textTheme.bodyMedium),
         ],
@@ -198,7 +198,7 @@ class _MetadataValueTile extends StatelessWidget {
       child: Ink(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
-          children: <Widget>[
+          children: [
             Expanded(
               child: Text(
                 item.title.sentence(),

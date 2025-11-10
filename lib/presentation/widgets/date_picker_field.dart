@@ -1,6 +1,5 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/constants.dart';
 import 'package:ovavue/presentation/utils.dart';
 
@@ -26,7 +25,7 @@ class DatePickerField extends FormField<DateTime> {
                prefixIcon: const Icon(AppIcons.date),
              ),
              child: Row(
-               children: <Widget>[
+               children: [
                  Expanded(
                    child: Text(
                      date != null ? date.format(DateTimeFormat.yearMonthDate) : hintText!,

@@ -32,7 +32,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
         centerTitle: true,
       ),
       body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+        builder: (context, ref, child) => ref
             .watch(preferencesProvider)
             .when(
               data: (PreferencesState data) => _ContentDataView(
@@ -68,12 +68,12 @@ class _ContentDataView extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Column(
-      children: <Widget>[
+      children: [
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
-              children: <Widget>[
+              children: [
                 _Item(
                   key: Key(state.accountKey),
                   leading: AppIcons.accountKey,
@@ -95,8 +95,8 @@ class _ContentDataView extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Consumer(
-                  builder: (BuildContext context, WidgetRef ref, _) => Column(
-                    children: <Widget>[
+                  builder: (context, ref, _) => Column(
+                    children: [
                       _Item(
                         label: l10n.backupClientProviderLabel,
                         child: DropdownButtonFormField<BackupClient>(
@@ -121,7 +121,7 @@ class _ContentDataView extends StatelessWidget {
                       const Divider(height: 2),
                       _Item(
                         child: Row(
-                          children: <Widget>[
+                          children: [
                             TextButton(
                               onPressed: () => _handleDatabaseImport(context),
                               child: Text(l10n.backupClientImportLabel),
@@ -142,7 +142,7 @@ class _ContentDataView extends StatelessWidget {
                   label: l10n.featureRequestsLabel,
                   child: Wrap(
                     spacing: 8,
-                    children: <Widget>[
+                    children: [
                       TextButton(
                         onPressed: _handleTranslationRequest,
                         child: Text(l10n.translationFeatureRequestCaption),
@@ -159,7 +159,7 @@ class _ContentDataView extends StatelessWidget {
                   label: l10n.getInTouchLabel,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
+                    children: [
                       IconButton(onPressed: _handleSendEmail, icon: const Icon(AppIcons.email)),
                       IconButton(onPressed: _handleOpenTwitter, icon: const Icon(AppIcons.twitter)),
                       IconButton(onPressed: _handleOpenGithubIssue, icon: const Icon(AppIcons.github)),
@@ -172,7 +172,7 @@ class _ContentDataView extends StatelessWidget {
           ),
         ),
         Consumer(
-          builder: (BuildContext context, WidgetRef ref, _) => SafeArea(
+          builder: (context, ref, _) => SafeArea(
             top: false,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -316,8 +316,8 @@ class _Item extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        if (label case final String label?) ...<Widget>[
+      children: [
+        if (label case final String label?) ...[
           Text(label, style: textTheme.labelLarge),
           const SizedBox(height: 4),
         ],
@@ -325,8 +325,8 @@ class _Item extends StatelessWidget {
           color: theme.colorScheme.surfaceContainerHighest,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: Row(
-            children: <Widget>[
-              if (leading case final IconData leading?) ...<Widget>[
+            children: [
+              if (leading case final IconData leading?) ...[
                 Icon(leading),
                 const SizedBox(width: 8),
               ],
@@ -337,7 +337,7 @@ class _Item extends StatelessWidget {
                 ),
               ),
               if (actions case final List<_ItemAction> actions)
-                for (final _ItemAction action in actions) ...<Widget>[
+                for (final _ItemAction action in actions) ...[
                   const SizedBox(width: 6),
                   IconButton(onPressed: action.$2, icon: Icon(action.$1)),
                 ],
@@ -363,7 +363,7 @@ class _ExitDialog extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             Text(l10n.exitAppMessage, style: theme.textTheme.bodyLarge),
             const SizedBox(height: 8),
             PrimaryButton(caption: l10n.continueCaption, onPressed: () => io.exit(1)),
@@ -397,7 +397,7 @@ class _BottomSheetOptions extends StatelessWidget {
         MediaQuery.paddingOf(context).bottom + 8.0,
       ),
       child: Row(
-        children: <Widget>[
+        children: [
           for (final ThemeMode choice in ThemeMode.values)
             Expanded(
               key: Key(choice.name),
@@ -405,7 +405,7 @@ class _BottomSheetOptions extends StatelessWidget {
                 onTap: () => Navigator.of(context).pop(choice),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+                  children: [
                     Icon(
                       choice.icon,
                       color: choice == initialValue ? activeColor : colorScheme.onSurface,

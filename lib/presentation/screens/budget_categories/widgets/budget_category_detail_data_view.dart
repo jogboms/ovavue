@@ -25,7 +25,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     final foregroundColor = state.category.colorScheme.foreground;
 
     return CustomScrollView(
-      slivers: <Widget>[
+      slivers: [
         SliverAppBar(
           expandedHeight: 250,
           pinned: true,
@@ -40,15 +40,15 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
           flexibleSpace: FlexibleSpaceBar(
             background: Column(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
+              children: [
                 BudgetCategoryHeader(
                   category: state.category,
                   allocationAmount: state.allocation,
                   budgetAmount: state.budget?.amount,
                 ),
                 Consumer(
-                  builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
-                    actions: <ActionButton>[
+                  builder: (context, ref, _) => ActionButtonRow(
+                    actions: [
                       ActionButton(
                         icon: AppIcons.addPlan,
                         backgroundColor: foregroundColor,
@@ -102,7 +102,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
               bottom: MediaQuery.paddingOf(context).bottom,
             ),
             sliver: SliverList.separated(
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, int index) {
                 final (BudgetPlanViewModel plan, Money? allocationAmount) = state.plans[index];
 
                 return BudgetCategoryPlanTile(

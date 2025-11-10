@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/models.dart';
 import 'package:ovavue/presentation/utils.dart';
 import 'package:ovavue/presentation/widgets.dart';
@@ -34,11 +33,11 @@ class BudgetCategoryPlanTile extends StatelessWidget {
       color: colorScheme.surface,
       onPressed: onPressed,
       child: Row(
-        children: <Widget>[
+        children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+              children: [
                 Text(
                   plan.title.sentence(),
                   style: textTheme.titleMedium?.copyWith(

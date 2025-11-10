@@ -12,7 +12,7 @@ void main() {
     tearDown(mockRepositories.reset);
 
     test('should fetch budgets', () {
-      final expectedBudgets = <BudgetEntity>[BudgetsMockImpl.generateBudget()];
+      final expectedBudgets = [BudgetsMockImpl.generateBudget()];
 
       when(
         () => mockRepositories.budgets.fetchAll(any()),

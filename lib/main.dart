@@ -156,7 +156,7 @@ void main() async {
           environment: environment,
           navigatorKey: navigatorKey,
           themeMode: (await themeModeStorage.get())?.themeMode,
-          navigatorObservers: <NavigatorObserver>[navigationObserver],
+          navigatorObservers: [navigationObserver],
         ),
       ),
     ),

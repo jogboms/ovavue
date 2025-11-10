@@ -14,10 +14,10 @@ void main() {
     tearDown(mockRepositories.reset);
 
     test('should fetch budget allocations', () {
-      final categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
+      final categories = [BudgetCategoriesMockImpl.generateCategory()];
       final plan = BudgetPlansMockImpl.generatePlan(category: categories.first);
       final budget = BudgetsMockImpl.generateBudget();
-      final expectedAllocations = <BudgetAllocationEntity>[
+      final expectedAllocations = [
         BudgetAllocationsMockImpl.generateAllocation(budget: budget, plan: plan),
       ];
 

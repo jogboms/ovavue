@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ovavue/core.dart';
-
 import 'package:ovavue/presentation/constants.dart';
 import 'package:ovavue/presentation/utils.dart';
 import 'package:ovavue/presentation/widgets/dialog_page.dart';
@@ -50,7 +49,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0).withKeyboardPadding(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             spacing,
             TextFormField(
               autofocus: true,
@@ -82,7 +81,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
               runSpacing: 8,
               spacing: 8,
               alignment: WrapAlignment.center,
-              children: <Widget>[
+              children: [
                 for (final BudgetCategoryColorScheme colorScheme in BudgetCategoryColorScheme.values)
                   _ColorItem(
                     key: ObjectKey(colorScheme),
@@ -188,7 +187,7 @@ class _IconPicker extends StatelessWidget {
           runSpacing: 8,
           spacing: 8,
           alignment: WrapAlignment.center,
-          children: <Widget>[
+          children: [
             for (final BudgetCategoryIcon icon in BudgetCategoryIcon.values)
               InkWell(
                 key: ObjectKey(icon),

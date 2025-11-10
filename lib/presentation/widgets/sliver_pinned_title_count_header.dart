@@ -27,7 +27,7 @@ class SliverPinnedTitleCountHeader extends StatelessWidget {
             fontWeight: AppFontWeight.semibold,
           ),
           child: Row(
-            children: <Widget>[
+            children: [
               Expanded(child: Text(title)),
               Text('($value)'),
             ],

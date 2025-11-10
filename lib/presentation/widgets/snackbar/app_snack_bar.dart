@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/theme.dart';
 import 'package:ovavue/presentation/utils.dart';
 import 'package:ovavue/presentation/widgets/loading_spinner.dart';
@@ -99,8 +98,8 @@ class AppSnackBar {
     _RowBar(
       key: Key(value ?? ''),
       backgroundColor: backgroundColor,
-      children: <Widget>[
-        if (leading != null) ...<Widget>[
+      children: [
+        if (leading != null) ...[
           leading,
           const SizedBox(width: 16),
         ],
@@ -133,7 +132,7 @@ class _RowBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor ?? theme.colorScheme.secondary,
-        boxShadow: const <BoxShadow>[
+        boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 1)),
         ],
         borderRadius: AppBorderRadius.c8,

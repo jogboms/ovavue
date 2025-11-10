@@ -23,7 +23,7 @@ class BudgetsPageState extends State<BudgetsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(budgetsProvider)
           .when(
             data: (List<BudgetViewModel> data) => _ContentDataView(
@@ -45,7 +45,7 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CustomScrollView(
-    slivers: <Widget>[
+    slivers: [
       CustomAppBar(
         title: Text(context.l10n.budgetsPageTitle),
         asSliver: true,
@@ -53,9 +53,9 @@ class _ContentDataView extends StatelessWidget {
       ),
       SliverToBoxAdapter(
         child: Consumer(
-          builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+          builder: (context, ref, _) => ActionButtonRow(
             alignment: Alignment.center,
-            actions: <ActionButton>[
+            actions: [
               ActionButton(
                 icon: AppIcons.plus,
                 onPressed: () => createBudgetAction(
@@ -77,7 +77,7 @@ class _ContentDataView extends StatelessWidget {
             bottom: MediaQuery.paddingOf(context).bottom,
           ),
           sliver: SliverList.builder(
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (context, int index) {
               final budget = data[index];
 
               return BudgetListTile(

@@ -23,12 +23,10 @@ class L10nEn extends L10n {
   String get crashViewQuoteAuthor => 'R & D';
 
   @override
-  String get crashViewBugMessage1 =>
-      'You just found a bug, no need to panic, we have logged the issue and would provide a resolution as soon as possible';
+  String get crashViewBugMessage1 => 'You just found a bug, no need to panic, we have logged the issue and would provide a resolution as soon as possible';
 
   @override
-  String get crashViewBugMessage2 =>
-      'If there\'s more to it, you could also file a personal complaint with our customer service representative';
+  String get crashViewBugMessage2 => 'If there\'s more to it, you could also file a personal complaint with our customer service representative';
 
   @override
   String get successfulMessage => 'Successful';
@@ -110,19 +108,16 @@ class L10nEn extends L10n {
   String get selectBudgetTemplateCaption => 'Select a budget template';
 
   @override
-  String get deletePlanAreYouSureAboutThisMessage =>
-      'This action is non-reversible and will also remove all allocations associated with this budget plan. Are you sure about this?';
+  String get deletePlanAreYouSureAboutThisMessage => 'This action is non-reversible and will also remove all allocations associated with this budget plan. Are you sure about this?';
 
   @override
   String get deleteCategoryAreYouSureAboutThisMessage => 'This action is non-reversible. Are you sure about this?';
 
   @override
-  String get deleteAllocationAreYouSureAboutThisMessage =>
-      'This action is non-reversible and would remove the allocation on the active budget for this budget plan. Are you sure about this?';
+  String get deleteAllocationAreYouSureAboutThisMessage => 'This action is non-reversible and would remove the allocation on the active budget for this budget plan. Are you sure about this?';
 
   @override
-  String get updatePlanCategoryAreYouSureAboutThisMessage =>
-      'This action is non-reversible and would update the category assigned this budget plan across all budgets. Are you sure about this?';
+  String get updatePlanCategoryAreYouSureAboutThisMessage => 'This action is non-reversible and would update the category assigned this budget plan across all budgets. Are you sure about this?';
 
   @override
   String get titleLabel => 'Title';

@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'filter_plans_by_budget_metadata.g.dart';
 
-@Riverpod(dependencies: <Object>[selectedBudgetPlansByMetadata])
+@Riverpod(dependencies: [selectedBudgetPlansByMetadata])
 Future<BaseBudgetPlansByMetadataState> filterPlansByBudgetMetadata(
   Ref ref, {
   required String budgetId,

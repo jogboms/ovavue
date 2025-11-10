@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'preferences_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, account])
+@Riverpod(dependencies: [registry, account])
 class Preferences extends _$Preferences {
   @override
   Future<PreferencesState> build() async {
@@ -36,5 +36,5 @@ class PreferencesState with EquatableMixin {
   final ThemeMode themeMode;
 
   @override
-  List<Object> get props => <Object>[accountKey, themeMode];
+  List<Object> get props => [accountKey, themeMode];
 }

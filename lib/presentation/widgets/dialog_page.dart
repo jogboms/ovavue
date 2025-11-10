@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/constants.dart';
 
 class DialogPage extends StatelessWidget {
@@ -14,7 +13,7 @@ class DialogPage extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+      children: [
         IconButton(
           onPressed: () => Navigator.pop(context),
           style: TextButton.styleFrom(backgroundColor: colorScheme.inverseSurface),

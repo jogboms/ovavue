@@ -21,7 +21,7 @@ class BudgetDetailPageState extends State<BudgetDetailPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(selectedBudgetProvider(widget.id))
           .when(
             data: (BudgetState data) => BudgetDetailDataView(

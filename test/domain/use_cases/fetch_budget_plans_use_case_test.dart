@@ -15,7 +15,7 @@ void main() {
 
     test('should fetch budget plans', () {
       final category = BudgetCategoriesMockImpl.generateCategory();
-      final expectedPlans = <BudgetPlanEntity>[
+      final expectedPlans = [
         BudgetPlansMockImpl.generatePlan(category: category),
       ];
 

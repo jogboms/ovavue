@@ -4,5 +4,5 @@ part 'app_version_provider.g.dart';
 
 /// Container for the application's version
 /// Should be overridden per [ProviderScope]
-@Riverpod(dependencies: <Object>[])
+@Riverpod(dependencies: [])
 String appVersion(Ref ref) => throw UnimplementedError();

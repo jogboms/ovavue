@@ -13,7 +13,7 @@ Future<void> main() async {
   final expectedMetadata = BudgetMetadataMockImpl.generateMetadataValue(id: metadataId);
   final expectedState = BudgetPlansByMetadataState(
     budget: BudgetViewModel.fromEntity(expectedBudget),
-    plans: <BudgetPlanViewModel>[],
+    plans: [],
     allocation: Money.zero,
     key: BudgetMetadataKeyViewModel.fromEntity(expectedMetadata.key),
     metadata: BudgetMetadataValueViewModel.fromEntity(expectedMetadata),

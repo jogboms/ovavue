@@ -58,13 +58,12 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0).withKeyboardPadding(context),
         child: Consumer(
-          builder: (BuildContext context, WidgetRef ref, _) {
-            final Iterable<BudgetCategoryViewModel> categories =
-                ref.watch(budgetCategoriesProvider).value ?? const <BudgetCategoryViewModel>[];
+          builder: (context, ref, _) {
+            final Iterable<BudgetCategoryViewModel> categories = ref.watch(budgetCategoriesProvider).value ?? const [];
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
+              children: [
                 spacing,
                 TextFormField(
                   autofocus: creating,
@@ -92,7 +91,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 ),
                 spacing,
-                if (initialCategory == null && creating) ...<Widget>[
+                if (initialCategory == null && creating) ...[
                   Builder(
                     builder: (BuildContext context) {
                       if (categories.isEmpty) {
@@ -108,7 +107,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                       }
 
                       return Row(
-                        children: <Widget>[
+                        children: [
                           Expanded(
                             child: categories.length == 1
                                 ? Builder(
@@ -212,7 +211,7 @@ class _CategoryItem extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Row(
-      children: <Widget>[
+      children: [
         BudgetCategoryAvatar.small(
           colorScheme: category.colorScheme,
           icon: category.icon.data,

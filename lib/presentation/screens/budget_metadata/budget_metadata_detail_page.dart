@@ -29,7 +29,7 @@ class BudgetMetadataDetailPageState extends State<BudgetMetadataDetailPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(selectedBudgetPlansByMetadataProvider(id: widget.id, budgetId: widget.budgetId))
           .when(
             data: (BudgetPlansByMetadataState data) => _ContentDataView(
@@ -61,10 +61,10 @@ class _ContentDataView extends StatelessWidget {
     final totalAllocationAmount = state.plans.map((BudgetPlanViewModel e) => e.allocation?.amount ?? Money.zero).sum();
 
     return CustomScrollView(
-      slivers: <Widget>[
+      slivers: [
         CustomAppBar(
           title: Column(
-            children: <Widget>[
+            children: [
               Text(
                 '#${state.metadata.title}',
                 style: textTheme.bodyMedium,
@@ -77,16 +77,16 @@ class _ContentDataView extends StatelessWidget {
           centerTitle: true,
         ),
         SliverList.list(
-          children: <Widget>[
+          children: [
             const SizedBox(height: 18.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
-                children: <Widget>[
+                children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
+                      children: [
                         Text(
                           state.key.title.sentence(),
                           style: textTheme.titleLarge?.copyWith(
@@ -127,7 +127,7 @@ class _ContentDataView extends StatelessWidget {
               bottom: MediaQuery.paddingOf(context).bottom,
             ),
             sliver: SliverList.separated(
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, int index) {
                 final plan = data.elementAt(index);
                 final allocationAmount = plan.allocation?.amount;
 

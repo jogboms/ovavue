@@ -14,7 +14,7 @@ class BudgetPlanSelectionPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Consumer(
-    builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+    builder: (context, ref, child) => ref
         .watch(budgetPlansProvider)
         .when(
           data: (List<BudgetPlanViewModel> data) => _ContentDataView(
@@ -41,7 +41,7 @@ class _ContentDataView extends StatelessWidget {
 
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 24),
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (context, int index) {
         final plan = data.elementAt(index);
 
         return BudgetPlanListTile(

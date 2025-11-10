@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/theme.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     required this.title,
-    this.actions = const <Widget>[],
+    this.actions = const [],
     this.asSliver = false,
     this.centerTitle,
   });

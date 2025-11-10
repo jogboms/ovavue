@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:ovavue/presentation/constants.dart';
 import 'package:ovavue/presentation/models.dart';
 import 'package:ovavue/presentation/routing.dart';
@@ -28,7 +27,7 @@ class _GroupedBudgetPlansPageState extends State<GroupedBudgetPlansPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(selectedBudgetProvider(widget.budgetId))
           .when(
             data: (BudgetState data) => _ContentDataView(
@@ -64,10 +63,10 @@ class _ContentDataView extends StatelessWidget {
     );
 
     return CustomScrollView(
-      slivers: <Widget>[
+      slivers: [
         CustomAppBar(
           title: Column(
-            children: <Widget>[
+            children: [
               Text(context.l10n.totalBudgetCaption.toUpperCase(), style: textTheme.labelMedium),
               Text(
                 '${state.budget.amount}',
@@ -123,7 +122,7 @@ class _Header extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Row(
-      children: <Widget>[
+      children: [
         BudgetCategoryAvatar.small(
           colorScheme: category.colorScheme,
           icon: category.icon.data,
@@ -131,7 +130,7 @@ class _Header extends StatelessWidget {
         const SizedBox(width: 12.0),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             Text(category.title.sentence(), style: textTheme.bodyMedium, maxLines: 1),
             const SizedBox(height: 2.0),
             Text('$allocationAmount', style: textTheme.titleMedium),
@@ -165,11 +164,11 @@ class _PlanTile extends StatelessWidget {
       ratio: allocation?.amount.ratio(categoryAllocationAmount) ?? 0.0,
       onPressed: onPressed,
       child: Row(
-        children: <Widget>[
+        children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+              children: [
                 Text(plan.title.sentence(), style: theme.textTheme.titleSmall),
                 const SizedBox(height: 4.0),
                 Text(plan.category.title.sentence(), style: theme.textTheme.bodySmall),

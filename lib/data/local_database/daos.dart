@@ -1,6 +1,6 @@
 part of 'database.dart';
 
-@DriftAccessor(tables: <Type>[Accounts])
+@DriftAccessor(tables: [Accounts])
 class AccountsDao extends DatabaseAccessor<Database> with _$AccountsDaoMixin {
   AccountsDao(super.db);
 
@@ -20,7 +20,7 @@ class AccountsDao extends DatabaseAccessor<Database> with _$AccountsDaoMixin {
   }
 }
 
-@DriftAccessor(tables: <Type>[Users])
+@DriftAccessor(tables: [Users])
 class UsersDao extends DatabaseAccessor<Database> with _$UsersDaoMixin {
   UsersDao(super.db);
 
@@ -34,7 +34,7 @@ class UsersDao extends DatabaseAccessor<Database> with _$UsersDaoMixin {
   UserEntity _mapUserDataModel(UserDataModel user) => user.toEntity(users.actualTableName);
 }
 
-@DriftAccessor(tables: <Type>[Budgets])
+@DriftAccessor(tables: [Budgets])
 class BudgetsDao extends DatabaseAccessor<Database> with _$BudgetsDaoMixin {
   BudgetsDao(super.db);
 
@@ -109,20 +109,20 @@ class BudgetsDao extends DatabaseAccessor<Database> with _$BudgetsDaoMixin {
       .then((BudgetDataModel e) => e.toEntity(budgets.actualTableName));
 }
 
-@DriftAccessor(tables: <Type>[BudgetPlans, BudgetCategories])
+@DriftAccessor(tables: [BudgetPlans, BudgetCategories])
 class BudgetPlansDao extends DatabaseAccessor<Database> with _$BudgetPlansDaoMixin {
   BudgetPlansDao(super.db);
 
   Stream<BudgetPlanEntity> watchSingleBudgetPlan(String id) =>
       (select(budgetPlans)..where(($BudgetPlansTable e) => e.id.equals(id)))
-          .join(<DBJoin>[
+          .join([
             innerJoin(budgetCategories, budgetCategories.id.equalsExp(budgetPlans.category)),
           ])
           .map(_mapRowToEntity)
           .watchSingle();
 
   Stream<BudgetPlanEntityList> watchAllBudgetPlans() => select(budgetPlans)
-      .join(<DBJoin>[
+      .join([
         innerJoin(budgetCategories, budgetCategories.id.equalsExp(budgetPlans.category)),
       ])
       .map(_mapRowToEntity)
@@ -130,7 +130,7 @@ class BudgetPlansDao extends DatabaseAccessor<Database> with _$BudgetPlansDaoMix
 
   Stream<BudgetPlanEntityList> watchAllBudgetPlansByCategory(String id) =>
       (select(budgetPlans)..where(($BudgetPlansTable e) => e.category.equals(id)))
-          .join(<DBJoin>[
+          .join([
             innerJoin(budgetCategories, budgetCategories.id.equalsExp(budgetPlans.category)),
           ])
           .map(_mapRowToEntity)
@@ -173,7 +173,7 @@ class BudgetPlansDao extends DatabaseAccessor<Database> with _$BudgetPlansDaoMix
   }
 }
 
-@DriftAccessor(tables: <Type>[BudgetCategories])
+@DriftAccessor(tables: [BudgetCategories])
 class BudgetCategoriesDao extends DatabaseAccessor<Database> with _$BudgetCategoriesDaoMixin {
   BudgetCategoriesDao(super.db);
 
@@ -209,7 +209,7 @@ class BudgetCategoriesDao extends DatabaseAccessor<Database> with _$BudgetCatego
       .then((BudgetCategoryDataModel e) => e.toEntity(budgetCategories.actualTableName));
 }
 
-@DriftAccessor(tables: <Type>[Budgets, BudgetPlans, BudgetCategories, BudgetAllocations])
+@DriftAccessor(tables: [Budgets, BudgetPlans, BudgetCategories, BudgetAllocations])
 class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAllocationsDaoMixin {
   BudgetAllocationsDao(super.db);
 
@@ -219,7 +219,7 @@ class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAlloc
   }) =>
       (select(budgetAllocations)
             ..where(($BudgetAllocationsTable e) => e.budget.equals(budgetId) & e.plan.equals(planId)))
-          .join(<DBJoin>[
+          .join([
             innerJoin(budgets, budgets.id.equalsExp(budgetAllocations.budget)),
             innerJoin(budgetPlans, budgetPlans.id.equalsExp(budgetAllocations.plan)),
           ])
@@ -268,7 +268,7 @@ class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAlloc
       into(budgetAllocations).insertReturning(_mapToInsertData(allocation)).then((BudgetAllocationDataModel e) => e.id);
 
   Stream<BudgetAllocationEntityList> _selectAll(SimpleSelectStatement<$BudgetAllocationsTable, Object?> query) => query
-      .join(<DBJoin>[
+      .join([
         innerJoin(budgets, budgets.id.equalsExp(budgetAllocations.budget)),
         innerJoin(budgetPlans, budgetPlans.id.equalsExp(budgetAllocations.plan)),
       ])
@@ -304,12 +304,12 @@ class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAlloc
       );
 }
 
-@DriftAccessor(tables: <Type>[BudgetMetadataKeys, BudgetMetadataValues, BudgetMetadataAssociations])
+@DriftAccessor(tables: [BudgetMetadataKeys, BudgetMetadataValues, BudgetMetadataAssociations])
 class BudgetMetadataDao extends DatabaseAccessor<Database> with _$BudgetMetadataDaoMixin {
   BudgetMetadataDao(super.db);
 
   Stream<BudgetMetadataValueEntityList> watchAllBudgetMetadataValues() => select(budgetMetadataValues)
-      .join(<DBJoin>[
+      .join([
         innerJoin(budgetMetadataKeys, budgetMetadataKeys.id.equalsExp(budgetMetadataValues.key)),
       ])
       .map(_mapValueRowToEntity)
@@ -317,7 +317,7 @@ class BudgetMetadataDao extends DatabaseAccessor<Database> with _$BudgetMetadata
 
   Stream<BudgetMetadataValueEntityList> watchAllBudgetMetadataValuesByPlan(String planId) =>
       (select(budgetMetadataAssociations)..where(($BudgetMetadataAssociationsTable e) => e.plan.equals(planId)))
-          .join(<DBJoin>[
+          .join([
             innerJoin(budgetMetadataValues, budgetMetadataValues.id.equalsExp(budgetMetadataAssociations.metadata)),
             innerJoin(budgetMetadataKeys, budgetMetadataKeys.id.equalsExp(budgetMetadataValues.key)),
           ])

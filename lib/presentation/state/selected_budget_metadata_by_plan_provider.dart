@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_budget_metadata_by_plan_provider.g.dart';
 
-@Riverpod(dependencies: <Object>[registry, user])
+@Riverpod(dependencies: [registry, user])
 Stream<List<BudgetMetadataValueViewModel>> selectedBudgetMetadataByPlan(
   Ref ref, {
   required String id,

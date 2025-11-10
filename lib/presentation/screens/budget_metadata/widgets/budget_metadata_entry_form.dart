@@ -78,7 +78,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0).withKeyboardPadding(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             TextFormField(
               autofocus: creating,
               controller: _titleController,
@@ -104,7 +104,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
             ),
             spacing,
             for (final controller in _values)
-              if (controller.value case final BudgetMetadataValueEntryModifyResult value) ...<Widget>[
+              if (controller.value case final BudgetMetadataValueEntryModifyResult value) ...[
                 _BudgetMetadataValueField(
                   key: ObjectKey(value),
                   initialValue: value,
@@ -213,7 +213,7 @@ class _BudgetMetadataValueField extends StatefulWidget {
 class _BudgetMetadataValueFieldState extends State<_BudgetMetadataValueField> {
   late final _titleEditingController = TextEditingController(text: widget.initialValue.title);
   late final _valueEditingController = TextEditingController(text: widget.initialValue.value);
-  late final _formChanges = Listenable.merge(<TextEditingController>[
+  late final _formChanges = Listenable.merge([
     _titleEditingController,
     _valueEditingController,
   ]);
@@ -243,7 +243,7 @@ class _BudgetMetadataValueFieldState extends State<_BudgetMetadataValueField> {
     final l10n = context.l10n;
 
     return Row(
-      children: <Widget>[
+      children: [
         Expanded(
           child: TextFormField(
             controller: _titleEditingController,
@@ -253,7 +253,7 @@ class _BudgetMetadataValueFieldState extends State<_BudgetMetadataValueField> {
             ),
             textCapitalization: TextCapitalization.sentences,
             textInputAction: TextInputAction.next,
-            inputFormatters: <TextInputFormatter>[
+            inputFormatters: [
               FilteringTextInputFormatter.deny(RegExp(r'\s?')),
             ],
             validator: (String? value) => _validator(value, l10n),
@@ -322,7 +322,7 @@ class BudgetMetadataValueEntryRemoveResult with EquatableMixin implements Budget
   final ReferenceEntity reference;
 
   @override
-  List<Object> get props => <Object>[reference];
+  List<Object> get props => [reference];
 }
 
 class BudgetMetadataEntryResult {

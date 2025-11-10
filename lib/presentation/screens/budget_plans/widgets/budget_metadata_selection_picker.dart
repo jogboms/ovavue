@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:ovavue/presentation/constants.dart';
 import 'package:ovavue/presentation/models.dart';
 import 'package:ovavue/presentation/state.dart';
@@ -17,7 +16,7 @@ class BudgetMetadataSelectionPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Consumer(
-    builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+    builder: (context, ref, child) => ref
         .watch(budgetMetadataProvider)
         .when(
           data: (List<BudgetMetadataViewModel> allData) => ref
@@ -89,9 +88,9 @@ class _ContentDataViewState extends State<_ContentDataView> {
         MediaQuery.paddingOf(context).bottom + 16.0,
       ),
       child: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => Column(
+        builder: (context, ref, child) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             Expanded(
               child: AnimatedCrossFade(
                 duration: kThemeChangeDuration,
@@ -99,7 +98,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
                 firstChild: const EmptyView(),
                 secondChild: Wrap(
                   spacing: 8,
-                  children: <Widget>[
+                  children: [
                     for (final BudgetMetadataValueViewModel metadata in widget.selectedData)
                       Chip(
                         key: Key(metadata.id),
@@ -115,10 +114,10 @@ class _ContentDataViewState extends State<_ContentDataView> {
                 ),
               ),
             ),
-            if (keys.isNotEmpty) ...<Widget>[
+            if (keys.isNotEmpty) ...[
               ValueListenableBuilder<BudgetMetadataViewModel?>(
                 valueListenable: _selectedMetadata,
-                builder: (BuildContext context, BudgetMetadataViewModel? value, _) =>
+                builder: (context, BudgetMetadataViewModel? value, _) =>
                     DropdownButtonFormField<BudgetMetadataViewModel>(
                       key: _metadataFieldKey,
                       initialValue: value,
@@ -141,14 +140,14 @@ class _ContentDataViewState extends State<_ContentDataView> {
               ),
               ValueListenableBuilder<BudgetMetadataViewModel?>(
                 valueListenable: _selectedMetadata,
-                builder: (BuildContext context, BudgetMetadataViewModel? metadata, _) {
+                builder: (context, BudgetMetadataViewModel? metadata, _) {
                   if (metadata == null) {
                     return const SizedBox.shrink();
                   }
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
+                    children: [
                       const SizedBox(height: 8),
                       DropdownButtonFormField<BudgetMetadataValueViewModel>(
                         key: Key(metadata.key.id),
@@ -168,7 +167,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
                       const SizedBox(height: 8),
                       ValueListenableBuilder<BudgetMetadataValueViewModel?>(
                         valueListenable: _selectedMetadataValue,
-                        builder: (BuildContext context, BudgetMetadataValueViewModel? metadata, _) => PrimaryButton(
+                        builder: (context, BudgetMetadataValueViewModel? metadata, _) => PrimaryButton(
                           enabled: metadata != null,
                           caption: l10n.submitCaption,
                           onPressed: () {

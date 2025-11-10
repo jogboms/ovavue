@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/models.dart';
 import 'package:ovavue/presentation/theme.dart';
 import 'package:ovavue/presentation/utils.dart';
@@ -30,7 +29,7 @@ class BudgetCategoryHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16.0, 18.0, 16.0, 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        children: [
           BudgetCategoryAvatar.inverse(
             colorScheme: category.colorScheme,
             icon: category.icon.data,
@@ -41,7 +40,7 @@ class BudgetCategoryHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
+              children: [
                 Text(
                   category.title.sentence(),
                   style: textTheme.titleLarge?.copyWith(
@@ -59,7 +58,7 @@ class BudgetCategoryHeader extends StatelessWidget {
               ],
             ),
           ),
-          if (allocationAmount != null && allocationAmount != Money.zero && budgetAmount != null) ...<Widget>[
+          if (allocationAmount != null && allocationAmount != Money.zero && budgetAmount != null) ...[
             const SizedBox(width: 8.0),
             AmountRatioItem.large(
               allocationAmount: allocationAmount,

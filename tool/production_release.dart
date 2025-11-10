@@ -36,19 +36,19 @@ void main(List<String> arguments) async {
     workingDirectory: workingDirectory,
   );
 
-  for (final action in <CmdAction>[
+  for (final action in [
     const CmdAction('melos bs'),
     if (!skipAnalysisChecks) const CmdAction('melos run analyze'),
     if (!skipTests) const CmdAction('melos run test_with_coverage'),
-    if (platform.contains(BuildPlatform.android.name)) ...<CmdAction>[
+    if (platform.contains(BuildPlatform.android.name)) ...[
       CmdAction('fvm flutter build appbundle --flavor prod', workingDirectory),
       CmdAction('fastlane beta', '$workingDirectory/android'),
     ],
-    if (platform.contains(BuildPlatform.ios.name)) ...<CmdAction>[
+    if (platform.contains(BuildPlatform.ios.name)) ...[
       CmdAction('fvm flutter build ios --flavor prod --release --no-codesign', workingDirectory),
       CmdAction('fastlane beta', '$workingDirectory/ios'),
     ],
-    if (gitPush) ...<CmdAction>[
+    if (gitPush) ...[
       CmdAction('git add $workingDirectory/pubspec.yaml'),
       CmdAction('git commit --message v$newVersion'),
       const CmdAction('git push --force-with-lease'),

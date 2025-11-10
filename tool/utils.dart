@@ -79,7 +79,7 @@ enum VersionBumpType {
     final split =
         RegExp(r'(\d+).(\d+).(\d+)\+?(\d)?')
             .firstMatch(current)
-            ?.groups(<int>[1, 2, 3, 4])
+            ?.groups([1, 2, 3, 4])
             .map((String? it) => it != null ? int.tryParse(it) ?? 0 : 0)
             .toList() ??
         List<int>.filled(4, 0);

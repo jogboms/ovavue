@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import 'package:ovavue/presentation/models/budget_metadata_key_view_model.dart';
 import 'package:ovavue/presentation/models/budget_metadata_value_view_model.dart';
 
@@ -13,5 +12,5 @@ class BudgetMetadataViewModel with EquatableMixin {
   final List<BudgetMetadataValueViewModel> values;
 
   @override
-  List<Object> get props => <Object>[key, values];
+  List<Object> get props => [key, values];
 }

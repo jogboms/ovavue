@@ -22,7 +22,7 @@ class BudgetCategoryDetailPageState extends State<BudgetCategoryDetailPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(selectedBudgetCategoryProvider(widget.id))
           .when(
             skipLoadingOnRefresh: true,

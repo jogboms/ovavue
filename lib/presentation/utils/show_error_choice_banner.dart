@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ovavue/presentation/theme.dart';
 
 Future<bool> showErrorChoiceBanner(
@@ -18,7 +17,7 @@ Future<bool> showErrorChoiceBanner(
           backgroundColor: theme.colorScheme.error,
           content: Text(message),
           contentTextStyle: theme.textTheme.bodyLarge?.copyWith(color: backgroundColor),
-          actions: <Widget>[
+          actions: [
             IconButton(
               onPressed: scaffoldMessengerState.removeCurrentMaterialBanner,
               icon: const Icon(Icons.check_outlined),

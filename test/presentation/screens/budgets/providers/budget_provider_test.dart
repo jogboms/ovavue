@@ -27,11 +27,11 @@ Future<void> main() async {
     );
     final dummyBudgetState = BudgetState(
       budget: BudgetViewModel.fromEntity(dummyBudget),
-      plans: <BudgetPlanViewModel>[
+      plans: [
         BudgetPlanViewModel.fromEntity(dummyBudgetPlan, dummyAllocation.toViewModel()),
       ],
       allocation: dummyAllocation.amount.asMoney,
-      categories: <SelectedBudgetCategoryViewModel>[
+      categories: [
         dummyBudgetCategory.toViewModel(dummyAllocation.amount.asMoney),
       ],
     );

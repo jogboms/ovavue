@@ -15,7 +15,7 @@ part 'mappings.dart';
 part 'tables.dart';
 
 @DriftDatabase(
-  tables: <Type>[
+  tables: [
     Accounts,
     Users,
     Budgets,
@@ -26,7 +26,7 @@ part 'tables.dart';
     BudgetMetadataValues,
     BudgetMetadataAssociations,
   ],
-  daos: <Type>[
+  daos: [
     AccountsDao,
     UsersDao,
     BudgetsDao,

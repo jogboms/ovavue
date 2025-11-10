@@ -88,7 +88,7 @@ void main() {
       verify(
         () => mockRepositories.budgetAllocations.createAll(
           any(),
-          <CreateBudgetAllocationData>[
+          [
             const CreateBudgetAllocationData(
               amount: 1,
               budget: dummyReference,

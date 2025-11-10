@@ -53,7 +53,7 @@ Future<void> main() async {
     test('should initialize with empty state', () {
       when(
         () => mockUseCases.fetchBudgetMetadataUseCase.call(any()),
-      ).thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(<BudgetMetadataValueEntity>[]));
+      ).thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value([]));
 
       expect(container.read(budgetMetadataProvider.future), completes);
     });

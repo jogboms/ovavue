@@ -24,7 +24,7 @@ class BudgetPlansPageState extends State<BudgetPlansPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+      builder: (context, ref, child) => ref
           .watch(budgetPlansProvider)
           .when(
             data: (List<BudgetPlanViewModel> data) => _ContentDataView(
@@ -51,7 +51,7 @@ class _ContentDataView extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return CustomScrollView(
-      slivers: <Widget>[
+      slivers: [
         CustomAppBar(
           title: Text(context.l10n.plansPageTitle),
           asSliver: true,
@@ -59,9 +59,9 @@ class _ContentDataView extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: Consumer(
-            builder: (BuildContext context, WidgetRef ref, _) => ActionButtonRow(
+            builder: (context, ref, _) => ActionButtonRow(
               alignment: Alignment.center,
-              actions: <ActionButton>[
+              actions: [
                 ActionButton(
                   icon: AppIcons.plus,
                   onPressed: () => createBudgetPlanAction(
@@ -78,20 +78,20 @@ class _ContentDataView extends StatelessWidget {
           const SliverFillRemaining(child: EmptyView())
         else
           Consumer(
-            builder: (BuildContext context, WidgetRef ref, _) => SliverPadding(
+            builder: (context, ref, _) => SliverPadding(
               padding: EdgeInsets.only(
                 top: 8.0,
                 bottom: MediaQuery.paddingOf(context).bottom,
               ),
               sliver: SliverList.separated(
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, int index) {
                   final plan = data[index];
 
                   return Slidable(
                     key: Key(plan.id),
                     endActionPane: ActionPane(
                       motion: const BehindMotion(),
-                      children: <SlidableAction>[
+                      children: [
                         SlidableAction(
                           onPressed: (BuildContext context) => deleteBudgetPlanAction(
                             context,

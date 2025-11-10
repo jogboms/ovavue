@@ -29,18 +29,18 @@ Future<void> main() async {
             (_) => Stream<BudgetState>.value(
               BudgetState(
                 budget: BudgetViewModel.fromEntity(expectedBudget),
-                plans: <BudgetPlanEntity>[
+                plans: [
                   expectedPlan,
                   BudgetPlansMockImpl.generatePlan(),
                 ].map(BudgetPlanViewModel.fromEntity).toList(),
                 allocation: Money.zero,
-                categories: <SelectedBudgetCategoryViewModel>[],
+                categories: [],
               ),
             ),
           ),
           budgetMetadataProvider.overrideWith(
             () => MockBudgetMetadata(
-              <BudgetMetadataValueEntity>[
+              [
                     expectedMetadata,
                     BudgetMetadataMockImpl.generateMetadataValue(),
                   ]
@@ -60,7 +60,7 @@ Future<void> main() async {
     test('should initialize with empty state', () {
       when(
         () => mockUseCases.fetchBudgetPlansByMetadataUseCase.call(userId: dummyUser.id, metadataId: metadataId),
-      ).thenAnswer((_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[]));
+      ).thenAnswer((_) => Stream<BudgetPlanEntityList>.value([]));
 
       expect(createProviderStream(), completes);
     });
@@ -69,7 +69,7 @@ Future<void> main() async {
       when(
         () => mockUseCases.fetchBudgetPlansByMetadataUseCase.call(userId: dummyUser.id, metadataId: metadataId),
       ).thenAnswer(
-        (_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[
+        (_) => Stream<BudgetPlanEntityList>.value([
           expectedPlan,
           BudgetPlansMockImpl.generatePlan(),
         ]),
@@ -83,7 +83,7 @@ Future<void> main() async {
             allocation: Money.zero,
             key: BudgetMetadataKeyViewModel.fromEntity(expectedMetadata.key),
             metadata: BudgetMetadataValueViewModel.fromEntity(expectedMetadata),
-            plans: <BudgetPlanEntity>[expectedPlan].map(BudgetPlanViewModel.fromEntity).toList(),
+            plans: [expectedPlan].map(BudgetPlanViewModel.fromEntity).toList(),
           ),
         ),
       );
@@ -94,7 +94,7 @@ Future<void> main() async {
 class MockBudgetMetadata extends AnyNotifier<AsyncValue<List<BudgetMetadataViewModel>>, List<BudgetMetadataViewModel>>
     with Mock
     implements BudgetMetadata {
-  MockBudgetMetadata([this._initialValue = const <BudgetMetadataViewModel>[]]);
+  MockBudgetMetadata([this._initialValue = const []]);
 
   final List<BudgetMetadataViewModel> _initialValue;
 

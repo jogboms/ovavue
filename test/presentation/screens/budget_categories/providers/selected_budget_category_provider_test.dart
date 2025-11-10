@@ -20,12 +20,12 @@ Future<void> main() async {
           userProvider.overrideWith((_) async => dummyUser),
           budgetCategoriesProvider.overrideWith(
             (_) => Stream<List<BudgetCategoryViewModel>>.value(
-              <BudgetCategoryViewModel>[BudgetCategoryViewModel.fromEntity(expectedCategory)],
+              [BudgetCategoryViewModel.fromEntity(expectedCategory)],
             ),
           ),
           budgetPlansProvider.overrideWith(
             (_) => Stream<List<BudgetPlanViewModel>>.value(
-              <BudgetPlanViewModel>[BudgetPlanViewModel.fromEntity(expectedPlan)],
+              [BudgetPlanViewModel.fromEntity(expectedPlan)],
             ),
           ),
         ],
@@ -40,7 +40,7 @@ Future<void> main() async {
         createProviderStream(),
         completion(
           BudgetCategoryState(
-            plans: <BudgetCategoryPlanViewModel>[
+            plans: [
               (BudgetPlanViewModel.fromEntity(expectedPlan), null),
             ],
             category: BudgetCategoryViewModel.fromEntity(expectedCategory),

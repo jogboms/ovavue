@@ -42,7 +42,7 @@ class _SliverExpandableGroupState<T> extends State<SliverExpandableGroup<T>> {
     final Widget child = SliverPadding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       sliver: MultiSliver(
-        children: <Widget>[
+        children: [
           SliverList.separated(
             itemBuilder: (_, int index) => widget.itemBuilder(widget.values[index]),
             separatorBuilder: (_, _) => const SizedBox(height: 4),
@@ -64,7 +64,7 @@ class _SliverExpandableGroupState<T> extends State<SliverExpandableGroup<T>> {
             color: colorScheme.surface,
             padding: const EdgeInsets.all(16.0),
             child: Row(
-              children: <Widget>[
+              children: [
                 Expanded(child: widget.header),
                 AnimatedRotation(
                   turns: _expanded ? 0 : 0.5,

@@ -37,8 +37,8 @@ class AmountRatioDecoratedBox extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: borderRadius,
               gradient: LinearGradient(
-                colors: <Color>[color, color, Colors.transparent],
-                stops: <double>[0, ratio, ratio],
+                colors: [color, color, Colors.transparent],
+                stops: [0, ratio, ratio],
               ),
             ),
             child: Ink(

@@ -77,14 +77,14 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0).withKeyboardPadding(context),
         child: Consumer(
-          builder: (BuildContext context, WidgetRef ref, _) {
-            final Iterable<BudgetViewModel> budgets = ref.watch(budgetsProvider).value ?? const <BudgetViewModel>[];
+          builder: (context, ref, _) {
+            final Iterable<BudgetViewModel> budgets = ref.watch(budgetsProvider).value ?? const [];
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
+              children: [
                 spacing,
-                if (creating && initialBudgetId == null && budgets.isNotEmpty) ...<Widget>[
+                if (creating && initialBudgetId == null && budgets.isNotEmpty) ...[
                   DropdownButtonFormField<String>(
                     key: _budgetsFieldKey,
                     initialValue: selectedBudgetId,
@@ -138,7 +138,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                   ),
                   keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
                   textInputAction: TextInputAction.done,
-                  inputFormatters: <TextInputFormatter>[
+                  inputFormatters: [
                     FilteringTextInputFormatter.allow(Money.regExp),
                   ],
                   validator: (String? value) =>
@@ -156,7 +156,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                   hintText: l10n.endDateLabel,
                   onChanged: (DateTime date) => setState(() => _endedAt = date),
                 ),
-                if (creating && budgets.isNotEmpty) ...<Widget>[
+                if (creating && budgets.isNotEmpty) ...[
                   spacing,
                   SwitchListTile.adaptive(
                     value: _activeState,
@@ -228,7 +228,7 @@ class _BudgetItem extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Row(
-      children: <Widget>[
+      children: [
         const Icon(AppIcons.budget),
         const SizedBox(width: 8),
         Expanded(

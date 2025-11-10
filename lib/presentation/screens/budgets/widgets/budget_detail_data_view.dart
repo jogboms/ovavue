@@ -25,7 +25,7 @@ class BudgetDetailDataView extends StatelessWidget {
     final router = context.router;
 
     return CustomScrollView(
-      slivers: <Widget>[
+      slivers: [
         CustomAppBar(
           title: _AppBarText(budget: state.budget),
           asSliver: true,
@@ -34,7 +34,7 @@ class BudgetDetailDataView extends StatelessWidget {
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           sliver: SliverList.list(
-            children: <Widget>[
+            children: [
               _HeaderText(budgetAmount: state.budget.amount),
               _CategoryView(
                 categories: state.categories,
@@ -57,11 +57,11 @@ class BudgetDetailDataView extends StatelessWidget {
         ),
         SliverPinnedHeader(
           child: Consumer(
-            builder: (BuildContext context, WidgetRef ref, Widget? child) => ActionButtonRow(
+            builder: (context, ref, child) => ActionButtonRow(
               alignment: Alignment.center,
               backgroundColor: theme.scaffoldBackgroundColor,
-              actions: <ActionButton>[
-                if (state.budget.active) ...<ActionButton>[
+              actions: [
+                if (state.budget.active) ...[
                   ActionButton(
                     icon: AppIcons.addAllocation,
                     onPressed: () => _handleAllocationAction(
@@ -130,7 +130,7 @@ class BudgetDetailDataView extends StatelessWidget {
               bottom: MediaQuery.paddingOf(context).bottom + 72,
             ),
             sliver: SliverList.separated(
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, int index) {
                 final plan = state.plans[index];
 
                 return _PlanTile(
@@ -248,7 +248,7 @@ class _AppBarText extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
-      children: <Widget>[
+      children: [
         Text(
           budget.title.sentence(),
           style: textTheme.headlineSmall?.copyWith(fontWeight: AppFontWeight.semibold),
@@ -328,7 +328,7 @@ class _CategoryViewState extends State<_CategoryView> {
       duration: kThemeChangeDuration,
       curve: Curves.easeInOut,
       child: Column(
-        children: <Widget>[
+        children: [
           if (_type == _CategoryViewType.pieChart)
             AspectRatio(
               aspectRatio: 1,
@@ -336,7 +336,7 @@ class _CategoryViewState extends State<_CategoryView> {
                 PieChartData(
                   sectionsSpace: _innerPieChartRadius / 4,
                   centerSpaceRadius: _innerPieChartRadius,
-                  sections: <PieChartSectionData>[
+                  sections: [
                     // ignore: false positive
                     for (final (BudgetCategoryViewModel category, Money allocation) in widget.categories)
                       _derivePieSectionData(
@@ -361,7 +361,7 @@ class _CategoryViewState extends State<_CategoryView> {
                 runSpacing: 12,
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
-                children: <Widget>[
+                children: [
                   // ignore: false positive
                   for (final (BudgetCategoryViewModel category, Money allocation) in widget.categories)
                     _CategoryChip(
@@ -388,7 +388,7 @@ class _CategoryViewState extends State<_CategoryView> {
             ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
+            children: [
               IconButton(
                 icon: const Icon(AppIcons.expand),
                 onPressed: widget.onExpand,
@@ -469,11 +469,11 @@ class _CategoryChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: [
           Icon(icon, size: 20, color: theme.colorScheme.onSurface),
           const SizedBox(width: 12),
           Column(
-            children: <Widget>[
+            children: [
               Text(title.sentence(), style: theme.textTheme.bodyLarge),
               Text(
                 '$allocationAmount (${allocationAmount.percentage(budgetAmount)})',
@@ -511,15 +511,15 @@ class _PlanTile extends StatelessWidget {
       ratio: allocation?.amount.ratio(budgetAmount) ?? 0.0,
       onPressed: onPressed,
       child: Row(
-        children: <Widget>[
+        children: [
           Expanded(
             child: Row(
-              children: <Widget>[
+              children: [
                 Icon(plan.category.icon.data),
                 const SizedBox(width: 12.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+                  children: [
                     Text(
                       plan.title.sentence(),
                       style: theme.textTheme.titleSmall,

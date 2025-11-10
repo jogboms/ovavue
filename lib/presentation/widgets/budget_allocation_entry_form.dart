@@ -66,7 +66,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Consumer(
-          builder: (BuildContext context, WidgetRef ref, _) {
+          builder: (context, ref, _) {
             final budgetRemainderAmount = ref.watch(
               selectedBudgetProvider(widget.budgetId).select(
                 (AsyncValue<BudgetState> e) => e.requireValue.budget.amount - e.requireValue.allocation,
@@ -80,15 +80,15 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                     .watch(budgetPlansProvider)
                     .value
                     ?.where((BudgetPlanViewModel e) => !widget.plansById.contains(e.id)) ??
-                const <BudgetPlanViewModel>[];
+                const [];
 
             return Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  if (initialPlan == null) ...<Widget>[
+                children: [
+                  if (initialPlan == null) ...[
                     Builder(
                       builder: (BuildContext context) {
                         if (plans.isEmpty) {
@@ -104,7 +104,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                         }
 
                         return Row(
-                          children: <Widget>[
+                          children: [
                             Expanded(
                               child: plans.length == 1
                                   ? Builder(
@@ -147,7 +147,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                   ],
                   ListenableBuilder(
                     listenable: _selectedPlan,
-                    builder: (BuildContext context, Widget? amountCounter) => TextFormField(
+                    builder: (context, Widget? amountCounter) => TextFormField(
                       focusNode: _amountFocusNode,
                       controller: _amountController,
                       autofocus: initialPlan != null || plans.length == 1,
@@ -155,7 +155,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                       keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
                       textInputAction: TextInputAction.done,
                       onEditingComplete: _handleSubmit,
-                      inputFormatters: <TextInputFormatter>[
+                      inputFormatters: [
                         FilteringTextInputFormatter.allow(Money.regExp),
                       ],
                       validator: (_) =>
@@ -168,7 +168,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                     ),
                     child: ListenableBuilder(
                       listenable: _amountController,
-                      builder: (BuildContext context, _) => Text(
+                      builder: (context, _) => Text(
                         context.l10n.amountRemainingCaption('${remainderAmount - _textAsMoney}'),
                       ),
                     ),
@@ -229,7 +229,7 @@ class _PlanItem extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Row(
-      children: <Widget>[
+      children: [
         BudgetCategoryAvatar.small(
           colorScheme: plan.category.colorScheme,
           icon: plan.category.icon.data,

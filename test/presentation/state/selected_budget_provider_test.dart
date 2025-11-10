@@ -3,8 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/data.dart';
-import 'package:ovavue/domain.dart';
-import 'package:ovavue/presentation.dart' hide BudgetPlanAllocationViewModelExtension;
+import 'package:ovavue/presentation.dart';
 
 import '../../utils.dart';
 
@@ -27,11 +26,11 @@ Future<void> main() async {
     }
 
     test('should show selected budget by id', () async {
-      final expectedPlans = <BudgetPlanEntity>[
+      final expectedPlans = [
         BudgetPlansMockImpl.generatePlan(),
       ];
       final expectedBudget = BudgetsMockImpl.generateBudget();
-      final expectedBudgetAllocations = <BudgetAllocationEntity>[
+      final expectedBudgetAllocations = [
         BudgetAllocationsMockImpl.generateAllocation(
           budget: expectedBudget,
           plan: expectedPlans.random(),
@@ -42,22 +41,20 @@ Future<void> main() async {
           userId: any(named: 'userId'),
           budgetId: any(named: 'budgetId'),
         ),
-      ).thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
+      ).thenAnswer((_) => Stream.value(expectedBudget));
       when(
         () => mockUseCases.fetchBudgetAllocationsByBudgetUseCase.call(
           userId: any(named: 'userId'),
           budgetId: any(named: 'budgetId'),
         ),
-      ).thenAnswer((_) => Stream<BudgetAllocationEntityList>.value(expectedBudgetAllocations));
+      ).thenAnswer((_) => Stream.value(expectedBudgetAllocations));
 
       final expectedPlanViewModels = expectedPlans
           .map(
-            (BudgetPlanEntity plan) => BudgetPlanViewModel.fromEntity(
+            (plan) => BudgetPlanViewModel.fromEntity(
               plan,
               expectedBudgetAllocations
-                  .firstWhereOrNull(
-                    (BudgetAllocationEntity e) => e.plan.id == plan.id && e.budget.id == expectedBudget.id,
-                  )
+                  .firstWhereOrNull((e) => e.plan.id == plan.id && e.budget.id == expectedBudget.id)
                   ?.toViewModel(),
             ),
           )
@@ -69,18 +66,15 @@ Future<void> main() async {
           BudgetState(
             budget: BudgetViewModel.fromEntity(expectedBudget),
             plans: expectedPlanViewModels,
-            allocation: expectedPlanViewModels.map((BudgetPlanViewModel e) => e.allocation?.amount).nonNulls.sum(),
+            allocation: expectedPlanViewModels.map((e) => e.allocation?.amount).nonNulls.sum(),
             categories: expectedPlans
-                .uniqueBy((BudgetPlanEntity e) => e.category.id)
-                .map((BudgetPlanEntity e) => e.category)
+                .uniqueBy((e) => e.category.id)
+                .map((e) => e.category)
                 .map(
-                  (BudgetCategoryEntity category) => category.toViewModel(
+                  (category) => category.toViewModel(
                     expectedBudgetAllocations
-                        .where(
-                          (BudgetAllocationEntity e) =>
-                              e.plan.category.id == category.id && e.budget.id == expectedBudget.id,
-                        )
-                        .map((BudgetAllocationEntity e) => e.amount.asMoney)
+                        .where((e) => e.plan.category.id == category.id && e.budget.id == expectedBudget.id)
+                        .map((e) => e.amount.asMoney)
                         .sum(),
                   ),
                 )
