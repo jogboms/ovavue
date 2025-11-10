@@ -29,27 +29,25 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-ext.minimumSdkVersion = 21
-
 android {
     namespace = "io.github.jogboms.ovavue"
-    compileSdk 34
+    compileSdk flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_23
+        targetCompatibility = JavaVersion.VERSION_23
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_23
     }
 
     defaultConfig {
         applicationId = "io.github.jogboms.ovavue"
-        minSdkVersion = project.ext.minimumSdkVersion
-        targetSdkVersion = 34
-        versionCode = generateVersionCode(flutterVersionName, project.ext.minimumSdkVersion) + flutterVersionCode.toInteger()
+        minSdkVersion = flutter.minSdkVersion
+        targetSdkVersion = flutter.targetSdkVersion
+        versionCode = generateVersionCode(flutterVersionName, flutter.minSdkVersion) + flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
 
@@ -96,5 +94,5 @@ flutter {
 
 private static Integer generateVersionCode(String versionName, Integer minimumSdkVersion) {
     def (major, minor, patch) = versionName.split('\\.').collect { it.toInteger() }
-    return minimumSdkVersion * 10000000 + major * 100000 + minor * 1000 + patch * 10
+    return minimumSdkVersion * 10000000 + major * 100000 + minor * 1000 + patch * 100
 }
