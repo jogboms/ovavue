@@ -1,8 +1,7 @@
 name: (Internal) Android Production Release
 
 on:
-  repository_dispatch:
-    types: [ deploy ]
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
@@ -10,7 +9,7 @@ concurrency:
 
 env:
   working_directory: android
-  java_version: "17.x"
+  java_version: "23.x"
   java_distribution: "zulu"
   ruby_version: "3.3.4"
 
@@ -30,15 +29,7 @@ jobs:
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      - uses: gradle/actions/setup-gradle@v5
 
       - name: Initialize environment variables from FVM config
         uses: kuhnroyal/flutter-fvm-config-action@v2
@@ -59,9 +50,7 @@ jobs:
           ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
 
       # Flutter actions
-      - run: flutter doctor
       - run: flutter pub get
-      - run: flutter packages pub run build_runner build
       - run: flutter build appbundle --flavor prod --dart-define=env.mode=prod
 
       # Fastlane deploy
@@ -70,11 +59,3 @@ jobs:
         with:
           lane: beta
           subdirectory: ${{ env.working_directory }}
-
-      # Clean up unnecessary gradle cache
-      - name: Cleanup Gradle Cache
-        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
-        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
-        run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties

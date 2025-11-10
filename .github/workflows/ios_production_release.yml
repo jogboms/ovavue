@@ -1,8 +1,7 @@
 name: (Internal) iOS Production Release
 
 on:
-  repository_dispatch:
-    types: [ deploy ]
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
@@ -37,9 +36,7 @@ jobs:
         run: ./tool/install.sh
 
       # Flutter actions
-      - run: flutter doctor
       - run: flutter pub get
-      - run: flutter packages pub run build_runner build
       - run: flutter build ios --flavor prod --dart-define=env.mode=prod --release --no-codesign
 
       # Fastlane deploy
