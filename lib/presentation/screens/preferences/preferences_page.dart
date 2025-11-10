@@ -99,7 +99,7 @@ class _ContentDataView extends StatelessWidget {
                       _Item(
                         label: l10n.backupClientProviderLabel,
                         child: DropdownButtonFormField<BackupClient>(
-                          value: backupClientController.client,
+                          initialValue: backupClientController.client,
                           isExpanded: true,
                           hint: Text(l10n.selectMetadataCaption, overflow: TextOverflow.ellipsis),
                           items: <DropdownMenuItem<BackupClient>>[

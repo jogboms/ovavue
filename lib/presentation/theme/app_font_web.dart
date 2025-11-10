@@ -1,7 +1,5 @@
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
-
 import 'package:flutter/foundation.dart';
+import 'package:web/web.dart';
 
 import 'app_font.dart' as fallback;
 

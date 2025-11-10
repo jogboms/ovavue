@@ -62,7 +62,7 @@ Future<void> main() async {
           BudgetState(
             budget: BudgetViewModel.fromEntity(expectedBudget),
             plans: expectedPlanViewModels,
-            allocation: expectedPlanViewModels.map((_) => _.allocation?.amount).whereNotNull().sum(),
+            allocation: expectedPlanViewModels.map((_) => _.allocation?.amount).nonNulls.sum(),
             categories: expectedPlans
                 .uniqueBy((_) => _.category.id)
                 .map((_) => _.category)

@@ -119,7 +119,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
                 builder: (BuildContext context, BudgetMetadataViewModel? value, _) {
                   return DropdownButtonFormField<BudgetMetadataViewModel>(
                     key: _metadataFieldKey,
-                    value: value,
+                    initialValue: value,
                     isExpanded: true,
                     decoration: const InputDecoration(prefixIcon: Icon(AppIcons.metadata)),
                     hint: Text(context.l10n.selectMetadataCaption, overflow: TextOverflow.ellipsis),
@@ -151,7 +151,7 @@ class _ContentDataViewState extends State<_ContentDataView> {
                       const SizedBox(height: 8),
                       DropdownButtonFormField<BudgetMetadataValueViewModel>(
                         key: Key(metadata.key.id),
-                        value: _selectedMetadataValue.value,
+                        initialValue: _selectedMetadataValue.value,
                         isExpanded: true,
                         hint: Text(context.l10n.selectMetadataValueCaption, overflow: TextOverflow.ellipsis),
                         items: <DropdownMenuItem<BudgetMetadataValueViewModel>>[

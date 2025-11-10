@@ -121,7 +121,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                                   )
                                 : DropdownButtonFormField<String>(
                                     key: _categoriesFieldKey,
-                                    value: selectedCategory?.id,
+                                    initialValue: selectedCategory?.id,
                                     isExpanded: true,
                                     decoration: InputDecoration(
                                       prefixIcon: selectedCategory?.id != null ? null : const Icon(AppIcons.categories),

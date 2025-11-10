@@ -89,7 +89,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
                 if (creating && initialBudgetId == null && budgets.isNotEmpty) ...<Widget>[
                   DropdownButtonFormField<String>(
                     key: _budgetsFieldKey,
-                    value: selectedBudgetId,
+                    initialValue: selectedBudgetId,
                     isExpanded: true,
                     decoration: InputDecoration(
                       prefixIcon: selectedBudgetId != null ? null : const Icon(AppIcons.budget),

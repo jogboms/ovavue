@@ -435,7 +435,7 @@ class _MetadataSection extends StatelessWidget {
             CupertinoButton(
               onPressed: () => onPressed(item),
               padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 6.0),
-              minSize: 0,
+              minimumSize: Size.zero,
               child: Text(
                 '#${item.title}',
                 style: theme.textTheme.bodyMedium?.copyWith(

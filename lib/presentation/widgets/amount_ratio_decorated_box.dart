@@ -30,8 +30,8 @@ class AmountRatioDecoratedBox extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: borderRadius,
-            color: color.withOpacity(.015),
-            border: Border.all(color: color.withOpacity(.025)),
+            color: color.withValues(alpha: .015),
+            border: Border.all(color: color.withValues(alpha: .025)),
           ),
           child: Ink(
             decoration: BoxDecoration(
@@ -44,7 +44,7 @@ class AmountRatioDecoratedBox extends StatelessWidget {
             child: Ink(
               decoration: BoxDecoration(
                 borderRadius: borderRadius,
-                color: colorScheme.surface.withOpacity(.64),
+                color: colorScheme.surface.withValues(alpha: .64),
               ),
               padding: padding ?? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               child: child,

@@ -114,7 +114,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                                     )
                                   : DropdownButtonFormField<String>(
                                       key: _plansFieldKey,
-                                      value: selectedPlan?.id,
+                                      initialValue: selectedPlan?.id,
                                       isExpanded: true,
                                       decoration: InputDecoration(
                                         prefixIcon: selectedPlan?.id != null ? null : const Icon(AppIcons.plans),

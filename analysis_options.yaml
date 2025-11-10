@@ -26,6 +26,10 @@ analyzer:
     strict-raw-types: true
     strict-inference: true
 
+formatter:
+  page_width: 120
+  trailing_commas: preserve
+
 linter:
   rules:
     # All rules from pedantic, already enabled rules are left out
@@ -34,7 +38,6 @@ linter:
     - prefer_single_quotes
     - sort_child_properties_last
     - unawaited_futures
-    - unsafe_html
 
     # Additional rules from https://github.com/flutter/flutter/blob/master/analysis_options.yaml
     # Not all rules are included

@@ -50,7 +50,7 @@ Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
 
       return BudgetCategoryState(
         category: category,
-        allocation: plans.map((_) => _.$2).whereNotNull().sum(),
+        allocation: plans.map((_) => _.$2).nonNulls.sum(),
         budget: budget,
         plans: plans.toList(growable: false),
       );

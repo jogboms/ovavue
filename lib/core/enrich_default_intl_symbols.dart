@@ -5,7 +5,7 @@ const String _us = 'en_US';
 const String _nigeria = 'en_NG';
 const String _nigeriaCurrencyCode = 'NGN';
 
-final _Symbols _enUs = (numberFormatSymbols[_us], compactNumberSymbols[_us]!);
+final _Symbols _enUs = (numberFormatSymbols[_us]!, compactNumberSymbols[_us]!);
 
 /// This is a hack because the dart team chooses to filter out certain locales for fear of potential duplicates.
 /// https://github.com/dart-lang/i18n/issues/160#issuecomment-1513218136
@@ -16,7 +16,7 @@ void enrichDefaultIntlSymbols() {
   }.map(
     (String key, String value) => MapEntry<String, _Symbols>(
       key,
-      (numberFormatSymbols[value], compactNumberSymbols[value]!),
+      (numberFormatSymbols[value]!, compactNumberSymbols[value]!),
     ),
   );
   symbols[_nigeria] = (_enUs.$1.copyWith(name: _nigeria, defCurrencyCode: _nigeriaCurrencyCode), _enUs.$2);
