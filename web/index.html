@@ -18,43 +18,45 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A tidy budget overview planner.">
+  <meta content="A tidy budget overview planner." name="description">
 
   <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="ovavue">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <meta content="ovavue" name="apple-mobile-web-app-title">
+  <link href="icons/Icon-192.png" rel="apple-touch-icon">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link href="favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+  <link href="favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
 
   <!--  Google Sign-in-->
-  <meta name="google-signin-client_id" content="719782367161-cldhpp1f15ll6tskgvc5ifrjsl5j6pq5.apps.googleusercontent.com">
+  <meta content="719782367161-cldhpp1f15ll6tskgvc5ifrjsl5j6pq5.apps.googleusercontent.com"
+        name="google-signin-client_id">
 
   <!-- Social media -->
-  <meta name="description" content="A tidy budget overview planner." />
-  <meta name="twitter:image:src" content="https://raw.githubusercontent.com/jogboms/ovavue/master/assets/ic_launcher.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:domain" content="https://ovavue.vercel.app" />
-  <meta name="twitter:title" content="Ovavue" />
-  <meta name="twitter:description" content="A tidy budget overview planner." />
-  <meta name="og:title" content="Ovavue">
-  <meta name="og:type" content="website" />
-  <meta name="og:site_name" content="Ovavue" />
-  <meta name="og:image" content="https://raw.githubusercontent.com/jogboms/ovavue/master/assets/ic_launcher.png" />
-  <meta name="og:image:alt" content="A tidy budget overview planner." />
-  <meta name="og:url" content="https://ovavue.vercel.app" />
-  <meta name="og:description" content="A tidy budget overview planner." />
+  <meta content="A tidy budget overview planner." name="description"/>
+  <meta content="https://raw.githubusercontent.com/jogboms/ovavue/main/assets/ic_launcher.png"
+        name="twitter:image:src"/>
+  <meta content="summary_large_image" name="twitter:card"/>
+  <meta content="https://ovavue.vercel.app" name="twitter:domain"/>
+  <meta content="Ovavue" name="twitter:title"/>
+  <meta content="A tidy budget overview planner." name="twitter:description"/>
+  <meta content="Ovavue" name="og:title">
+  <meta content="website" name="og:type"/>
+  <meta content="Ovavue" name="og:site_name"/>
+  <meta content="https://raw.githubusercontent.com/jogboms/ovavue/main/assets/ic_launcher.png" name="og:image"/>
+  <meta content="A tidy budget overview planner." name="og:image:alt"/>
+  <meta content="https://ovavue.vercel.app" name="og:url"/>
+  <meta content="A tidy budget overview planner." name="og:description"/>
 
   <title>Ovavue</title>
-  <link rel="manifest" href="manifest.json">
+  <link href="manifest.json" rel="manifest">
 
   <style>
-  @media (prefers-color-scheme: dark) {
-    body { background-color: #100F1E; }
-  }
+    @media (prefers-color-scheme: dark) {
+      body { background-color: #100F1E; }
+    }
   </style>
 
   <script>
@@ -62,23 +64,23 @@
     var serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
+  <script defer src="flutter.js"></script>
 </head>
 <body>
 <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
+  window.addEventListener('load', function(ev) {
+    // Download main.dart.js
+    _flutter.loader.loadEntrypoint({
+      serviceWorker: {
+        serviceWorkerVersion: serviceWorkerVersion,
+      },
+      onEntrypointLoaded: function(engineInitializer) {
+        engineInitializer.initializeEngine().then(function(appRunner) {
+          appRunner.runApp();
+        });
+      }
     });
-  </script>
+  });
+</script>
 </body>
 </html>
