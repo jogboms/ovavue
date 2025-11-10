@@ -1,6 +1,5 @@
+import 'package:ovavue/data/repositories/preferences/theme_mode_storage.dart';
 import 'package:ovavue/domain.dart';
-
-import 'theme_mode_storage.dart';
 
 class PreferencesMockImpl implements PreferencesRepository {
   PreferencesMockImpl(this._themeModeStorage);

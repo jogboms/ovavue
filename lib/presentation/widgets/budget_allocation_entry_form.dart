@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants.dart';
-import '../models.dart';
-import '../state.dart';
-import '../utils.dart';
-import 'budget_category_avatar.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets/budget_category_avatar.dart';
 
 class BudgetAllocationEntryForm extends StatefulWidget {
   const BudgetAllocationEntryForm({
@@ -29,14 +29,14 @@ class BudgetAllocationEntryForm extends StatefulWidget {
 }
 
 class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final _formKey = GlobalKey<FormState>();
   static final GlobalKey<FormFieldState<String>> _plansFieldKey = GlobalKey(debugLabel: 'plansFieldKey');
-  static const Key _createPlanButtonKey = Key('createPlanButtonKey');
+  static const _createPlanButtonKey = Key('createPlanButtonKey');
 
-  late final FocusNode _amountFocusNode = FocusNode(debugLabel: 'amount');
+  late final _amountFocusNode = FocusNode(debugLabel: 'amount');
 
-  late final ValueNotifier<BudgetPlanViewModel?> _selectedPlan = ValueNotifier<BudgetPlanViewModel?>(widget.plan);
-  late final TextEditingController _amountController = TextEditingController(
+  late final _selectedPlan = ValueNotifier<BudgetPlanViewModel?>(widget.plan);
+  late final _amountController = TextEditingController(
     text: widget.allocation?.editableTextValue ?? '',
   );
 
@@ -51,10 +51,10 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
+    final l10n = context.l10n;
 
-    final BudgetPlanViewModel? initialPlan = widget.plan;
-    final BudgetPlanViewModel? selectedPlan = _selectedPlan.value;
+    final initialPlan = widget.plan;
+    final selectedPlan = _selectedPlan.value;
 
     return Container(
       margin: EdgeInsets.fromLTRB(
@@ -68,17 +68,20 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Consumer(
           builder: (BuildContext context, WidgetRef ref, _) {
-            final Money budgetRemainderAmount = ref.watch(
+            final budgetRemainderAmount = ref.watch(
               selectedBudgetProvider(widget.budgetId).select(
-                (_) => _.requireValue.budget.amount - _.requireValue.allocation,
+                (AsyncValue<BudgetState> e) => e.requireValue.budget.amount - e.requireValue.allocation,
               ),
             );
-            final Money allocationAmount = widget.allocation ?? Money.zero;
-            final Money remainderAmount = budgetRemainderAmount + allocationAmount;
+            final allocationAmount = widget.allocation ?? Money.zero;
+            final remainderAmount = budgetRemainderAmount + allocationAmount;
 
-            final Iterable<BudgetPlanViewModel> plans =
-                ref.watch(budgetPlansProvider).valueOrNull?.where((_) => !widget.plansById.contains(_.id)) ??
-                    const <BudgetPlanViewModel>[];
+            final plans =
+                ref
+                    .watch(budgetPlansProvider)
+                    .valueOrNull
+                    ?.where((BudgetPlanViewModel e) => !widget.plansById.contains(e.id)) ??
+                const <BudgetPlanViewModel>[];
 
             return Padding(
               padding: const EdgeInsets.only(top: 20.0),
@@ -107,7 +110,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
                               child: plans.length == 1
                                   ? Builder(
                                       builder: (_) {
-                                        final BudgetPlanViewModel plan = plans.first;
+                                        final plan = plans.first;
                                         _handlePlanSelection(plan);
                                         return _PlanItem(key: Key(plan.id), plan: plans.first);
                                       },
@@ -181,7 +184,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
   }
 
   void _handlePlanCreation(WidgetRef ref) async {
-    final String? id = await createBudgetPlanAction(
+    final id = await createBudgetPlanAction(
       context: context,
       ref: ref,
       navigateOnComplete: false,
@@ -202,7 +205,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
 
   void _handlePlanIdSelection(Iterable<BudgetPlanViewModel> plans, String? id) {
     if (id != null) {
-      _selectedPlan.value = plans.firstWhere((_) => _.id == id);
+      _selectedPlan.value = plans.firstWhere((BudgetPlanViewModel e) => e.id == id);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _amountFocusNode.requestFocus();
       });
@@ -210,7 +213,7 @@ class _BudgetAllocationEntryFormState extends State<BudgetAllocationEntryForm> {
   }
 
   void _handleSubmit() {
-    final BudgetPlanViewModel? plan = _selectedPlan.value;
+    final plan = _selectedPlan.value;
     if (plan != null && _formKey.currentState?.validate() == true) {
       Navigator.pop(context, BudgetAllocationEntryResult(_textAsMoney, plan));
     }
@@ -224,7 +227,7 @@ class _PlanItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Row(
       children: <Widget>[
@@ -250,7 +253,7 @@ Future<BudgetAllocationEntryResult?> showBudgetAllocationEntryForm({
   required BudgetPlanViewModel? plan,
   required Money? allocation,
 }) async {
-  final BudgetAllocationEntryResult? result = await showModalBottomSheet(
+  final result = await showModalBottomSheet<BudgetAllocationEntryResult>(
     context: context,
     builder: (_) => BudgetAllocationEntryForm(
       allocation: allocation,

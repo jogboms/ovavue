@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme.dart';
+import 'package:ovavue/presentation/theme.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -16,8 +16,8 @@ class ActionButton extends StatelessWidget {
     required this.icon,
     required this.borderColor,
     required this.onPressed,
-  })  : backgroundColor = Colors.transparent,
-        foregroundColor = borderColor;
+  }) : backgroundColor = Colors.transparent,
+       foregroundColor = borderColor;
 
   final IconData icon;
   final Color? backgroundColor;
@@ -27,8 +27,8 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = context.theme.colorScheme;
-    final Color? borderColor = this.borderColor;
+    final colorScheme = context.theme.colorScheme;
+    final borderColor = this.borderColor;
 
     return FilledButton(
       style: FilledButton.styleFrom(

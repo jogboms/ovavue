@@ -6,8 +6,8 @@ import '../../utils.dart';
 
 void main() {
   group('DeleteBudgetAllocationUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final DeleteBudgetAllocationUseCase useCase = DeleteBudgetAllocationUseCase(
+    final analytics = LogAnalytics();
+    final useCase = DeleteBudgetAllocationUseCase(
       allocations: mockRepositories.budgetAllocations,
       analytics: analytics,
     );

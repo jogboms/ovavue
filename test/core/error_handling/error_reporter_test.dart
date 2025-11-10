@@ -28,7 +28,7 @@ void main() {
     });
 
     test('should report with client', () {
-      final Exception exception = Exception();
+      final exception = Exception();
       reporter.report(exception, StackTrace.empty);
 
       verify(
@@ -42,7 +42,7 @@ void main() {
 
     test('should report with delay', () {
       fakeAsync((FakeAsync async) {
-        final Exception exception = Exception();
+        final exception = Exception();
         reporter.report(exception, StackTrace.empty);
         async.elapse(const Duration(seconds: 5));
         reporter.report(exception, StackTrace.empty);
@@ -60,12 +60,15 @@ void main() {
     });
 
     test('should log error when report fails', () {
-      final Exception reportException = Exception();
+      final reportException = Exception();
       when(
-        () => client.report(stackTrace: any(named: 'stackTrace'), error: any(named: 'error')),
+        () => client.report(
+          stackTrace: any(named: 'stackTrace'),
+          error: any(named: 'error'),
+        ),
       ).thenThrow(reportException);
 
-      final Exception exception = Exception();
+      final exception = Exception();
       reporter.report(exception, StackTrace.empty);
 
       verify(
@@ -79,7 +82,7 @@ void main() {
     });
 
     test('should report crash with client', () {
-      final FakeFlutterErrorDetails errorDetails = FakeFlutterErrorDetails();
+      final errorDetails = FakeFlutterErrorDetails();
       reporter.reportCrash(errorDetails);
 
       verify(() => client.reportCrash(errorDetails)).called(1);

@@ -1,4 +1,4 @@
-import 'analytics_event.dart';
+import 'package:ovavue/domain/analytics/analytics_event.dart';
 
 abstract class Analytics {
   Future<void> setUserId(String id);

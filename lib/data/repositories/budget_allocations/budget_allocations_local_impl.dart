@@ -1,6 +1,5 @@
+import 'package:ovavue/data/local_database.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../local_database.dart';
 
 class BudgetAllocationsLocalImpl implements BudgetAllocationsRepository {
   const BudgetAllocationsLocalImpl(this._db);
@@ -38,8 +37,7 @@ class BudgetAllocationsLocalImpl implements BudgetAllocationsRepository {
     required String userId,
     required String budgetId,
     required String planId,
-  }) =>
-      _db.budgetAllocationsDao.watchSingleBudgetPlan(budgetId: budgetId, planId: planId);
+  }) => _db.budgetAllocationsDao.watchSingleBudgetPlan(budgetId: budgetId, planId: planId);
 
   @override
   Future<bool> update(UpdateBudgetAllocationData allocation) => _db.budgetAllocationsDao.updateAllocation(allocation);

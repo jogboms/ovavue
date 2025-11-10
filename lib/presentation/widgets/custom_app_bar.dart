@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme.dart';
+import 'package:ovavue/presentation/theme.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -11,7 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle,
   });
 
-  static const CustomAppBar empty = CustomAppBar(title: Text(''));
+  static const empty = CustomAppBar(title: Text(''));
 
   final Widget title;
   final List<Widget> actions;
@@ -20,11 +20,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = context.theme;
-    final Color backgroundColor = theme.scaffoldBackgroundColor;
-    final Widget? leading =
-        ModalRoute.of(context)?.canPop == true ? BackButton(color: theme.colorScheme.onSurface) : null;
-    final DefaultTextStyle title = DefaultTextStyle(
+    final theme = context.theme;
+    final backgroundColor = theme.scaffoldBackgroundColor;
+    final Widget? leading = ModalRoute.of(context)?.canPop == true
+        ? BackButton(color: theme.colorScheme.onSurface)
+        : null;
+    final title = DefaultTextStyle(
       style: theme.textTheme.titleLarge!.copyWith(
         fontWeight: AppFontWeight.semibold,
       ),

@@ -1,14 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
-import 'package:registry/registry.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/screens/budget_categories/providers/budget_category_state.dart';
+import 'package:ovavue/presentation/screens/budget_categories/providers/models.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../../models.dart';
-import '../../../state.dart';
-import '../../../utils.dart';
-import 'budget_category_state.dart';
-import 'models.dart';
 
 export 'models.dart';
 
@@ -20,37 +18,40 @@ Stream<BudgetCategoryState> selectedBudgetCategoryByBudget(
   required String id,
   required String budgetId,
 }) async* {
-  final Registry registry = ref.read(registryProvider);
-  final UserEntity user = await ref.watch(userProvider.future);
+  final registry = ref.read(registryProvider);
+  final user = await ref.watch(userProvider.future);
 
-  final BudgetCategoryViewModel category = await ref.watch(
+  final category = await ref.watch(
     budgetCategoriesProvider.selectAsync(
-      (List<BudgetCategoryViewModel> categories) => categories.firstWhere((_) => _.id == id),
+      (List<BudgetCategoryViewModel> categories) => categories.firstWhere((BudgetCategoryViewModel e) => e.id == id),
     ),
   );
-  final BudgetViewModel budget = await ref.watch(
+  final budget = await ref.watch(
     budgetsProvider.selectAsync(
-      (List<BudgetViewModel> budgets) => budgets.firstWhere((_) => _.id == budgetId),
+      (List<BudgetViewModel> budgets) => budgets.firstWhere((BudgetViewModel e) => e.id == budgetId),
     ),
   );
-  final Iterable<BudgetPlanViewModel> budgetPlans = await ref.watch(
+  final budgetPlans = await ref.watch(
     budgetPlansProvider.selectAsync(
-      (List<BudgetPlanViewModel> plans) => plans.where((_) => _.category.id == id),
+      (List<BudgetPlanViewModel> plans) => plans.where((BudgetPlanViewModel e) => e.category.id == id),
     ),
   );
 
   yield* registry.get<FetchBudgetAllocationsByBudgetUseCase>().call(userId: user.id, budgetId: budgetId).map(
     (BudgetAllocationEntityList allocations) {
-      final Map<String, BudgetAllocationEntity> allocationsByPlan = allocations.foldToMap((_) => _.plan.id);
-      final Iterable<BudgetCategoryPlanViewModel> plans =
-          budgetPlans.map((_) => _.toViewModel(allocationsByPlan[_.id]?.amount.asMoney)).sorted(
-                (BudgetCategoryPlanViewModel a, BudgetCategoryPlanViewModel b) =>
-                    (b.$2 ?? Money.zero).compareTo(a.$2 ?? Money.zero),
-              );
+      final allocationsByPlan = allocations.foldToMap(
+        (BudgetAllocationEntity e) => e.plan.id,
+      );
+      final Iterable<BudgetCategoryPlanViewModel> plans = budgetPlans
+          .map((BudgetPlanViewModel e) => e.toViewModel(allocationsByPlan[e.id]?.amount.asMoney))
+          .sorted(
+            (BudgetCategoryPlanViewModel a, BudgetCategoryPlanViewModel b) =>
+                (b.$2 ?? Money.zero).compareTo(a.$2 ?? Money.zero),
+          );
 
       return BudgetCategoryState(
         category: category,
-        allocation: plans.map((_) => _.$2).nonNulls.sum(),
+        allocation: plans.map((BudgetCategoryPlanViewModel e) => e.$2).nonNulls.sum(),
         budget: budget,
         plans: plans.toList(growable: false),
       );

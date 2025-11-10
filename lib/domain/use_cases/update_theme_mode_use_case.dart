@@ -1,4 +1,4 @@
-import '../repositories/preferences.dart';
+import 'package:ovavue/domain/repositories/preferences.dart';
 
 class UpdateThemeModeUseCase {
   const UpdateThemeModeUseCase({

@@ -3,20 +3,19 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
-import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 
 import '../../utils.dart';
 
 void main() {
   group('AppCrashErrorView', () {
-    final AccountEntity dummyAccount = AuthMockImpl.generateAccount();
+    final dummyAccount = AuthMockImpl.generateAccount();
 
     tearDown(mockUseCases.reset);
 
     testWidgets('smoke test', (WidgetTester tester) async {
-      when(mockUseCases.fetchAccountUseCase).thenAnswer((_) async => dummyAccount);
-      when(mockUseCases.fetchThemeModeUseCase).thenAnswer((_) async => 1);
+      when(mockUseCases.fetchAccountUseCase.call).thenAnswer((_) async => dummyAccount);
+      when(mockUseCases.fetchThemeModeUseCase.call).thenAnswer((_) async => 1);
 
       await tester.pumpWidget(
         createApp(

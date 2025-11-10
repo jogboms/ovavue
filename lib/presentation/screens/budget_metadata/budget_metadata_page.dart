@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../constants.dart';
-import '../../models.dart';
-import '../../routing.dart';
-import '../../state.dart';
-import '../../theme.dart';
-import '../../utils.dart';
-import '../../widgets.dart';
-import 'widgets/budget_metadata_entry_form.dart';
-import 'widgets/budget_metadata_value_vertical_divider.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/screens/budget_metadata/widgets/budget_metadata_entry_form.dart';
+import 'package:ovavue/presentation/screens/budget_metadata/widgets/budget_metadata_value_vertical_divider.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetMetadataPage extends StatefulWidget {
   const BudgetMetadataPage({super.key});
@@ -21,25 +20,25 @@ class BudgetMetadataPage extends StatefulWidget {
 
 class _BudgetMetadataPageState extends State<BudgetMetadataPage> {
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(budgetMetadataProvider).when(
-              data: (List<BudgetMetadataViewModel> data) => _ContentDataView(
-                key: dataViewKey,
-                data: data,
-                metadataNotifier: ref.read(budgetMetadataProvider.notifier),
-              ),
-              error: ErrorView.new,
-              loading: () => child!,
+  Widget build(BuildContext context) => Scaffold(
+    body: Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+          .watch(budgetMetadataProvider)
+          .when(
+            data: (List<BudgetMetadataViewModel> data) => _ContentDataView(
+              key: dataViewKey,
+              data: data,
+              metadataNotifier: ref.read(budgetMetadataProvider.notifier),
             ),
-        child: const LoadingView(),
-      ),
-    );
-  }
+            error: ErrorView.new,
+            loading: () => child!,
+          ),
+      child: const LoadingView(),
+    ),
+  );
 }
 
 class _ContentDataView extends StatelessWidget {
@@ -54,7 +53,7 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
+    final l10n = context.l10n;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -112,7 +111,7 @@ class _ContentDataView extends StatelessWidget {
     BuildContext context, {
     required BudgetMetadataViewModel? metadata,
   }) async {
-    final BudgetMetadataEntryResult? result = await showBudgetMetadataEntryForm(
+    final result = await showBudgetMetadataEntryForm(
       context: context,
       type: metadata == null ? BudgetMetadataEntryType.create : BudgetMetadataEntryType.update,
       title: metadata?.key.title,
@@ -123,7 +122,7 @@ class _ContentDataView extends StatelessWidget {
       return;
     }
     if (context.mounted) {
-      final Set<BudgetMetadataValueOperation> operations = <BudgetMetadataValueOperation>{
+      final operations = <BudgetMetadataValueOperation>{
         for (final BudgetMetadataValueEntryResult item in result.values)
           switch (item) {
             BudgetMetadataValueEntryModifyResult(reference: final ReferenceEntity reference) =>
@@ -133,12 +132,12 @@ class _ContentDataView extends StatelessWidget {
                 value: item.value,
               ),
             BudgetMetadataValueEntryModifyResult() => BudgetMetadataValueCreationOperation(
-                title: item.title,
-                value: item.value,
-              ),
+              title: item.title,
+              value: item.value,
+            ),
             BudgetMetadataValueEntryRemoveResult() => BudgetMetadataValueRemovalOperation(
-                reference: item.reference,
-              ),
+              reference: item.reference,
+            ),
           },
       };
       if (metadata != null) {
@@ -168,7 +167,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,8 +190,8 @@ class _MetadataValueTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
     return InkWell(
       onTap: onPressed,

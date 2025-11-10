@@ -9,8 +9,8 @@ import '../../utils.dart';
 
 Future<void> main() async {
   group('UserProvider', () {
-    final AccountEntity dummyAccount = AuthMockImpl.generateAccount();
-    final UserEntity dummyUser = UsersMockImpl.user;
+    final dummyAccount = AuthMockImpl.generateAccount();
+    final dummyUser = UsersMockImpl.user;
 
     setUpAll(() {
       registerFallbackValue(dummyAccount);
@@ -20,7 +20,7 @@ Future<void> main() async {
     tearDown(mockUseCases.reset);
 
     Future<UserEntity> createProviderFuture() {
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           accountProvider.overrideWith((_) async => dummyAccount),
         ],

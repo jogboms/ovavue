@@ -1,5 +1,5 @@
-import '../entities/budget_category_entity.dart';
-import '../repositories/budget_categories.dart';
+import 'package:ovavue/domain/entities/budget_category_entity.dart';
+import 'package:ovavue/domain/repositories/budget_categories.dart';
 
 class FetchBudgetCategoriesUseCase {
   const FetchBudgetCategoriesUseCase({

@@ -7,17 +7,17 @@ import '../../utils.dart';
 
 void main() {
   group('FetchBudgetAllocationsByPlanUseCase', () {
-    final FetchBudgetAllocationsByPlanUseCase useCase = FetchBudgetAllocationsByPlanUseCase(
+    final useCase = FetchBudgetAllocationsByPlanUseCase(
       allocations: mockRepositories.budgetAllocations,
     );
 
     tearDown(mockRepositories.reset);
 
     test('should fetch budget allocations by plan', () {
-      final BudgetCategoryEntityList categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
-      final BudgetPlanEntity plan = BudgetPlansMockImpl.generatePlan(category: categories.first);
-      final BudgetEntity budget = BudgetsMockImpl.generateBudget();
-      final BudgetAllocationEntityList expectedAllocations = <BudgetAllocationEntity>[
+      final categories = <BudgetCategoryEntity>[BudgetCategoriesMockImpl.generateCategory()];
+      final plan = BudgetPlansMockImpl.generatePlan(category: categories.first);
+      final budget = BudgetsMockImpl.generateBudget();
+      final expectedAllocations = <BudgetAllocationEntity>[
         BudgetAllocationsMockImpl.generateAllocation(budget: budget, plan: plan),
       ];
 
@@ -29,14 +29,15 @@ void main() {
     });
 
     test('should bubble fetch errors', () {
-      when(() => mockRepositories.budgetAllocations.fetchByPlan(userId: '1', planId: '1'))
-          .thenThrow(Exception('an error'));
+      when(
+        () => mockRepositories.budgetAllocations.fetchByPlan(userId: '1', planId: '1'),
+      ).thenThrow(Exception('an error'));
 
       expect(() => useCase(userId: '1', planId: '1'), throwsException);
     });
 
     test('should bubble stream errors', () {
-      final Exception expectedError = Exception('an error');
+      final expectedError = Exception('an error');
 
       when(() => mockRepositories.budgetAllocations.fetchByPlan(userId: '1', planId: '1')).thenAnswer(
         (_) => Stream<BudgetAllocationEntityList>.error(expectedError),

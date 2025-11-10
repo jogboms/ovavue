@@ -21,18 +21,18 @@ class MockRepositories {
   final PreferencesRepository preferences = MockPreferencesRepository();
 
   void reset() => <Object>[
-        auth,
-        users,
-        budgets,
-        budgetPlans,
-        budgetCategories,
-        budgetAllocations,
-        budgetMetadata,
-        preferences,
-      ].forEach(mt.reset);
+    auth,
+    users,
+    budgets,
+    budgetPlans,
+    budgetCategories,
+    budgetAllocations,
+    budgetMetadata,
+    preferences,
+  ].forEach(mt.reset);
 }
 
-final MockRepositories mockRepositories = MockRepositories();
+final mockRepositories = MockRepositories();
 
 class MockUseCases {
   final CreateBudgetAllocationUseCase createBudgetAllocationUseCase = MockCreateBudgetAllocationUseCase();
@@ -71,87 +71,86 @@ class MockUseCases {
   final UpdateThemeModeUseCase updateThemeModeUseCase = MockUpdateThemeModeUseCase();
 
   void reset() => <Object>[
-        createBudgetAllocationUseCase,
-        createBudgetCategoryUseCase,
-        createBudgetPlanUseCase,
-        createBudgetMetadataUseCase,
-        createBudgetUseCase,
-        createUserUseCase,
-        activateBudgetUseCase,
-        updateBudgetAllocationUseCase,
-        updateBudgetCategoryUseCase,
-        updateBudgetPlanUseCase,
-        updateBudgetMetadataUseCase,
-        updateBudgetUseCase,
-        deleteBudgetAllocationUseCase,
-        deleteBudgetCategoryUseCase,
-        deleteBudgetPlanUseCase,
-        deleteBudgetUseCase,
-        addMetadataToPlanUseCase,
-        removeMetadataFromPlanUseCase,
-        fetchAccountUseCase,
-        fetchBudgetAllocationsByPlanUseCase,
-        fetchBudgetCategoriesUseCase,
-        fetchBudgetPlansUseCase,
-        fetchBudgetPlansByMetadataUseCase,
-        fetchBudgetMetadataUseCase,
-        fetchBudgetMetadataByPlanUseCase,
-        fetchBudgetUseCase,
-        fetchBudgetsUseCase,
-        fetchActiveBudgetUseCase,
-        fetchUserUseCase,
-        fetchThemeModeUseCase,
-        updateThemeModeUseCase,
-      ].forEach(mt.reset);
+    createBudgetAllocationUseCase,
+    createBudgetCategoryUseCase,
+    createBudgetPlanUseCase,
+    createBudgetMetadataUseCase,
+    createBudgetUseCase,
+    createUserUseCase,
+    activateBudgetUseCase,
+    updateBudgetAllocationUseCase,
+    updateBudgetCategoryUseCase,
+    updateBudgetPlanUseCase,
+    updateBudgetMetadataUseCase,
+    updateBudgetUseCase,
+    deleteBudgetAllocationUseCase,
+    deleteBudgetCategoryUseCase,
+    deleteBudgetPlanUseCase,
+    deleteBudgetUseCase,
+    addMetadataToPlanUseCase,
+    removeMetadataFromPlanUseCase,
+    fetchAccountUseCase,
+    fetchBudgetAllocationsByPlanUseCase,
+    fetchBudgetCategoriesUseCase,
+    fetchBudgetPlansUseCase,
+    fetchBudgetPlansByMetadataUseCase,
+    fetchBudgetMetadataUseCase,
+    fetchBudgetMetadataByPlanUseCase,
+    fetchBudgetUseCase,
+    fetchBudgetsUseCase,
+    fetchActiveBudgetUseCase,
+    fetchUserUseCase,
+    fetchThemeModeUseCase,
+    updateThemeModeUseCase,
+  ].forEach(mt.reset);
 }
 
-final MockUseCases mockUseCases = MockUseCases();
+final mockUseCases = MockUseCases();
 
 Registry createRegistry({
   Environment environment = Environment.testing,
-}) =>
-    Registry()
-      ..set<Analytics>(FakeAnalytics())
-      ..set(mockRepositories.auth)
-      ..set(mockRepositories.users)
-      ..set(mockRepositories.budgets)
-      ..set(mockRepositories.budgetPlans)
-      ..set(mockRepositories.budgetCategories)
-      ..set(mockRepositories.budgetAllocations)
-      ..set(mockRepositories.preferences)
-      ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
-      ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
-      ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
-      ..factory((RegistryFactory di) => CreateBudgetMetadataUseCase(metadata: di(), analytics: di()))
-      ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
-      ..factory((RegistryFactory di) => ActivateBudgetUseCase(budgets: di(), analytics: di()))
-      ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
-      ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
-      ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
-      ..factory((RegistryFactory di) => UpdateBudgetMetadataUseCase(metadata: di(), analytics: di()))
-      ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
-      ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
-      ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
-      ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
-      ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), allocations: di(), analytics: di()))
-      ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
-      ..factory((RegistryFactory di) => AddMetadataToPlanUseCase(metadata: di(), analytics: di()))
-      ..factory((RegistryFactory di) => RemoveMetadataFromPlanUseCase(metadata: di(), analytics: di()))
-      ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
-      ..factory((RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(allocations: di()))
-      ..factory((RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(allocations: di()))
-      ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
-      ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di()))
-      ..factory((RegistryFactory di) => FetchBudgetPlansByMetadataUseCase(plans: di(), metadata: di()))
-      ..factory((RegistryFactory di) => FetchBudgetMetadataUseCase(metadata: di()))
-      ..factory((RegistryFactory di) => FetchBudgetMetadataByPlanUseCase(metadata: di()))
-      ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di()))
-      ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
-      ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
-      ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
-      ..factory((RegistryFactory di) => FetchThemeModeUseCase(preferences: di()))
-      ..factory((RegistryFactory di) => UpdateThemeModeUseCase(preferences: di()))
-      ..set(environment);
+}) => Registry()
+  ..set<Analytics>(FakeAnalytics())
+  ..set(mockRepositories.auth)
+  ..set(mockRepositories.users)
+  ..set(mockRepositories.budgets)
+  ..set(mockRepositories.budgetPlans)
+  ..set(mockRepositories.budgetCategories)
+  ..set(mockRepositories.budgetAllocations)
+  ..set(mockRepositories.preferences)
+  ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
+  ..factory((RegistryFactory di) => CreateBudgetCategoryUseCase(categories: di(), analytics: di()))
+  ..factory((RegistryFactory di) => CreateBudgetPlanUseCase(plans: di(), analytics: di()))
+  ..factory((RegistryFactory di) => CreateBudgetMetadataUseCase(metadata: di(), analytics: di()))
+  ..factory((RegistryFactory di) => CreateBudgetUseCase(budgets: di(), allocations: di(), analytics: di()))
+  ..factory((RegistryFactory di) => ActivateBudgetUseCase(budgets: di(), analytics: di()))
+  ..factory((RegistryFactory di) => UpdateBudgetAllocationUseCase(allocations: di(), analytics: di()))
+  ..factory((RegistryFactory di) => UpdateBudgetCategoryUseCase(categories: di(), analytics: di()))
+  ..factory((RegistryFactory di) => UpdateBudgetPlanUseCase(plans: di(), analytics: di()))
+  ..factory((RegistryFactory di) => UpdateBudgetMetadataUseCase(metadata: di(), analytics: di()))
+  ..factory((RegistryFactory di) => UpdateBudgetUseCase(budgets: di(), analytics: di()))
+  ..factory((RegistryFactory di) => CreateUserUseCase(users: di(), analytics: di()))
+  ..factory((RegistryFactory di) => DeleteBudgetAllocationUseCase(allocations: di(), analytics: di()))
+  ..factory((RegistryFactory di) => DeleteBudgetCategoryUseCase(categories: di(), analytics: di()))
+  ..factory((RegistryFactory di) => DeleteBudgetPlanUseCase(plans: di(), allocations: di(), analytics: di()))
+  ..factory((RegistryFactory di) => DeleteBudgetUseCase(budgets: di(), analytics: di()))
+  ..factory((RegistryFactory di) => AddMetadataToPlanUseCase(metadata: di(), analytics: di()))
+  ..factory((RegistryFactory di) => RemoveMetadataFromPlanUseCase(metadata: di(), analytics: di()))
+  ..factory((RegistryFactory di) => FetchAccountUseCase(auth: di()))
+  ..factory((RegistryFactory di) => FetchBudgetAllocationsByBudgetUseCase(allocations: di()))
+  ..factory((RegistryFactory di) => FetchBudgetAllocationsByPlanUseCase(allocations: di()))
+  ..factory((RegistryFactory di) => FetchBudgetCategoriesUseCase(categories: di()))
+  ..factory((RegistryFactory di) => FetchBudgetPlansUseCase(plans: di()))
+  ..factory((RegistryFactory di) => FetchBudgetPlansByMetadataUseCase(plans: di(), metadata: di()))
+  ..factory((RegistryFactory di) => FetchBudgetMetadataUseCase(metadata: di()))
+  ..factory((RegistryFactory di) => FetchBudgetMetadataByPlanUseCase(metadata: di()))
+  ..factory((RegistryFactory di) => FetchBudgetUseCase(budgets: di()))
+  ..factory((RegistryFactory di) => FetchBudgetsUseCase(budgets: di()))
+  ..factory((RegistryFactory di) => FetchActiveBudgetUseCase(budgets: di()))
+  ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
+  ..factory((RegistryFactory di) => FetchThemeModeUseCase(preferences: di()))
+  ..factory((RegistryFactory di) => UpdateThemeModeUseCase(preferences: di()))
+  ..set(environment);
 
 ProviderContainer createProviderContainer({
   ProviderContainer? parent,
@@ -159,7 +158,7 @@ ProviderContainer createProviderContainer({
   List<Override>? overrides,
   List<ProviderObserver>? observers,
 }) {
-  final ProviderContainer container = ProviderContainer(
+  final container = ProviderContainer(
     parent: parent,
     overrides: <Override>[
       registryProvider.overrideWithValue(
@@ -201,7 +200,7 @@ Widget createApp({
 }
 
 class ProviderListener<T> {
-  final List<T> log = <T>[];
+  final log = <T>[];
 
   void call(T? previous, T next) => log.add(next);
 
@@ -209,7 +208,7 @@ class ProviderListener<T> {
 }
 
 class LogAnalytics implements Analytics {
-  final List<AnalyticsEvent> events = <AnalyticsEvent>[];
+  final events = <AnalyticsEvent>[];
   String? userId;
 
   @override

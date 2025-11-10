@@ -3,12 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../../constants.dart';
-import '../../../models.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
-import 'budget_metadata_value_vertical_divider.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/screens/budget_metadata/widgets/budget_metadata_value_vertical_divider.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 enum BudgetMetadataEntryType { create, update }
 
@@ -31,10 +30,10 @@ class BudgetMetadataEntryForm extends StatefulWidget {
 }
 
 class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final _formKey = GlobalKey<FormState>();
 
-  late final TextEditingController _titleController = TextEditingController(text: widget.title ?? '');
-  late final TextEditingController _descriptionController = TextEditingController(text: widget.description ?? '');
+  late final _titleController = TextEditingController(text: widget.title ?? '');
+  late final _descriptionController = TextEditingController(text: widget.description ?? '');
 
   late Set<_BudgetMetadataValueController> _values;
 
@@ -59,7 +58,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
     _titleController.dispose();
     _descriptionController.dispose();
 
-    for (final _BudgetMetadataValueController controller in _values) {
+    for (final controller in _values) {
       controller.dispose();
     }
 
@@ -68,10 +67,10 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
-    const SizedBox spacing = SizedBox(height: 12.0);
+    final l10n = context.l10n;
+    const spacing = SizedBox(height: 12.0);
 
-    final bool creating = widget.type == BudgetMetadataEntryType.create;
+    final creating = widget.type == BudgetMetadataEntryType.create;
 
     return Form(
       key: _formKey,
@@ -125,7 +124,9 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
             spacing,
             PrimaryButton(
               caption: l10n.submitCaption,
-              enabled: _values.where((_) => _.value is BudgetMetadataValueEntryModifyResult).isNotEmpty,
+              enabled: _values
+                  .where((_BudgetMetadataValueController e) => e.value is BudgetMetadataValueEntryModifyResult)
+                  .isNotEmpty,
               onPressed: _handleSubmit,
             ),
           ],
@@ -134,18 +135,17 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
     );
   }
 
-  Set<_BudgetMetadataValueController> _generateControllers(List<BudgetMetadataValueViewModel>? values) {
-    return <_BudgetMetadataValueController>{
-      for (final BudgetMetadataValueViewModel item in values ?? <BudgetMetadataValueViewModel>[])
-        _BudgetMetadataValueController(
-          BudgetMetadataValueEntryModifyResult(
-            reference: (id: item.id, path: item.path),
-            title: item.title,
-            value: item.value,
+  Set<_BudgetMetadataValueController> _generateControllers(List<BudgetMetadataValueViewModel>? values) =>
+      <_BudgetMetadataValueController>{
+        for (final BudgetMetadataValueViewModel item in values ?? <BudgetMetadataValueViewModel>[])
+          _BudgetMetadataValueController(
+            BudgetMetadataValueEntryModifyResult(
+              reference: (id: item.id, path: item.path),
+              title: item.title,
+              value: item.value,
+            ),
           ),
-        ),
-    };
-  }
+      };
 
   void _handleCreateValueType() {
     setState(() {
@@ -165,7 +165,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
   void _handleRemoveValueType(BudgetMetadataValueEntryModifyResult item) {
     setState(() {
       _values = <_BudgetMetadataValueController>{
-        ..._values.where((_) => _.value != item),
+        ..._values.where((_BudgetMetadataValueController e) => e.value != item),
         if (item.reference case final ReferenceEntity reference)
           _BudgetMetadataValueController(
             BudgetMetadataValueEntryRemoveResult(
@@ -183,7 +183,7 @@ class _BudgetMetadataEntryFormState extends State<BudgetMetadataEntryForm> {
         BudgetMetadataEntryResult(
           title: _titleController.text.trim(),
           description: _descriptionController.text.trim(),
-          values: _values.map((_) => _.value),
+          values: _values.map((_BudgetMetadataValueController e) => e.value),
         ),
       );
     }
@@ -216,9 +216,9 @@ class _BudgetMetadataValueField extends StatefulWidget {
 }
 
 class _BudgetMetadataValueFieldState extends State<_BudgetMetadataValueField> {
-  late final TextEditingController _titleEditingController = TextEditingController(text: widget.initialValue.title);
-  late final TextEditingController _valueEditingController = TextEditingController(text: widget.initialValue.value);
-  late final Listenable _formChanges = Listenable.merge(<TextEditingController>[
+  late final _titleEditingController = TextEditingController(text: widget.initialValue.title);
+  late final _valueEditingController = TextEditingController(text: widget.initialValue.value);
+  late final _formChanges = Listenable.merge(<TextEditingController>[
     _titleEditingController,
     _valueEditingController,
   ]);
@@ -243,9 +243,9 @@ class _BudgetMetadataValueFieldState extends State<_BudgetMetadataValueField> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
-    final L10n l10n = context.l10n;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
 
     return Row(
       children: <Widget>[
@@ -294,16 +294,15 @@ Future<BudgetMetadataEntryResult?> showBudgetMetadataEntryForm({
   required String? title,
   required String? description,
   required List<BudgetMetadataValueViewModel>? values,
-}) =>
-    showDialogPage(
-      context: context,
-      builder: (_) => BudgetMetadataEntryForm(
-        type: type,
-        title: title,
-        description: description,
-        values: values,
-      ),
-    );
+}) => showDialogPage(
+  context: context,
+  builder: (_) => BudgetMetadataEntryForm(
+    type: type,
+    title: title,
+    description: description,
+    values: values,
+  ),
+);
 
 sealed class BudgetMetadataValueEntryResult {}
 

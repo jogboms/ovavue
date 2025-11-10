@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'reference_entity.dart';
+import 'package:ovavue/domain/entities/reference_entity.dart';
 
 class CreateBudgetAllocationData with EquatableMixin {
   const CreateBudgetAllocationData({

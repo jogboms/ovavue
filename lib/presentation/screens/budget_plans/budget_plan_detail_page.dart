@@ -2,18 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../constants.dart';
-import '../../models.dart';
-import '../../routing.dart';
-import '../../state.dart';
-import '../../theme.dart';
-import '../../utils.dart';
-import '../../widgets.dart';
-import 'providers/selected_budget_plan_provider.dart';
-import 'utils/delete_budget_plan_action.dart';
-import 'widgets/budget_category_selection_picker.dart';
-import 'widgets/budget_metadata_selection_picker.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/screens/budget_plans/providers/selected_budget_plan_provider.dart';
+import 'package:ovavue/presentation/screens/budget_plans/utils/delete_budget_plan_action.dart';
+import 'package:ovavue/presentation/screens/budget_plans/widgets/budget_category_selection_picker.dart';
+import 'package:ovavue/presentation/screens/budget_plans/widgets/budget_metadata_selection_picker.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetPlanDetailPage extends StatefulWidget {
   const BudgetPlanDetailPage({super.key, required this.id, required this.entrypoint, this.budgetId});
@@ -29,28 +28,27 @@ class BudgetPlanDetailPage extends StatefulWidget {
 @visibleForTesting
 class BudgetPlanDetailPageState extends State<BudgetPlanDetailPage> {
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) =>
-            ref.watch(selectedBudgetPlanProvider(id: widget.id, budgetId: widget.budgetId)).when(
-                  data: (BudgetPlanState data) => _ContentDataView(
-                    key: dataViewKey,
-                    entrypoint: widget.entrypoint,
-                    state: data,
-                    budgetId: widget.budgetId,
-                  ),
-                  error: ErrorView.new,
-                  loading: () => child!,
-                  skipLoadingOnReload: true,
-                ),
-        child: const LoadingView(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    body: Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+          .watch(selectedBudgetPlanProvider(id: widget.id, budgetId: widget.budgetId))
+          .when(
+            data: (BudgetPlanState data) => _ContentDataView(
+              key: dataViewKey,
+              entrypoint: widget.entrypoint,
+              state: data,
+              budgetId: widget.budgetId,
+            ),
+            error: ErrorView.new,
+            loading: () => child!,
+            skipLoadingOnReload: true,
+          ),
+      child: const LoadingView(),
+    ),
+  );
 }
 
 class _ContentDataView extends StatelessWidget {
@@ -67,12 +65,12 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
-    final BudgetViewModel? budget = state.budget;
-    final BudgetAllocationViewModel? allocation = state.allocation;
+    final budget = state.budget;
+    final allocation = state.allocation;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -107,7 +105,7 @@ class _ContentDataView extends StatelessWidget {
                             key: Key(state.plan.category.id),
                             category: state.plan.category,
                             onPressed: () {
-                              final String? budgetId = this.budgetId;
+                              final budgetId = this.budgetId;
                               if (budgetId != null) {
                                 context.router.goToBudgetCategoryDetailForBudget(
                                   id: state.plan.category.id,
@@ -255,7 +253,7 @@ class _ContentDataView extends StatelessWidget {
     required BudgetPlanViewModel plan,
     required BudgetAllocationViewModel? allocation,
   }) async {
-    final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
+    final result = await showBudgetAllocationEntryForm(
       context: context,
       allocation: allocation?.amount,
       plan: plan,
@@ -266,7 +264,7 @@ class _ContentDataView extends StatelessWidget {
       return;
     }
 
-    final BudgetPlanProvider provider = ref.read(budgetPlanProvider);
+    final provider = ref.read(budgetPlanProvider);
     if (allocation == null) {
       await provider.createAllocation(
         CreateBudgetAllocationData(
@@ -291,9 +289,9 @@ class _ContentDataView extends StatelessWidget {
     required WidgetRef ref,
     required BudgetPlanViewModel plan,
   }) async {
-    final L10n l10n = context.l10n;
+    final l10n = context.l10n;
 
-    final BudgetCategoryViewModel? category = await showModalBottomSheet(
+    final category = await showModalBottomSheet<BudgetCategoryViewModel>(
       context: context,
       builder: (_) => BudgetCategorySelectionPicker(
         selectedId: plan.category.id,
@@ -303,7 +301,7 @@ class _ContentDataView extends StatelessWidget {
       return;
     }
     if (context.mounted) {
-      final bool choice = await showErrorChoiceBanner(
+      final choice = await showErrorChoiceBanner(
         context,
         message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
       );
@@ -319,20 +317,19 @@ class _ContentDataView extends StatelessWidget {
     BuildContext context, {
     required WidgetRef ref,
     required BudgetPlanViewModel plan,
-  }) async =>
-      showModalBottomSheet<void>(
-        context: context,
-        builder: (_) => BudgetMetadataSelectionPicker(plan: plan),
-      );
+  }) async => showModalBottomSheet<void>(
+    context: context,
+    builder: (_) => BudgetMetadataSelectionPicker(plan: plan),
+  );
 
   void _handleDeleteAllocationAction(
     BuildContext context, {
     required WidgetRef ref,
     required BudgetAllocationViewModel allocation,
   }) async {
-    final L10n l10n = context.l10n;
-    final AppSnackBar snackBar = context.snackBar;
-    final bool choice = await showErrorChoiceBanner(
+    final l10n = context.l10n;
+    final snackBar = context.snackBar;
+    final choice = await showErrorChoiceBanner(
       context,
       message: l10n.deleteAllocationAreYouSureAboutThisMessage,
     );
@@ -340,7 +337,9 @@ class _ContentDataView extends StatelessWidget {
       return;
     }
 
-    final bool successful = await ref.read(budgetPlanProvider).deleteAllocation(
+    final successful = await ref
+        .read(budgetPlanProvider)
+        .deleteAllocation(
           id: allocation.id,
           path: allocation.path,
         );
@@ -356,10 +355,10 @@ class _ContentDataView extends StatelessWidget {
     required WidgetRef ref,
     required BudgetPlanViewModel plan,
   }) async {
-    final L10n l10n = context.l10n;
-    final AppSnackBar snackBar = context.snackBar;
+    final l10n = context.l10n;
+    final snackBar = context.snackBar;
 
-    final BudgetPlanEntryResult? result = await showBudgetPlanEntryForm(
+    final result = await showBudgetPlanEntryForm(
       context: context,
       type: BudgetPlanEntryType.update,
       title: plan.title,
@@ -370,7 +369,9 @@ class _ContentDataView extends StatelessWidget {
       return null;
     }
 
-    final bool successful = await ref.read(budgetPlanProvider).update(
+    final successful = await ref
+        .read(budgetPlanProvider)
+        .update(
           UpdateBudgetPlanData(
             id: plan.id,
             path: plan.path,
@@ -395,7 +396,7 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return ActionChip(
       label: Text(category.title.sentence()),
@@ -418,8 +419,8 @@ class _MetadataSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     if (metadata.isEmpty) {
       return const SizedBox.shrink();

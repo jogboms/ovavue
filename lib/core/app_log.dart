@@ -16,11 +16,11 @@ class AppLog {
   }
 
   static void e(Object error, StackTrace stackTrace, {Object? message}) => _logger.log(
-        Level.SEVERE,
-        message ?? error.toString(),
-        error,
-        error is Error && error.stackTrace != null ? error.stackTrace! : stackTrace,
-      );
+    Level.SEVERE,
+    message ?? error.toString(),
+    error,
+    error is Error && error.stackTrace != null ? error.stackTrace! : stackTrace,
+  );
 
   static void i(Object message) => _logger.info(message);
 }
@@ -35,25 +35,24 @@ void Function(LogRecord) _logListener(
   ExceptionLogFilter exceptionFilter,
   ExceptionLogBuilder onException,
   LogBuilder onLog,
-) =>
-    (LogRecord record) {
-      final LogBuilder logger = logFilter() ? onLog : (_) {};
-      if (record.level != Level.SEVERE) {
-        logger(record.message);
-        return;
-      }
+) => (LogRecord record) {
+  final logger = logFilter() ? onLog : (_) {};
+  if (record.level != Level.SEVERE) {
+    logger(record.message);
+    return;
+  }
 
-      logger(record.error);
-      logger(record.stackTrace);
+  logger(record.error);
+  logger(record.stackTrace);
 
-      final Object error = record.error!;
-      if (!exceptionFilter(error)) {
-        return;
-      }
+  final error = record.error!;
+  if (!exceptionFilter(error)) {
+    return;
+  }
 
-      onException(
-        error,
-        record.stackTrace ?? StackTrace.current,
-        record.object ?? <String, dynamic>{},
-      );
-    };
+  onException(
+    error,
+    record.stackTrace ?? StackTrace.current,
+    record.object ?? <String, dynamic>{},
+  );
+};

@@ -7,14 +7,14 @@ import '../../utils.dart';
 
 void main() {
   group('CreateUserUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final CreateUserUseCase useCase = CreateUserUseCase(
+    final analytics = LogAnalytics();
+    final useCase = CreateUserUseCase(
       users: mockRepositories.users,
       analytics: analytics,
     );
 
-    final AccountEntity dummyAccountModel = AuthMockImpl.generateAccount();
-    final UserEntity dummyModel = dummyAccountModel.toUserEntity();
+    final dummyAccountModel = AuthMockImpl.generateAccount();
+    final dummyModel = dummyAccountModel.toUserEntity();
 
     setUpAll(() {
       registerFallbackValue(dummyAccountModel);

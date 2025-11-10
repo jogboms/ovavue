@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:ovavue/presentation/theme/app_border_radius.dart';
+import 'package:ovavue/presentation/theme/app_font.dart' if (dart.library.html) 'app_font_web.dart';
+import 'package:ovavue/presentation/theme/app_style.dart';
 
-import 'app_border_radius.dart';
-import 'app_font.dart' if (dart.library.html) 'app_font_web.dart';
-import 'app_style.dart';
-
-const Color _kPrimaryLightColor = Color(0xFF006B5A);
-const Color _kPrimaryDarkColor = Color(0xFF5BDBBF);
-const Color _kBackgroundDarkColor = Color(0xFF010101);
-const double _kIconSize = 28.0;
+const _kPrimaryLightColor = Color(0xFF006B5A);
+const _kPrimaryDarkColor = Color(0xFF5BDBBF);
+const _kBackgroundDarkColor = Color(0xFF010101);
+const _kIconSize = 28.0;
 
 @visibleForTesting
 class AppColorTheme {
   const AppColorTheme._();
 
-  final Color success = const Color(0xFF239f77);
-  final Color onSuccess = const Color(0xFFFFFFFF);
+  Color get success => const Color(0xFF239f77);
 
-  final Color danger = const Color(0xFFEB5757);
-  final Color onDanger = const Color(0xFFFFFFFF);
+  Color get onSuccess => const Color(0xFFFFFFFF);
+
+  Color get danger => const Color(0xFFEB5757);
+
+  Color get onDanger => const Color(0xFFFFFFFF);
 }
 
 class AppTheme extends ThemeExtension<AppTheme> {
   const AppTheme._();
 
-  final AppColorTheme color = const AppColorTheme._();
+  AppColorTheme get color => const AppColorTheme._();
 
-  final BorderRadius textFieldBorderRadius = AppBorderRadius.c8;
+  BorderRadius get textFieldBorderRadius => AppBorderRadius.c8;
 
   @override
   ThemeExtension<AppTheme> copyWith() => this;
@@ -38,29 +39,29 @@ ThemeData themeBuilder(
   ThemeData defaultTheme, {
   AppTheme appTheme = const AppTheme._(),
 }) {
-  final Brightness brightness = defaultTheme.brightness;
-  final bool isDark = brightness == Brightness.dark;
+  final brightness = defaultTheme.brightness;
+  final isDark = brightness == Brightness.dark;
 
-  final ColorScheme colorScheme = ColorScheme.fromSeed(
+  final colorScheme = ColorScheme.fromSeed(
     seedColor: isDark ? _kPrimaryDarkColor : _kPrimaryLightColor,
     brightness: brightness,
   );
-  final Color scaffoldBackgroundColor = isDark ? _kBackgroundDarkColor : colorScheme.surface;
+  final scaffoldBackgroundColor = isDark ? _kBackgroundDarkColor : colorScheme.surface;
 
-  final OutlineInputBorder textFieldBorder = OutlineInputBorder(
+  final textFieldBorder = OutlineInputBorder(
     borderSide: BorderSide.none,
     borderRadius: appTheme.textFieldBorderRadius,
   );
-  final OutlineInputBorder textFieldErrorBorder = textFieldBorder.copyWith(
+  final textFieldErrorBorder = textFieldBorder.copyWith(
     borderSide: BorderSide(color: colorScheme.error),
   );
 
-  final TextTheme textTheme = defaultTheme.textTheme.apply(fontFamily: kAppFontFamily);
+  final textTheme = defaultTheme.textTheme.apply(fontFamily: kAppFontFamily);
 
-  final TextStyle? buttonTextStyle = textTheme.labelMedium?.copyWith(
+  final buttonTextStyle = textTheme.labelMedium?.copyWith(
     fontWeight: AppFontWeight.semibold,
   );
-  final ButtonStyle buttonStyle = ButtonStyle(
+  final buttonStyle = ButtonStyle(
     textStyle: WidgetStateProperty.all(buttonTextStyle),
     elevation: WidgetStateProperty.all(0),
   );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ovavue/core.dart';
 
-import '../constants.dart';
-import '../utils.dart';
-import 'dialog_page.dart';
-import 'primary_button.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets/dialog_page.dart';
+import 'package:ovavue/presentation/widgets/primary_button.dart';
 
 class BudgetCategoryEntryForm extends StatefulWidget {
   const BudgetCategoryEntryForm({
@@ -25,10 +25,10 @@ class BudgetCategoryEntryForm extends StatefulWidget {
 }
 
 class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final _formKey = GlobalKey<FormState>();
 
-  late final TextEditingController _titleController = TextEditingController(text: widget.title ?? '');
-  late final TextEditingController _descriptionController = TextEditingController(text: widget.description ?? '');
+  late final _titleController = TextEditingController(text: widget.title ?? '');
+  late final _descriptionController = TextEditingController(text: widget.description ?? '');
   late BudgetCategoryIcon _icon = widget.icon ?? BudgetCategoryIcon.values.random();
   late BudgetCategoryColorScheme _colorScheme = widget.colorScheme ?? BudgetCategoryColorScheme.values.random();
 
@@ -41,8 +41,8 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
-    const SizedBox spacing = SizedBox(height: 12.0);
+    final l10n = context.l10n;
+    const spacing = SizedBox(height: 12.0);
 
     return Form(
       key: _formKey,
@@ -128,7 +128,7 @@ class _BudgetCategoryEntryFormState extends State<BudgetCategoryEntryForm> {
   }
 
   void _handleCategorySelection() async {
-    final BudgetCategoryIcon? icon = await showModalBottomSheet(
+    final icon = await showModalBottomSheet<BudgetCategoryIcon>(
       context: context,
       builder: (_) => _IconPicker(initialValue: _icon),
     );
@@ -144,16 +144,15 @@ Future<BudgetCategoryEntryResult?> showBudgetCategoryEntryForm({
   required String? description,
   required BudgetCategoryIcon? icon,
   required BudgetCategoryColorScheme? colorScheme,
-}) =>
-    showDialogPage(
-      context: context,
-      builder: (_) => BudgetCategoryEntryForm(
-        title: title,
-        description: description,
-        icon: icon,
-        colorScheme: colorScheme,
-      ),
-    );
+}) => showDialogPage(
+  context: context,
+  builder: (_) => BudgetCategoryEntryForm(
+    title: title,
+    description: description,
+    icon: icon,
+    colorScheme: colorScheme,
+  ),
+);
 
 class BudgetCategoryEntryResult {
   const BudgetCategoryEntryResult({
@@ -174,11 +173,11 @@ class _IconPicker extends StatelessWidget {
 
   final BudgetCategoryIcon initialValue;
 
-  static const double _dimension = 48.0;
+  static const _dimension = 48.0;
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return SafeArea(
       top: false,
@@ -224,22 +223,20 @@ class _ColorItem extends StatelessWidget {
   final VoidCallback onPressed;
   final bool selected;
 
-  static const double _dimension = 56.0;
+  static const _dimension = 56.0;
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: selected ? null : onPressed,
-      child: Ink(
-        height: _dimension,
-        width: _dimension,
-        decoration: BoxDecoration(
-          color: colorScheme.background,
-          border: selected ? Border.all(color: colorScheme.foreground, width: 4) : null,
-          borderRadius: BorderRadius.circular(selected ? _dimension / 2 : 8),
-        ),
-        child: Icon(icon.data, color: colorScheme.foreground),
+  Widget build(BuildContext context) => InkWell(
+    onTap: selected ? null : onPressed,
+    child: Ink(
+      height: _dimension,
+      width: _dimension,
+      decoration: BoxDecoration(
+        color: colorScheme.background,
+        border: selected ? Border.all(color: colorScheme.foreground, width: 4) : null,
+        borderRadius: BorderRadius.circular(selected ? _dimension / 2 : 8),
       ),
-    );
-  }
+      child: Icon(icon.data, color: colorScheme.foreground),
+    ),
+  );
 }

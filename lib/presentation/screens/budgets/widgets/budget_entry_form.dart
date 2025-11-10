@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../constants.dart';
-import '../../../models.dart';
-import '../../../state.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 enum BudgetEntryType { create, update }
 
@@ -42,14 +42,14 @@ class BudgetEntryForm extends StatefulWidget {
 }
 
 class _BudgetEntryFormState extends State<BudgetEntryForm> {
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final _formKey = GlobalKey<FormState>();
   static final GlobalKey<FormFieldState<String>> _budgetsFieldKey = GlobalKey(debugLabel: 'budgetsFieldKey');
 
   late int _index = _computeIndex(widget.index ?? 0);
   late String? _budgetId = widget.budgetId;
-  late final TextEditingController _titleController = TextEditingController(text: widget.title ?? _deriveTitle(_index));
-  late final TextEditingController _descriptionController = TextEditingController(text: widget.description ?? '');
-  late final TextEditingController _amountController = TextEditingController(
+  late final _titleController = TextEditingController(text: widget.title ?? _deriveTitle(_index));
+  late final _descriptionController = TextEditingController(text: widget.description ?? '');
+  late final _amountController = TextEditingController(
     text: widget.amount?.editableTextValue ?? '',
   );
   late DateTime _startedAt = widget.startedAt ?? clock.now();
@@ -66,12 +66,12 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
-    const SizedBox spacing = SizedBox(height: 12.0);
+    final l10n = context.l10n;
+    const spacing = SizedBox(height: 12.0);
 
-    final bool creating = widget.type == BudgetEntryType.create;
-    final String? initialBudgetId = widget.budgetId;
-    final String? selectedBudgetId = _budgetId;
+    final creating = widget.type == BudgetEntryType.create;
+    final initialBudgetId = widget.budgetId;
+    final selectedBudgetId = _budgetId;
 
     return Form(
       key: _formKey,
@@ -196,7 +196,7 @@ class _BudgetEntryFormState extends State<BudgetEntryForm> {
 
   void _handleIdSelection(Iterable<BudgetViewModel> budgets, String? id) {
     if (id != null) {
-      _handleSelection(budgets.firstWhere((_) => _.id == id));
+      _handleSelection(budgets.firstWhere((BudgetViewModel e) => e.id == id));
     }
   }
 
@@ -227,7 +227,7 @@ class _BudgetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Row(
       children: <Widget>[
@@ -263,22 +263,21 @@ Future<BudgetEntryResult?> showBudgetEntryForm({
   required DateTime? startedAt,
   required DateTime? endedAt,
   required DateTime createdAt,
-}) =>
-    showDialogPage(
-      context: context,
-      builder: (_) => BudgetEntryForm(
-        type: type,
-        budgetId: budgetId,
-        index: index,
-        title: title,
-        description: description,
-        amount: amount,
-        active: active,
-        startedAt: startedAt,
-        endedAt: endedAt,
-        createdAt: createdAt,
-      ),
-    );
+}) => showDialogPage(
+  context: context,
+  builder: (_) => BudgetEntryForm(
+    type: type,
+    budgetId: budgetId,
+    index: index,
+    title: title,
+    description: description,
+    amount: amount,
+    active: active,
+    startedAt: startedAt,
+    endedAt: endedAt,
+    createdAt: createdAt,
+  ),
+);
 
 class BudgetEntryResult {
   const BudgetEntryResult({

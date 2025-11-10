@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import 'budget_entity.dart';
-import 'budget_plan_entity.dart';
-import 'reference_entity.dart';
+import 'package:ovavue/domain/entities/budget_entity.dart';
+import 'package:ovavue/domain/entities/budget_plan_entity.dart';
+import 'package:ovavue/domain/entities/reference_entity.dart';
 
 @visibleForTesting
 class BaseBudgetAllocationEntity<U, V> with EquatableMixin {

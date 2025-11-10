@@ -1,7 +1,6 @@
 import 'package:ovavue/domain.dart';
+import 'package:ovavue/presentation/state/registry_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import 'registry_provider.dart';
 
 part 'account_provider.g.dart';
 

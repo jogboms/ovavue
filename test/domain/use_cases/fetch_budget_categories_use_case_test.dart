@@ -7,14 +7,14 @@ import '../../utils.dart';
 
 void main() {
   group('FetchBudgetCategoriesUseCase', () {
-    final FetchBudgetCategoriesUseCase useCase = FetchBudgetCategoriesUseCase(
+    final useCase = FetchBudgetCategoriesUseCase(
       categories: mockRepositories.budgetCategories,
     );
 
     tearDown(mockRepositories.reset);
 
     test('should fetch budget categories', () {
-      final BudgetCategoryEntityList expectedBudgetCategories = BudgetCategoryEntityList.generate(
+      final expectedBudgetCategories = BudgetCategoryEntityList.generate(
         3,
         (_) => BudgetCategoriesMockImpl.generateCategory(),
       );
@@ -33,7 +33,7 @@ void main() {
     });
 
     test('should bubble stream errors', () {
-      final Exception expectedError = Exception('an error');
+      final expectedError = Exception('an error');
 
       when(() => mockRepositories.budgetCategories.fetchAll(any())).thenAnswer(
         (_) => Stream<BudgetCategoryEntityList>.error(expectedError),

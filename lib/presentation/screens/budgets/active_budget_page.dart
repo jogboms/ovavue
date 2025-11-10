@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../constants.dart';
-import '../../routing.dart';
-import '../../state.dart';
-import '../../utils.dart';
-import '../../widgets.dart';
-import 'providers/active_budget_provider.dart';
-import 'utils/create_budget_action.dart';
-import 'widgets/budget_detail_data_view.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/screens/budgets/providers/active_budget_provider.dart';
+import 'package:ovavue/presentation/screens/budgets/utils/create_budget_action.dart';
+import 'package:ovavue/presentation/screens/budgets/widgets/budget_detail_data_view.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class ActiveBudgetPage extends StatefulWidget {
   const ActiveBudgetPage({super.key});
@@ -20,44 +19,44 @@ class ActiveBudgetPage extends StatefulWidget {
 @visibleForTesting
 class ActiveBudgetPageState extends State<ActiveBudgetPage> {
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(activeBudgetProvider).when(
-              data: (BaseBudgetState state) => switch (state) {
-                BudgetState() => BudgetDetailDataView(key: dataViewKey, state: state),
-                EmptyBudgetState() => _EmptyBudgetView(ref: ref),
-              },
-              error: ErrorView.new,
-              loading: () => child!,
-              skipLoadingOnReload: true,
-            ),
-        child: const LoadingView(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(AppIcons.menu),
-        onPressed: () async {
-          late final AppRouter router = context.router;
-          final _BottomSheetChoice? result = await showModalBottomSheet<_BottomSheetChoice>(
-            context: context,
-            builder: (_) => const _BottomSheetOptions(),
-          );
+  Widget build(BuildContext context) => Scaffold(
+    body: Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+          .watch(activeBudgetProvider)
+          .when(
+            data: (BaseBudgetState state) => switch (state) {
+              BudgetState() => BudgetDetailDataView(key: dataViewKey, state: state),
+              EmptyBudgetState() => _EmptyBudgetView(ref: ref),
+            },
+            error: ErrorView.new,
+            loading: () => child!,
+            skipLoadingOnReload: true,
+          ),
+      child: const LoadingView(),
+    ),
+    floatingActionButton: FloatingActionButton(
+      child: const Icon(AppIcons.menu),
+      onPressed: () async {
+        late final router = context.router;
+        final result = await showModalBottomSheet<_BottomSheetChoice>(
+          context: context,
+          builder: (_) => const _BottomSheetOptions(),
+        );
 
-          return switch (result) {
-            _BottomSheetChoice.budgets => router.goToBudgets(),
-            _BottomSheetChoice.plans => router.goToBudgetPlans(),
-            _BottomSheetChoice.categories => router.goToBudgetCategories(),
-            _BottomSheetChoice.metadata => router.goToBudgetMetadata(),
-            _BottomSheetChoice.preferences => router.goToPreferences(),
-            null => null,
-          };
-        },
-      ),
-    );
-  }
+        return switch (result) {
+          _BottomSheetChoice.budgets => router.goToBudgets(),
+          _BottomSheetChoice.plans => router.goToBudgetPlans(),
+          _BottomSheetChoice.categories => router.goToBudgetCategories(),
+          _BottomSheetChoice.metadata => router.goToBudgetMetadata(),
+          _BottomSheetChoice.preferences => router.goToPreferences(),
+          null => null,
+        };
+      },
+    ),
+  );
 }
 
 class _EmptyBudgetView extends StatelessWidget {
@@ -67,8 +66,8 @@ class _EmptyBudgetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final L10n l10n = context.l10n;
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     const Widget spacing = SizedBox(height: 12);
 
@@ -115,9 +114,9 @@ class _BottomSheetOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(

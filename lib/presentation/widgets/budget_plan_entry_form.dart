@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants.dart';
-import '../models.dart';
-import '../state.dart';
-import '../utils.dart';
-import 'budget_category_avatar.dart';
-import 'dialog_page.dart';
-import 'primary_button.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets/budget_category_avatar.dart';
+import 'package:ovavue/presentation/widgets/dialog_page.dart';
+import 'package:ovavue/presentation/widgets/primary_button.dart';
 
 enum BudgetPlanEntryType { create, update }
 
@@ -30,12 +30,12 @@ class BudgetPlanEntryForm extends StatefulWidget {
 }
 
 class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final _formKey = GlobalKey<FormState>();
   static final GlobalKey<FormFieldState<String>> _categoriesFieldKey = GlobalKey(debugLabel: 'categoriesFieldKey');
-  static const Key _createCategoryButtonKey = Key('createCategoryButtonKey');
+  static const _createCategoryButtonKey = Key('createCategoryButtonKey');
 
-  late final TextEditingController _titleController = TextEditingController(text: widget.title ?? '');
-  late final TextEditingController _descriptionController = TextEditingController(text: widget.description ?? '');
+  late final _titleController = TextEditingController(text: widget.title ?? '');
+  late final _descriptionController = TextEditingController(text: widget.description ?? '');
   late BudgetCategoryViewModel? _selectedCategory = widget.category;
 
   @override
@@ -47,12 +47,12 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
-    const SizedBox spacing = SizedBox(height: 12.0);
+    final l10n = context.l10n;
+    const spacing = SizedBox(height: 12.0);
 
-    final bool creating = widget.type == BudgetPlanEntryType.create;
-    final BudgetCategoryViewModel? initialCategory = widget.category;
-    final BudgetCategoryViewModel? selectedCategory = _selectedCategory;
+    final creating = widget.type == BudgetPlanEntryType.create;
+    final initialCategory = widget.category;
+    final selectedCategory = _selectedCategory;
 
     return Form(
       key: _formKey,
@@ -114,7 +114,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
                             child: categories.length == 1
                                 ? Builder(
                                     builder: (_) {
-                                      final BudgetCategoryViewModel category = categories.first;
+                                      final category = categories.first;
                                       _handleCategorySelection(category);
                                       return _CategoryItem(key: Key(category.id), category: categories.first);
                                     },
@@ -164,7 +164,7 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
   }
 
   void _handleCategoryCreation(WidgetRef ref) async {
-    final String? id = await createBudgetCategoryAction(
+    final id = await createBudgetCategoryAction(
       context: context,
       ref: ref,
       navigateOnComplete: false,
@@ -184,12 +184,12 @@ class _BudgetPlanEntryFormState extends State<BudgetPlanEntryForm> {
 
   void _handleCategoryIdSelection(Iterable<BudgetCategoryViewModel> categories, String? id) {
     if (id != null) {
-      _selectedCategory = categories.firstWhere((_) => _.id == id);
+      _selectedCategory = categories.firstWhere((BudgetCategoryViewModel e) => e.id == id);
     }
   }
 
   void _handleSubmit() {
-    final BudgetCategoryViewModel? category = _selectedCategory;
+    final category = _selectedCategory;
     if (category != null && _formKey.currentState?.validate() == true) {
       Navigator.pop(
         context,
@@ -210,7 +210,7 @@ class _CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Row(
       children: <Widget>[
@@ -235,16 +235,15 @@ Future<BudgetPlanEntryResult?> showBudgetPlanEntryForm({
   required String? title,
   required String? description,
   required BudgetCategoryViewModel? category,
-}) =>
-    showDialogPage(
-      context: context,
-      builder: (_) => BudgetPlanEntryForm(
-        type: type,
-        title: title,
-        description: description,
-        category: category,
-      ),
-    );
+}) => showDialogPage(
+  context: context,
+  builder: (_) => BudgetPlanEntryForm(
+    type: type,
+    title: title,
+    description: description,
+    category: category,
+  ),
+);
 
 class BudgetPlanEntryResult {
   const BudgetPlanEntryResult({

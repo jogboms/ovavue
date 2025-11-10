@@ -1,7 +1,7 @@
-import '../entities/budget_allocation_entity.dart';
-import '../entities/create_budget_allocation_data.dart';
-import '../entities/reference_entity.dart';
-import '../entities/update_budget_allocation_data.dart';
+import 'package:ovavue/domain/entities/budget_allocation_entity.dart';
+import 'package:ovavue/domain/entities/create_budget_allocation_data.dart';
+import 'package:ovavue/domain/entities/reference_entity.dart';
+import 'package:ovavue/domain/entities/update_budget_allocation_data.dart';
 
 abstract class BudgetAllocationsRepository {
   Future<String> create(String userId, CreateBudgetAllocationData allocation);

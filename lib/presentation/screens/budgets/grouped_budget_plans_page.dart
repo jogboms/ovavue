@@ -2,13 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants.dart';
-import '../../models.dart';
-import '../../routing.dart';
-import '../../state.dart';
-import '../../theme.dart';
-import '../../utils.dart';
-import '../../widgets.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class GroupedBudgetPlansPage extends StatefulWidget {
   const GroupedBudgetPlansPage({super.key, required this.budgetId});
@@ -21,32 +21,31 @@ class GroupedBudgetPlansPage extends StatefulWidget {
 
 class _GroupedBudgetPlansPageState extends State<GroupedBudgetPlansPage> {
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
-  bool _expandAllGroups = false;
+  var _expandAllGroups = false;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) =>
-            ref.watch(selectedBudgetProvider(widget.budgetId)).when(
-                  data: (BudgetState data) => _ContentDataView(
-                    key: dataViewKey,
-                    state: data,
-                    expandAllGroups: _expandAllGroups,
-                  ),
-                  error: ErrorView.new,
-                  loading: () => child!,
-                ),
-        child: const LoadingView(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(AppIcons.toggleAll),
-        onPressed: () => setState(() => _expandAllGroups = !_expandAllGroups),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    body: Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+          .watch(selectedBudgetProvider(widget.budgetId))
+          .when(
+            data: (BudgetState data) => _ContentDataView(
+              key: dataViewKey,
+              state: data,
+              expandAllGroups: _expandAllGroups,
+            ),
+            error: ErrorView.new,
+            loading: () => child!,
+          ),
+      child: const LoadingView(),
+    ),
+    floatingActionButton: FloatingActionButton(
+      child: const Icon(AppIcons.toggleAll),
+      onPressed: () => setState(() => _expandAllGroups = !_expandAllGroups),
+    ),
+  );
 }
 
 class _ContentDataView extends StatelessWidget {
@@ -57,10 +56,12 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
-    final Map<String, List<BudgetPlanViewModel>> plansByCategory = state.plans.groupListsBy((_) => _.category.id);
+    final plansByCategory = state.plans.groupListsBy(
+      (BudgetPlanViewModel e) => e.category.id,
+    );
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -80,7 +81,7 @@ class _ContentDataView extends StatelessWidget {
         if (state.categories.isEmpty)
           const SliverFillRemaining(child: EmptyView())
         else
-          // ignore: prefer_final_locals, false positive
+          // ignore: false positive
           for (final (BudgetCategoryViewModel category, Money allocation) in state.categories)
             SliverPadding(
               padding: const EdgeInsets.only(top: 4),
@@ -119,7 +120,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Row(
       children: <Widget>[
@@ -155,9 +156,9 @@ class _PlanTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
-    final BudgetAllocationViewModel? allocation = plan.allocation;
+    final allocation = plan.allocation;
 
     return AmountRatioDecoratedBox(
       color: plan.category.colorScheme.background,

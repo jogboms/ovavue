@@ -1,9 +1,12 @@
 import 'dart:ui';
 
+import 'package:meta/meta.dart';
+
+@immutable
 class BudgetCategoryColorScheme {
   const BudgetCategoryColorScheme._(this.foreground, this.background, this.brightness);
 
-  static const BudgetCategoryColorScheme excess = BudgetCategoryColorScheme._(
+  static const excess = BudgetCategoryColorScheme._(
     Color(0xFFB7B7B7),
     Color(0xFF363636),
     Brightness.dark,
@@ -28,7 +31,7 @@ class BudgetCategoryColorScheme {
   int get hashCode => foreground.hashCode ^ background.hashCode ^ brightness.hashCode;
 
   /// Would be great not to change the index of the color schemes. Append-only and/or Replace-only
-  static const List<BudgetCategoryColorScheme> values = <BudgetCategoryColorScheme>[
+  static const values = <BudgetCategoryColorScheme>[
     BudgetCategoryColorScheme._(Color(0xFFFFFFFF), Color(0xFF00539C), Brightness.dark),
     BudgetCategoryColorScheme._(Color(0xFF000000), Color(0xFFEEA47F), Brightness.light),
     BudgetCategoryColorScheme._(Color(0xFFFFFFFF), Color(0xFF2F3C7E), Brightness.dark),

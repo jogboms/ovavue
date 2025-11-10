@@ -133,7 +133,6 @@ class FakeStackTrace extends Fake implements StackTrace {}
 
 class FakeFlutterErrorDetails extends Fake implements FlutterErrorDetails {
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return toDiagnosticsNode(style: DiagnosticsTreeStyle.error).toStringDeep(minLevel: minLevel);
-  }
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      toDiagnosticsNode(style: DiagnosticsTreeStyle.error).toStringDeep(minLevel: minLevel);
 }

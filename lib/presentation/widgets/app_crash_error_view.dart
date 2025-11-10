@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../theme.dart';
-import '../utils.dart';
-import 'app_icon.dart';
-import 'custom_app_bar.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets/app_icon.dart';
+import 'package:ovavue/presentation/widgets/custom_app_bar.dart';
 
 class AppCrashErrorView extends StatelessWidget {
   const AppCrashErrorView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = context.theme;
-    final TextTheme textTheme = theme.textTheme;
-    final L10n l10n = context.l10n;
+    final theme = context.theme;
+    final textTheme = theme.textTheme;
+    final l10n = context.l10n;
     return Scaffold(
       appBar: CustomAppBar.empty,
       body: SingleChildScrollView(

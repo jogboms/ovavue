@@ -6,7 +6,7 @@ enum Environment {
   prod,
   testing;
 
-  static const String _envMode = String.fromEnvironment('env.mode', defaultValue: 'mock');
+  static const _envMode = String.fromEnvironment('env.mode', defaultValue: 'mock');
 
   static Environment _derive() {
     if (io.Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -29,13 +29,11 @@ enum Environment {
   bool get isTesting => this == testing;
 
   bool get isDebugging {
-    bool condition = false;
-    assert(
-      () {
-        condition = true;
-        return condition;
-      }(),
-    );
+    var condition = false;
+    assert(() {
+      condition = true;
+      return condition;
+    }(), 'Not in debug mode');
     return condition;
   }
 }

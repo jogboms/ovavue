@@ -6,7 +6,7 @@ import 'package:args/args.dart';
 
 import 'utils.dart';
 
-final ArgParser parser = ArgParser()
+final parser = ArgParser()
   ..addMultiOption(
     'platform',
     allowed: BuildPlatform.values.names,
@@ -24,19 +24,19 @@ final ArgParser parser = ArgParser()
   ..addFlag('gitPush');
 
 void main(List<String> arguments) async {
-  final ArgResults args = parser.parse(arguments);
-  final List<String> platform = args['platform'] as List<String>;
-  final String versionBumpType = args['versionBumpType'] as String;
-  final bool skipAnalysisChecks = args['skipAnalysisChecks'] as bool;
-  final bool skipTests = args['skipTests'] as bool;
-  final bool gitPush = args['gitPush'] as bool;
+  final args = parser.parse(arguments);
+  final platform = args['platform'] as List<String>;
+  final versionBumpType = args['versionBumpType'] as String;
+  final skipAnalysisChecks = args['skipAnalysisChecks'] as bool;
+  final skipTests = args['skipTests'] as bool;
+  final gitPush = args['gitPush'] as bool;
 
-  final String newVersion = await bumpPackageVersion(
+  final newVersion = await bumpPackageVersion(
     VersionBumpType.fromName(versionBumpType),
     workingDirectory: workingDirectory,
   );
 
-  for (final CmdAction action in <CmdAction>[
+  for (final action in <CmdAction>[
     const CmdAction('melos bs'),
     if (!skipAnalysisChecks) const CmdAction('melos run analyze'),
     if (!skipTests) const CmdAction('melos run test_with_coverage'),
@@ -54,7 +54,6 @@ void main(List<String> arguments) async {
       const CmdAction('git push --force-with-lease'),
     ],
   ]) {
-    // ignore: invalid_use_of_visible_for_testing_member
     await runCmdAction(action, environment: Platform.environment);
   }
 }

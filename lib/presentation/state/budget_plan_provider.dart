@@ -2,17 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:ovavue/domain.dart';
-import 'package:registry/registry.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../models.dart';
-import '../state.dart';
 
 part 'budget_plan_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user])
 BudgetPlanProvider budgetPlan(BudgetPlanRef ref) {
-  final RegistryFactory di = ref.read(registryProvider).get;
+  final di = ref.read(registryProvider).get;
 
   return BudgetPlanProvider(
     fetchUser: () => ref.read(userProvider.future),
@@ -35,13 +33,13 @@ class BudgetPlanProvider {
     required CreateBudgetAllocationUseCase createBudgetAllocationUseCase,
     required UpdateBudgetAllocationUseCase updateBudgetAllocationUseCase,
     required DeleteBudgetAllocationUseCase deleteBudgetAllocationUseCase,
-  })  : _deleteBudgetAllocationUseCase = deleteBudgetAllocationUseCase,
-        _updateBudgetAllocationUseCase = updateBudgetAllocationUseCase,
-        _createBudgetAllocationUseCase = createBudgetAllocationUseCase,
-        _deleteBudgetPlanUseCase = deleteBudgetPlanUseCase,
-        _updateBudgetPlanUseCase = updateBudgetPlanUseCase,
-        _createBudgetPlanUseCase = createBudgetPlanUseCase,
-        _fetchUser = fetchUser;
+  }) : _deleteBudgetAllocationUseCase = deleteBudgetAllocationUseCase,
+       _updateBudgetAllocationUseCase = updateBudgetAllocationUseCase,
+       _createBudgetAllocationUseCase = createBudgetAllocationUseCase,
+       _deleteBudgetPlanUseCase = deleteBudgetPlanUseCase,
+       _updateBudgetPlanUseCase = updateBudgetPlanUseCase,
+       _createBudgetPlanUseCase = createBudgetPlanUseCase,
+       _fetchUser = fetchUser;
 
   final AsyncValueGetter<UserEntity> _fetchUser;
   final CreateBudgetPlanUseCase _createBudgetPlanUseCase;
@@ -52,7 +50,7 @@ class BudgetPlanProvider {
   final DeleteBudgetAllocationUseCase _deleteBudgetAllocationUseCase;
 
   Future<String> create(CreateBudgetPlanData data) async {
-    final String userId = (await _fetchUser()).id;
+    final userId = (await _fetchUser()).id;
     return _createBudgetPlanUseCase(userId: userId, plan: data);
   }
 
@@ -62,12 +60,12 @@ class BudgetPlanProvider {
     required String id,
     required String path,
   }) async {
-    final String userId = (await _fetchUser()).id;
+    final userId = (await _fetchUser()).id;
     return _deleteBudgetPlanUseCase(userId: userId, id: id, path: path);
   }
 
   Future<String> createAllocation(CreateBudgetAllocationData data) async {
-    final String userId = (await _fetchUser()).id;
+    final userId = (await _fetchUser()).id;
     return _createBudgetAllocationUseCase(userId: userId, allocation: data);
   }
 
@@ -76,21 +74,18 @@ class BudgetPlanProvider {
   Future<bool> deleteAllocation({
     required String id,
     required String path,
-  }) async =>
-      _deleteBudgetAllocationUseCase(id: id, path: path);
+  }) async => _deleteBudgetAllocationUseCase(id: id, path: path);
 
   Future<bool> updateCategory({
     required BudgetPlanViewModel plan,
     required BudgetCategoryViewModel category,
-  }) async {
-    return _updateBudgetPlanUseCase.call(
-      UpdateBudgetPlanData(
-        id: plan.id,
-        path: plan.path,
-        title: plan.title,
-        description: plan.description,
-        category: (id: category.id, path: category.path),
-      ),
-    );
-  }
+  }) async => _updateBudgetPlanUseCase.call(
+    UpdateBudgetPlanData(
+      id: plan.id,
+      path: plan.path,
+      title: plan.title,
+      description: plan.description,
+      category: (id: category.id, path: category.path),
+    ),
+  );
 }

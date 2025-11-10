@@ -1,7 +1,7 @@
 import 'package:ovavue/core.dart';
 
-import '../entities/user_entity.dart';
-import '../repositories/users.dart';
+import 'package:ovavue/domain/entities/user_entity.dart';
+import 'package:ovavue/domain/repositories/users.dart';
 
 class FetchUserUseCase {
   const FetchUserUseCase({required UsersRepository users}) : _users = users;

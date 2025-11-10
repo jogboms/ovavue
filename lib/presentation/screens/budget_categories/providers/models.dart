@@ -1,5 +1,5 @@
-import '../../../models.dart';
-import '../../../utils.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/utils.dart';
 
 typedef BudgetCategoryPlanViewModel = (BudgetPlanViewModel, Money?);
 

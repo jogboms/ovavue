@@ -1,4 +1,4 @@
-import 'reference_entity.dart';
+import 'package:ovavue/domain/entities/reference_entity.dart';
 
 class UpdateBudgetPlanData {
   const UpdateBudgetPlanData({

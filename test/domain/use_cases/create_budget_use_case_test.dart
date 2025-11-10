@@ -6,15 +6,15 @@ import '../../utils.dart';
 
 void main() {
   group('CreateBudgetUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final CreateBudgetUseCase useCase = CreateBudgetUseCase(
+    final analytics = LogAnalytics();
+    final useCase = CreateBudgetUseCase(
       budgets: mockRepositories.budgets,
       allocations: mockRepositories.budgetAllocations,
       analytics: analytics,
     );
 
-    const ReferenceEntity dummyReference = (id: '1', path: 'path');
-    final CreateBudgetData dummyData = CreateBudgetData(
+    const dummyReference = (id: '1', path: 'path');
+    final dummyData = CreateBudgetData(
       index: 1,
       title: 'title',
       amount: 1,

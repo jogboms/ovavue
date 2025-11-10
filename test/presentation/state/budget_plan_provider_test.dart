@@ -10,8 +10,8 @@ import '../../utils.dart';
 
 Future<void> main() async {
   group('BudgetPlanProvider', () {
-    final MockAsyncCallback<UserEntity> mockFetchUser = MockAsyncCallback<UserEntity>();
-    final UserEntity dummyUser = UsersMockImpl.user;
+    final mockFetchUser = MockAsyncCallback<UserEntity>();
+    final dummyUser = UsersMockImpl.user;
 
     setUpAll(() {
       registerFallbackValue(FakeCreateBudgetPlanData());
@@ -26,36 +26,40 @@ Future<void> main() async {
     });
 
     BudgetPlanProvider createProvider() => BudgetPlanProvider(
-          fetchUser: mockFetchUser,
-          createBudgetPlanUseCase: mockUseCases.createBudgetPlanUseCase,
-          updateBudgetPlanUseCase: mockUseCases.updateBudgetPlanUseCase,
-          deleteBudgetPlanUseCase: mockUseCases.deleteBudgetPlanUseCase,
-          createBudgetAllocationUseCase: mockUseCases.createBudgetAllocationUseCase,
-          updateBudgetAllocationUseCase: mockUseCases.updateBudgetAllocationUseCase,
-          deleteBudgetAllocationUseCase: mockUseCases.deleteBudgetAllocationUseCase,
-        );
+      fetchUser: mockFetchUser.call,
+      createBudgetPlanUseCase: mockUseCases.createBudgetPlanUseCase,
+      updateBudgetPlanUseCase: mockUseCases.updateBudgetPlanUseCase,
+      deleteBudgetPlanUseCase: mockUseCases.deleteBudgetPlanUseCase,
+      createBudgetAllocationUseCase: mockUseCases.createBudgetAllocationUseCase,
+      updateBudgetAllocationUseCase: mockUseCases.updateBudgetAllocationUseCase,
+      deleteBudgetAllocationUseCase: mockUseCases.deleteBudgetAllocationUseCase,
+    );
 
     test('should create new instance when read', () {
-      final ProviderContainer container = createProviderContainer();
+      final container = createProviderContainer();
       addTearDown(container.dispose);
 
       expect(container.read(budgetPlanProvider), isA<BudgetPlanProvider>());
     });
 
     test('should create new budget plan for user from userProvider', () async {
-      when(() => mockUseCases.createBudgetPlanUseCase.call(plan: any(named: 'plan'), userId: any(named: 'userId')))
-          .thenAnswer((_) async => '1');
+      when(
+        () => mockUseCases.createBudgetPlanUseCase.call(
+          plan: any(named: 'plan'),
+          userId: any(named: 'userId'),
+        ),
+      ).thenAnswer((_) async => '1');
 
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
         ],
       );
       addTearDown(container.dispose);
 
-      final BudgetPlanProvider provider = container.read(budgetPlanProvider);
+      final provider = container.read(budgetPlanProvider);
 
-      final String id = await provider.create(
+      final id = await provider.create(
         const CreateBudgetPlanData(
           title: 'title',
           description: 'description',
@@ -69,21 +73,26 @@ Future<void> main() async {
     group('Create', () {
       test('should create new budget plan for user', () async {
         when(mockFetchUser.call).thenAnswer((_) async => dummyUser);
-        when(() => mockUseCases.createBudgetPlanUseCase.call(plan: any(named: 'plan'), userId: any(named: 'userId')))
-            .thenAnswer((_) async => '1');
+        when(
+          () => mockUseCases.createBudgetPlanUseCase.call(
+            plan: any(named: 'plan'),
+            userId: any(named: 'userId'),
+          ),
+        ).thenAnswer((_) async => '1');
 
-        const CreateBudgetPlanData createBudgetPlanData = CreateBudgetPlanData(
+        const createBudgetPlanData = CreateBudgetPlanData(
           title: 'title',
           description: 'description',
           category: (id: 'id', path: 'path'),
         );
-        final String budgetPlanId = await createProvider().create(createBudgetPlanData);
+        final budgetPlanId = await createProvider().create(createBudgetPlanData);
 
         expect(budgetPlanId, '1');
         verify(mockFetchUser.call).called(1);
 
-        verify(() => mockUseCases.createBudgetPlanUseCase.call(userId: dummyUser.id, plan: createBudgetPlanData))
-            .called(1);
+        verify(
+          () => mockUseCases.createBudgetPlanUseCase.call(userId: dummyUser.id, plan: createBudgetPlanData),
+        ).called(1);
       });
     });
 
@@ -91,7 +100,7 @@ Future<void> main() async {
       test('should update existing budget plan', () async {
         when(() => mockUseCases.updateBudgetPlanUseCase.call(any())).thenAnswer((_) async => true);
 
-        const UpdateBudgetPlanData updateBudgetPlanData = UpdateBudgetPlanData(
+        const updateBudgetPlanData = UpdateBudgetPlanData(
           id: '1',
           path: 'path',
           title: 'title',
@@ -108,7 +117,7 @@ Future<void> main() async {
       test('should update existing budget plan\'s category', () async {
         when(() => mockUseCases.updateBudgetPlanUseCase.call(any())).thenAnswer((_) async => true);
 
-        final BudgetCategoryViewModel expectedCategory = BudgetCategoryViewModel(
+        final expectedCategory = BudgetCategoryViewModel(
           id: '1',
           path: 'path',
           title: 'title',
@@ -118,7 +127,7 @@ Future<void> main() async {
           createdAt: DateTime(0),
           updatedAt: DateTime(0),
         );
-        final BudgetPlanViewModel expectedPlan = BudgetPlanViewModel(
+        final expectedPlan = BudgetPlanViewModel(
           id: '1',
           path: 'path',
           title: 'title',
@@ -129,7 +138,7 @@ Future<void> main() async {
           updatedAt: DateTime(0),
         );
 
-        const UpdateBudgetPlanData updateBudgetPlanData = UpdateBudgetPlanData(
+        const updateBudgetPlanData = UpdateBudgetPlanData(
           id: '1',
           path: 'path',
           title: 'title',
@@ -138,8 +147,9 @@ Future<void> main() async {
         );
         await createProvider().updateCategory(plan: expectedPlan, category: expectedCategory);
 
-        final UpdateBudgetPlanData updateData =
-            verify(() => mockUseCases.updateBudgetPlanUseCase.call(captureAny())).capturedType();
+        final updateData = verify(
+          () => mockUseCases.updateBudgetPlanUseCase.call(captureAny()),
+        ).capturedType<UpdateBudgetPlanData>();
         expect(updateData.id, updateBudgetPlanData.id);
         expect(updateData.path, updateBudgetPlanData.path);
       });
@@ -148,8 +158,9 @@ Future<void> main() async {
     group('Delete', () {
       test('should delete existing budget plan', () async {
         when(mockFetchUser.call).thenAnswer((_) async => dummyUser);
-        when(() => mockUseCases.deleteBudgetPlanUseCase.call(userId: dummyUser.id, id: '1', path: 'path'))
-            .thenAnswer((_) async => true);
+        when(
+          () => mockUseCases.deleteBudgetPlanUseCase.call(userId: dummyUser.id, id: '1', path: 'path'),
+        ).thenAnswer((_) async => true);
 
         await createProvider().delete(id: '1', path: 'path');
 
@@ -160,8 +171,12 @@ Future<void> main() async {
     group('Delete allocation', () {
       test('should delete existing budget plan', () async {
         when(mockFetchUser.call).thenAnswer((_) async => dummyUser);
-        when(() => mockUseCases.deleteBudgetAllocationUseCase.call(id: any(named: 'id'), path: any(named: 'path')))
-            .thenAnswer((_) async => true);
+        when(
+          () => mockUseCases.deleteBudgetAllocationUseCase.call(
+            id: any(named: 'id'),
+            path: any(named: 'path'),
+          ),
+        ).thenAnswer((_) async => true);
 
         await createProvider().deleteAllocation(id: '1', path: 'path');
 
@@ -179,12 +194,12 @@ Future<void> main() async {
           ),
         ).thenAnswer((_) async => '1');
 
-        const CreateBudgetAllocationData createBudgetAllocationData = CreateBudgetAllocationData(
+        const createBudgetAllocationData = CreateBudgetAllocationData(
           amount: 1,
           budget: (id: 'id', path: 'path'),
           plan: (id: 'id', path: 'path'),
         );
-        final String budgetPlanId = await createProvider().createAllocation(createBudgetAllocationData);
+        final budgetPlanId = await createProvider().createAllocation(createBudgetAllocationData);
 
         expect(budgetPlanId, '1');
         verify(mockFetchUser.call).called(1);
@@ -202,7 +217,7 @@ Future<void> main() async {
       test('should update existing budget allocation for plan', () async {
         when(() => mockUseCases.updateBudgetAllocationUseCase.call(any())).thenAnswer((_) async => true);
 
-        const UpdateBudgetAllocationData updateBudgetAllocationData = UpdateBudgetAllocationData(
+        const updateBudgetAllocationData = UpdateBudgetAllocationData(
           id: '1',
           path: 'path',
           amount: 1,

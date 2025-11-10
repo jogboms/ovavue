@@ -7,15 +7,16 @@ import '../../utils.dart';
 
 void main() {
   group('FetchActiveBudgetUseCase', () {
-    final FetchActiveBudgetUseCase useCase = FetchActiveBudgetUseCase(budgets: mockRepositories.budgets);
+    final useCase = FetchActiveBudgetUseCase(budgets: mockRepositories.budgets);
 
     tearDown(mockRepositories.reset);
 
     test('should fetch active budget', () {
-      final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget();
+      final expectedBudget = BudgetsMockImpl.generateBudget();
 
-      when(() => mockRepositories.budgets.fetchActiveBudget(any()))
-          .thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
+      when(
+        () => mockRepositories.budgets.fetchActiveBudget(any()),
+      ).thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
 
       expectLater(useCase('1'), emits(expectedBudget));
     });
@@ -27,7 +28,7 @@ void main() {
     });
 
     test('should bubble stream errors', () {
-      final Exception expectedError = Exception('an error');
+      final expectedError = Exception('an error');
 
       when(() => mockRepositories.budgets.fetchActiveBudget(any())).thenAnswer(
         (_) => Stream<BudgetEntity>.error(expectedError),

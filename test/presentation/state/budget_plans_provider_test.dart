@@ -9,12 +9,12 @@ import '../../utils.dart';
 
 Future<void> main() async {
   group('BudgetPlansProvider', () {
-    final UserEntity dummyUser = UsersMockImpl.user;
+    final dummyUser = UsersMockImpl.user;
 
     tearDown(mockUseCases.reset);
 
     Future<List<BudgetPlanViewModel>> createProviderStream() {
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
         ],
@@ -24,17 +24,21 @@ Future<void> main() async {
     }
 
     test('should initialize with empty state', () {
-      when(() => mockUseCases.fetchBudgetPlansUseCase.call(any()))
-          .thenAnswer((_) => Stream<List<BudgetPlanEntity>>.value(<BudgetPlanEntity>[]));
+      when(
+        () => mockUseCases.fetchBudgetPlansUseCase.call(any()),
+      ).thenAnswer((_) => Stream<List<BudgetPlanEntity>>.value(<BudgetPlanEntity>[]));
 
       expect(createProviderStream(), completes);
     });
 
     test('should emit fetched tags', () {
-      final List<BudgetPlanEntity> expectedBudgetPlans =
-          List<BudgetPlanEntity>.filled(3, BudgetPlansMockImpl.generatePlan());
-      when(() => mockUseCases.fetchBudgetPlansUseCase.call(any()))
-          .thenAnswer((_) => Stream<List<BudgetPlanEntity>>.value(expectedBudgetPlans));
+      final expectedBudgetPlans = List<BudgetPlanEntity>.filled(
+        3,
+        BudgetPlansMockImpl.generatePlan(),
+      );
+      when(
+        () => mockUseCases.fetchBudgetPlansUseCase.call(any()),
+      ).thenAnswer((_) => Stream<List<BudgetPlanEntity>>.value(expectedBudgetPlans));
 
       expect(
         createProviderStream(),

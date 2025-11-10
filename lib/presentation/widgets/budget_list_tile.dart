@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../theme.dart';
-import '../utils.dart';
-import '../widgets.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetListTile extends StatelessWidget {
   const BudgetListTile({
@@ -28,14 +28,14 @@ class BudgetListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
-    final Money? allocationAmount = this.allocationAmount;
+    final allocationAmount = this.allocationAmount;
 
-    final Color? foregroundColor = active ? colorScheme.onSurfaceVariant : null;
-    final TextStyle? titleTextStyle = textTheme.titleMedium?.copyWith(color: foregroundColor);
+    final foregroundColor = active ? colorScheme.onSurfaceVariant : null;
+    final titleTextStyle = textTheme.titleMedium?.copyWith(color: foregroundColor);
 
     return ListTile(
       title: Text(title.sentence(), style: titleTextStyle),

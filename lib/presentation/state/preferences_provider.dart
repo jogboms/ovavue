@@ -1,10 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:ovavue/domain.dart';
-import 'package:registry/registry.dart';
+import 'package:ovavue/presentation/state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../state.dart';
 
 part 'preferences_provider.g.dart';
 
@@ -12,9 +10,9 @@ part 'preferences_provider.g.dart';
 class Preferences extends _$Preferences {
   @override
   Future<PreferencesState> build() async {
-    final RegistryFactory di = ref.read(registryProvider).get;
-    final AccountEntity account = await ref.watch(accountProvider.future);
-    final int? themeMode = await di<FetchThemeModeUseCase>().call();
+    final di = ref.read(registryProvider).get;
+    final account = await ref.watch(accountProvider.future);
+    final themeMode = await di<FetchThemeModeUseCase>().call();
 
     return PreferencesState(
       accountKey: account.id,

@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/core.dart';
+import 'package:ovavue/presentation/backup_client/backup_client.dart';
+import 'package:ovavue/presentation/backup_client/backup_client_provider.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 import 'package:universal_io/io.dart' as io;
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../backup_client/backup_client.dart';
-import '../../backup_client/backup_client_provider.dart';
-import '../../constants.dart';
-import '../../state.dart';
-import '../../utils.dart';
-import '../../widgets.dart';
 
 class PreferencesPage extends StatefulWidget {
   const PreferencesPage({super.key});
@@ -21,11 +20,11 @@ class PreferencesPage extends StatefulWidget {
 
 class _PreferencesPageState extends State<PreferencesPage> {
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -33,7 +32,9 @@ class _PreferencesPageState extends State<PreferencesPage> {
         centerTitle: true,
       ),
       body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(preferencesProvider).when(
+        builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+            .watch(preferencesProvider)
+            .when(
               data: (PreferencesState data) => _ContentDataView(
                 key: dataViewKey,
                 backupClientController: ref.read(backupClientControllerProvider),
@@ -63,8 +64,8 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
-    final ThemeData theme = Theme.of(context);
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
 
     return Column(
       children: <Widget>[
@@ -188,14 +189,14 @@ class _ContentDataView extends StatelessWidget {
   }
 
   void _handleCopyToClipboard(BuildContext context, String value) async {
-    final L10n l10n = context.l10n;
-    final AppSnackBar snackBar = AppSnackBar.of(context);
+    final l10n = context.l10n;
+    final snackBar = AppSnackBar.of(context);
     await Clipboard.setData(ClipboardData(text: value));
     snackBar.info(l10n.copiedToClipboardMessage);
   }
 
   void _handleThemeModeUpdate(BuildContext context, ThemeMode value) async {
-    final ThemeMode? themeMode = await showModalBottomSheet<ThemeMode>(
+    final themeMode = await showModalBottomSheet<ThemeMode>(
       context: context,
       builder: (_) => _BottomSheetOptions(initialValue: value),
     );
@@ -205,10 +206,10 @@ class _ContentDataView extends StatelessWidget {
   }
 
   void _handleDatabaseBackupClientSetup(BuildContext context, BackupClient client) async {
-    final L10n l10n = context.l10n;
-    final AppSnackBar snackBar = AppSnackBar.of(context);
+    final l10n = context.l10n;
+    final snackBar = AppSnackBar.of(context);
 
-    final BackupClientResult result = await backupClientController.setup(client, state.accountKey);
+    final result = await backupClientController.setup(client, state.accountKey);
     return switch (result) {
       BackupClientResult.success => snackBar.success(l10n.successfulMessage),
       BackupClientResult.failure => snackBar.error(l10n.genericErrorMessage),
@@ -218,10 +219,10 @@ class _ContentDataView extends StatelessWidget {
   }
 
   void _handleDatabaseImport(BuildContext context) async {
-    final L10n l10n = context.l10n;
-    final AppSnackBar snackBar = AppSnackBar.of(context);
+    final l10n = context.l10n;
+    final snackBar = AppSnackBar.of(context);
 
-    final BackupClientResult result = await backupClientController.import();
+    final result = await backupClientController.import();
     switch (result) {
       case BackupClientResult.success:
         if (context.mounted) {
@@ -240,10 +241,10 @@ class _ContentDataView extends StatelessWidget {
   }
 
   void _handleDatabaseExport(BuildContext context) async {
-    final L10n l10n = context.l10n;
-    final AppSnackBar snackBar = AppSnackBar.of(context);
+    final l10n = context.l10n;
+    final snackBar = AppSnackBar.of(context);
 
-    final BackupClientResult result = await backupClientController.export();
+    final result = await backupClientController.export();
     return switch (result) {
       BackupClientResult.success => snackBar.success(l10n.successfulMessage),
       BackupClientResult.failure => snackBar.error(l10n.genericErrorMessage),
@@ -253,15 +254,18 @@ class _ContentDataView extends StatelessWidget {
   }
 
   void _handleSendEmail({String subject = 'Hello from Ovavue', String? body}) => _handleOpenUrl(
-        Uri(
-          scheme: 'mailto',
-          path: 'jeremiahogbomo@gmail.com',
-          query: <String, String>{
-            'subject': subject,
-            if (body != null) 'body': body,
-          }.entries.map((_) => '${Uri.encodeComponent(_.key)}=${Uri.encodeComponent(_.value)}').join('&'),
-        ),
-      );
+    Uri(
+      scheme: 'mailto',
+      path: 'jeremiahogbomo@gmail.com',
+      query:
+          <String, String>{
+                'subject': subject,
+                'body': ?body,
+              }.entries
+              .map((MapEntry<String, String> e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+              .join('&'),
+    ),
+  );
 
   void _handleOpenTwitter() => _handleOpenUrl(Uri.https('twitter.com', 'jogboms'));
 
@@ -270,14 +274,14 @@ class _ContentDataView extends StatelessWidget {
   void _handleOpenWebsite() => _handleOpenUrl(Uri.https('jogboms.github.io'));
 
   void _handleTranslationRequest() => _handleSendEmail(
-        subject: 'Translation request for Ovavue',
-        body: 'I would like to be able to use the application in my local language. My language is ',
-      );
+    subject: 'Translation request for Ovavue',
+    body: 'I would like to be able to use the application in my local language. My language is ',
+  );
 
   void _handleCurrencyRequest() => _handleSendEmail(
-        subject: 'Currency request for Ovavue',
-        body: 'I would like to be able to use the application in my local currency. My currency is ',
-      );
+    subject: 'Currency request for Ovavue',
+    body: 'I would like to be able to use the application in my local currency. My currency is ',
+  );
 
   void _handleOpenUrl(Uri url) async {
     try {
@@ -306,8 +310,8 @@ class _Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -350,8 +354,8 @@ class _ExitDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = context.l10n;
-    final ThemeData theme = Theme.of(context);
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
 
     return SafeArea(
       top: false,
@@ -379,11 +383,11 @@ class _BottomSheetOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
-    final Color activeColor = colorScheme.primary;
+    final activeColor = colorScheme.primary;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -429,8 +433,8 @@ class _BottomSheetOptions extends StatelessWidget {
 
 extension on ThemeMode {
   IconData get icon => switch (this) {
-        ThemeMode.system => AppIcons.autoThemeMode,
-        ThemeMode.dark => AppIcons.darkThemeMode,
-        ThemeMode.light => AppIcons.lightThemeMode,
-      };
+    ThemeMode.system => AppIcons.autoThemeMode,
+    ThemeMode.dark => AppIcons.darkThemeMode,
+    ThemeMode.light => AppIcons.lightThemeMode,
+  };
 }

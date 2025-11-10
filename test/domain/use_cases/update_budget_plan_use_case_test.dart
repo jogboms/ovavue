@@ -6,13 +6,13 @@ import '../../utils.dart';
 
 void main() {
   group('UpdateBudgetPlanUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final UpdateBudgetPlanUseCase useCase = UpdateBudgetPlanUseCase(
+    final analytics = LogAnalytics();
+    final useCase = UpdateBudgetPlanUseCase(
       plans: mockRepositories.budgetPlans,
       analytics: analytics,
     );
 
-    const UpdateBudgetPlanData dummyData = UpdateBudgetPlanData(
+    const dummyData = UpdateBudgetPlanData(
       id: 'id',
       path: 'path',
       title: 'title',

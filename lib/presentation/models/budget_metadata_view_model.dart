@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'budget_metadata_key_view_model.dart';
-import 'budget_metadata_value_view_model.dart';
+import 'package:ovavue/presentation/models/budget_metadata_key_view_model.dart';
+import 'package:ovavue/presentation/models/budget_metadata_value_view_model.dart';
 
 class BudgetMetadataViewModel with EquatableMixin {
   const BudgetMetadataViewModel({

@@ -46,7 +46,7 @@ void main() {
   });
 }
 
-final workingDirectory = Directory.current.path;
+final String workingDirectory = Directory.current.path;
 
 Future<String> bumpPackageVersion(
   VersionBumpType type, {
@@ -61,7 +61,7 @@ Future<String> bumpPackageVersion(
   final currentVersion = versionRegExp.firstMatch(pubspec)!.group(2)!;
   final newVersion = type.bump(currentVersion, override: valueOverride);
 
-  final updatedPubspec = pubspec.replaceFirstMapped(versionRegExp, (match) => '${match[1]}$newVersion');
+  final updatedPubspec = pubspec.replaceFirstMapped(versionRegExp, (Match match) => '${match[1]}$newVersion');
   await pubspecFile.writeAsString(updatedPubspec);
 
   return newVersion;
@@ -76,10 +76,11 @@ enum VersionBumpType {
   static VersionBumpType fromName(String? name) => values.asNameMap()[name] ?? VersionBumpType.patch;
 
   String bump(String current, {String? override}) {
-    final split = RegExp(r'(\d+).(\d+).(\d+)\+?(\d)?')
+    final split =
+        RegExp(r'(\d+).(\d+).(\d+)\+?(\d)?')
             .firstMatch(current)
-            ?.groups([1, 2, 3, 4])
-            .map((it) => it != null ? int.tryParse(it) ?? 0 : 0)
+            ?.groups(<int>[1, 2, 3, 4])
+            .map((String? it) => it != null ? int.tryParse(it) ?? 0 : 0)
             .toList() ??
         List<int>.filled(4, 0);
 
@@ -97,7 +98,7 @@ enum BuildPlatform { android, ios }
 enum FlavorPlatform { dev, prod }
 
 extension EnumNames on Iterable<Enum> {
-  Iterable<String> get names => map((it) => it.name);
+  Iterable<String> get names => map((Enum it) => it.name);
 }
 
 final class CmdAction {

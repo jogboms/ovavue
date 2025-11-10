@@ -8,13 +8,13 @@ import 'package:riverpod/riverpod.dart';
 import '../../../../utils.dart';
 
 Future<void> main() async {
-  final UserEntity dummyUser = UsersMockImpl.user;
+  final dummyUser = UsersMockImpl.user;
 
   tearDown(mockUseCases.reset);
 
   group('ActiveBudgetIdProvider', () {
     Future<String?> createProviderStream() {
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
         ],
@@ -25,9 +25,10 @@ Future<void> main() async {
     }
 
     test('should show active budget id', () async {
-      final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget();
-      when(() => mockUseCases.fetchActiveBudgetUseCase.call(any()))
-          .thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
+      final expectedBudget = BudgetsMockImpl.generateBudget();
+      when(
+        () => mockUseCases.fetchActiveBudgetUseCase.call(any()),
+      ).thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
 
       expect(
         createProviderStream(),
@@ -36,8 +37,9 @@ Future<void> main() async {
     });
 
     test('should return null when no active budget', () async {
-      when(() => mockUseCases.fetchActiveBudgetUseCase.call(any()))
-          .thenAnswer((_) => Stream<BudgetEntity?>.value(null));
+      when(
+        () => mockUseCases.fetchActiveBudgetUseCase.call(any()),
+      ).thenAnswer((_) => Stream<BudgetEntity?>.value(null));
 
       expect(
         createProviderStream(),

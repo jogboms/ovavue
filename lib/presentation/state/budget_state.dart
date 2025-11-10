@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../models.dart';
-import '../utils.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/utils.dart';
 
 sealed class BaseBudgetState {
   static const BaseBudgetState empty = EmptyBudgetState();

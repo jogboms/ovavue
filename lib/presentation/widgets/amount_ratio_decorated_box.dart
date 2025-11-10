@@ -20,7 +20,7 @@ class AmountRatioDecoratedBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Material(
       type: MaterialType.transparency,

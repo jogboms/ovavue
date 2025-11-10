@@ -1,6 +1,5 @@
+import 'package:ovavue/presentation/state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../../state.dart';
 
 part 'filter_plans_by_budget_metadata.g.dart';
 
@@ -9,7 +8,7 @@ Future<BaseBudgetPlansByMetadataState> filterPlansByBudgetMetadata(
   FilterPlansByBudgetMetadataRef ref, {
   required String budgetId,
 }) async {
-  final String? metadataId = ref.watch(filterMetadataIdProvider);
+  final metadataId = ref.watch(filterMetadataIdProvider);
   if (metadataId == null) {
     return BaseBudgetPlansByMetadataState.empty;
   }

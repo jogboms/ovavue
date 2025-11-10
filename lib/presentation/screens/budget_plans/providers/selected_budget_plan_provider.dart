@@ -1,11 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ovavue/domain.dart';
-import 'package:registry/registry.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../../models.dart';
-import '../../../state.dart';
 
 part 'models.dart';
 part 'selected_budget_plan_provider.g.dart';
@@ -16,23 +14,23 @@ Stream<BudgetPlanState> selectedBudgetPlan(
   required String id,
   required String? budgetId,
 }) async* {
-  final Registry registry = ref.read(registryProvider);
-  final UserEntity user = await ref.watch(userProvider.future);
+  final registry = ref.read(registryProvider);
+  final user = await ref.watch(userProvider.future);
 
-  final BudgetPlanViewModel? plan = await ref.watch(
+  final plan = await ref.watch(
     budgetPlansProvider.selectAsync(
-      (List<BudgetPlanViewModel> plans) => plans.firstWhereOrNull((_) => _.id == id),
+      (List<BudgetPlanViewModel> plans) => plans.firstWhereOrNull((BudgetPlanViewModel e) => e.id == id),
     ),
   );
 
   if (plan != null) {
-    final BudgetViewModel? budget = await ref.watch(
+    final budget = await ref.watch(
       budgetsProvider.selectAsync(
-        (List<BudgetViewModel> budgets) => budgets.firstWhereOrNull((_) => _.id == budgetId),
+        (List<BudgetViewModel> budgets) => budgets.firstWhereOrNull((BudgetViewModel e) => e.id == budgetId),
       ),
     );
 
-    final List<BudgetMetadataValueViewModel> metadata = await ref.watch(
+    final metadata = await ref.watch(
       selectedBudgetMetadataByPlanProvider(id: plan.id).future,
     );
 
@@ -44,10 +42,12 @@ Stream<BudgetPlanState> selectedBudgetPlan(
             plan: plan,
             metadata: metadata,
             budget: budget,
-            allocation: allocations.firstWhereOrNull((_) => _.budget.id == budgetId)?.toViewModel(),
+            allocation: allocations
+                .firstWhereOrNull((BudgetAllocationEntity e) => e.budget.id == budgetId)
+                ?.toViewModel(),
             previousAllocations: allocations
-                .where((_) => _.budget.id != budgetId)
-                .map((_) => (_.toViewModel(), BudgetViewModel.fromEntity(_.budget)))
+                .where((BudgetAllocationEntity e) => e.budget.id != budgetId)
+                .map((BudgetAllocationEntity e) => (e.toViewModel(), BudgetViewModel.fromEntity(e.budget)))
                 .sorted(
                   (BudgetPlanAllocationViewModel a, BudgetPlanAllocationViewModel b) =>
                       b.$2.startedAt.compareTo(a.$2.startedAt),

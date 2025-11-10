@@ -6,13 +6,13 @@ import '../../utils.dart';
 
 void main() {
   group('UpdateBudgetAllocationUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final UpdateBudgetAllocationUseCase useCase = UpdateBudgetAllocationUseCase(
+    final analytics = LogAnalytics();
+    final useCase = UpdateBudgetAllocationUseCase(
       allocations: mockRepositories.budgetAllocations,
       analytics: analytics,
     );
 
-    const UpdateBudgetAllocationData dummyData = UpdateBudgetAllocationData(
+    const dummyData = UpdateBudgetAllocationData(
       id: 'id',
       path: 'path',
       amount: 1,

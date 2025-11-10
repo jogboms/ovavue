@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:ovavue/domain.dart';
 
-import '../utils.dart';
+import 'package:ovavue/presentation/utils.dart';
 
 class BudgetAllocationViewModel with EquatableMixin {
   const BudgetAllocationViewModel({
@@ -24,10 +24,10 @@ class BudgetAllocationViewModel with EquatableMixin {
 
 extension BudgetAllocationViewModelExtension on BudgetAllocationEntity {
   BudgetAllocationViewModel toViewModel() => BudgetAllocationViewModel(
-        id: id,
-        path: path,
-        amount: Money(amount),
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
+    id: id,
+    path: path,
+    amount: Money(amount),
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  );
 }

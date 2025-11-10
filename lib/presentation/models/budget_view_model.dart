@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:ovavue/domain.dart';
-
-import '../utils.dart';
+import 'package:ovavue/presentation/utils.dart';
 
 class BudgetViewModel with EquatableMixin {
   const BudgetViewModel({
@@ -18,21 +17,19 @@ class BudgetViewModel with EquatableMixin {
     required this.updatedAt,
   });
 
-  static BudgetViewModel fromEntity(BudgetEntity entity) {
-    return BudgetViewModel(
-      id: entity.id,
-      title: entity.title,
-      index: entity.index,
-      path: entity.path,
-      amount: entity.amount.asMoney,
-      description: entity.description,
-      active: entity.active,
-      startedAt: entity.startedAt,
-      endedAt: entity.endedAt,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    );
-  }
+  factory BudgetViewModel.fromEntity(BudgetEntity entity) => BudgetViewModel(
+    id: entity.id,
+    title: entity.title,
+    index: entity.index,
+    path: entity.path,
+    amount: entity.amount.asMoney,
+    description: entity.description,
+    active: entity.active,
+    startedAt: entity.startedAt,
+    endedAt: entity.endedAt,
+    createdAt: entity.createdAt,
+    updatedAt: entity.updatedAt,
+  );
 
   final String id;
   final String path;
@@ -47,6 +44,17 @@ class BudgetViewModel with EquatableMixin {
   final DateTime? updatedAt;
 
   @override
-  List<Object?> get props =>
-      <Object?>[id, path, index, title, amount, description, active, startedAt, endedAt, createdAt, updatedAt];
+  List<Object?> get props => <Object?>[
+    id,
+    path,
+    index,
+    title,
+    amount,
+    description,
+    active,
+    startedAt,
+    endedAt,
+    createdAt,
+    updatedAt,
+  ];
 }

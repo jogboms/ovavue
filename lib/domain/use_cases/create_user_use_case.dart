@@ -1,15 +1,15 @@
-import '../analytics/analytics.dart';
-import '../analytics/analytics_event.dart';
-import '../entities/account_entity.dart';
-import '../entities/user_entity.dart';
-import '../repositories/users.dart';
+import 'package:ovavue/domain/analytics/analytics.dart';
+import 'package:ovavue/domain/analytics/analytics_event.dart';
+import 'package:ovavue/domain/entities/account_entity.dart';
+import 'package:ovavue/domain/entities/user_entity.dart';
+import 'package:ovavue/domain/repositories/users.dart';
 
 class CreateUserUseCase {
   const CreateUserUseCase({
     required UsersRepository users,
     required Analytics analytics,
-  })  : _users = users,
-        _analytics = analytics;
+  }) : _users = users,
+       _analytics = analytics;
 
   final UsersRepository _users;
   final Analytics _analytics;

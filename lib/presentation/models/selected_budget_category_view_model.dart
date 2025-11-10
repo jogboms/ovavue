@@ -1,7 +1,6 @@
 import 'package:ovavue/domain.dart';
-
-import '../utils.dart';
-import 'budget_category_view_model.dart';
+import 'package:ovavue/presentation/models/budget_category_view_model.dart';
+import 'package:ovavue/presentation/utils.dart';
 
 typedef SelectedBudgetCategoryViewModel = (BudgetCategoryViewModel, Money);
 

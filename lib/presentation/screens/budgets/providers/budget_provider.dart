@@ -1,17 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:ovavue/domain.dart';
-import 'package:registry/registry.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/screens/budgets/providers/active_budget_provider.dart';
+import 'package:ovavue/presentation/state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../../models.dart';
-import '../../../state.dart';
-import 'active_budget_provider.dart';
 
 part 'budget_provider.g.dart';
 
 @Riverpod(dependencies: <Object>[registry, user, activeBudget, selectedBudget])
 BudgetProvider budget(BudgetRef ref) {
-  final RegistryFactory di = ref.read(registryProvider).get;
+  final di = ref.read(registryProvider).get;
 
   return BudgetProvider(
     fetchUser: () => ref.read(userProvider.future),
@@ -28,16 +26,15 @@ BudgetProvider budget(BudgetRef ref) {
         (BudgetState data) => data.plans.fold(
           <ReferenceEntity, int>{},
           (PlanToAllocationMap previousValue, BudgetPlanViewModel element) {
-            final int? amount = element.allocation?.amount.rawValue;
+            final amount = element.allocation?.amount.rawValue;
             if (amount == null) {
               return previousValue;
             }
 
-            return previousValue
-              ..putIfAbsent(
-                (id: element.id, path: element.path),
-                () => amount,
-              );
+            return previousValue..putIfAbsent(
+              (id: element.id, path: element.path),
+              () => amount,
+            );
           },
         ),
       ),
@@ -57,12 +54,12 @@ class BudgetProvider {
     required CreateBudgetUseCase createBudgetUseCase,
     required ActivateBudgetUseCase activateBudgetUseCase,
     required UpdateBudgetUseCase updateBudgetUseCase,
-  })  : _updateBudgetUseCase = updateBudgetUseCase,
-        _activateBudgetUseCase = activateBudgetUseCase,
-        _createBudgetUseCase = createBudgetUseCase,
-        _fetchBudgetAllocations = fetchBudgetAllocations,
-        _fetchActiveBudgetReference = fetchActiveBudgetReference,
-        _fetchUser = fetchUser;
+  }) : _updateBudgetUseCase = updateBudgetUseCase,
+       _activateBudgetUseCase = activateBudgetUseCase,
+       _createBudgetUseCase = createBudgetUseCase,
+       _fetchBudgetAllocations = fetchBudgetAllocations,
+       _fetchActiveBudgetReference = fetchActiveBudgetReference,
+       _fetchUser = fetchUser;
 
   final AsyncValueGetter<UserEntity> _fetchUser;
   final AsyncValueGetter<ReferenceEntity?> _fetchActiveBudgetReference;
@@ -81,9 +78,9 @@ class BudgetProvider {
     required DateTime? endedAt,
     required bool active,
   }) async {
-    final String userId = (await _fetchUser()).id;
-    final ReferenceEntity? activeBudgetReference = await _fetchActiveBudgetReference();
-    final PlanToAllocationMap? allocations = fromBudgetId != null ? await _fetchBudgetAllocations(fromBudgetId) : null;
+    final userId = (await _fetchUser()).id;
+    final activeBudgetReference = await _fetchActiveBudgetReference();
+    final allocations = fromBudgetId != null ? await _fetchBudgetAllocations(fromBudgetId) : null;
 
     return _createBudgetUseCase.call(
       userId: userId,
@@ -105,8 +102,8 @@ class BudgetProvider {
     required String id,
     required String path,
   }) async {
-    final String userId = (await _fetchUser()).id;
-    final ReferenceEntity? activeBudgetReference = await _fetchActiveBudgetReference();
+    final userId = (await _fetchUser()).id;
+    final activeBudgetReference = await _fetchActiveBudgetReference();
 
     return _activateBudgetUseCase.call(
       userId: userId,
@@ -124,18 +121,16 @@ class BudgetProvider {
     required bool active,
     required DateTime startedAt,
     required DateTime? endedAt,
-  }) async {
-    return _updateBudgetUseCase.call(
-      UpdateBudgetData(
-        id: id,
-        path: path,
-        title: title,
-        amount: amount,
-        description: description,
-        active: active,
-        startedAt: startedAt,
-        endedAt: endedAt,
-      ),
-    );
-  }
+  }) async => _updateBudgetUseCase.call(
+    UpdateBudgetData(
+      id: id,
+      path: path,
+      title: title,
+      amount: amount,
+      description: description,
+      active: active,
+      startedAt: startedAt,
+      endedAt: endedAt,
+    ),
+  );
 }

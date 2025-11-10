@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:ovavue/data/local_database.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../local_database.dart';
 
 class AuthLocalImpl implements AuthRepository {
   const AuthLocalImpl(this._db, this._storage);
@@ -12,8 +11,8 @@ class AuthLocalImpl implements AuthRepository {
 
   @override
   Future<AccountEntity> fetch() async {
-    final String? id = await _storage.get();
-    final AccountEntity account = await _db.accountsDao.getOrCreateSingleAccount(id);
+    final id = await _storage.get();
+    final account = await _db.accountsDao.getOrCreateSingleAccount(id);
     if (id == null || id != account.id) {
       await _storage.set(account.id);
     }

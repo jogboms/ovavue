@@ -14,17 +14,17 @@ void main() {
     });
 
     testWidgets('should work as expected without errors', (WidgetTester tester) async {
-      const Key childKey = Key('child');
-      const Key errorViewKey = Key('errorView');
+      const childKey = Key('child');
+      const errorViewKey = Key('errorView');
 
-      final MockCrashHandler crashHandler = MockCrashHandler();
-      final MockExceptionHandler exceptionHandler = MockExceptionHandler();
+      final crashHandler = MockCrashHandler();
+      final exceptionHandler = MockExceptionHandler();
 
       await tester.pumpWidget(
         ErrorBoundary(
           errorViewBuilder: (_) => const SizedBox.shrink(key: errorViewKey),
-          onCrash: crashHandler,
-          onException: exceptionHandler,
+          onCrash: crashHandler.call,
+          onException: exceptionHandler.call,
           child: const SizedBox.shrink(key: childKey),
         ),
       );
@@ -36,17 +36,17 @@ void main() {
     });
 
     testWidgets('should trigger onCrash', (WidgetTester tester) async {
-      const Key childKey = Key('child');
-      const Key errorViewKey = Key('errorView');
+      const childKey = Key('child');
+      const errorViewKey = Key('errorView');
 
-      final MockCrashHandler crashHandler = MockCrashHandler();
-      final MockExceptionHandler exceptionHandler = MockExceptionHandler();
+      final crashHandler = MockCrashHandler();
+      final exceptionHandler = MockExceptionHandler();
 
       await tester.pumpWidget(
         ErrorBoundary(
           errorViewBuilder: (_) => const SizedBox.shrink(key: errorViewKey),
-          onCrash: crashHandler,
-          onException: exceptionHandler,
+          onCrash: crashHandler.call,
+          onException: exceptionHandler.call,
           isReleaseMode: true,
           child: Builder(key: childKey, builder: (_) => throw Exception()),
         ),
@@ -62,17 +62,17 @@ void main() {
     });
 
     testWidgets('should not override error handler in non-release mode', (WidgetTester tester) async {
-      const Key childKey = Key('child');
-      const Key errorViewKey = Key('errorView');
+      const childKey = Key('child');
+      const errorViewKey = Key('errorView');
 
-      final MockCrashHandler crashHandler = MockCrashHandler();
-      final MockExceptionHandler exceptionHandler = MockExceptionHandler();
+      final crashHandler = MockCrashHandler();
+      final exceptionHandler = MockExceptionHandler();
 
       await tester.pumpWidget(
         ErrorBoundary(
           errorViewBuilder: (_) => const SizedBox.shrink(key: errorViewKey),
-          onCrash: crashHandler,
-          onException: exceptionHandler,
+          onCrash: crashHandler.call,
+          onException: exceptionHandler.call,
           child: Builder(key: childKey, builder: (_) => throw Exception()),
         ),
       );
@@ -92,18 +92,18 @@ void main() {
     testWidgets(
       'should trigger onException',
       (WidgetTester tester) async {
-        const Key childKey = Key('child');
-        const Key errorViewKey = Key('errorView');
+        const childKey = Key('child');
+        const errorViewKey = Key('errorView');
 
-        final MockCrashHandler crashHandler = MockCrashHandler();
-        final MockExceptionHandler exceptionHandler = MockExceptionHandler();
+        final crashHandler = MockCrashHandler();
+        final exceptionHandler = MockExceptionHandler();
 
         await tester.pumpWidget(
           ErrorBoundary(
             platformDispatcher: tester.binding.platformDispatcher,
             errorViewBuilder: (_) => const SizedBox.shrink(key: errorViewKey),
-            onCrash: crashHandler,
-            onException: exceptionHandler,
+            onCrash: crashHandler.call,
+            onException: exceptionHandler.call,
             isReleaseMode: true,
             child: MaterialApp(
               home: GestureDetector(

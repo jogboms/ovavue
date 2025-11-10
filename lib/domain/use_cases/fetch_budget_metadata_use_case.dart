@@ -1,5 +1,5 @@
-import '../entities/budget_metadata_value_entity.dart';
-import '../repositories/budget_metadata.dart';
+import 'package:ovavue/domain/entities/budget_metadata_value_entity.dart';
+import 'package:ovavue/domain/repositories/budget_metadata.dart';
 
 class FetchBudgetMetadataUseCase {
   const FetchBudgetMetadataUseCase({

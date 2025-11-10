@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:ovavue/data/repositories/preferences/theme_mode_storage.dart';
 import 'package:ovavue/domain.dart';
-
-import 'theme_mode_storage.dart';
 
 class PreferencesLocalImpl implements PreferencesRepository {
   const PreferencesLocalImpl(this._themeModeStorage);

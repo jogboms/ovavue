@@ -1,14 +1,14 @@
-import '../analytics/analytics.dart';
-import '../analytics/analytics_event.dart';
-import '../entities/update_budget_metadata_data.dart';
-import '../repositories/budget_metadata.dart';
+import 'package:ovavue/domain/analytics/analytics.dart';
+import 'package:ovavue/domain/analytics/analytics_event.dart';
+import 'package:ovavue/domain/entities/update_budget_metadata_data.dart';
+import 'package:ovavue/domain/repositories/budget_metadata.dart';
 
 class UpdateBudgetMetadataUseCase {
   const UpdateBudgetMetadataUseCase({
     required BudgetMetadataRepository metadata,
     required Analytics analytics,
-  })  : _metadata = metadata,
-        _analytics = analytics;
+  }) : _metadata = metadata,
+       _analytics = analytics;
 
   final BudgetMetadataRepository _metadata;
   final Analytics _analytics;

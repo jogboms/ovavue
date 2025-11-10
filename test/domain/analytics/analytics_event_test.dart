@@ -10,11 +10,11 @@ void main() {
     test('should serialize to string', () {
       expect(AnalyticsEvent('name').toString(), 'app_name');
       expect(
-        AnalyticsEvent('name', <String, dynamic>{}).toString(),
+        AnalyticsEvent('name', {}).toString(),
         'app_name',
       );
       expect(
-        AnalyticsEvent('name', <String, dynamic>{'1': 'one'}).toString(),
+        AnalyticsEvent('name', {'1': 'one'}).toString(),
         'app_name: {1: one}',
       );
     });

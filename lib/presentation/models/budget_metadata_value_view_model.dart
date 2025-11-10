@@ -10,15 +10,13 @@ class BudgetMetadataValueViewModel with EquatableMixin {
     required this.key,
   });
 
-  static BudgetMetadataValueViewModel fromEntity(BudgetMetadataValueEntity entity) {
-    return BudgetMetadataValueViewModel(
-      id: entity.id,
-      path: entity.path,
-      title: entity.title,
-      value: entity.value,
-      key: (id: entity.key.id, path: entity.key.path),
-    );
-  }
+  factory BudgetMetadataValueViewModel.fromEntity(BudgetMetadataValueEntity entity) => BudgetMetadataValueViewModel(
+    id: entity.id,
+    path: entity.path,
+    title: entity.title,
+    value: entity.value,
+    key: (id: entity.key.id, path: entity.key.path),
+  );
 
   final String id;
   final String path;

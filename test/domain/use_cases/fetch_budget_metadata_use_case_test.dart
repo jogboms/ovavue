@@ -7,20 +7,21 @@ import '../../utils.dart';
 
 void main() {
   group('FetchBudgetMetadataUseCase', () {
-    final FetchBudgetMetadataUseCase useCase = FetchBudgetMetadataUseCase(
+    final useCase = FetchBudgetMetadataUseCase(
       metadata: mockRepositories.budgetMetadata,
     );
 
     tearDown(mockRepositories.reset);
 
     test('should fetch budget metadata', () {
-      final BudgetMetadataKeyEntity key = BudgetMetadataMockImpl.generateMetadataKey();
-      final BudgetMetadataValueEntityList expectedMetadata = <BudgetMetadataValueEntity>[
+      final key = BudgetMetadataMockImpl.generateMetadataKey();
+      final expectedMetadata = <BudgetMetadataValueEntity>[
         BudgetMetadataMockImpl.generateMetadataValue(key: key),
       ];
 
-      when(() => mockRepositories.budgetMetadata.fetchAll(any()))
-          .thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(expectedMetadata));
+      when(
+        () => mockRepositories.budgetMetadata.fetchAll(any()),
+      ).thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(expectedMetadata));
 
       expectLater(useCase('1'), emits(expectedMetadata));
     });
@@ -32,7 +33,7 @@ void main() {
     });
 
     test('should bubble stream errors', () {
-      final Exception expectedError = Exception('an error');
+      final expectedError = Exception('an error');
 
       when(() => mockRepositories.budgetMetadata.fetchAll(any())).thenAnswer(
         (_) => Stream<BudgetMetadataValueEntityList>.error(expectedError),

@@ -6,13 +6,13 @@ import '../../utils.dart';
 
 void main() {
   group('UpdateBudgetCategoryUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final UpdateBudgetCategoryUseCase useCase = UpdateBudgetCategoryUseCase(
+    final analytics = LogAnalytics();
+    final useCase = UpdateBudgetCategoryUseCase(
       categories: mockRepositories.budgetCategories,
       analytics: analytics,
     );
 
-    const UpdateBudgetCategoryData dummyData = UpdateBudgetCategoryData(
+    const dummyData = UpdateBudgetCategoryData(
       id: 'id',
       path: 'path',
       title: 'title',

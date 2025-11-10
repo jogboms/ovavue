@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils.dart';
+import 'package:ovavue/presentation/utils.dart';
 
 enum BudgetDurationTextType { small, medium, large }
 
@@ -29,12 +29,12 @@ class BudgetDurationText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
-    final DateTime? endedAt = this.endedAt;
-    final TextStyle? textStyle = switch (type) {
+    final endedAt = this.endedAt;
+    final textStyle = switch (type) {
       BudgetDurationTextType.small => textTheme.bodySmall,
       BudgetDurationTextType.medium => textTheme.titleSmall,
       BudgetDurationTextType.large => textTheme.titleMedium,

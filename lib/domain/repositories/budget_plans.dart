@@ -1,7 +1,7 @@
-import '../entities/budget_plan_entity.dart';
-import '../entities/create_budget_plan_data.dart';
-import '../entities/reference_entity.dart';
-import '../entities/update_budget_plan_data.dart';
+import 'package:ovavue/domain/entities/budget_plan_entity.dart';
+import 'package:ovavue/domain/entities/create_budget_plan_data.dart';
+import 'package:ovavue/domain/entities/reference_entity.dart';
+import 'package:ovavue/domain/entities/update_budget_plan_data.dart';
 
 abstract class BudgetPlansRepository {
   Future<String> create(String userId, CreateBudgetPlanData plan);

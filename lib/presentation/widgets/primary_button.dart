@@ -8,10 +8,8 @@ class PrimaryButton extends StatelessWidget {
   final bool enabled;
 
   @override
-  Widget build(BuildContext context) {
-    return FilledButton.tonal(
-      onPressed: enabled ? onPressed : null,
-      child: Text(caption),
-    );
-  }
+  Widget build(BuildContext context) => FilledButton.tonal(
+    onPressed: enabled ? onPressed : null,
+    child: Text(caption),
+  );
 }

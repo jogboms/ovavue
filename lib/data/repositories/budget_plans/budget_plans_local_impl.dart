@@ -1,6 +1,5 @@
+import 'package:ovavue/data/local_database.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../local_database.dart';
 
 class BudgetPlansLocalImpl implements BudgetPlansRepository {
   const BudgetPlansLocalImpl(this._db);

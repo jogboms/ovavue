@@ -2,18 +2,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/screens/budgets/providers/budget_provider.dart';
+import 'package:ovavue/presentation/screens/budgets/utils/create_budget_action.dart';
+import 'package:ovavue/presentation/screens/budgets/widgets/budget_entry_form.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
-import '../../../constants.dart';
-import '../../../models.dart';
-import '../../../routing.dart';
-import '../../../state.dart';
-import '../../../theme.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
-import '../providers/budget_provider.dart';
-import '../utils/create_budget_action.dart';
-import 'budget_entry_form.dart';
 
 class BudgetDetailDataView extends StatelessWidget {
   const BudgetDetailDataView({super.key, required this.state});
@@ -22,8 +21,8 @@ class BudgetDetailDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final AppRouter router = context.router;
+    final theme = Theme.of(context);
+    final router = context.router;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -132,7 +131,7 @@ class BudgetDetailDataView extends StatelessWidget {
             ),
             sliver: SliverList.separated(
               itemBuilder: (BuildContext context, int index) {
-                final BudgetPlanViewModel plan = state.plans[index];
+                final plan = state.plans[index];
 
                 return _PlanTile(
                   key: Key(plan.id),
@@ -145,7 +144,7 @@ class BudgetDetailDataView extends StatelessWidget {
                   ),
                 );
               },
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
+              separatorBuilder: (_, _) => const SizedBox(height: 4),
               itemCount: state.plans.length,
             ),
           ),
@@ -159,10 +158,10 @@ class BudgetDetailDataView extends StatelessWidget {
     required BudgetViewModel budget,
     required List<BudgetPlanViewModel> plans,
   }) async {
-    final BudgetAllocationEntryResult? result = await showBudgetAllocationEntryForm(
+    final result = await showBudgetAllocationEntryForm(
       context: context,
       budgetId: budget.id,
-      plansById: plans.map((_) => _.id),
+      plansById: plans.map((BudgetPlanViewModel e) => e.id),
       plan: null,
       allocation: null,
     );
@@ -170,7 +169,9 @@ class BudgetDetailDataView extends StatelessWidget {
       return;
     }
 
-    await ref.read(budgetPlanProvider).createAllocation(
+    await ref
+        .read(budgetPlanProvider)
+        .createAllocation(
           CreateBudgetAllocationData(
             amount: result.amount.rawValue,
             budget: (id: budget.id, path: budget.path),
@@ -184,7 +185,7 @@ class BudgetDetailDataView extends StatelessWidget {
     required WidgetRef ref,
     required BudgetViewModel budget,
   }) async {
-    final BudgetEntryResult? result = await showBudgetEntryForm(
+    final result = await showBudgetEntryForm(
       context: context,
       type: BudgetEntryType.update,
       budgetId: budget.id,
@@ -201,7 +202,9 @@ class BudgetDetailDataView extends StatelessWidget {
       return;
     }
 
-    await ref.read(budgetProvider).update(
+    await ref
+        .read(budgetProvider)
+        .update(
           id: budget.id,
           path: budget.path,
           title: result.title,
@@ -217,24 +220,22 @@ class BudgetDetailDataView extends StatelessWidget {
     BuildContext context, {
     required WidgetRef ref,
     required BudgetViewModel budget,
-  }) async =>
-      ref.read(budgetProvider).activate(id: budget.id, path: budget.path);
+  }) async => ref.read(budgetProvider).activate(id: budget.id, path: budget.path);
 
   void _handleDuplicateAction(
     BuildContext context, {
     required WidgetRef ref,
     required BudgetViewModel budget,
-  }) async =>
-      createBudgetAction(
-        context,
-        ref: ref,
-        budgetId: budget.id,
-        index: budget.index,
-        amount: budget.amount,
-        description: budget.description,
-        createdAt: budget.createdAt,
-        navigateOnComplete: budget.endedAt != null,
-      );
+  }) async => createBudgetAction(
+    context,
+    ref: ref,
+    budgetId: budget.id,
+    index: budget.index,
+    amount: budget.amount,
+    description: budget.description,
+    createdAt: budget.createdAt,
+    navigateOnComplete: budget.endedAt != null,
+  );
 }
 
 class _AppBarText extends StatelessWidget {
@@ -244,7 +245,7 @@ class _AppBarText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Column(
       children: <Widget>[
@@ -268,7 +269,7 @@ class _HeaderText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
@@ -313,15 +314,15 @@ class _CategoryView extends StatefulWidget {
 
 class _CategoryViewState extends State<_CategoryView> {
   _CategoryViewType _type = _CategoryViewType.pieChart;
-  static const double _innerPieChartRadius = 16.0;
+  static const _innerPieChartRadius = 16.0;
 
   @override
   Widget build(BuildContext context) {
-    final L10n l10n = L10n.of(context);
+    final l10n = L10n.of(context);
 
-    final Money excessAmount = widget.budgetAmount - widget.allocationAmount;
-    const BudgetCategoryColorScheme excessAmountColorScheme = BudgetCategoryColorScheme.excess;
-    const BudgetCategoryIcon excessAmountIcon = BudgetCategoryIcon.excess;
+    final excessAmount = widget.budgetAmount - widget.allocationAmount;
+    const excessAmountColorScheme = BudgetCategoryColorScheme.excess;
+    const excessAmountIcon = BudgetCategoryIcon.excess;
 
     return AnimatedSize(
       duration: kThemeChangeDuration,
@@ -336,7 +337,7 @@ class _CategoryViewState extends State<_CategoryView> {
                   sectionsSpace: _innerPieChartRadius / 4,
                   centerSpaceRadius: _innerPieChartRadius,
                   sections: <PieChartSectionData>[
-                    // ignore: prefer_final_locals, false positive
+                    // ignore: false positive
                     for (final (BudgetCategoryViewModel category, Money allocation) in widget.categories)
                       _derivePieSectionData(
                         amount: allocation,
@@ -361,7 +362,7 @@ class _CategoryViewState extends State<_CategoryView> {
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: <Widget>[
-                  // ignore: prefer_final_locals, false positive
+                  // ignore: false positive
                   for (final (BudgetCategoryViewModel category, Money allocation) in widget.categories)
                     _CategoryChip(
                       key: Key(category.id),
@@ -414,9 +415,9 @@ class _CategoryViewState extends State<_CategoryView> {
     required IconData icon,
     required BudgetCategoryColorScheme colorScheme,
   }) {
-    final double dimension = MediaQuery.of(context).size.shortestSide;
-    final ThemeData theme = Theme.of(context);
-    final TextStyle labelTextStyle = theme.textTheme.labelLarge!.copyWith(
+    final dimension = MediaQuery.of(context).size.shortestSide;
+    final theme = Theme.of(context);
+    final labelTextStyle = theme.textTheme.labelLarge!.copyWith(
       fontWeight: AppFontWeight.bold,
       color: colorScheme.foreground,
       letterSpacing: .01,
@@ -458,7 +459,7 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return AmountRatioDecoratedBox(
       onPressed: onPressed,
@@ -501,9 +502,9 @@ class _PlanTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
-    final BudgetAllocationViewModel? allocation = plan.allocation;
+    final allocation = plan.allocation;
 
     return AmountRatioDecoratedBox(
       color: plan.category.colorScheme.background,

@@ -1,16 +1,16 @@
-import '../analytics/analytics.dart';
-import '../analytics/analytics_event.dart';
-import '../repositories/budget_allocations.dart';
-import '../repositories/budget_plans.dart';
+import 'package:ovavue/domain/analytics/analytics.dart';
+import 'package:ovavue/domain/analytics/analytics_event.dart';
+import 'package:ovavue/domain/repositories/budget_allocations.dart';
+import 'package:ovavue/domain/repositories/budget_plans.dart';
 
 class DeleteBudgetPlanUseCase {
   const DeleteBudgetPlanUseCase({
     required BudgetPlansRepository plans,
     required BudgetAllocationsRepository allocations,
     required Analytics analytics,
-  })  : _plans = plans,
-        _allocations = allocations,
-        _analytics = analytics;
+  }) : _plans = plans,
+       _allocations = allocations,
+       _analytics = analytics;
 
   final BudgetPlansRepository _plans;
   final BudgetAllocationsRepository _allocations;

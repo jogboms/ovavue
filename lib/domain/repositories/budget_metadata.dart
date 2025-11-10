@@ -1,7 +1,7 @@
-import '../entities/budget_metadata_value_entity.dart';
-import '../entities/create_budget_metadata_data.dart';
-import '../entities/reference_entity.dart';
-import '../entities/update_budget_metadata_data.dart';
+import 'package:ovavue/domain/entities/budget_metadata_value_entity.dart';
+import 'package:ovavue/domain/entities/create_budget_metadata_data.dart';
+import 'package:ovavue/domain/entities/reference_entity.dart';
+import 'package:ovavue/domain/entities/update_budget_metadata_data.dart';
 
 abstract class BudgetMetadataRepository {
   Future<String> create(String userId, CreateBudgetMetadataData metadata);

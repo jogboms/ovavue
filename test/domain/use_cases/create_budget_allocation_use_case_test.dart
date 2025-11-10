@@ -6,13 +6,13 @@ import '../../utils.dart';
 
 void main() {
   group('CreateBudgetAllocationUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final CreateBudgetAllocationUseCase useCase = CreateBudgetAllocationUseCase(
+    final analytics = LogAnalytics();
+    final useCase = CreateBudgetAllocationUseCase(
       allocations: mockRepositories.budgetAllocations,
       analytics: analytics,
     );
 
-    const CreateBudgetAllocationData dummyData = CreateBudgetAllocationData(
+    const dummyData = CreateBudgetAllocationData(
       amount: 1,
       budget: (id: '1', path: 'path'),
       plan: (id: '1', path: 'path'),

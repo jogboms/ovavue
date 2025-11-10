@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../widgets.dart';
-import 'providers/budget_category_state.dart';
-import 'providers/selected_budget_category_by_budget_provider.dart';
-import 'widgets/budget_category_detail_data_view.dart';
+import 'package:ovavue/presentation/screens/budget_categories/providers/budget_category_state.dart';
+import 'package:ovavue/presentation/screens/budget_categories/providers/selected_budget_category_by_budget_provider.dart';
+import 'package:ovavue/presentation/screens/budget_categories/widgets/budget_category_detail_data_view.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetCategoryDetailForBudgetPage extends StatefulWidget {
   const BudgetCategoryDetailForBudgetPage({super.key, required this.id, required this.budgetId});
@@ -19,25 +18,24 @@ class BudgetCategoryDetailForBudgetPage extends StatefulWidget {
 @visibleForTesting
 class BudgetCategoryDetailForBudgetPageState extends State<BudgetCategoryDetailForBudgetPage> {
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) =>
-            ref.watch(selectedBudgetCategoryByBudgetProvider(id: widget.id, budgetId: widget.budgetId)).when(
-                  skipLoadingOnRefresh: true,
-                  skipLoadingOnReload: true,
-                  data: (BudgetCategoryState data) => BudgetCategoryDetailDataView(
-                    key: dataViewKey,
-                    state: data,
-                  ),
-                  error: ErrorView.new,
-                  loading: () => child!,
-                ),
-        child: const LoadingView(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    body: Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+          .watch(selectedBudgetCategoryByBudgetProvider(id: widget.id, budgetId: widget.budgetId))
+          .when(
+            skipLoadingOnRefresh: true,
+            skipLoadingOnReload: true,
+            data: (BudgetCategoryState data) => BudgetCategoryDetailDataView(
+              key: dataViewKey,
+              state: data,
+            ),
+            error: ErrorView.new,
+            loading: () => child!,
+          ),
+      child: const LoadingView(),
+    ),
+  );
 }

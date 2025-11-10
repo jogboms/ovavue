@@ -1,5 +1,5 @@
-import '../entities/budget_entity.dart';
-import '../repositories/budgets.dart';
+import 'package:ovavue/domain/entities/budget_entity.dart';
+import 'package:ovavue/domain/repositories/budgets.dart';
 
 class FetchBudgetUseCase {
   const FetchBudgetUseCase({
@@ -11,6 +11,5 @@ class FetchBudgetUseCase {
   Stream<BudgetEntity> call({
     required String userId,
     required String budgetId,
-  }) =>
-      _budgets.fetchOne(userId: userId, budgetId: budgetId);
+  }) => _budgets.fetchOne(userId: userId, budgetId: budgetId);
 }

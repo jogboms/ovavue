@@ -1,2 +1,2 @@
-const int kTitleMaxCharacterLength = 35;
-const int kDescriptionMaxCharacterLength = 65;
+const kTitleMaxCharacterLength = 35;
+const kDescriptionMaxCharacterLength = 65;

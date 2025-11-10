@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
-
-import '../../../models.dart';
-import '../../../utils.dart';
-import 'models.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/screens/budget_categories/providers/models.dart';
+import 'package:ovavue/presentation/utils.dart';
 
 class BudgetCategoryState with EquatableMixin {
   const BudgetCategoryState({

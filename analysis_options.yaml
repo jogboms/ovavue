@@ -1,4 +1,4 @@
-include: package:mfsao/analysis_options.yaml
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
@@ -32,8 +32,6 @@ formatter:
 
 linter:
   rules:
-    # All rules from pedantic, already enabled rules are left out
-    # https://github.com/google/pedantic/blob/master/lib/analysis_options.1.11.0.yaml
     - always_declare_return_types
     - prefer_single_quotes
     - sort_child_properties_last
@@ -42,16 +40,20 @@ linter:
     # Additional rules from https://github.com/flutter/flutter/blob/master/analysis_options.yaml
     # Not all rules are included
     - always_put_control_body_on_new_line
-    - always_specify_types # also used by Flutter itself, makes it more readable
+    - always_use_package_imports
+    - avoid_equals_and_hash_code_on_mutable_classes
+    - avoid_field_initializers_in_const_classes
+    - avoid_positional_boolean_parameters
+    - avoid_print
     - avoid_private_typedef_functions
     - avoid_redundant_argument_values
-    - avoid_returning_null_for_future
     - avoid_returning_null_for_void
     - avoid_returning_this
     - avoid_setters_without_getters
     - avoid_shadowing_type_parameters
     - avoid_single_cascade_in_expression_statements
     - avoid_slow_async_io
+    - cancel_subscriptions
     - cast_nullable_to_non_nullable
     - control_flow_in_finally
     - directives_ordering
@@ -67,10 +69,33 @@ linter:
     - literal_only_boolean_expressions
     - no_default_cases
     - no_logic_in_create_state
+    - no_runtimeType_toString
+    - non_constant_identifier_names
+    - noop_primitive_operations
+    - null_check_on_nullable_type_parameter
+    - null_closures
     - missing_whitespace_between_adjacent_strings
+    - omit_local_variable_types
+    - omit_obvious_property_types
+    - only_throw_errors
+    - overridden_fields
     - sort_pub_dependencies
+    - prefer_asserts_in_initializer_lists
+    - prefer_asserts_with_message
+    - prefer_collection_literals
+    - prefer_conditional_assignment
+    - prefer_const_constructors
+    - prefer_const_constructors_in_immutables
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - prefer_constructors_over_static_methods
+    - prefer_contains
+    - prefer_equal_for_default_values
+    - prefer_expression_function_bodies
+    - prefer_final_fields
     - prefer_final_in_for_each
     - prefer_final_locals
+    - prefer_for_elements_to_map_fromIterable
     - prefer_foreach
     - prefer_function_declarations_over_variables
     - prefer_generic_function_type_aliases
@@ -95,6 +120,7 @@ linter:
     - unnecessary_const
     - unnecessary_constructor_name
     - unnecessary_getters_setters
+    - unnecessary_ignore
     - unnecessary_lambdas
     - unnecessary_late
     - unnecessary_new
@@ -109,16 +135,25 @@ linter:
     - unnecessary_string_escapes
     - unnecessary_string_interpolations
     - unnecessary_this
+    - unnecessary_to_list_in_spreads
+    - unnecessary_underscores
+    - unrelated_type_equality_checks
     - use_build_context_synchronously
+    - use_colored_box
+    - use_decorated_box
+    - use_enums
     - use_full_hex_values_for_flutter_colors
     - use_function_type_syntax_for_parameters
     - use_is_even_rather_than_modulo
     - use_key_in_widget_constructors
     - use_late_for_private_fields_and_variables
     - use_named_constants
+    - use_null_aware_elements
     - use_raw_strings
     - use_rethrow_when_possible
     - use_setters_to_change_properties
     - use_string_buffers
     - use_to_and_as_if_applicable
     - use_super_parameters
+    - valid_regexps
+    - void_checks

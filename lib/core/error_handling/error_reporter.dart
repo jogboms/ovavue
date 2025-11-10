@@ -14,7 +14,7 @@ class ErrorReporter {
 
   final Platform platform;
 
-  final Duration _lockDuration = const Duration(seconds: 10);
+  final _lockDuration = const Duration(seconds: 10);
 
   DateTime? _lastReportTime;
 

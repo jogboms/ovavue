@@ -1,14 +1,14 @@
-import '../analytics/analytics.dart';
-import '../analytics/analytics_event.dart';
-import '../entities/reference_entity.dart';
-import '../repositories/budget_categories.dart';
+import 'package:ovavue/domain/analytics/analytics.dart';
+import 'package:ovavue/domain/analytics/analytics_event.dart';
+import 'package:ovavue/domain/entities/reference_entity.dart';
+import 'package:ovavue/domain/repositories/budget_categories.dart';
 
 class DeleteBudgetCategoryUseCase {
   const DeleteBudgetCategoryUseCase({
     required BudgetCategoriesRepository categories,
     required Analytics analytics,
-  })  : _categories = categories,
-        _analytics = analytics;
+  }) : _categories = categories,
+       _analytics = analytics;
 
   final BudgetCategoriesRepository _categories;
   final Analytics _analytics;

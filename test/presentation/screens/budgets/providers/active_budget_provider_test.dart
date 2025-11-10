@@ -7,13 +7,13 @@ import 'package:riverpod/riverpod.dart';
 import '../../../../utils.dart';
 
 Future<void> main() async {
-  final UserEntity dummyUser = UsersMockImpl.user;
+  final dummyUser = UsersMockImpl.user;
 
   tearDown(mockUseCases.reset);
 
   group('ActiveBudgetProvider', () {
     Future<BaseBudgetState> createProviderStream(BudgetEntity? budget) {
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
           activeBudgetIdProvider.overrideWith((_) => Stream<String?>.value(budget?.id)),
@@ -36,7 +36,7 @@ Future<void> main() async {
     }
 
     test('should show active budget', () async {
-      final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget();
+      final expectedBudget = BudgetsMockImpl.generateBudget();
 
       expect(
         createProviderStream(expectedBudget),

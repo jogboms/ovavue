@@ -10,19 +10,19 @@ import '../../utils.dart';
 
 Future<void> main() async {
   group('SelectedBudgetPlansByMetadataProvider', () {
-    final UserEntity dummyUser = UsersMockImpl.user;
-    const String budgetId = 'budget-id';
-    const String planId = 'plan-id';
-    const String metadataId = 'metadata-id';
+    final dummyUser = UsersMockImpl.user;
+    const budgetId = 'budget-id';
+    const planId = 'plan-id';
+    const metadataId = 'metadata-id';
 
-    final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget(id: budgetId);
-    final BudgetPlanEntity expectedPlan = BudgetPlansMockImpl.generatePlan(id: planId);
-    final BudgetMetadataValueEntity expectedMetadata = BudgetMetadataMockImpl.generateMetadataValue(id: metadataId);
+    final expectedBudget = BudgetsMockImpl.generateBudget(id: budgetId);
+    final expectedPlan = BudgetPlansMockImpl.generatePlan(id: planId);
+    final expectedMetadata = BudgetMetadataMockImpl.generateMetadataValue(id: metadataId);
 
     tearDown(mockUseCases.reset);
 
     Future<BudgetPlansByMetadataState> createProviderStream() {
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
           selectedBudgetProvider(expectedBudget.id).overrideWith(
@@ -41,9 +41,13 @@ Future<void> main() async {
           budgetMetadataProvider.overrideWith(
             () => MockBudgetMetadata(
               <BudgetMetadataValueEntity>[
-                expectedMetadata,
-                BudgetMetadataMockImpl.generateMetadataValue(),
-              ].groupListsBy((_) => _.key).entries.map((_) => _.toEntity()).toList(growable: false),
+                    expectedMetadata,
+                    BudgetMetadataMockImpl.generateMetadataValue(),
+                  ]
+                  .groupListsBy((BudgetMetadataValueEntity e) => e.key)
+                  .entries
+                  .map((MapEntry<BudgetMetadataKeyEntity, List<BudgetMetadataValueEntity>> e) => e.toEntity())
+                  .toList(growable: false),
             ),
           ),
         ],
@@ -54,15 +58,17 @@ Future<void> main() async {
     }
 
     test('should initialize with empty state', () {
-      when(() => mockUseCases.fetchBudgetPlansByMetadataUseCase.call(userId: dummyUser.id, metadataId: metadataId))
-          .thenAnswer((_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[]));
+      when(
+        () => mockUseCases.fetchBudgetPlansByMetadataUseCase.call(userId: dummyUser.id, metadataId: metadataId),
+      ).thenAnswer((_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[]));
 
       expect(createProviderStream(), completes);
     });
 
     test('should emit fetched budget plans by metadata', () {
-      when(() => mockUseCases.fetchBudgetPlansByMetadataUseCase.call(userId: dummyUser.id, metadataId: metadataId))
-          .thenAnswer(
+      when(
+        () => mockUseCases.fetchBudgetPlansByMetadataUseCase.call(userId: dummyUser.id, metadataId: metadataId),
+      ).thenAnswer(
         (_) => Stream<BudgetPlanEntityList>.value(<BudgetPlanEntity>[
           expectedPlan,
           BudgetPlansMockImpl.generatePlan(),

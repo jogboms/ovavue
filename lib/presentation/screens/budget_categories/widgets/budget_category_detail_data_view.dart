@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../../constants.dart';
-import '../../../models.dart';
-import '../../../routing.dart';
-import '../../../state.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
-import '../providers/budget_category_state.dart';
-import 'budget_category_header.dart';
-import 'budget_category_plan_tile.dart';
-import 'budget_plan_selection_picker.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/screens/budget_categories/providers/budget_category_state.dart';
+import 'package:ovavue/presentation/screens/budget_categories/providers/models.dart';
+import 'package:ovavue/presentation/screens/budget_categories/widgets/budget_category_header.dart';
+import 'package:ovavue/presentation/screens/budget_categories/widgets/budget_category_plan_tile.dart';
+import 'package:ovavue/presentation/screens/budget_categories/widgets/budget_plan_selection_picker.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetCategoryDetailDataView extends StatelessWidget {
   const BudgetCategoryDetailDataView({super.key, required this.state});
@@ -21,8 +21,8 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color backgroundColor = state.category.colorScheme.background;
-    final Color foregroundColor = state.category.colorScheme.foreground;
+    final backgroundColor = state.category.colorScheme.background;
+    final foregroundColor = state.category.colorScheme.foreground;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -57,7 +57,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                           context,
                           ref: ref,
                           category: state.category,
-                          planIds: state.plans.map((_) => _.$1.id),
+                          planIds: state.plans.map((BudgetCategoryPlanViewModel e) => e.$1.id),
                         ),
                       ),
                       ActionButton(
@@ -117,7 +117,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
                   ),
                 );
               },
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
+              separatorBuilder: (_, _) => const SizedBox(height: 4),
               itemCount: state.plans.length,
             ),
           ),
@@ -131,9 +131,9 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     required BudgetCategoryViewModel category,
     required Iterable<String> planIds,
   }) async {
-    final L10n l10n = context.l10n;
+    final l10n = context.l10n;
 
-    final BudgetPlanViewModel? plan = await showModalBottomSheet(
+    final plan = await showModalBottomSheet<BudgetPlanViewModel>(
       context: context,
       builder: (_) => BudgetPlanSelectionPicker(
         selectedIds: planIds,
@@ -143,7 +143,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
       return;
     }
     if (context.mounted) {
-      final bool choice = await showErrorChoiceBanner(
+      final choice = await showErrorChoiceBanner(
         context,
         message: l10n.updatePlanCategoryAreYouSureAboutThisMessage,
       );
@@ -161,10 +161,10 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     required BudgetCategoryViewModel category,
     required bool dismissOnComplete,
   }) async {
-    final L10n l10n = context.l10n;
-    final AppSnackBar snackBar = context.snackBar;
-    final NavigatorState navigator = Navigator.of(context);
-    final bool choice = await showErrorChoiceBanner(
+    final l10n = context.l10n;
+    final snackBar = context.snackBar;
+    final navigator = Navigator.of(context);
+    final choice = await showErrorChoiceBanner(
       context,
       message: l10n.deleteCategoryAreYouSureAboutThisMessage,
     );
@@ -172,7 +172,7 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
       return;
     }
 
-    final bool successful = await ref.read(budgetCategoryProvider).delete((id: category.id, path: category.path));
+    final successful = await ref.read(budgetCategoryProvider).delete((id: category.id, path: category.path));
     if (successful) {
       snackBar.success(l10n.successfulMessage);
       if (dismissOnComplete) {
@@ -188,10 +188,10 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
     required WidgetRef ref,
     required BudgetCategoryViewModel category,
   }) async {
-    final L10n l10n = context.l10n;
-    final AppSnackBar snackBar = context.snackBar;
+    final l10n = context.l10n;
+    final snackBar = context.snackBar;
 
-    final BudgetCategoryEntryResult? result = await showBudgetCategoryEntryForm(
+    final result = await showBudgetCategoryEntryForm(
       context: context,
       title: category.title,
       description: category.description,
@@ -202,7 +202,9 @@ class BudgetCategoryDetailDataView extends StatelessWidget {
       return;
     }
 
-    final bool successful = await ref.read(budgetCategoryProvider).update(
+    final successful = await ref
+        .read(budgetCategoryProvider)
+        .update(
           UpdateBudgetCategoryData(
             id: category.id,
             path: category.path,

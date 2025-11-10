@@ -7,9 +7,9 @@ import '../../utils.dart';
 
 void main() {
   group('FetchUserUseCase', () {
-    final FetchUserUseCase useCase = FetchUserUseCase(users: mockRepositories.users);
+    final useCase = FetchUserUseCase(users: mockRepositories.users);
 
-    final UserEntity dummyUser = UsersMockImpl.user;
+    final dummyUser = UsersMockImpl.user;
 
     tearDown(mockRepositories.reset);
 

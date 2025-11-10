@@ -1,10 +1,8 @@
 import 'package:ovavue/domain.dart';
-import 'package:registry/registry.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state/registry_provider.dart';
+import 'package:ovavue/presentation/state/user_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../models.dart';
-import 'registry_provider.dart';
-import 'user_provider.dart';
 
 part 'selected_budget_metadata_by_plan_provider.g.dart';
 
@@ -13,12 +11,12 @@ Stream<List<BudgetMetadataValueViewModel>> selectedBudgetMetadataByPlan(
   SelectedBudgetMetadataByPlanRef ref, {
   required String id,
 }) async* {
-  final Registry registry = ref.read(registryProvider);
-  final UserEntity user = await ref.watch(userProvider.future);
+  final registry = ref.read(registryProvider);
+  final user = await ref.watch(userProvider.future);
 
   yield* registry
       .get<FetchBudgetMetadataByPlanUseCase>()
       .call(userId: user.id, planId: id)
-      .map((_) => _.map(BudgetMetadataValueViewModel.fromEntity).toList(growable: false))
+      .map((BudgetMetadataValueEntityList e) => e.map(BudgetMetadataValueViewModel.fromEntity).toList(growable: false))
       .distinct();
 }

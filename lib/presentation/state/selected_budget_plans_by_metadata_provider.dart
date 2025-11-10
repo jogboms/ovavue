@@ -1,17 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:ovavue/core.dart';
 import 'package:ovavue/domain.dart';
-import 'package:registry/registry.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state/budget_metadata_provider.dart';
+import 'package:ovavue/presentation/state/budget_plans_by_metadata_state.dart';
+import 'package:ovavue/presentation/state/registry_provider.dart';
+import 'package:ovavue/presentation/state/selected_budget_provider.dart';
+import 'package:ovavue/presentation/state/user_provider.dart';
+import 'package:ovavue/presentation/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../models.dart';
-import '../utils.dart';
-import 'budget_metadata_provider.dart';
-import 'budget_plans_by_metadata_state.dart';
-import 'budget_state.dart';
-import 'registry_provider.dart';
-import 'selected_budget_provider.dart';
-import 'user_provider.dart';
 
 part 'selected_budget_plans_by_metadata_provider.g.dart';
 
@@ -21,25 +18,32 @@ Stream<BudgetPlansByMetadataState> selectedBudgetPlansByMetadata(
   required String id,
   required String? budgetId,
 }) async* {
-  final Registry registry = ref.read(registryProvider);
-  final UserEntity user = await ref.watch(userProvider.future);
+  final registry = ref.read(registryProvider);
+  final user = await ref.watch(userProvider.future);
 
-  final BudgetMetadataViewModel? metadata = await ref.watch(
+  final metadata = await ref.watch(
     budgetMetadataProvider.selectAsync(
-      (_) => _.firstWhereOrNull((_) => _.values.map((_) => _.id).contains(id)),
+      (List<BudgetMetadataViewModel> e) => e.firstWhereOrNull(
+        (BudgetMetadataViewModel e) => e.values.map((BudgetMetadataValueViewModel e) => e.id).contains(id),
+      ),
     ),
   );
 
   if (metadata != null) {
-    final BudgetState? budgetState = budgetId == null ? null : await ref.watch(selectedBudgetProvider(budgetId).future);
-    final Map<String, BudgetPlanViewModel>? budgetPlansById = budgetState?.plans.foldToMap((_) => _.id);
+    final budgetState = budgetId == null ? null : await ref.watch(selectedBudgetProvider(budgetId).future);
+    final budgetPlansById = budgetState?.plans.foldToMap(
+      (BudgetPlanViewModel e) => e.id,
+    );
 
-    yield* registry.get<FetchBudgetPlansByMetadataUseCase>().call(userId: user.id, metadataId: id).map(
+    yield* registry
+        .get<FetchBudgetPlansByMetadataUseCase>()
+        .call(userId: user.id, metadataId: id)
+        .map(
           (BudgetPlanEntityList plans) => BudgetPlansByMetadataState(
             budget: budgetState?.budget,
             allocation: budgetState?.allocation,
             key: metadata.key,
-            metadata: metadata.values.firstWhere((_) => _.id == id),
+            metadata: metadata.values.firstWhere((BudgetMetadataValueViewModel e) => e.id == id),
             plans: plans
                 .map(
                   (BudgetPlanEntity plan) => budgetId != null && budgetPlansById != null

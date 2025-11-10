@@ -6,13 +6,13 @@ import '../../utils.dart';
 
 void main() {
   group('CreateBudgetCategoryUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final CreateBudgetCategoryUseCase useCase = CreateBudgetCategoryUseCase(
+    final analytics = LogAnalytics();
+    final useCase = CreateBudgetCategoryUseCase(
       categories: mockRepositories.budgetCategories,
       analytics: analytics,
     );
 
-    const CreateBudgetCategoryData dummyData = CreateBudgetCategoryData(
+    const dummyData = CreateBudgetCategoryData(
       title: 'title',
       description: 'description',
       iconIndex: 0,

@@ -1,19 +1,19 @@
-import '../analytics/analytics.dart';
-import '../analytics/analytics_event.dart';
-import '../entities/create_budget_allocation_data.dart';
-import '../entities/create_budget_data.dart';
-import '../entities/reference_entity.dart';
-import '../repositories/budget_allocations.dart';
-import '../repositories/budgets.dart';
+import 'package:ovavue/domain/analytics/analytics.dart';
+import 'package:ovavue/domain/analytics/analytics_event.dart';
+import 'package:ovavue/domain/entities/create_budget_allocation_data.dart';
+import 'package:ovavue/domain/entities/create_budget_data.dart';
+import 'package:ovavue/domain/entities/reference_entity.dart';
+import 'package:ovavue/domain/repositories/budget_allocations.dart';
+import 'package:ovavue/domain/repositories/budgets.dart';
 
 class CreateBudgetUseCase {
   const CreateBudgetUseCase({
     required BudgetsRepository budgets,
     required BudgetAllocationsRepository allocations,
     required Analytics analytics,
-  })  : _budgets = budgets,
-        _allocations = allocations,
-        _analytics = analytics;
+  }) : _budgets = budgets,
+       _allocations = allocations,
+       _analytics = analytics;
 
   final BudgetsRepository _budgets;
   final BudgetAllocationsRepository _allocations;

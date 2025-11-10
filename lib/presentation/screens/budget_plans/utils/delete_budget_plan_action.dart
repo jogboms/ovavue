@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../models.dart';
-import '../../../state.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 void deleteBudgetPlanAction(
   BuildContext context, {
@@ -12,10 +12,10 @@ void deleteBudgetPlanAction(
   required BudgetPlanViewModel plan,
   required bool dismissOnComplete,
 }) async {
-  final L10n l10n = context.l10n;
-  final AppSnackBar snackBar = context.snackBar;
-  final NavigatorState navigator = Navigator.of(context);
-  final bool choice = await showErrorChoiceBanner(
+  final l10n = context.l10n;
+  final snackBar = context.snackBar;
+  final navigator = Navigator.of(context);
+  final choice = await showErrorChoiceBanner(
     context,
     message: l10n.deletePlanAreYouSureAboutThisMessage,
   );
@@ -23,7 +23,9 @@ void deleteBudgetPlanAction(
     return;
   }
 
-  final bool successful = await ref.read(budgetPlanProvider).delete(
+  final successful = await ref
+      .read(budgetPlanProvider)
+      .delete(
         id: plan.id,
         path: plan.path,
       );

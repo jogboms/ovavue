@@ -6,10 +6,12 @@ class AccountsDao extends DatabaseAccessor<Database> with _$AccountsDaoMixin {
 
   Future<AccountEntity> getOrCreateSingleAccount(String? id) async {
     if (id == null) {
-      return into(accounts).insertReturning(AccountsCompanion.insert()).then((_) => _.toEntity());
+      return into(accounts).insertReturning(AccountsCompanion.insert()).then((AccountDataModel e) => e.toEntity());
     }
 
-    return (select(accounts)..where((_) => _.id.equals(id))).getSingleOrNull().then((AccountDataModel? account) {
+    return (select(accounts)..where(($AccountsTable e) => e.id.equals(id))).getSingleOrNull().then((
+      AccountDataModel? account,
+    ) {
       if (account == null) {
         return getOrCreateSingleAccount(null);
       }
@@ -22,12 +24,12 @@ class AccountsDao extends DatabaseAccessor<Database> with _$AccountsDaoMixin {
 class UsersDao extends DatabaseAccessor<Database> with _$UsersDaoMixin {
   UsersDao(super.db);
 
-  Future<UserEntity> createUser(AccountEntity account) async => into(users)
-      .insertReturning(UsersCompanion.insert(id: DBValue(account.id), createdAt: clock.now()))
-      .then(_mapUserDataModel);
+  Future<UserEntity> createUser(AccountEntity account) async => into(
+    users,
+  ).insertReturning(UsersCompanion.insert(id: DBValue(account.id), createdAt: clock.now())).then(_mapUserDataModel);
 
   Future<UserEntity?> getSingleUser(String id) async =>
-      (select(users)..where((_) => _.id.equals(id))).map(_mapUserDataModel).getSingleOrNull();
+      (select(users)..where(($UsersTable e) => e.id.equals(id))).map(_mapUserDataModel).getSingleOrNull();
 
   UserEntity _mapUserDataModel(UserDataModel user) => user.toEntity(users.actualTableName);
 }
@@ -36,23 +38,27 @@ class UsersDao extends DatabaseAccessor<Database> with _$UsersDaoMixin {
 class BudgetsDao extends DatabaseAccessor<Database> with _$BudgetsDaoMixin {
   BudgetsDao(super.db);
 
-  Stream<BudgetEntity?> watchActiveBudget() => (select(budgets)
-        ..where((_) => _.active.equals(true))
-        ..limit(1))
-      .map((_) => _.toEntity(budgets.actualTableName))
-      .watchSingleOrNull();
+  Stream<BudgetEntity?> watchActiveBudget() =>
+      (select(budgets)
+            ..where(($BudgetsTable e) => e.active.equals(true))
+            ..limit(1))
+          .map((BudgetDataModel e) => e.toEntity(budgets.actualTableName))
+          .watchSingleOrNull();
 
-  Stream<BudgetEntity> watchSingleBudget(String id) => (select(budgets)
-        ..where((_) => _.id.equals(id))
-        ..limit(1))
-      .map((_) => _.toEntity(budgets.actualTableName))
-      .watchSingle();
+  Stream<BudgetEntity> watchSingleBudget(String id) =>
+      (select(budgets)
+            ..where(($BudgetsTable e) => e.id.equals(id))
+            ..limit(1))
+          .map((BudgetDataModel e) => e.toEntity(budgets.actualTableName))
+          .watchSingle();
 
-  Stream<BudgetEntityList> watchAllBudgets() => select(budgets).map((_) => _.toEntity(budgets.actualTableName)).watch();
+  Stream<BudgetEntityList> watchAllBudgets() =>
+      select(budgets).map((BudgetDataModel e) => e.toEntity(budgets.actualTableName)).watch();
 
-  Future<bool> deleteBudget(String id) async => (delete(budgets)..where((_) => _.id.equals(id))).go().then((_) => true);
+  Future<bool> deleteBudget(String id) async =>
+      (delete(budgets)..where(($BudgetsTable e) => e.id.equals(id))).go().then((_) => true);
 
-  Future<bool> activateBudget(String id) async => (update(budgets)..where((_) => _.id.equals(id)))
+  Future<bool> activateBudget(String id) async => (update(budgets)..where(($BudgetsTable e) => e.id.equals(id)))
       .write(
         BudgetsCompanion(
           active: const DBValue(true),
@@ -61,29 +67,31 @@ class BudgetsDao extends DatabaseAccessor<Database> with _$BudgetsDaoMixin {
       )
       .then((_) => true);
 
-  Future<bool> deactivateBudget(String id, DateTime? endedAt) async => (update(budgets)..where((_) => _.id.equals(id)))
-      .write(
-        BudgetsCompanion(
-          active: const DBValue(false),
-          endedAt: endedAt != null ? DBValue(endedAt) : const DBValue.absent(),
-          updatedAt: DBValue(clock.now()),
-        ),
-      )
-      .then((_) => true);
+  Future<bool> deactivateBudget(String id, DateTime? endedAt) async =>
+      (update(budgets)..where(($BudgetsTable e) => e.id.equals(id)))
+          .write(
+            BudgetsCompanion(
+              active: const DBValue(false),
+              endedAt: endedAt != null ? DBValue(endedAt) : const DBValue.absent(),
+              updatedAt: DBValue(clock.now()),
+            ),
+          )
+          .then((_) => true);
 
-  Future<bool> updateBudget(UpdateBudgetData budget) async => (update(budgets)..where((_) => _.id.equals(budget.id)))
-      .write(
-        BudgetsCompanion(
-          title: DBValue(budget.title),
-          description: DBValue(budget.description),
-          amount: DBValue(budget.amount),
-          active: DBValue(budget.active),
-          startedAt: DBValue(budget.startedAt),
-          endedAt: DBValue(budget.endedAt),
-          updatedAt: DBValue(clock.now()),
-        ),
-      )
-      .then((_) => true);
+  Future<bool> updateBudget(UpdateBudgetData budget) async =>
+      (update(budgets)..where(($BudgetsTable e) => e.id.equals(budget.id)))
+          .write(
+            BudgetsCompanion(
+              title: DBValue(budget.title),
+              description: DBValue(budget.description),
+              amount: DBValue(budget.amount),
+              active: DBValue(budget.active),
+              startedAt: DBValue(budget.startedAt),
+              endedAt: DBValue(budget.endedAt),
+              updatedAt: DBValue(clock.now()),
+            ),
+          )
+          .then((_) => true);
 
   Future<BudgetEntity> createBudget(CreateBudgetData budget) async => into(budgets)
       .insertReturning(
@@ -98,19 +106,20 @@ class BudgetsDao extends DatabaseAccessor<Database> with _$BudgetsDaoMixin {
           createdAt: clock.now(),
         ),
       )
-      .then((_) => _.toEntity(budgets.actualTableName));
+      .then((BudgetDataModel e) => e.toEntity(budgets.actualTableName));
 }
 
 @DriftAccessor(tables: <Type>[BudgetPlans, BudgetCategories])
 class BudgetPlansDao extends DatabaseAccessor<Database> with _$BudgetPlansDaoMixin {
   BudgetPlansDao(super.db);
 
-  Stream<BudgetPlanEntity> watchSingleBudgetPlan(String id) => (select(budgetPlans)..where((_) => _.id.equals(id)))
-      .join(<DBJoin>[
-        innerJoin(budgetCategories, budgetCategories.id.equalsExp(budgetPlans.category)),
-      ])
-      .map(_mapRowToEntity)
-      .watchSingle();
+  Stream<BudgetPlanEntity> watchSingleBudgetPlan(String id) =>
+      (select(budgetPlans)..where(($BudgetPlansTable e) => e.id.equals(id)))
+          .join(<DBJoin>[
+            innerJoin(budgetCategories, budgetCategories.id.equalsExp(budgetPlans.category)),
+          ])
+          .map(_mapRowToEntity)
+          .watchSingle();
 
   Stream<BudgetPlanEntityList> watchAllBudgetPlans() => select(budgetPlans)
       .join(<DBJoin>[
@@ -120,7 +129,7 @@ class BudgetPlansDao extends DatabaseAccessor<Database> with _$BudgetPlansDaoMix
       .watch();
 
   Stream<BudgetPlanEntityList> watchAllBudgetPlansByCategory(String id) =>
-      (select(budgetPlans)..where((_) => _.category.equals(id)))
+      (select(budgetPlans)..where(($BudgetPlansTable e) => e.category.equals(id)))
           .join(<DBJoin>[
             innerJoin(budgetCategories, budgetCategories.id.equalsExp(budgetPlans.category)),
           ])
@@ -128,18 +137,19 @@ class BudgetPlansDao extends DatabaseAccessor<Database> with _$BudgetPlansDaoMix
           .watch();
 
   Future<bool> deletePlan(String id) async =>
-      (delete(budgetPlans)..where((_) => _.id.equals(id))).go().then((_) => true);
+      (delete(budgetPlans)..where(($BudgetPlansTable e) => e.id.equals(id))).go().then((_) => true);
 
-  Future<bool> updatePlan(UpdateBudgetPlanData plan) async => (update(budgetPlans)..where((_) => _.id.equals(plan.id)))
-      .write(
-        BudgetPlansCompanion(
-          title: DBValue(plan.title),
-          description: DBValue(plan.description),
-          category: DBValue(plan.category.id),
-          updatedAt: DBValue(clock.now()),
-        ),
-      )
-      .then((_) => true);
+  Future<bool> updatePlan(UpdateBudgetPlanData plan) async =>
+      (update(budgetPlans)..where(($BudgetPlansTable e) => e.id.equals(plan.id)))
+          .write(
+            BudgetPlansCompanion(
+              title: DBValue(plan.title),
+              description: DBValue(plan.description),
+              category: DBValue(plan.category.id),
+              updatedAt: DBValue(clock.now()),
+            ),
+          )
+          .then((_) => true);
 
   Future<String> createPlan(CreateBudgetPlanData plan) async => into(budgetPlans)
       .insertReturning(
@@ -150,11 +160,11 @@ class BudgetPlansDao extends DatabaseAccessor<Database> with _$BudgetPlansDaoMix
           createdAt: clock.now(),
         ),
       )
-      .then((_) => _.id);
+      .then((BudgetPlanDataModel e) => e.id);
 
   BudgetPlanEntity _mapRowToEntity(TypedResult row) {
-    final BudgetPlanDataModel plan = row.readTable(budgetPlans);
-    final BudgetCategoryDataModel category = row.readTable(budgetCategories);
+    final plan = row.readTable(budgetPlans);
+    final category = row.readTable(budgetCategories);
 
     return plan.toEntity(
       tableName: budgetPlans.actualTableName,
@@ -168,13 +178,13 @@ class BudgetCategoriesDao extends DatabaseAccessor<Database> with _$BudgetCatego
   BudgetCategoriesDao(super.db);
 
   Stream<BudgetCategoryEntityList> watchAllBudgetCategories() =>
-      select(budgetCategories).map((_) => _.toEntity(budgetCategories.actualTableName)).watch();
+      select(budgetCategories).map((BudgetCategoryDataModel e) => e.toEntity(budgetCategories.actualTableName)).watch();
 
   Future<bool> deleteCategory(String id) async =>
-      (delete(budgetCategories)..where((_) => _.id.equals(id))).go().then((_) => true);
+      (delete(budgetCategories)..where(($BudgetCategoriesTable e) => e.id.equals(id))).go().then((_) => true);
 
   Future<bool> updateCategory(UpdateBudgetCategoryData category) async =>
-      (update(budgetCategories)..where((_) => _.id.equals(category.id)))
+      (update(budgetCategories)..where(($BudgetCategoriesTable e) => e.id.equals(category.id)))
           .write(
             BudgetCategoriesCompanion(
               title: DBValue(category.title),
@@ -196,7 +206,7 @@ class BudgetCategoriesDao extends DatabaseAccessor<Database> with _$BudgetCatego
           createdAt: clock.now(),
         ),
       )
-      .then((_) => _.toEntity(budgetCategories.actualTableName));
+      .then((BudgetCategoryDataModel e) => e.toEntity(budgetCategories.actualTableName));
 }
 
 @DriftAccessor(tables: <Type>[Budgets, BudgetPlans, BudgetCategories, BudgetAllocations])
@@ -207,40 +217,43 @@ class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAlloc
     required String budgetId,
     required String planId,
   }) =>
-      (select(budgetAllocations)..where((_) => _.budget.equals(budgetId) & _.plan.equals(planId)))
+      (select(budgetAllocations)
+            ..where(($BudgetAllocationsTable e) => e.budget.equals(budgetId) & e.plan.equals(planId)))
           .join(<DBJoin>[
             innerJoin(budgets, budgets.id.equalsExp(budgetAllocations.budget)),
             innerJoin(budgetPlans, budgetPlans.id.equalsExp(budgetAllocations.plan)),
           ])
           .watchSingle()
           .switchMap((TypedResult row) {
-            final BudgetPlanDataModel plan = row.readTable(budgetPlans);
-            return (select(budgetCategories)..where((_) => _.id.equals(plan.id))).watchSingle().map(
-                  (BudgetCategoryDataModel category) => _mapRowToEntity(
-                    row,
-                    <String, BudgetCategoryDataModel>{
-                      category.id: category,
-                    },
-                  ),
-                );
+            final plan = row.readTable(budgetPlans);
+            return (select(
+              budgetCategories,
+            )..where(($BudgetCategoriesTable e) => e.id.equals(plan.id))).watchSingle().map(
+              (BudgetCategoryDataModel category) => _mapRowToEntity(
+                row,
+                <String, BudgetCategoryDataModel>{
+                  category.id: category,
+                },
+              ),
+            );
           });
 
   Stream<BudgetAllocationEntityList> watchAllBudgetAllocations() => _selectAll(select(budgetAllocations));
 
   Stream<BudgetAllocationEntityList> watchAllBudgetAllocationsByBudget(String id) =>
-      _selectAll(select(budgetAllocations)..where((_) => _.budget.equals(id)));
+      _selectAll(select(budgetAllocations)..where(($BudgetAllocationsTable e) => e.budget.equals(id)));
 
   Stream<BudgetAllocationEntityList> watchAllBudgetAllocationsByPlan(String id) =>
-      _selectAll(select(budgetAllocations)..where((_) => _.plan.equals(id)));
+      _selectAll(select(budgetAllocations)..where(($BudgetAllocationsTable e) => e.plan.equals(id)));
 
   Future<bool> deleteAllocation(String id) async =>
-      (delete(budgetAllocations)..where((_) => _.id.equals(id))).go().then((_) => true);
+      (delete(budgetAllocations)..where(($BudgetAllocationsTable e) => e.id.equals(id))).go().then((_) => true);
 
   Future<bool> deleteAllocationByPlan(String id) async =>
-      (delete(budgetAllocations)..where((_) => _.plan.equals(id))).go().then((_) => true);
+      (delete(budgetAllocations)..where(($BudgetAllocationsTable e) => e.plan.equals(id))).go().then((_) => true);
 
   Future<bool> updateAllocation(UpdateBudgetAllocationData allocation) async =>
-      (update(budgetAllocations)..where((_) => _.id.equals(allocation.id)))
+      (update(budgetAllocations)..where(($BudgetAllocationsTable e) => e.id.equals(allocation.id)))
           .write(
             BudgetAllocationsCompanion(
               amount: DBValue(allocation.amount),
@@ -252,7 +265,7 @@ class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAlloc
       budgetAllocations.insertAll(allocations.map(_mapToInsertData)).then((_) => true);
 
   Future<String> createAllocation(CreateBudgetAllocationData allocation) async =>
-      into(budgetAllocations).insertReturning(_mapToInsertData(allocation)).then((_) => _.id);
+      into(budgetAllocations).insertReturning(_mapToInsertData(allocation)).then((BudgetAllocationDataModel e) => e.id);
 
   Stream<BudgetAllocationEntityList> _selectAll(SimpleSelectStatement<$BudgetAllocationsTable, Object?> query) => query
       .join(<DBJoin>[
@@ -263,16 +276,16 @@ class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAlloc
       .switchMap(_mapToEntityListStream);
 
   Stream<BudgetAllocationEntityList> _mapToEntityListStream(List<TypedResult> rows) =>
-      select(budgetCategories).watch().map((_) {
-        final Map<String, BudgetCategoryDataModel> categoryById = _.foldToMap((_) => _.id);
+      select(budgetCategories).watch().map((List<BudgetCategoryDataModel> e) {
+        final categoryById = e.foldToMap((BudgetCategoryDataModel e) => e.id);
 
-        return rows.map((_) => _mapRowToEntity(_, categoryById)).toList(growable: false);
+        return rows.map((TypedResult e) => _mapRowToEntity(e, categoryById)).toList(growable: false);
       });
 
   BudgetAllocationEntity _mapRowToEntity(TypedResult row, Map<String, BudgetCategoryDataModel> categoryById) {
-    final BudgetAllocationDataModel allocation = row.readTable(budgetAllocations);
-    final BudgetDataModel budget = row.readTable(budgets);
-    final BudgetPlanDataModel plan = row.readTable(budgetPlans);
+    final allocation = row.readTable(budgetAllocations);
+    final budget = row.readTable(budgets);
+    final plan = row.readTable(budgetPlans);
 
     return allocation.toEntity(
       tableName: budgetAllocations.actualTableName,
@@ -282,14 +295,13 @@ class BudgetAllocationsDao extends DatabaseAccessor<Database> with _$BudgetAlloc
     );
   }
 
-  Insertable<BudgetAllocationDataModel> _mapToInsertData(CreateBudgetAllocationData allocation) {
-    return BudgetAllocationsCompanion.insert(
-      amount: allocation.amount,
-      budget: allocation.budget.id,
-      plan: allocation.plan.id,
-      createdAt: clock.now(),
-    );
-  }
+  Insertable<BudgetAllocationDataModel> _mapToInsertData(CreateBudgetAllocationData allocation) =>
+      BudgetAllocationsCompanion.insert(
+        amount: allocation.amount,
+        budget: allocation.budget.id,
+        plan: allocation.plan.id,
+        createdAt: clock.now(),
+      );
 }
 
 @DriftAccessor(tables: <Type>[BudgetMetadataKeys, BudgetMetadataValues, BudgetMetadataAssociations])
@@ -304,7 +316,7 @@ class BudgetMetadataDao extends DatabaseAccessor<Database> with _$BudgetMetadata
       .watch();
 
   Stream<BudgetMetadataValueEntityList> watchAllBudgetMetadataValuesByPlan(String planId) =>
-      (select(budgetMetadataAssociations)..where((_) => _.plan.equals(planId)))
+      (select(budgetMetadataAssociations)..where(($BudgetMetadataAssociationsTable e) => e.plan.equals(planId)))
           .join(<DBJoin>[
             innerJoin(budgetMetadataValues, budgetMetadataValues.id.equalsExp(budgetMetadataAssociations.metadata)),
             innerJoin(budgetMetadataKeys, budgetMetadataKeys.id.equalsExp(budgetMetadataValues.key)),
@@ -313,40 +325,39 @@ class BudgetMetadataDao extends DatabaseAccessor<Database> with _$BudgetMetadata
           .watch();
 
   Stream<List<ReferenceEntity>> watchAllBudgetPlansByMetadata(String metadataId) =>
-      (select(budgetMetadataAssociations)..where((_) => _.metadata.equals(metadataId)))
-          .map((_) => _.toPlanReferenceEntity(budgetPlans.actualTableName))
+      (select(budgetMetadataAssociations)..where(($BudgetMetadataAssociationsTable e) => e.metadata.equals(metadataId)))
+          .map((BudgetMetadataAssociationDataModel e) => e.toPlanReferenceEntity(budgetPlans.actualTableName))
           .watch();
 
   Future<String> createMetadata(CreateBudgetMetadataData metadata) => transaction(() async {
-        final BudgetMetadataKeyDataModel key = await into(budgetMetadataKeys).insertReturning(
-          BudgetMetadataKeysCompanion.insert(
-            title: metadata.title,
-            description: metadata.description,
-            createdAt: clock.now(),
-          ),
-        );
+    final key = await into(budgetMetadataKeys).insertReturning(
+      BudgetMetadataKeysCompanion.insert(
+        title: metadata.title,
+        description: metadata.description,
+        createdAt: clock.now(),
+      ),
+    );
 
-        await _runOperations(key, metadata.operations);
+    await _runOperations(key, metadata.operations);
 
-        return key.id;
-      });
+    return key.id;
+  });
 
   Future<bool> updateMetadata(UpdateBudgetMetadataData metadata) => transaction(() async {
-        final BudgetMetadataKeyDataModel key =
-            await (update(budgetMetadataKeys)..where((_) => _.id.equals(metadata.id)))
-                .writeReturning(
-                  BudgetMetadataKeysCompanion(
-                    title: DBValue(metadata.title),
-                    description: DBValue(metadata.description),
-                    updatedAt: DBValue(clock.now()),
-                  ),
-                )
-                .then((_) => _.single);
+    final key = await (update(budgetMetadataKeys)..where(($BudgetMetadataKeysTable e) => e.id.equals(metadata.id)))
+        .writeReturning(
+          BudgetMetadataKeysCompanion(
+            title: DBValue(metadata.title),
+            description: DBValue(metadata.description),
+            updatedAt: DBValue(clock.now()),
+          ),
+        )
+        .then((List<BudgetMetadataKeyDataModel> e) => e.single);
 
-        await _runOperations(key, metadata.operations);
+    await _runOperations(key, metadata.operations);
 
-        return true;
-      });
+    return true;
+  });
 
   Future<bool> addMetadataToPlan({
     required ReferenceEntity plan,
@@ -366,8 +377,9 @@ class BudgetMetadataDao extends DatabaseAccessor<Database> with _$BudgetMetadata
     required ReferenceEntity plan,
     required ReferenceEntity metadata,
   }) async {
-    await (delete(budgetMetadataAssociations)..where((_) => _.plan.equals(plan.id) & _.metadata.equals(metadata.id)))
-        .go();
+    await (delete(
+      budgetMetadataAssociations,
+    )..where(($BudgetMetadataAssociationsTable e) => e.plan.equals(plan.id) & e.metadata.equals(metadata.id))).go();
     return true;
   }
 
@@ -376,29 +388,32 @@ class BudgetMetadataDao extends DatabaseAccessor<Database> with _$BudgetMetadata
         for (final BudgetMetadataValueOperation item in operations)
           switch (item) {
             BudgetMetadataValueCreationOperation() => into(budgetMetadataValues).insertReturning(
-                BudgetMetadataValuesCompanion.insert(
-                  title: item.title,
-                  value: item.value,
-                  key: key.id,
-                  createdAt: clock.now(),
-                ),
+              BudgetMetadataValuesCompanion.insert(
+                title: item.title,
+                value: item.value,
+                key: key.id,
+                createdAt: clock.now(),
               ),
+            ),
             BudgetMetadataValueModificationOperation() =>
-              (update(budgetMetadataValues)..where((_) => _.id.equals(item.reference.id))).write(
+              (update(
+                budgetMetadataValues,
+              )..where(($BudgetMetadataValuesTable e) => e.id.equals(item.reference.id))).write(
                 BudgetMetadataValuesCompanion(
                   title: DBValue(item.title),
                   value: DBValue(item.value),
                   updatedAt: DBValue(clock.now()),
                 ),
               ),
-            BudgetMetadataValueRemovalOperation() =>
-              (delete(budgetMetadataValues)..where((_) => _.id.equals(item.reference.id))).go(),
+            BudgetMetadataValueRemovalOperation() => (delete(
+              budgetMetadataValues,
+            )..where(($BudgetMetadataValuesTable e) => e.id.equals(item.reference.id))).go(),
           },
       ]);
 
   BudgetMetadataValueEntity _mapValueRowToEntity(TypedResult row) {
-    final BudgetMetadataValueDataModel metadataValue = row.readTable(budgetMetadataValues);
-    final BudgetMetadataKeyDataModel metadataKey = row.readTable(budgetMetadataKeys);
+    final metadataValue = row.readTable(budgetMetadataValues);
+    final metadataKey = row.readTable(budgetMetadataKeys);
 
     return metadataValue.toEntity(
       tableName: budgetMetadataValues.actualTableName,

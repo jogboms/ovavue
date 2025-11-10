@@ -1,5 +1,5 @@
-import '../entities/budget_entity.dart';
-import '../repositories/budgets.dart';
+import 'package:ovavue/domain/entities/budget_entity.dart';
+import 'package:ovavue/domain/repositories/budgets.dart';
 
 class FetchActiveBudgetUseCase {
   const FetchActiveBudgetUseCase({

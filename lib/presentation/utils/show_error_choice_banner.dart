@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../theme.dart';
+import 'package:ovavue/presentation/theme.dart';
 
 Future<bool> showErrorChoiceBanner(
   BuildContext context, {
   required String message,
 }) async {
-  final ThemeData theme = context.theme;
-  final ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(context)
+  final theme = context.theme;
+  final scaffoldMessengerState = ScaffoldMessenger.of(context)
     ..removeCurrentMaterialBanner(reason: MaterialBannerClosedReason.dismiss);
 
-  final Color backgroundColor = theme.colorScheme.onError;
+  final backgroundColor = theme.colorScheme.onError;
 
-  final Future<MaterialBannerClosedReason> result = scaffoldMessengerState
+  final result = scaffoldMessengerState
       .showMaterialBanner(
         MaterialBanner(
           backgroundColor: theme.colorScheme.error,

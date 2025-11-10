@@ -2,18 +2,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
 
-import '../routing.dart';
-import '../state.dart';
-import '../widgets.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 Future<String?> createBudgetCategoryAction({
   required BuildContext context,
   required WidgetRef ref,
   required bool navigateOnComplete,
 }) async {
-  final AppRouter router = context.router;
+  final router = context.router;
 
-  final BudgetCategoryEntryResult? result = await showBudgetCategoryEntryForm(
+  final result = await showBudgetCategoryEntryForm(
     context: context,
     title: null,
     description: null,
@@ -24,7 +24,9 @@ Future<String?> createBudgetCategoryAction({
     return null;
   }
 
-  final String id = await ref.read(budgetCategoryProvider).create(
+  final id = await ref
+      .read(budgetCategoryProvider)
+      .create(
         CreateBudgetCategoryData(
           title: result.title,
           description: result.description,

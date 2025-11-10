@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
-import '../../constants.dart';
-import '../../models.dart';
-import '../../routing.dart';
-import '../../state.dart';
-import '../../utils.dart';
-import '../../widgets.dart';
-import 'utils/delete_budget_plan_action.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/screens/budget_plans/utils/delete_budget_plan_action.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetPlansPage extends StatefulWidget {
   const BudgetPlansPage({super.key});
@@ -20,25 +19,25 @@ class BudgetPlansPage extends StatefulWidget {
 @visibleForTesting
 class BudgetPlansPageState extends State<BudgetPlansPage> {
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(budgetPlansProvider).when(
-              data: (List<BudgetPlanViewModel> data) => _ContentDataView(
-                key: dataViewKey,
-                data: data,
-              ),
-              error: ErrorView.new,
-              loading: () => child!,
-              skipLoadingOnReload: true,
+  Widget build(BuildContext context) => Scaffold(
+    body: Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+          .watch(budgetPlansProvider)
+          .when(
+            data: (List<BudgetPlanViewModel> data) => _ContentDataView(
+              key: dataViewKey,
+              data: data,
             ),
-        child: const LoadingView(),
-      ),
-    );
-  }
+            error: ErrorView.new,
+            loading: () => child!,
+            skipLoadingOnReload: true,
+          ),
+      child: const LoadingView(),
+    ),
+  );
 }
 
 class _ContentDataView extends StatelessWidget {
@@ -48,8 +47,8 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -86,7 +85,7 @@ class _ContentDataView extends StatelessWidget {
               ),
               sliver: SliverList.separated(
                 itemBuilder: (BuildContext context, int index) {
-                  final BudgetPlanViewModel plan = data[index];
+                  final plan = data[index];
 
                   return Slidable(
                     key: Key(plan.id),
@@ -116,7 +115,7 @@ class _ContentDataView extends StatelessWidget {
                     ),
                   );
                 },
-                separatorBuilder: (_, __) => const SizedBox(height: 4),
+                separatorBuilder: (_, _) => const SizedBox(height: 4),
                 itemCount: data.length,
               ),
             ),

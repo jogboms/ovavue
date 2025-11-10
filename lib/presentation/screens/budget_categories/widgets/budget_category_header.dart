@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../models.dart';
-import '../../../theme.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetCategoryHeader extends StatelessWidget {
   const BudgetCategoryHeader({
@@ -19,12 +19,12 @@ class BudgetCategoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
-    final Money? allocationAmount = this.allocationAmount;
-    final Money? budgetAmount = this.budgetAmount;
-    final Color foregroundColor = category.colorScheme.foreground;
+    final allocationAmount = this.allocationAmount;
+    final budgetAmount = this.budgetAmount;
+    final foregroundColor = category.colorScheme.foreground;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 18.0, 16.0, 6.0),

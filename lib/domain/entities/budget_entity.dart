@@ -28,8 +28,19 @@ class BudgetEntity with EquatableMixin {
   final DateTime? updatedAt;
 
   @override
-  List<Object?> get props =>
-      <Object?>[id, path, index, title, amount, description, active, startedAt, endedAt, createdAt, updatedAt];
+  List<Object?> get props => <Object?>[
+    id,
+    path,
+    index,
+    title,
+    amount,
+    description,
+    active,
+    startedAt,
+    endedAt,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 typedef BudgetEntityList = List<BudgetEntity>;

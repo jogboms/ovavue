@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/core.dart';
 
-import 'screens/budgets/active_budget_page.dart';
-import 'state.dart';
-import 'theme.dart';
-import 'utils.dart';
-import 'widgets.dart';
+import 'package:ovavue/presentation/screens/budgets/active_budget_page.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class App extends StatefulWidget {
   const App({
@@ -30,29 +30,29 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   @override
-  Widget build(BuildContext context) {
-    return _Banner(
-      key: ObjectKey(widget.environment),
-      visible: !widget.environment.isProduction,
-      message: widget.environment.name.toUpperCase(),
-      child: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          navigatorKey: widget.navigatorKey,
-          theme: themeBuilder(ThemeData.light()),
-          darkTheme: themeBuilder(ThemeData.dark()),
-          themeMode: ref.watch(preferencesProvider.select((_) => _.value?.themeMode)) ?? widget.themeMode,
-          onGenerateTitle: (BuildContext context) => context.l10n.appName,
-          localizationsDelegates: L10n.localizationsDelegates,
-          supportedLocales: L10n.supportedLocales,
-          builder: (_, Widget? child) => SnackBarProvider(navigatorKey: widget.navigatorKey, child: child!),
-          home: child,
-          navigatorObservers: widget.navigatorObservers ?? <NavigatorObserver>[],
-        ),
-        child: widget.home ?? const ActiveBudgetPage(),
+  Widget build(BuildContext context) => _Banner(
+    key: ObjectKey(widget.environment),
+    visible: !widget.environment.isProduction,
+    message: widget.environment.name.toUpperCase(),
+    child: Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        navigatorKey: widget.navigatorKey,
+        theme: themeBuilder(ThemeData.light()),
+        darkTheme: themeBuilder(ThemeData.dark()),
+        themeMode:
+            ref.watch(preferencesProvider.select((AsyncValue<PreferencesState> e) => e.value?.themeMode)) ??
+            widget.themeMode,
+        onGenerateTitle: (BuildContext context) => context.l10n.appName,
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
+        builder: (_, Widget? child) => SnackBarProvider(navigatorKey: widget.navigatorKey, child: child!),
+        home: child,
+        navigatorObservers: widget.navigatorObservers ?? <NavigatorObserver>[],
       ),
-    );
-  }
+      child: widget.home ?? const ActiveBudgetPage(),
+    ),
+  );
 }
 
 class _Banner extends StatelessWidget {

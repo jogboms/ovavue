@@ -7,9 +7,9 @@ import '../../utils.dart';
 
 void main() {
   group('FetchAccountUseCase', () {
-    final FetchAccountUseCase useCase = FetchAccountUseCase(auth: mockRepositories.auth);
+    final useCase = FetchAccountUseCase(auth: mockRepositories.auth);
 
-    final AccountEntity dummyAccount = AuthMockImpl.generateAccount();
+    final dummyAccount = AuthMockImpl.generateAccount();
 
     tearDown(mockRepositories.reset);
 

@@ -1,6 +1,5 @@
+import 'package:ovavue/data/local_database.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../local_database.dart';
 
 class UsersLocalImpl implements UsersRepository {
   const UsersLocalImpl(this._db);

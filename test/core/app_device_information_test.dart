@@ -14,7 +14,7 @@ class MockPackageInfoPlatform extends Mock with MockPlatformInterfaceMixin imple
 void main() {
   group('AppDeviceInformation', () {
     final DeviceInfoPlatform deviceInfoPlatform = MockDeviceInfoPlatform();
-    final MockPackageInfoPlatform packageInfoPlatform = MockPackageInfoPlatform();
+    final packageInfoPlatform = MockPackageInfoPlatform();
 
     setUpAll(() {
       DeviceInfoPlatform.instance = deviceInfoPlatform;
@@ -75,7 +75,7 @@ void main() {
           },
         }),
       );
-      final AppDeviceInformation info = await AppDeviceInformation.initialize(
+      final info = await AppDeviceInformation.initialize(
         platformOverride: DevicePlatform.android,
       );
 
@@ -84,7 +84,7 @@ void main() {
       expect(info.os, 'Android');
       expect(info.model, 'Nokia 2');
 
-      final Map<String, String> infoMap = info.toMap();
+      final infoMap = info.toMap();
       expect(infoMap.containsKey('appName'), true);
       expect(infoMap.containsKey('packageName'), true);
     });
@@ -107,7 +107,7 @@ void main() {
           },
         }),
       );
-      final AppDeviceInformation info = await AppDeviceInformation.initialize(
+      final info = await AppDeviceInformation.initialize(
         platformOverride: DevicePlatform.ios,
       );
 
@@ -116,7 +116,7 @@ void main() {
       expect(info.os, 'iPadOS');
       expect(info.model, 'iPhone XS Max');
 
-      final Map<String, String> infoMap = info.toMap();
+      final infoMap = info.toMap();
       expect(infoMap.containsKey('appName'), true);
       expect(infoMap.containsKey('packageName'), true);
     });
@@ -125,7 +125,7 @@ void main() {
       when(deviceInfoPlatform.deviceInfo).thenAnswer(
         (_) async => WebBrowserInfo.fromMap(<String, String>{'userAgent': 'Firefox', 'vendorSub': 'Windows'}),
       );
-      final AppDeviceInformation info = await AppDeviceInformation.initialize(
+      final info = await AppDeviceInformation.initialize(
         platformOverride: DevicePlatform.web,
       );
 
@@ -134,7 +134,7 @@ void main() {
       expect(info.os, 'firefox');
       expect(info.model, 'Windows');
 
-      final Map<String, String> infoMap = info.toMap();
+      final infoMap = info.toMap();
       expect(infoMap.containsKey('appName'), true);
       expect(infoMap.containsKey('packageName'), true);
     });

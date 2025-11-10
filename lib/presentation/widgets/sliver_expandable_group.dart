@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:ovavue/presentation/constants.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
-import '../constants.dart';
 
 class SliverExpandableGroup<T> extends StatefulWidget {
   const SliverExpandableGroup({
@@ -38,7 +37,7 @@ class _SliverExpandableGroupState<T> extends State<SliverExpandableGroup<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final Widget child = SliverPadding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -46,7 +45,7 @@ class _SliverExpandableGroupState<T> extends State<SliverExpandableGroup<T>> {
         children: <Widget>[
           SliverList.separated(
             itemBuilder: (_, int index) => widget.itemBuilder(widget.values[index]),
-            separatorBuilder: (_, __) => const SizedBox(height: 4),
+            separatorBuilder: (_, _) => const SizedBox(height: 4),
             itemCount: widget.values.length,
           ),
           if (widget.bottom case final Widget bottom)

@@ -2,11 +2,10 @@ import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:faker/faker.dart';
 import 'package:ovavue/core.dart';
+import 'package:ovavue/data/repositories/auth/auth_mock_impl.dart';
+import 'package:ovavue/data/repositories/extensions.dart';
 import 'package:ovavue/domain.dart';
 import 'package:rxdart/subjects.dart';
-
-import '../auth/auth_mock_impl.dart';
-import '../extensions.dart';
 
 class BudgetsMockImpl implements BudgetsRepository {
   static BudgetEntity generateBudget({
@@ -36,23 +35,25 @@ class BudgetsMockImpl implements BudgetsRepository {
     );
   }
 
-  static final Map<String, BudgetEntity> _budgets = <String, BudgetEntity>{};
+  static final _budgets = <String, BudgetEntity>{};
 
-  static final BehaviorSubject<Map<String, BudgetEntity>> _budgets$ =
-      BehaviorSubject<Map<String, BudgetEntity>>.seeded(_budgets);
+  static final _budgets$ = BehaviorSubject<Map<String, BudgetEntity>>.seeded(
+    _budgets,
+  );
 
-  static final Stream<Map<String, BudgetEntity>> budgets$ =
-      _budgets$.map((_) => _.map(MapEntry<String, BudgetEntity>.new));
+  static final Stream<Map<String, BudgetEntity>> budgets$ = _budgets$.map(
+    (Map<String, BudgetEntity> e) => e.map(MapEntry<String, BudgetEntity>.new),
+  );
 
   BudgetEntityList seed(
     int count, {
     String? userId,
   }) {
-    final BudgetEntityList items = BudgetEntityList.generate(
+    final items = BudgetEntityList.generate(
       count,
       (int index) {
-        final DateTime startedAt = clock.monthsFromNow(index);
-        final bool active = count == index + 1;
+        final startedAt = clock.monthsFromNow(index);
+        final active = count == index + 1;
         return BudgetsMockImpl.generateBudget(
           index: index,
           title: '${clock.now().year}.${index + 1}',
@@ -63,15 +64,15 @@ class BudgetsMockImpl implements BudgetsRepository {
         );
       },
     );
-    _budgets$.add(_budgets..addAll(items.foldToMap((_) => _.id)));
+    _budgets$.add(_budgets..addAll(items.foldToMap((BudgetEntity e) => e.id)));
     return items;
   }
 
   @override
   Future<ReferenceEntity> create(String userId, CreateBudgetData budget) async {
-    final String id = faker.guid.guid();
-    final String path = '/budgets/$userId/$id';
-    final BudgetEntity newItem = BudgetEntity(
+    final id = faker.guid.guid();
+    final path = '/budgets/$userId/$id';
+    final newItem = BudgetEntity(
       id: id,
       path: path,
       index: budget.index,
@@ -106,18 +107,19 @@ class BudgetsMockImpl implements BudgetsRepository {
 
   @override
   Stream<BudgetEntity?> fetchActiveBudget(String userId) => budgets$.map(
-        (Map<String, BudgetEntity> event) => event.values.toList(growable: false).firstWhereOrNull((_) => _.active),
-      );
+    (Map<String, BudgetEntity> event) =>
+        event.values.toList(growable: false).firstWhereOrNull((BudgetEntity e) => e.active),
+  );
 
   @override
   Future<bool> activateBudget(ReferenceEntity reference) async {
-    _budgets$.add(_budgets..update(reference.id, (_) => _.copyWith(active: true)));
+    _budgets$.add(_budgets..update(reference.id, (BudgetEntity e) => e.copyWith(active: true)));
     return true;
   }
 
   @override
   Future<bool> deactivateBudget({required ReferenceEntity reference, required DateTime? endedAt}) async {
-    _budgets$.add(_budgets..update(reference.id, (_) => _.copyWith(active: false, endedAt: endedAt)));
+    _budgets$.add(_budgets..update(reference.id, (BudgetEntity e) => e.copyWith(active: false, endedAt: endedAt)));
     return true;
   }
 
@@ -139,28 +141,27 @@ extension on BudgetEntity {
     DateTime? endedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      BudgetEntity(
-        id: id ?? this.id,
-        path: path ?? this.path,
-        index: index ?? this.index,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        amount: amount ?? this.amount,
-        active: active ?? this.active,
-        startedAt: startedAt ?? this.startedAt,
-        endedAt: endedAt ?? this.endedAt,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => BudgetEntity(
+    id: id ?? this.id,
+    path: path ?? this.path,
+    index: index ?? this.index,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    amount: amount ?? this.amount,
+    active: active ?? this.active,
+    startedAt: startedAt ?? this.startedAt,
+    endedAt: endedAt ?? this.endedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   BudgetEntity update(UpdateBudgetData update) => copyWith(
-        title: update.title,
-        description: update.description,
-        amount: update.amount,
-        active: update.active,
-        startedAt: update.startedAt,
-        endedAt: update.endedAt,
-        updatedAt: clock.now(),
-      );
+    title: update.title,
+    description: update.description,
+    amount: update.amount,
+    active: update.active,
+    startedAt: update.startedAt,
+    endedAt: update.endedAt,
+    updatedAt: clock.now(),
+  );
 }

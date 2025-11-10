@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:money/money.dart';
 
-import '../l10n/l10n.dart';
-import '../models.dart';
+import 'package:ovavue/presentation/l10n/l10n.dart';
+import 'package:ovavue/presentation/models.dart';
 
 export '../l10n/l10n.dart';
 
@@ -23,18 +23,18 @@ extension StringExtensions on String {
     return this[0].toUpperCase() + substring(1);
   }
 
-  String sentence() => split(' ').map((_) => _.capitalize()).join(' ');
+  String sentence() => split(' ').map((String e) => e.capitalize()).join(' ');
 }
 
 extension SortedByMoneyIterableExtension on Iterable<BudgetPlanViewModel> {
   List<BudgetPlanViewModel> sortedByMoney() => sorted(
-        (BudgetPlanViewModel a, BudgetPlanViewModel b) {
-          final Money moneyA = a.allocation?.amount ?? Money.zero;
-          final Money moneyB = b.allocation?.amount ?? Money.zero;
+    (BudgetPlanViewModel a, BudgetPlanViewModel b) {
+      final moneyA = a.allocation?.amount ?? Money.zero;
+      final moneyB = b.allocation?.amount ?? Money.zero;
 
-          return moneyB.compareTo(moneyA);
-        },
-      );
+      return moneyB.compareTo(moneyA);
+    },
+  );
 }
 
 extension KeyboardPaddingEdgeInsets on EdgeInsets {

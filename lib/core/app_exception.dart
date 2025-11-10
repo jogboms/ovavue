@@ -1,3 +1,6 @@
+import 'package:meta/meta.dart';
+
+@immutable
 class AppException implements Exception {
   const AppException(this.message);
 

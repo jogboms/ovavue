@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../constants.dart';
-import '../../../models.dart';
-import '../../../state.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
+import 'package:ovavue/presentation/constants.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetMetadataSelectionPicker extends StatelessWidget {
   const BudgetMetadataSelectionPicker({super.key, required this.plan});
@@ -13,29 +13,30 @@ class BudgetMetadataSelectionPicker extends StatelessWidget {
   final BudgetPlanViewModel plan;
 
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref.watch(budgetMetadataProvider).when(
-            data: (List<BudgetMetadataViewModel> allData) =>
-                ref.watch(selectedBudgetMetadataByPlanProvider(id: plan.id)).when(
-                      data: (List<BudgetMetadataValueViewModel> selectedData) => _ContentDataView(
-                        key: dataViewKey,
-                        allData: allData,
-                        selectedData: selectedData,
-                        plan: plan,
-                      ),
-                      error: ErrorView.new,
-                      loading: () => child!,
-                    ),
-            error: ErrorView.new,
-            loading: () => child!,
-          ),
-      child: const LoadingView(),
-    );
-  }
+  Widget build(BuildContext context) => Consumer(
+    builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+        .watch(budgetMetadataProvider)
+        .when(
+          data: (List<BudgetMetadataViewModel> allData) => ref
+              .watch(selectedBudgetMetadataByPlanProvider(id: plan.id))
+              .when(
+                data: (List<BudgetMetadataValueViewModel> selectedData) => _ContentDataView(
+                  key: dataViewKey,
+                  allData: allData,
+                  selectedData: selectedData,
+                  plan: plan,
+                ),
+                error: ErrorView.new,
+                loading: () => child!,
+              ),
+          error: ErrorView.new,
+          loading: () => child!,
+        ),
+    child: const LoadingView(),
+  );
 }
 
 class _ContentDataView extends StatefulWidget {
@@ -57,9 +58,8 @@ class _ContentDataView extends StatefulWidget {
 class _ContentDataViewState extends State<_ContentDataView> {
   static final GlobalKey<FormFieldState<String>> _metadataFieldKey = GlobalKey(debugLabel: 'metadataFieldKey');
 
-  final ValueNotifier<BudgetMetadataViewModel?> _selectedMetadata = ValueNotifier<BudgetMetadataViewModel?>(null);
-  final ValueNotifier<BudgetMetadataValueViewModel?> _selectedMetadataValue =
-      ValueNotifier<BudgetMetadataValueViewModel?>(null);
+  final _selectedMetadata = ValueNotifier<BudgetMetadataViewModel?>(null);
+  final _selectedMetadataValue = ValueNotifier<BudgetMetadataValueViewModel?>(null);
 
   @override
   void dispose() {
@@ -75,9 +75,11 @@ class _ContentDataViewState extends State<_ContentDataView> {
       return const EmptyView();
     }
 
-    final L10n l10n = context.l10n;
-    final Iterable<String> selectedIds = widget.selectedData.map((_) => _.key.id);
-    final Iterable<BudgetMetadataViewModel> keys = widget.allData.where((_) => !selectedIds.contains(_.key.id));
+    final l10n = context.l10n;
+    final selectedIds = widget.selectedData.map((BudgetMetadataValueViewModel e) => e.key.id);
+    final keys = widget.allData.where(
+      (BudgetMetadataViewModel e) => !selectedIds.contains(e.key.id),
+    );
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -116,27 +118,26 @@ class _ContentDataViewState extends State<_ContentDataView> {
             if (keys.isNotEmpty) ...<Widget>[
               ValueListenableBuilder<BudgetMetadataViewModel?>(
                 valueListenable: _selectedMetadata,
-                builder: (BuildContext context, BudgetMetadataViewModel? value, _) {
-                  return DropdownButtonFormField<BudgetMetadataViewModel>(
-                    key: _metadataFieldKey,
-                    initialValue: value,
-                    isExpanded: true,
-                    decoration: const InputDecoration(prefixIcon: Icon(AppIcons.metadata)),
-                    hint: Text(context.l10n.selectMetadataCaption, overflow: TextOverflow.ellipsis),
-                    items: <DropdownMenuItem<BudgetMetadataViewModel>>[
-                      for (final BudgetMetadataViewModel item in keys)
-                        DropdownMenuItem<BudgetMetadataViewModel>(
-                          key: Key(item.key.id),
-                          value: item,
-                          child: Text(item.key.title),
-                        ),
-                    ],
-                    onChanged: (BudgetMetadataViewModel? value) {
-                      _selectedMetadata.value = value;
-                      _selectedMetadataValue.value = null;
-                    },
-                  );
-                },
+                builder: (BuildContext context, BudgetMetadataViewModel? value, _) =>
+                    DropdownButtonFormField<BudgetMetadataViewModel>(
+                      key: _metadataFieldKey,
+                      initialValue: value,
+                      isExpanded: true,
+                      decoration: const InputDecoration(prefixIcon: Icon(AppIcons.metadata)),
+                      hint: Text(context.l10n.selectMetadataCaption, overflow: TextOverflow.ellipsis),
+                      items: <DropdownMenuItem<BudgetMetadataViewModel>>[
+                        for (final BudgetMetadataViewModel item in keys)
+                          DropdownMenuItem<BudgetMetadataViewModel>(
+                            key: Key(item.key.id),
+                            value: item,
+                            child: Text(item.key.title),
+                          ),
+                      ],
+                      onChanged: (BudgetMetadataViewModel? value) {
+                        _selectedMetadata.value = value;
+                        _selectedMetadataValue.value = null;
+                      },
+                    ),
               ),
               ValueListenableBuilder<BudgetMetadataViewModel?>(
                 valueListenable: _selectedMetadata,
@@ -199,10 +200,12 @@ class _ContentDataViewState extends State<_ContentDataView> {
     required BudgetPlanViewModel plan,
     required BudgetMetadataValueViewModel metadata,
   }) async {
-    await ref.read(budgetMetadataProvider.notifier).addMetadataToPlan(
-      plan: (id: plan.id, path: plan.path),
-      metadata: (id: metadata.id, path: metadata.path),
-    );
+    await ref
+        .read(budgetMetadataProvider.notifier)
+        .addMetadataToPlan(
+          plan: (id: plan.id, path: plan.path),
+          metadata: (id: metadata.id, path: metadata.path),
+        );
     _metadataFieldKey.currentState?.reset();
     _selectedMetadata.value = null;
     _selectedMetadataValue.value = null;
@@ -214,9 +217,11 @@ class _ContentDataViewState extends State<_ContentDataView> {
     required BudgetPlanViewModel plan,
     required BudgetMetadataValueViewModel metadata,
   }) async {
-    await ref.read(budgetMetadataProvider.notifier).removeMetadataFromPlan(
-      plan: (id: plan.id, path: plan.path),
-      metadata: (id: metadata.id, path: metadata.path),
-    );
+    await ref
+        .read(budgetMetadataProvider.notifier)
+        .removeMetadataFromPlan(
+          plan: (id: plan.id, path: plan.path),
+          metadata: (id: metadata.id, path: metadata.path),
+        );
   }
 }

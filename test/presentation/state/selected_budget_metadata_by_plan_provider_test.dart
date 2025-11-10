@@ -9,13 +9,13 @@ import '../../utils.dart';
 
 Future<void> main() async {
   group('SelectedBudgetMetadataByPlanProvider', () {
-    final UserEntity dummyUser = UsersMockImpl.user;
-    const String planId = 'plan-id';
+    final dummyUser = UsersMockImpl.user;
+    const planId = 'plan-id';
 
     tearDown(mockUseCases.reset);
 
     Future<List<BudgetMetadataValueViewModel>> createProviderStream() {
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
         ],
@@ -25,17 +25,21 @@ Future<void> main() async {
     }
 
     test('should initialize with empty state', () {
-      when(() => mockUseCases.fetchBudgetMetadataByPlanUseCase.call(userId: dummyUser.id, planId: planId))
-          .thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(<BudgetMetadataValueEntity>[]));
+      when(
+        () => mockUseCases.fetchBudgetMetadataByPlanUseCase.call(userId: dummyUser.id, planId: planId),
+      ).thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(<BudgetMetadataValueEntity>[]));
 
       expect(createProviderStream(), completes);
     });
 
     test('should emit fetched tags', () {
-      final BudgetMetadataValueEntityList expectedBudgetMetadata =
-          BudgetMetadataValueEntityList.filled(3, BudgetMetadataMockImpl.generateMetadataValue());
-      when(() => mockUseCases.fetchBudgetMetadataByPlanUseCase.call(userId: dummyUser.id, planId: planId))
-          .thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(expectedBudgetMetadata));
+      final expectedBudgetMetadata = BudgetMetadataValueEntityList.filled(
+        3,
+        BudgetMetadataMockImpl.generateMetadataValue(),
+      );
+      when(
+        () => mockUseCases.fetchBudgetMetadataByPlanUseCase.call(userId: dummyUser.id, planId: planId),
+      ).thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(expectedBudgetMetadata));
 
       expect(
         createProviderStream(),

@@ -13,21 +13,20 @@ import '../../../../utils.dart';
 
 Future<void> main() async {
   group('BudgetProvider', () {
-    final MockAsyncCallback<UserEntity> mockFetchUser = MockAsyncCallback<UserEntity>();
+    final mockFetchUser = MockAsyncCallback<UserEntity>();
     final MockAsyncCallback<ReferenceEntity?> mockFetchActiveBudgetReference = MockAsyncCallback<ReferenceEntity>();
-    final MockAsyncCallbackValueChanged<PlanToAllocationMap, String> mockFetchBudgetAllocations =
-        MockAsyncCallbackValueChanged<PlanToAllocationMap, String>();
+    final mockFetchBudgetAllocations = MockAsyncCallbackValueChanged<PlanToAllocationMap, String>();
 
-    final UserEntity dummyUser = UsersMockImpl.user;
-    final BudgetEntity dummyBudget = BudgetsMockImpl.generateBudget();
-    final BudgetPlanEntity dummyBudgetPlan = BudgetPlansMockImpl.generatePlan(id: '1');
-    final BudgetCategoryEntity dummyBudgetCategory = BudgetCategoriesMockImpl.generateCategory(id: '1');
-    final BudgetAllocationEntity dummyAllocation = BudgetAllocationsMockImpl.generateAllocation(
+    final dummyUser = UsersMockImpl.user;
+    final dummyBudget = BudgetsMockImpl.generateBudget();
+    final dummyBudgetPlan = BudgetPlansMockImpl.generatePlan(id: '1');
+    final dummyBudgetCategory = BudgetCategoriesMockImpl.generateCategory(id: '1');
+    final dummyAllocation = BudgetAllocationsMockImpl.generateAllocation(
       id: '1',
       plan: dummyBudgetPlan,
       budget: dummyBudget,
     );
-    final BudgetState dummyBudgetState = BudgetState(
+    final dummyBudgetState = BudgetState(
       budget: BudgetViewModel.fromEntity(dummyBudget),
       plans: <BudgetPlanViewModel>[
         BudgetPlanViewModel.fromEntity(dummyBudgetPlan, dummyAllocation.toViewModel()),
@@ -52,16 +51,16 @@ Future<void> main() async {
     });
 
     BudgetProvider createProvider() => BudgetProvider(
-          fetchUser: mockFetchUser,
-          fetchActiveBudgetReference: mockFetchActiveBudgetReference,
-          fetchBudgetAllocations: mockFetchBudgetAllocations,
-          createBudgetUseCase: mockUseCases.createBudgetUseCase,
-          activateBudgetUseCase: mockUseCases.activateBudgetUseCase,
-          updateBudgetUseCase: mockUseCases.updateBudgetUseCase,
-        );
+      fetchUser: mockFetchUser.call,
+      fetchActiveBudgetReference: mockFetchActiveBudgetReference.call,
+      fetchBudgetAllocations: mockFetchBudgetAllocations.call,
+      createBudgetUseCase: mockUseCases.createBudgetUseCase,
+      activateBudgetUseCase: mockUseCases.activateBudgetUseCase,
+      updateBudgetUseCase: mockUseCases.updateBudgetUseCase,
+    );
 
     test('should create new instance when read', () {
-      final ProviderContainer container = createProviderContainer();
+      final container = createProviderContainer();
       addTearDown(container.dispose);
 
       expect(container.read(budgetProvider), isA<BudgetProvider>());
@@ -77,7 +76,7 @@ Future<void> main() async {
         ),
       ).thenAnswer((_) async => '1');
 
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
           activeBudgetProvider.overrideWith((_) => Stream<BudgetState>.value(dummyBudgetState)),
@@ -86,7 +85,7 @@ Future<void> main() async {
       );
       addTearDown(container.dispose);
 
-      final BudgetProvider provider = container.read(budgetProvider);
+      final provider = container.read(budgetProvider);
 
       expect(
         provider.create(
@@ -121,7 +120,7 @@ Future<void> main() async {
           ),
         ).thenAnswer((_) async => '1');
 
-        final CreateBudgetData createBudgetData = CreateBudgetData(
+        final createBudgetData = CreateBudgetData(
           index: 1,
           title: 'title',
           description: 'description',
@@ -130,7 +129,7 @@ Future<void> main() async {
           startedAt: DateTime(0),
           endedAt: null,
         );
-        final String budgetId = await createProvider().create(
+        final budgetId = await createProvider().create(
           index: 1,
           title: 'title',
           description: 'description',
@@ -187,7 +186,7 @@ Future<void> main() async {
       test('should update existing budget', () async {
         when(() => mockUseCases.updateBudgetUseCase.call(any())).thenAnswer((_) async => true);
 
-        final UpdateBudgetData updateBudgetData = UpdateBudgetData(
+        final updateBudgetData = UpdateBudgetData(
           id: '1',
           path: 'path',
           title: 'title',

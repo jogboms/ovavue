@@ -11,7 +11,7 @@ class SnackBarProvider extends StatefulWidget with DiagnosticableTreeMixin {
   final GlobalKey<NavigatorState> navigatorKey;
 
   static SnackBarProviderState? of(BuildContext context) {
-    final SnackBarProviderState? result = context.findAncestorStateOfType<SnackBarProviderState>();
+    final result = context.findAncestorStateOfType<SnackBarProviderState>();
     if (result != null) {
       return result;
     }
@@ -35,8 +35,8 @@ class SnackBarProvider extends StatefulWidget with DiagnosticableTreeMixin {
 }
 
 class SnackBarProviderState extends State<SnackBarProvider> {
-  final List<Snack> _snacks = <Snack>[];
-  static const Duration _duration = Duration(seconds: 5);
+  final _snacks = <Snack>[];
+  static const _duration = Duration(seconds: 5);
 
   @override
   void dispose() {
@@ -55,7 +55,7 @@ class SnackBarProviderState extends State<SnackBarProvider> {
   }) async {
     hideCurrentSnackBar();
 
-    final OverlayEntry barrier = OverlayEntry(
+    final barrier = OverlayEntry(
       builder: (_) => GestureDetector(
         key: key,
         onTapUp: dismissible ? (_) => hideCurrentSnackBar() : null,
@@ -76,8 +76,8 @@ class SnackBarProviderState extends State<SnackBarProvider> {
       ),
     );
 
-    final Completer<String> completer = Completer<String>();
-    final String id = shortHash(Object());
+    final completer = Completer<String>();
+    final id = shortHash(Object());
     _snacks.add(
       Snack(
         id: id,
@@ -100,7 +100,7 @@ class SnackBarProviderState extends State<SnackBarProvider> {
       return;
     }
 
-    final Snack lastSnack = _snacks.last;
+    final lastSnack = _snacks.last;
     if (lastSnack.timer.isActive && !lastSnack.completer.isCompleted) {
       lastSnack.remove();
     }

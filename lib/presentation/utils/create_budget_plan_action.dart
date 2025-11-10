@@ -1,20 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ovavue/domain.dart';
-
-import '../routing.dart';
-import '../state.dart';
-import '../widgets.dart';
-import 'budget_plan_detail_page_entrypoint.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/utils/budget_plan_detail_page_entrypoint.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 Future<String?> createBudgetPlanAction({
   required BuildContext context,
   required WidgetRef ref,
   required bool navigateOnComplete,
 }) async {
-  final AppRouter router = context.router;
+  final router = context.router;
 
-  final BudgetPlanEntryResult? result = await showBudgetPlanEntryForm(
+  final result = await showBudgetPlanEntryForm(
     context: context,
     type: BudgetPlanEntryType.create,
     title: null,
@@ -25,7 +24,9 @@ Future<String?> createBudgetPlanAction({
     return null;
   }
 
-  final String id = await ref.read(budgetPlanProvider).create(
+  final id = await ref
+      .read(budgetPlanProvider)
+      .create(
         CreateBudgetPlanData(
           title: result.title,
           description: result.description,

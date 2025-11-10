@@ -1,5 +1,5 @@
-import '../entities/account_entity.dart';
-import '../repositories/auth.dart';
+import 'package:ovavue/domain/entities/account_entity.dart';
+import 'package:ovavue/domain/repositories/auth.dart';
 
 class FetchAccountUseCase {
   const FetchAccountUseCase({required AuthRepository auth}) : _auth = auth;

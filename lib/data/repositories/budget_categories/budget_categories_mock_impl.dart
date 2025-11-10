@@ -1,11 +1,10 @@
 import 'package:clock/clock.dart';
 import 'package:faker/faker.dart';
 import 'package:ovavue/core.dart';
+import 'package:ovavue/data/repositories/auth/auth_mock_impl.dart';
+import 'package:ovavue/data/repositories/extensions.dart';
 import 'package:ovavue/domain.dart';
 import 'package:rxdart/subjects.dart';
-
-import '../auth/auth_mock_impl.dart';
-import '../extensions.dart';
 
 class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
   static BudgetCategoryEntity generateCategory({String? id, String? userId}) {
@@ -22,10 +21,9 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
     );
   }
 
-  static final Map<String, BudgetCategoryEntity> _categories = <String, BudgetCategoryEntity>{};
+  static final _categories = <String, BudgetCategoryEntity>{};
 
-  static final BehaviorSubject<Map<String, BudgetCategoryEntity>> _categories$ =
-      BehaviorSubject<Map<String, BudgetCategoryEntity>>.seeded(_categories);
+  static final _categories$ = BehaviorSubject<Map<String, BudgetCategoryEntity>>.seeded(_categories);
 
   static final Stream<Map<String, BudgetCategoryEntity>> categories$ = _categories$.stream;
 
@@ -33,7 +31,7 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
     int count, {
     String? userId,
   }) {
-    final BudgetCategoryEntityList items = BudgetCategoryEntityList.generate(
+    final items = BudgetCategoryEntityList.generate(
       count,
       (_) => BudgetCategoriesMockImpl.generateCategory(userId: userId),
     );
@@ -43,8 +41,8 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
 
   @override
   Future<String> create(String userId, CreateBudgetCategoryData category) async {
-    final String id = faker.guid.guid();
-    final BudgetCategoryEntity newTag = BudgetCategoryEntity(
+    final id = faker.guid.guid();
+    final newTag = BudgetCategoryEntity(
       id: id,
       path: '/categories/$userId/$id',
       title: category.title,
@@ -77,13 +75,13 @@ class BudgetCategoriesMockImpl implements BudgetCategoriesRepository {
 
 extension on BudgetCategoryEntity {
   BudgetCategoryEntity update(UpdateBudgetCategoryData update) => BudgetCategoryEntity(
-        id: id,
-        path: path,
-        title: update.title,
-        description: update.description,
-        iconIndex: update.iconIndex,
-        colorSchemeIndex: update.colorSchemeIndex,
-        createdAt: createdAt,
-        updatedAt: clock.now(),
-      );
+    id: id,
+    path: path,
+    title: update.title,
+    description: update.description,
+    iconIndex: update.iconIndex,
+    colorSchemeIndex: update.colorSchemeIndex,
+    createdAt: createdAt,
+    updatedAt: clock.now(),
+  );
 }

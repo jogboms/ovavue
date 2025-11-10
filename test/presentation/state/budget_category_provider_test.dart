@@ -10,8 +10,8 @@ import '../../utils.dart';
 
 Future<void> main() async {
   group('BudgetCategoryProvider', () {
-    final MockAsyncCallback<UserEntity> mockFetchUser = MockAsyncCallback<UserEntity>();
-    final UserEntity dummyUser = UsersMockImpl.user;
+    final mockFetchUser = MockAsyncCallback<UserEntity>();
+    final dummyUser = UsersMockImpl.user;
 
     setUpAll(() {
       registerFallbackValue((id: '1', path: 'path'));
@@ -25,14 +25,14 @@ Future<void> main() async {
     });
 
     BudgetCategoryProvider createProvider() => BudgetCategoryProvider(
-          fetchUser: mockFetchUser,
-          createBudgetCategoryUseCase: mockUseCases.createBudgetCategoryUseCase,
-          updateBudgetCategoryUseCase: mockUseCases.updateBudgetCategoryUseCase,
-          deleteBudgetCategoryUseCase: mockUseCases.deleteBudgetCategoryUseCase,
-        );
+      fetchUser: mockFetchUser.call,
+      createBudgetCategoryUseCase: mockUseCases.createBudgetCategoryUseCase,
+      updateBudgetCategoryUseCase: mockUseCases.updateBudgetCategoryUseCase,
+      deleteBudgetCategoryUseCase: mockUseCases.deleteBudgetCategoryUseCase,
+    );
 
     test('should create new instance when read', () {
-      final ProviderContainer container = createProviderContainer();
+      final container = createProviderContainer();
       addTearDown(container.dispose);
 
       expect(container.read(budgetCategoryProvider), isA<BudgetCategoryProvider>());
@@ -46,16 +46,16 @@ Future<void> main() async {
         ),
       ).thenAnswer((_) async => '1');
 
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
         ],
       );
       addTearDown(container.dispose);
 
-      final BudgetCategoryProvider provider = container.read(budgetCategoryProvider);
+      final provider = container.read(budgetCategoryProvider);
 
-      final String id = await provider.create(
+      final id = await provider.create(
         const CreateBudgetCategoryData(
           title: 'title',
           description: 'description',
@@ -77,13 +77,13 @@ Future<void> main() async {
           ),
         ).thenAnswer((_) async => '1');
 
-        const CreateBudgetCategoryData createBudgetCategoryData = CreateBudgetCategoryData(
+        const createBudgetCategoryData = CreateBudgetCategoryData(
           title: 'title',
           description: 'description',
           iconIndex: 1,
           colorSchemeIndex: 1,
         );
-        final String budgetCategoryId = await createProvider().create(createBudgetCategoryData);
+        final budgetCategoryId = await createProvider().create(createBudgetCategoryData);
 
         expect(budgetCategoryId, '1');
         verify(mockFetchUser.call).called(1);
@@ -101,7 +101,7 @@ Future<void> main() async {
       test('should update existing budget category', () async {
         when(() => mockUseCases.updateBudgetCategoryUseCase.call(any())).thenAnswer((_) async => true);
 
-        const UpdateBudgetCategoryData updateBudgetCategoryData = UpdateBudgetCategoryData(
+        const updateBudgetCategoryData = UpdateBudgetCategoryData(
           id: '1',
           path: 'path',
           title: 'title',

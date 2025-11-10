@@ -1,7 +1,6 @@
 import 'package:ovavue/presentation/backup_client/backup_client.dart';
+import 'package:ovavue/presentation/backup_client/backup_client_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../backup_client/backup_client_provider.dart';
 
 part 'backup_client_controller_provider.g.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../models.dart';
-import '../utils.dart';
-import 'budget_category_avatar.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets/budget_category_avatar.dart';
 
 class BudgetPlanListTile extends StatelessWidget {
   const BudgetPlanListTile({
@@ -18,7 +18,7 @@ class BudgetPlanListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return ListTile(
       title: Text(plan.title.sentence(), maxLines: 1),

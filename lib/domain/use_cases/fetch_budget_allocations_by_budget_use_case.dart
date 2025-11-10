@@ -1,5 +1,5 @@
-import '../entities/budget_allocation_entity.dart';
-import '../repositories/budget_allocations.dart';
+import 'package:ovavue/domain/entities/budget_allocation_entity.dart';
+import 'package:ovavue/domain/repositories/budget_allocations.dart';
 
 class FetchBudgetAllocationsByBudgetUseCase {
   const FetchBudgetAllocationsByBudgetUseCase({
@@ -11,6 +11,5 @@ class FetchBudgetAllocationsByBudgetUseCase {
   Stream<BudgetAllocationEntityList> call({
     required String userId,
     required String budgetId,
-  }) =>
-      _allocations.fetchByBudget(userId: userId, budgetId: budgetId);
+  }) => _allocations.fetchByBudget(userId: userId, budgetId: budgetId);
 }

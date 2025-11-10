@@ -6,7 +6,7 @@ import 'package:args/args.dart';
 
 import 'utils.dart';
 
-final ArgParser parser = ArgParser()
+final parser = ArgParser()
   ..addOption(
     'versionBumpType',
     allowed: VersionBumpType.values.names,
@@ -15,8 +15,8 @@ final ArgParser parser = ArgParser()
   );
 
 void main(List<String> arguments) async {
-  final ArgResults args = parser.parse(arguments);
-  final String versionBumpType = args['versionBumpType'] as String;
+  final args = parser.parse(arguments);
+  final versionBumpType = args['versionBumpType'] as String;
 
   stdout.writeln(
     await bumpPackageVersion(

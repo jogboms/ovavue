@@ -1,10 +1,9 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:ovavue/core/app_exception.dart';
+import 'package:ovavue/core/app_log.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:universal_io/io.dart' as io;
-
-import 'app_exception.dart';
-import 'app_log.dart';
 
 abstract class DeviceInformation {
   String get appName;
@@ -34,8 +33,8 @@ abstract class DeviceInformation {
 
 class AppDeviceInformation implements DeviceInformation {
   AppDeviceInformation._({required _DeviceInfo device, required PackageInfo package})
-      : _device = device,
-        _package = package;
+    : _device = device,
+      _package = package;
 
   final PackageInfo _package;
   final _DeviceInfo _device;
@@ -89,18 +88,18 @@ class AppDeviceInformation implements DeviceInformation {
 
   @override
   Map<String, String> toMap() => <String, String>{
-        'appName': appName,
-        'appVersion': appVersion,
-        'buildNumber': buildNumber,
-        'isPhysicalDevice': '$isPhysicalDevice',
-        'packageName': packageName,
-        'os': os,
-        if (deviceId != null) 'deviceId': deviceId!,
-        if (brand != null) 'brand': brand!,
-        if (model != null) 'model': model!,
-        if (deviceVersion != null) 'deviceVersion': deviceVersion!,
-        if (sdk != null) 'sdk': sdk!,
-      };
+    'appName': appName,
+    'appVersion': appVersion,
+    'buildNumber': buildNumber,
+    'isPhysicalDevice': '$isPhysicalDevice',
+    'packageName': packageName,
+    'os': os,
+    if (deviceId != null) 'deviceId': deviceId!,
+    if (brand != null) 'brand': brand!,
+    if (model != null) 'model': model!,
+    if (deviceVersion != null) 'deviceVersion': deviceVersion!,
+    if (sdk != null) 'sdk': sdk!,
+  };
 }
 
 class _DeviceInfo {
@@ -119,7 +118,7 @@ class _DeviceInfo {
     DevicePlatform? platformOverride,
   }) async {
     if (identical(0, 0.0) || platformOverride == DevicePlatform.web) {
-      final WebBrowserInfo web = await info.webBrowserInfo;
+      final web = await info.webBrowserInfo;
       return _DeviceInfo(
         id: web.userAgent,
         isPhysicalDevice: true,
@@ -130,7 +129,7 @@ class _DeviceInfo {
         sdk: web.product,
       );
     } else if (io.Platform.isAndroid || platformOverride == DevicePlatform.android) {
-      final AndroidDeviceInfo android = await info.androidInfo;
+      final android = await info.androidInfo;
       return _DeviceInfo(
         id: android.id,
         isPhysicalDevice: android.isPhysicalDevice,
@@ -141,7 +140,7 @@ class _DeviceInfo {
         sdk: '${android.version.sdkInt}',
       );
     } else if (io.Platform.isIOS || platformOverride == DevicePlatform.ios) {
-      final IosDeviceInfo ios = await info.iosInfo;
+      final ios = await info.iosInfo;
       return _DeviceInfo(
         id: ios.identifierForVendor,
         isPhysicalDevice: ios.isPhysicalDevice,

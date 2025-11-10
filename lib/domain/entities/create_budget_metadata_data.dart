@@ -1,4 +1,4 @@
-import 'budget_metadata_value_operation.dart';
+import 'package:ovavue/domain/entities/budget_metadata_value_operation.dart';
 
 class CreateBudgetMetadataData {
   const CreateBudgetMetadataData({

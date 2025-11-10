@@ -4,7 +4,7 @@ import 'package:ovavue/core.dart';
 class ErrorView extends StatelessWidget {
   const ErrorView(this.error, this.stackTrace, {super.key});
 
-  static const Key errorViewKey = Key('errorViewKey');
+  static const errorViewKey = Key('errorViewKey');
 
   final Object error;
   final StackTrace? stackTrace;

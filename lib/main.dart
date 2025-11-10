@@ -5,16 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
+import 'package:ovavue/core.dart';
+import 'package:ovavue/data.dart';
+import 'package:ovavue/domain.dart';
+import 'package:ovavue/presentation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:registry/registry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart' as io;
-
-import 'core.dart';
-import 'data.dart';
-import 'domain.dart';
-import 'presentation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,12 +25,12 @@ void main() async {
   final ReporterClient reporterClient;
   final Analytics analytics;
   final AuthIdentityStorage authIdentityStorage;
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  final NavigatorObserver navigationObserver = NavigatorObserver();
+  final navigatorKey = GlobalKey<NavigatorState>();
+  final navigationObserver = NavigatorObserver();
   final DeviceInformation deviceInformation = await AppDeviceInformation.initialize();
-  final SharedPreferences storage = await SharedPreferences.getInstance();
-  final _ThemeModeStorage themeModeStorage = _ThemeModeStorage(storage);
-  final _DefaultBackupClientController backupClientController = _DefaultBackupClientController(
+  final storage = await SharedPreferences.getInstance();
+  final themeModeStorage = _ThemeModeStorage(storage);
+  final backupClientController = _DefaultBackupClientController(
     navigatorKey: navigatorKey,
     storage: storage,
   );
@@ -70,11 +69,11 @@ void main() async {
       break;
   }
 
-  final ErrorReporter errorReporter = ErrorReporter(client: reporterClient);
+  final errorReporter = ErrorReporter(client: reporterClient);
   AppLog.init(
     logFilter: () => kDebugMode && !environment.isTesting,
     exceptionFilter: (Object error) {
-      const List<Type> ignoreTypes = <Type>[
+      const ignoreTypes = <Type>[
         io.SocketException,
         io.HandshakeException,
         async.TimeoutException,
@@ -85,11 +84,9 @@ void main() async {
     onLog: (Object? message) => debugPrint(message?.toString()),
   );
 
-  final Registry registry = Registry()
-
+  final registry = Registry()
     /// Analytics.
     ..set(analytics)
-
     /// Repositories.
     /// Do not use directly within the app.
     /// Added to Registry only for convenience with the UseCase factories.
@@ -101,7 +98,6 @@ void main() async {
     ..set(repository.budgetAllocations)
     ..set(repository.budgetMetadata)
     ..set(repository.preferences)
-
     /// UseCases.
     /// Callable classes that may contain logic or else route directly to repositories.
     ..factory((RegistryFactory di) => CreateBudgetAllocationUseCase(allocations: di(), analytics: di()))
@@ -136,11 +132,10 @@ void main() async {
     ..factory((RegistryFactory di) => FetchUserUseCase(users: di()))
     ..factory((RegistryFactory di) => FetchThemeModeUseCase(preferences: di()))
     ..factory((RegistryFactory di) => UpdateThemeModeUseCase(preferences: di()))
-
     /// Environment.
     ..set(environment);
 
-  final String? accountKey = await authIdentityStorage.get();
+  final accountKey = await authIdentityStorage.get();
   if (accountKey != null) {
     backupClientController.hydrate(accountKey);
   }
@@ -173,24 +168,24 @@ class _Repository {
     Database db, {
     required AuthIdentityStorage authIdentityStorage,
     required this.preferences,
-  })  : auth = AuthLocalImpl(db, authIdentityStorage),
-        users = UsersLocalImpl(db),
-        budgets = BudgetsLocalImpl(db),
-        budgetPlans = BudgetPlansLocalImpl(db),
-        budgetCategories = BudgetCategoriesLocalImpl(db),
-        budgetAllocations = BudgetAllocationsLocalImpl(db),
-        budgetMetadata = BudgetMetadataLocalImpl(db);
+  }) : auth = AuthLocalImpl(db, authIdentityStorage),
+       users = UsersLocalImpl(db),
+       budgets = BudgetsLocalImpl(db),
+       budgetPlans = BudgetPlansLocalImpl(db),
+       budgetCategories = BudgetCategoriesLocalImpl(db),
+       budgetAllocations = BudgetAllocationsLocalImpl(db),
+       budgetMetadata = BudgetMetadataLocalImpl(db);
 
   _Repository.mock({
     required ThemeModeStorage themeModeStorage,
-  })  : auth = AuthMockImpl(),
-        users = UsersMockImpl(),
-        budgets = BudgetsMockImpl(),
-        budgetPlans = BudgetPlansMockImpl(),
-        budgetCategories = BudgetCategoriesMockImpl(),
-        budgetAllocations = BudgetAllocationsMockImpl(),
-        budgetMetadata = BudgetMetadataMockImpl(),
-        preferences = PreferencesMockImpl(themeModeStorage);
+  }) : auth = AuthMockImpl(),
+       users = UsersMockImpl(),
+       budgets = BudgetsMockImpl(),
+       budgetPlans = BudgetPlansMockImpl(),
+       budgetCategories = BudgetCategoriesMockImpl(),
+       budgetAllocations = BudgetAllocationsMockImpl(),
+       budgetMetadata = BudgetMetadataMockImpl(),
+       preferences = PreferencesMockImpl(themeModeStorage);
 
   final AuthRepository auth;
   final UsersRepository users;
@@ -210,7 +205,7 @@ class _ReporterClient implements ReporterClient {
 
   final DeviceInformation deviceInformation;
   final Environment environment;
-  final Set<_ReporterErrorEvent> _events = <_ReporterErrorEvent>{};
+  final _events = <_ReporterErrorEvent>{};
 
   @override
   async.FutureOr<void> report({required StackTrace stackTrace, required Object error, Object? extra}) async {
@@ -273,7 +268,7 @@ class _PrintAnalytics implements Analytics {
 class _InMemoryAnalytics implements Analytics {
   // ignore: unused_field, use_late_for_private_fields_and_variables
   String? _screenName;
-  final Set<AnalyticsEvent> _events = <AnalyticsEvent>{};
+  final _events = <AnalyticsEvent>{};
 
   @override
   Future<void> log(AnalyticsEvent event) async => _events.add(event);
@@ -292,7 +287,7 @@ class _SecureStorageAuthIdentityStorage implements AuthIdentityStorage {
   const _SecureStorageAuthIdentityStorage(this._storage);
 
   final FlutterSecureStorage _storage;
-  static const String _key = 'ovavue.app.auth.identity';
+  static const _key = 'ovavue.app.auth.identity';
 
   @override
   async.FutureOr<String?> get() => _storage.read(key: _key);
@@ -315,7 +310,7 @@ class _ThemeModeStorage implements ThemeModeStorage {
   const _ThemeModeStorage(this._storage);
 
   final SharedPreferences _storage;
-  static const String _key = 'ovavue.app.theme_mode';
+  static const _key = 'ovavue.app.theme_mode';
 
   @override
   async.FutureOr<int?> get() => _storage.getInt(_key);
@@ -328,10 +323,10 @@ class _DefaultBackupClientController implements BackupClientController {
   _DefaultBackupClientController({
     required GlobalKey<NavigatorState> navigatorKey,
     required SharedPreferences storage,
-  })  : _navigatorKey = navigatorKey,
-        _storage = storage {
-    final String? clientName = storage.getString(_key);
-    final BackupClientProvider? client = clientName != null ? backupClientProviderByName(clientName) : null;
+  }) : _navigatorKey = navigatorKey,
+       _storage = storage {
+    final clientName = storage.getString(_key);
+    final client = clientName != null ? backupClientProviderByName(clientName) : null;
     if (client == null && clientName != null) {
       AppLog.e('Could not find backup client with name: $clientName', StackTrace.current);
     }
@@ -341,7 +336,7 @@ class _DefaultBackupClientController implements BackupClientController {
 
   final GlobalKey<NavigatorState> _navigatorKey;
   final SharedPreferences _storage;
-  static const String _key = 'ovavue.app.backup_client';
+  static const _key = 'ovavue.app.backup_client';
 
   @override
   Set<BackupClientProvider> get clients => backupClientProviders;
@@ -354,16 +349,16 @@ class _DefaultBackupClientController implements BackupClientController {
 
   @override
   String displayName(BackupClientProvider client) {
-    final Locale locale = Localizations.localeOf(_navigatorKey.currentContext!);
+    final locale = Localizations.localeOf(_navigatorKey.currentContext!);
     return client.displayName(BackupClientLocale.from(locale));
   }
 
   @override
   Future<BackupClientResult> setup(BackupClientProvider client, String accountKey) async {
-    final async.Completer<BackupClientResult> completer = async.Completer<BackupClientResult>();
+    final completer = async.Completer<BackupClientResult>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final BackupClientResult result = await client.setup(_navigatorKey.currentContext!, accountKey);
+      final result = await client.setup(_navigatorKey.currentContext!, accountKey);
       if (result == BackupClientResult.success) {
         _client = client;
         await _storage.setString(_key, _client.name);
@@ -384,12 +379,12 @@ class _DefaultBackupClientController implements BackupClientController {
 }
 
 class _LocalDatabaseUtility {
-  static const String _dbName = 'db.sqlite';
+  static const _dbName = 'db.sqlite';
 
   static Future<String> location() async => p.join(await _deriveDirectoryPath(), _dbName);
 
   static Future<String> _deriveDirectoryPath() =>
-      (io.Platform.isIOS ? getLibraryDirectory() : getApplicationDocumentsDirectory()).then((_) => _.path);
+      (io.Platform.isIOS ? getLibraryDirectory() : getApplicationDocumentsDirectory()).then((io.Directory e) => e.path);
 }
 
 extension on int {

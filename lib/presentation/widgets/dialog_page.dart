@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
+import 'package:ovavue/presentation/constants.dart';
 
 class DialogPage extends StatelessWidget {
   const DialogPage(this.builder, {super.key});
@@ -9,8 +9,8 @@ class DialogPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,9 +39,8 @@ class DialogPage extends StatelessWidget {
 Future<T?> showDialogPage<T>({
   required BuildContext context,
   required WidgetBuilder builder,
-}) =>
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => DialogPage(builder),
-    );
+}) => showDialog(
+  context: context,
+  barrierDismissible: false,
+  builder: (_) => DialogPage(builder),
+);

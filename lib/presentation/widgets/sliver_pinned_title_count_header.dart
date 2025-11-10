@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
-import '../theme.dart';
-import '../utils.dart';
 
 class SliverPinnedTitleCountHeader extends StatelessWidget {
   const SliverPinnedTitleCountHeader.count({super.key, required this.title, required int count}) : value = count;
@@ -14,9 +13,9 @@ class SliverPinnedTitleCountHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
     return SliverPinnedHeader(
       child: Container(

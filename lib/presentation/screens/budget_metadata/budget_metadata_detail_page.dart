@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models.dart';
-import '../../routing.dart';
-import '../../state.dart';
-import '../../theme.dart';
-import '../../utils.dart';
-import '../../widgets.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/state.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetMetadataDetailPage extends StatefulWidget {
   const BudgetMetadataDetailPage({
@@ -25,26 +24,25 @@ class BudgetMetadataDetailPage extends StatefulWidget {
 @visibleForTesting
 class BudgetMetadataDetailPageState extends State<BudgetMetadataDetailPage> {
   @visibleForTesting
-  static const Key dataViewKey = Key('dataViewKey');
+  static const dataViewKey = Key('dataViewKey');
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) =>
-            ref.watch(selectedBudgetPlansByMetadataProvider(id: widget.id, budgetId: widget.budgetId)).when(
-                  data: (BudgetPlansByMetadataState data) => _ContentDataView(
-                    key: dataViewKey,
-                    state: data,
-                  ),
-                  error: ErrorView.new,
-                  loading: () => child!,
-                  skipLoadingOnReload: true,
-                ),
-        child: const LoadingView(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    body: Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) => ref
+          .watch(selectedBudgetPlansByMetadataProvider(id: widget.id, budgetId: widget.budgetId))
+          .when(
+            data: (BudgetPlansByMetadataState data) => _ContentDataView(
+              key: dataViewKey,
+              state: data,
+            ),
+            error: ErrorView.new,
+            loading: () => child!,
+            skipLoadingOnReload: true,
+          ),
+      child: const LoadingView(),
+    ),
+  );
 }
 
 class _ContentDataView extends StatelessWidget {
@@ -54,13 +52,13 @@ class _ContentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = context.theme;
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = context.theme;
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
-    final List<BudgetPlanViewModel> data = state.plans;
-    final BudgetViewModel? budget = state.budget;
-    final Money totalAllocationAmount = state.plans.map((_) => _.allocation?.amount ?? Money.zero).sum();
+    final data = state.plans;
+    final budget = state.budget;
+    final totalAllocationAmount = state.plans.map((BudgetPlanViewModel e) => e.allocation?.amount ?? Money.zero).sum();
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -130,8 +128,8 @@ class _ContentDataView extends StatelessWidget {
             ),
             sliver: SliverList.separated(
               itemBuilder: (BuildContext context, int index) {
-                final BudgetPlanViewModel plan = data.elementAt(index);
-                final Money? allocationAmount = plan.allocation?.amount;
+                final plan = data.elementAt(index);
+                final allocationAmount = plan.allocation?.amount;
 
                 return BudgetPlanListTile(
                   key: Key(plan.id),
@@ -149,7 +147,7 @@ class _ContentDataView extends StatelessWidget {
                   ),
                 );
               },
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
+              separatorBuilder: (_, _) => const SizedBox(height: 4),
               itemCount: data.length,
             ),
           ),

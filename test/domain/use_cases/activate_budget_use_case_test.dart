@@ -6,13 +6,13 @@ import '../../utils.dart';
 
 void main() {
   group('ActivateBudgetUseCase', () {
-    final LogAnalytics analytics = LogAnalytics();
-    final ActivateBudgetUseCase useCase = ActivateBudgetUseCase(
+    final analytics = LogAnalytics();
+    final useCase = ActivateBudgetUseCase(
       budgets: mockRepositories.budgets,
       analytics: analytics,
     );
 
-    const ReferenceEntity dummyReference = (id: '1', path: 'path');
+    const dummyReference = (id: '1', path: 'path');
 
     setUpAll(() {
       registerFallbackValue(dummyReference);
@@ -39,8 +39,9 @@ void main() {
 
     test('should activate a budget and deactivate active budget', () async {
       when(() => mockRepositories.budgets.activateBudget(any())).thenAnswer((_) async => true);
-      when(() => mockRepositories.budgets.deactivateBudget(reference: (id: '1', path: 'path'), endedAt: null))
-          .thenAnswer((_) async => true);
+      when(
+        () => mockRepositories.budgets.deactivateBudget(reference: (id: '1', path: 'path'), endedAt: null),
+      ).thenAnswer((_) async => true);
 
       await expectLater(
         useCase(
@@ -55,8 +56,9 @@ void main() {
 
     test('should bubble activate errors', () {
       when(() => mockRepositories.budgets.activateBudget(any())).thenThrow(Exception('an error'));
-      when(() => mockRepositories.budgets.deactivateBudget(reference: (id: '1', path: 'path'), endedAt: null))
-          .thenThrow(Exception('an error'));
+      when(
+        () => mockRepositories.budgets.deactivateBudget(reference: (id: '1', path: 'path'), endedAt: null),
+      ).thenThrow(Exception('an error'));
 
       expect(
         () => useCase(

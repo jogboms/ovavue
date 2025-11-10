@@ -1,10 +1,9 @@
 import 'package:clock/clock.dart';
+import 'package:ovavue/data/repositories/auth/auth_mock_impl.dart';
 import 'package:ovavue/domain.dart';
 
-import '../auth/auth_mock_impl.dart';
-
 class UsersMockImpl implements UsersRepository {
-  static final UserEntity user = UserEntity(
+  static final user = UserEntity(
     id: AuthMockImpl.id,
     path: '/users/${AuthMockImpl.id}',
     createdAt: clock.now(),

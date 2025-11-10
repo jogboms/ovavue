@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../models.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
+import 'package:ovavue/presentation/models.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 class BudgetCategoryPlanTile extends StatelessWidget {
   const BudgetCategoryPlanTile({
@@ -20,12 +20,12 @@ class BudgetCategoryPlanTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextTheme textTheme = theme.textTheme;
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
-    final Money? allocationAmount = this.allocationAmount;
-    final Money? categoryAllocationAmount = this.categoryAllocationAmount;
+    final allocationAmount = this.allocationAmount;
+    final categoryAllocationAmount = this.categoryAllocationAmount;
 
     return AmountRatioDecoratedBox(
       ratio: allocationAmount != null && categoryAllocationAmount != null

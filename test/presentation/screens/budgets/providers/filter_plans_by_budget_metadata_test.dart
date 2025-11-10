@@ -1,18 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ovavue/data.dart';
-import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../../../../utils.dart';
 
 Future<void> main() async {
-  const String budgetId = 'budget-id';
-  const String metadataId = 'metadata-id';
+  const budgetId = 'budget-id';
+  const metadataId = 'metadata-id';
 
-  final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget(id: budgetId);
-  final BudgetMetadataValueEntity expectedMetadata = BudgetMetadataMockImpl.generateMetadataValue(id: metadataId);
-  final BudgetPlansByMetadataState expectedState = BudgetPlansByMetadataState(
+  final expectedBudget = BudgetsMockImpl.generateBudget(id: budgetId);
+  final expectedMetadata = BudgetMetadataMockImpl.generateMetadataValue(id: metadataId);
+  final expectedState = BudgetPlansByMetadataState(
     budget: BudgetViewModel.fromEntity(expectedBudget),
     plans: <BudgetPlanViewModel>[],
     allocation: Money.zero,

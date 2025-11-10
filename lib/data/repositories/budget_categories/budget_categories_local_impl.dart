@@ -1,6 +1,5 @@
+import 'package:ovavue/data/local_database.dart';
 import 'package:ovavue/domain.dart';
-
-import '../../local_database.dart';
 
 class BudgetCategoriesLocalImpl implements BudgetCategoriesRepository {
   const BudgetCategoriesLocalImpl(this._db);
@@ -9,7 +8,7 @@ class BudgetCategoriesLocalImpl implements BudgetCategoriesRepository {
 
   @override
   Future<String> create(String userId, CreateBudgetCategoryData category) =>
-      _db.budgetCategoriesDao.createCategory(category).then((_) => _.id);
+      _db.budgetCategoriesDao.createCategory(category).then((BudgetCategoryEntity e) => e.id);
 
   @override
   Future<bool> delete(ReferenceEntity reference) => _db.budgetCategoriesDao.deleteCategory(reference.id);

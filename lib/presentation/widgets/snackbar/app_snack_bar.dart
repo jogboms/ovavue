@@ -2,52 +2,52 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../theme.dart';
-import '../../utils.dart';
-import '../loading_spinner.dart';
-import 'snack_bar_provider.dart';
+import 'package:ovavue/presentation/theme.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets/loading_spinner.dart';
+import 'package:ovavue/presentation/widgets/snackbar/snack_bar_provider.dart';
 
 class AppSnackBar {
   AppSnackBar.of(BuildContext context)
-      : _theme = context.theme,
-        _l10n = context.l10n,
-        _state = SnackBarProvider.of(context);
+    : _theme = context.theme,
+      _l10n = context.l10n,
+      _state = SnackBarProvider.of(context);
 
-  static const Key successKey = Key('snackBarSuccessKey');
-  static const Key infoKey = Key('snackBarInfoKey');
-  static const Key errorKey = Key('snackBarErrorKey');
-  static const Key loadingKey = Key('snackBarLoadingKey');
+  static const successKey = Key('snackBarSuccessKey');
+  static const infoKey = Key('snackBarInfoKey');
+  static const errorKey = Key('snackBarErrorKey');
+  static const loadingKey = Key('snackBarLoadingKey');
 
   final SnackBarProviderState? _state;
   final ThemeData _theme;
   final L10n _l10n;
 
   FutureOr<void> success(String value, {Duration? duration, Alignment? alignment}) => _showForType(
-        value,
-        key: successKey,
-        icon: Icons.check,
-        type: SnackBarType.success,
-        alignment: alignment,
-        duration: duration,
-      );
+    value,
+    key: successKey,
+    icon: Icons.check,
+    type: SnackBarType.success,
+    alignment: alignment,
+    duration: duration,
+  );
 
   FutureOr<void> info(String value, {Duration? duration, Alignment? alignment}) => _showForType(
-        value,
-        key: infoKey,
-        icon: Icons.alarm,
-        type: SnackBarType.info,
-        alignment: alignment,
-        duration: duration,
-      );
+    value,
+    key: infoKey,
+    icon: Icons.alarm,
+    type: SnackBarType.info,
+    alignment: alignment,
+    duration: duration,
+  );
 
   FutureOr<void> error(String value, {Duration? duration, Alignment? alignment}) => _showForType(
-        value,
-        key: errorKey,
-        icon: Icons.warning,
-        type: SnackBarType.error,
-        alignment: alignment,
-        duration: duration,
-      );
+    value,
+    key: errorKey,
+    icon: Icons.warning,
+    type: SnackBarType.error,
+    alignment: alignment,
+    duration: duration,
+  );
 
   FutureOr<void> loading({
     String? value,
@@ -55,17 +55,16 @@ class AppSnackBar {
     Color? color,
     Alignment? alignment,
     bool dismissible = false,
-  }) =>
-      _show(
-        value ?? _l10n.loadingMessage,
-        key: loadingKey,
-        color: color ?? Colors.black,
-        alignment: alignment,
-        dismissible: dismissible,
-        backgroundColor: backgroundColor ?? Colors.white,
-        duration: const Duration(days: 1),
-        leading: LoadingSpinner.circle(size: 24, color: color),
-      );
+  }) => _show(
+    value ?? _l10n.loadingMessage,
+    key: loadingKey,
+    color: color ?? Colors.black,
+    alignment: alignment,
+    dismissible: dismissible,
+    backgroundColor: backgroundColor ?? Colors.white,
+    duration: const Duration(days: 1),
+    leading: LoadingSpinner.circle(size: 24, color: color),
+  );
 
   FutureOr<void> _showForType(
     String value, {
@@ -75,7 +74,7 @@ class AppSnackBar {
     Duration? duration,
     Alignment? alignment,
   }) {
-    final Color foregroundColor = type.toForegroundColor(_theme);
+    final foregroundColor = type.toForegroundColor(_theme);
     return _show(
       value,
       key: key,
@@ -96,29 +95,28 @@ class AppSnackBar {
     Duration? duration,
     bool dismissible = true,
     Alignment? alignment,
-  }) =>
-      _state?.showSnackBar(
-        _RowBar(
-          key: Key(value ?? ''),
-          backgroundColor: backgroundColor,
-          children: <Widget>[
-            if (leading != null) ...<Widget>[
-              leading,
-              const SizedBox(width: 16),
-            ],
-            Expanded(
-              child: Text(
-                value ?? '',
-                style: TextStyle(fontSize: 14, color: color, fontWeight: AppFontWeight.semibold),
-              ),
-            ),
-          ],
+  }) => _state?.showSnackBar(
+    _RowBar(
+      key: Key(value ?? ''),
+      backgroundColor: backgroundColor,
+      children: <Widget>[
+        if (leading != null) ...<Widget>[
+          leading,
+          const SizedBox(width: 16),
+        ],
+        Expanded(
+          child: Text(
+            value ?? '',
+            style: TextStyle(fontSize: 14, color: color, fontWeight: AppFontWeight.semibold),
+          ),
         ),
-        key: key,
-        duration: duration,
-        alignment: alignment,
-        dismissible: dismissible,
-      );
+      ],
+    ),
+    key: key,
+    duration: duration,
+    alignment: alignment,
+    dismissible: dismissible,
+  );
 
   void hide() => _state?.hideCurrentSnackBar();
 }
@@ -131,7 +129,7 @@ class _RowBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = context.theme;
+    final theme = context.theme;
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor ?? theme.colorScheme.secondary,
@@ -156,16 +154,16 @@ enum SnackBarType {
   error;
 
   Color toForegroundColor(ThemeData theme) => switch (this) {
-        SnackBarType.info => theme.colorScheme.onSurface,
-        SnackBarType.success => theme.appTheme.color.onSuccess,
-        SnackBarType.error => theme.appTheme.color.onDanger,
-      };
+    SnackBarType.info => theme.colorScheme.onSurface,
+    SnackBarType.success => theme.appTheme.color.onSuccess,
+    SnackBarType.error => theme.appTheme.color.onDanger,
+  };
 
   Color toBackgroundColor(ThemeData theme) => switch (this) {
-        SnackBarType.info => theme.colorScheme.surface,
-        SnackBarType.success => theme.appTheme.color.success,
-        SnackBarType.error => theme.appTheme.color.danger,
-      };
+    SnackBarType.info => theme.colorScheme.surface,
+    SnackBarType.success => theme.appTheme.color.success,
+    SnackBarType.error => theme.appTheme.color.danger,
+  };
 }
 
 extension AppSnackBarBuildContextExtensions on BuildContext {

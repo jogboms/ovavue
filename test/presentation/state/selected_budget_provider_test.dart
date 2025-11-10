@@ -10,14 +10,14 @@ import 'package:riverpod/riverpod.dart';
 import '../../utils.dart';
 
 Future<void> main() async {
-  final UserEntity dummyUser = UsersMockImpl.user;
-  const String budgetId = 'budget-id';
+  final dummyUser = UsersMockImpl.user;
+  const budgetId = 'budget-id';
 
   tearDown(mockUseCases.reset);
 
   group('SelectedBudgetProvider', () {
     Future<BudgetState> createProviderStream() {
-      final ProviderContainer container = createProviderContainer(
+      final container = createProviderContainer(
         overrides: <Override>[
           userProvider.overrideWith((_) async => dummyUser),
         ],
@@ -28,29 +28,37 @@ Future<void> main() async {
     }
 
     test('should show selected budget by id', () async {
-      final List<BudgetPlanEntity> expectedPlans = <BudgetPlanEntity>[
+      final expectedPlans = <BudgetPlanEntity>[
         BudgetPlansMockImpl.generatePlan(),
       ];
-      final BudgetEntity expectedBudget = BudgetsMockImpl.generateBudget();
-      final List<BudgetAllocationEntity> expectedBudgetAllocations = <BudgetAllocationEntity>[
+      final expectedBudget = BudgetsMockImpl.generateBudget();
+      final expectedBudgetAllocations = <BudgetAllocationEntity>[
         BudgetAllocationsMockImpl.generateAllocation(
           budget: expectedBudget,
           plan: expectedPlans.random(),
         ),
       ];
-      when(() => mockUseCases.fetchBudgetUseCase.call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')))
-          .thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
       when(
-        () => mockUseCases.fetchBudgetAllocationsByBudgetUseCase
-            .call(userId: any(named: 'userId'), budgetId: any(named: 'budgetId')),
+        () => mockUseCases.fetchBudgetUseCase.call(
+          userId: any(named: 'userId'),
+          budgetId: any(named: 'budgetId'),
+        ),
+      ).thenAnswer((_) => Stream<BudgetEntity>.value(expectedBudget));
+      when(
+        () => mockUseCases.fetchBudgetAllocationsByBudgetUseCase.call(
+          userId: any(named: 'userId'),
+          budgetId: any(named: 'budgetId'),
+        ),
       ).thenAnswer((_) => Stream<BudgetAllocationEntityList>.value(expectedBudgetAllocations));
 
-      final List<BudgetPlanViewModel> expectedPlanViewModels = expectedPlans
+      final expectedPlanViewModels = expectedPlans
           .map(
             (BudgetPlanEntity plan) => BudgetPlanViewModel.fromEntity(
               plan,
               expectedBudgetAllocations
-                  .firstWhereOrNull((_) => _.plan.id == plan.id && _.budget.id == expectedBudget.id)
+                  .firstWhereOrNull(
+                    (BudgetAllocationEntity e) => e.plan.id == plan.id && e.budget.id == expectedBudget.id,
+                  )
                   ?.toViewModel(),
             ),
           )
@@ -62,15 +70,18 @@ Future<void> main() async {
           BudgetState(
             budget: BudgetViewModel.fromEntity(expectedBudget),
             plans: expectedPlanViewModels,
-            allocation: expectedPlanViewModels.map((_) => _.allocation?.amount).nonNulls.sum(),
+            allocation: expectedPlanViewModels.map((BudgetPlanViewModel e) => e.allocation?.amount).nonNulls.sum(),
             categories: expectedPlans
-                .uniqueBy((_) => _.category.id)
-                .map((_) => _.category)
+                .uniqueBy((BudgetPlanEntity e) => e.category.id)
+                .map((BudgetPlanEntity e) => e.category)
                 .map(
                   (BudgetCategoryEntity category) => category.toViewModel(
                     expectedBudgetAllocations
-                        .where((_) => _.plan.category.id == category.id && _.budget.id == expectedBudget.id)
-                        .map((_) => _.amount.asMoney)
+                        .where(
+                          (BudgetAllocationEntity e) =>
+                              e.plan.category.id == category.id && e.budget.id == expectedBudget.id,
+                        )
+                        .map((BudgetAllocationEntity e) => e.amount.asMoney)
                         .sum(),
                   ),
                 )

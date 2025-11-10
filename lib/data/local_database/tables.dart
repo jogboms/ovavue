@@ -1,6 +1,6 @@
 part of 'database.dart';
 
-const Uuid _uuid = Uuid();
+const _uuid = Uuid();
 
 @optionalTypeArgs
 typedef DBValue<T> = Value<T>;

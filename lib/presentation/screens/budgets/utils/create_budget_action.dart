@@ -1,12 +1,11 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../routing.dart';
-import '../../../utils.dart';
-import '../../../widgets.dart';
-import '../providers/budget_provider.dart';
-import '../widgets/budget_entry_form.dart';
+import 'package:ovavue/presentation/routing.dart';
+import 'package:ovavue/presentation/screens/budgets/providers/budget_provider.dart';
+import 'package:ovavue/presentation/screens/budgets/widgets/budget_entry_form.dart';
+import 'package:ovavue/presentation/utils.dart';
+import 'package:ovavue/presentation/widgets.dart';
 
 void createBudgetAction(
   BuildContext context, {
@@ -21,11 +20,11 @@ void createBudgetAction(
   DateTime? endedAt,
   DateTime? createdAt,
 }) async {
-  final L10n l10n = context.l10n;
-  final AppSnackBar snackBar = context.snackBar;
-  final AppRouter router = context.router;
+  final l10n = context.l10n;
+  final snackBar = context.snackBar;
+  final router = context.router;
 
-  final BudgetEntryResult? result = await showBudgetEntryForm(
+  final result = await showBudgetEntryForm(
     context: context,
     type: BudgetEntryType.create,
     budgetId: budgetId,
@@ -42,7 +41,9 @@ void createBudgetAction(
     return;
   }
 
-  final String id = await ref.read(budgetProvider).create(
+  final id = await ref
+      .read(budgetProvider)
+      .create(
         fromBudgetId: result.fromBudgetId,
         index: result.index,
         title: result.title,
