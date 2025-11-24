@@ -54,7 +54,7 @@ dependency_overrides:
 
 dev_dependencies:
   args:
-  build_runner: ^2.10.1
+  build_runner: ^2.10.4
   custom_lint:
   device_info_plus_platform_interface: ^7.0.3
   drift_dev: ^2.29.0
