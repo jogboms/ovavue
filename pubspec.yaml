@@ -44,7 +44,7 @@ dependencies:
   sliver_tools: ^0.2.12
   sqlite3_flutter_libs: ^0.5.40
   tabler_icons: ^2.5.0+1
-  universal_io: ^2.2.2
+  universal_io: ^2.3.1
   url_launcher: ^6.3.2
   uuid: ^4.5.2
   web: ^1.1.1
