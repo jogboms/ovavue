@@ -33,7 +33,7 @@ jobs:
     name: Format, Analyse & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Initialize environment variables from FVM config
         uses: kuhnroyal/flutter-fvm-config-action@v3
@@ -61,7 +61,7 @@ jobs:
     name: Create release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.API_TOKEN_GITHUB }}
 
