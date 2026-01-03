@@ -13,6 +13,19 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
+## Android
+
+### android beta
+
+```sh
+[bundle exec] fastlane android beta
+```
+
+Upload build to Google Play
+
+----
+
+
 ## iOS
 
 ### ios beta
@@ -21,7 +34,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios beta
 ```
 
-Push a new beta build to TestFlight
+Upload build to TestFlight
 
 ----
 

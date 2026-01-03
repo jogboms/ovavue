@@ -8,7 +8,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  working_directory: android
   java_version: "23.x"
   java_distribution: "zulu"
   ruby_version: "3.3.4"
@@ -23,7 +22,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.ruby_version }}
-          working-directory: ${{ env.working_directory }}
           bundler-cache: true
       - uses: actions/setup-java@v5
         with:
@@ -54,8 +52,7 @@ jobs:
       - run: flutter build appbundle --flavor prod
 
       # Fastlane deploy
-      - name: Deploy Android Beta to Play Store via Fastlane
+      - name: Deploy via Fastlane
         uses: maierj/fastlane-action@v3.1.0
         with:
-          lane: beta
-          subdirectory: ${{ env.working_directory }}
+          lane: android beta

@@ -1,0 +1,20 @@
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
+
+default_app_identifier = 'io.github.jogboms.ovavue'
+
+ENV['keychain_user'] = 'Test'
+ENV['keychain_password'] = 'Password1!'
+
+for_platform :android do
+  json_key_file("service_account_key.json")
+  package_name default_app_identifier
+end
+
+for_platform :ios do
+  app_identifier default_app_identifier
+  apple_id(ENV["FASTLANE_APPLE_ID"])
+
+  itc_team_id(ENV["APP_STORE_CONNECT_TEAM_ID"])
+  team_id(ENV["DEVELOPER_PORTAL_TEAM_ID"])
+end

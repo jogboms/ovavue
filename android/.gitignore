@@ -14,5 +14,5 @@ service_account_key.json
 **/*.jks
 
 # Fastlane
-fastlane/report.xml
-fastlane/metadata
+../fastlane/report.xml
+../fastlane/metadata

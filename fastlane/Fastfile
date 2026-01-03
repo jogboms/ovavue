@@ -1,0 +1,86 @@
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+fastlane_version '2.230.0'
+
+platform :android do
+  desc "Upload build to Google Play"
+  lane :beta do
+    begin
+      upload_to_play_store(
+        track: 'beta',
+        aab: 'build/app/outputs/bundle/prodRelease/app-prod-release.aab',
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
+        release_status: "draft",
+      )
+    end
+  end
+end
+
+platform :ios do
+  desc "Upload build to TestFlight"
+  lane :beta do
+    keychain_name = ENV['keychain_user']
+    keychain_password = ENV['keychain_password']
+    ensure_temp_keychain(keychain_name, keychain_password)
+
+    identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+
+    github_token = ENV["GIT_AUTHORIZATION"]
+    sync_code_signing(
+      app_identifier: identifier,
+      git_basic_authorization: github_token ? Base64.strict_encode64(github_token) : nil,
+      readonly: true,
+      keychain_name: keychain_name,
+      keychain_password: keychain_password
+    )
+
+    developerAppId = ENV["DEVELOPER_APP_ID"]
+    provisioningProfileSpecifier = ENV["PROVISIONING_PROFILE_SPECIFIER"]
+    build_app(
+      skip_build_archive: true,
+      archive_path: "build/ios/archive/Runner.xcarchive",
+      export_team_id: CredentialsManager::AppfileConfig.try_fetch_value(:team_id),
+      workspace: "ios/Runner.xcworkspace",
+      configuration: "Prod-Release",
+      scheme: "Prod",
+      export_options: {
+        provisioningProfiles: {
+            developerAppId => provisioningProfileSpecifier
+        }
+      }
+    )
+
+    upload_to_testflight(
+      apple_id: developerAppId,
+      skip_waiting_for_build_processing: true,
+      skip_submission: true,
+      notify_external_testers: false,
+      ipa: ENV['IPA_OUTPUT_PATH']
+    )
+
+    delete_temp_keychain(keychain_name)
+  end
+end
+
+def delete_temp_keychain(name)
+  delete_keychain(
+    name: name
+  ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+end
+
+def create_temp_keychain(name, password)
+  create_keychain(
+    name: name,
+    password: password,
+    unlock: false,
+    timeout: 0
+  )
+end
+
+def ensure_temp_keychain(name, password)
+  delete_temp_keychain(name)
+  create_temp_keychain(name, password)
+end

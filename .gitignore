@@ -56,3 +56,8 @@ app.*.map.json
 .last_build_id
 
 .env
+
+# Fastlane
+fastlane/report.xml
+Runner.ipa
+Runner.app.dSYM.zip

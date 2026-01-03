@@ -8,12 +8,11 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  working_directory: ios
   ruby_version: "3.3.4"
 
 jobs:
   deploy_ios:
-    name: Deploy beta build to TestFlight
+    name: Deploy to TestFlight
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v6
@@ -21,7 +20,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.ruby_version }}
-          working-directory: ${{ env.working_directory }}
           bundler-cache: true
 
       - name: Initialize environment variables from FVM config
@@ -37,23 +35,19 @@ jobs:
 
       # Flutter actions
       - run: flutter pub get
-      - run: flutter build ios --flavor prod --release --no-codesign
+      - run: flutter build ipa --flavor prod --release --no-codesign
 
       # Fastlane deploy
-      - name: Deploy iOS Beta to TestFlight via Fastlane
+      - name: Deploy via Fastlane
         uses: maierj/fastlane-action@v3.1.0
         with:
-          lane: beta
-          subdirectory: ${{ env.working_directory }}
+          lane: ios beta
         env:
           APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }}
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
-          DEVELOPER_APP_IDENTIFIER: ${{ secrets.DEVELOPER_APP_IDENTIFIER }}
           DEVELOPER_PORTAL_TEAM_ID: ${{ secrets.DEVELOPER_PORTAL_TEAM_ID }}
           FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
-          TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
-          TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
