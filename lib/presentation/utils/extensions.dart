@@ -49,7 +49,8 @@ extension DateTimeFormatExtension on DateTime {
 enum DateTimeFormat {
   dottedInt('dd.MM.yy'),
   dottedIntFull('dd.MM.yyyy'),
-  yearMonthDate('yMMMMd');
+  yearMonthDate('yMMMMd')
+  ;
 
   const DateTimeFormat(this._pattern);
 

@@ -10,28 +10,25 @@ part of 'preferences_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(Preferences)
-const preferencesProvider = PreferencesProvider._();
+final preferencesProvider = PreferencesProvider._();
 
 final class PreferencesProvider extends $AsyncNotifierProvider<Preferences, PreferencesState> {
-  const PreferencesProvider._()
+  PreferencesProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'preferencesProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[
-          registryProvider,
-          accountProvider,
-        ],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider, accountProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           PreferencesProvider.$allTransitiveDependencies0,
           PreferencesProvider.$allTransitiveDependencies1,
         ],
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = accountProvider;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = accountProvider;
 
   @override
   String debugGetCreateSourceHash() => _$preferencesHash();
@@ -48,7 +45,6 @@ abstract class _$Preferences extends $AsyncNotifier<PreferencesState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<PreferencesState>, PreferencesState>;
     final element =
         ref.element
@@ -58,6 +54,6 @@ abstract class _$Preferences extends $AsyncNotifier<PreferencesState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

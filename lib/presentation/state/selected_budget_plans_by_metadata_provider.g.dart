@@ -10,7 +10,7 @@ part of 'selected_budget_plans_by_metadata_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(selectedBudgetPlansByMetadata)
-const selectedBudgetPlansByMetadataProvider = SelectedBudgetPlansByMetadataFamily._();
+final selectedBudgetPlansByMetadataProvider = SelectedBudgetPlansByMetadataFamily._();
 
 final class SelectedBudgetPlansByMetadataProvider
     extends
@@ -20,7 +20,7 @@ final class SelectedBudgetPlansByMetadataProvider
           Stream<BudgetPlansByMetadataState>
         >
     with $FutureModifier<BudgetPlansByMetadataState>, $StreamProvider<BudgetPlansByMetadataState> {
-  const SelectedBudgetPlansByMetadataProvider._({
+  SelectedBudgetPlansByMetadataProvider._({
     required SelectedBudgetPlansByMetadataFamily super.from,
     required ({String id, String? budgetId}) super.argument,
   }) : super(
@@ -31,11 +31,11 @@ final class SelectedBudgetPlansByMetadataProvider
          $allTransitiveDependencies: null,
        );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = userProvider;
-  static const $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
-  static const $allTransitiveDependencies3 = budgetMetadataProvider;
-  static const $allTransitiveDependencies4 = selectedBudgetProvider;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = userProvider;
+  static final $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies3 = budgetMetadataProvider;
+  static final $allTransitiveDependencies4 = selectedBudgetProvider;
 
   @override
   String debugGetCreateSourceHash() => _$selectedBudgetPlansByMetadataHash();
@@ -78,17 +78,17 @@ String _$selectedBudgetPlansByMetadataHash() => r'75ffba4915b3bd0392b334346d8b91
 
 final class SelectedBudgetPlansByMetadataFamily extends $Family
     with $FunctionalFamilyOverride<Stream<BudgetPlansByMetadataState>, ({String id, String? budgetId})> {
-  const SelectedBudgetPlansByMetadataFamily._()
+  SelectedBudgetPlansByMetadataFamily._()
     : super(
         retry: null,
         name: r'selectedBudgetPlansByMetadataProvider',
-        dependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[
           registryProvider,
           userProvider,
           budgetMetadataProvider,
           selectedBudgetProvider,
         ],
-        $allTransitiveDependencies: const <ProviderOrFamily>{
+        $allTransitiveDependencies: <ProviderOrFamily>{
           SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies0,
           SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies1,
           SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies2,

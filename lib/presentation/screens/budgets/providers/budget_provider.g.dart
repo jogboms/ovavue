@@ -10,24 +10,24 @@ part of 'budget_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(budget)
-const budgetProvider = BudgetProvider._();
+final budgetProvider = BudgetProvider._();
 
 final class BudgetProvider extends $FunctionalProvider<BudgetProviderState, BudgetProviderState, BudgetProviderState>
     with $Provider<BudgetProviderState> {
-  const BudgetProvider._()
+  BudgetProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'budgetProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[
           registryProvider,
           userProvider,
           activeBudgetProvider,
           selectedBudgetProvider,
         ],
-        $allTransitiveDependencies: const <ProviderOrFamily>{
+        $allTransitiveDependencies: <ProviderOrFamily>{
           BudgetProvider.$allTransitiveDependencies0,
           BudgetProvider.$allTransitiveDependencies1,
           BudgetProvider.$allTransitiveDependencies2,
@@ -37,12 +37,12 @@ final class BudgetProvider extends $FunctionalProvider<BudgetProviderState, Budg
         },
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = userProvider;
-  static const $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
-  static const $allTransitiveDependencies3 = activeBudgetProvider;
-  static const $allTransitiveDependencies4 = ActiveBudgetProvider.$allTransitiveDependencies0;
-  static const $allTransitiveDependencies5 = ActiveBudgetProvider.$allTransitiveDependencies4;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = userProvider;
+  static final $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies3 = activeBudgetProvider;
+  static final $allTransitiveDependencies4 = ActiveBudgetProvider.$allTransitiveDependencies0;
+  static final $allTransitiveDependencies5 = ActiveBudgetProvider.$allTransitiveDependencies4;
 
   @override
   String debugGetCreateSourceHash() => _$budgetHash();

@@ -3474,7 +3474,10 @@ class $$AccountsTableTableManager
           $$AccountsTableAnnotationComposer,
           $$AccountsTableCreateCompanionBuilder,
           $$AccountsTableUpdateCompanionBuilder,
-          (AccountDataModel, BaseReferences<_$Database, $AccountsTable, AccountDataModel>),
+          (
+            AccountDataModel,
+            BaseReferences<_$Database, $AccountsTable, AccountDataModel>,
+          ),
           AccountDataModel,
           PrefetchHooks Function()
         > {
@@ -3512,7 +3515,10 @@ typedef $$AccountsTableProcessedTableManager =
       $$AccountsTableAnnotationComposer,
       $$AccountsTableCreateCompanionBuilder,
       $$AccountsTableUpdateCompanionBuilder,
-      (AccountDataModel, BaseReferences<_$Database, $AccountsTable, AccountDataModel>),
+      (
+        AccountDataModel,
+        BaseReferences<_$Database, $AccountsTable, AccountDataModel>,
+      ),
       AccountDataModel,
       PrefetchHooks Function()
     >;
@@ -3591,7 +3597,10 @@ class $$UsersTableTableManager
           $$UsersTableAnnotationComposer,
           $$UsersTableCreateCompanionBuilder,
           $$UsersTableUpdateCompanionBuilder,
-          (UserDataModel, BaseReferences<_$Database, $UsersTable, UserDataModel>),
+          (
+            UserDataModel,
+            BaseReferences<_$Database, $UsersTable, UserDataModel>,
+          ),
           UserDataModel,
           PrefetchHooks Function()
         > {
@@ -6294,7 +6303,10 @@ class $$BudgetMetadataAssociationsTableTableManager
           $$BudgetMetadataAssociationsTableAnnotationComposer,
           $$BudgetMetadataAssociationsTableCreateCompanionBuilder,
           $$BudgetMetadataAssociationsTableUpdateCompanionBuilder,
-          (BudgetMetadataAssociationDataModel, $$BudgetMetadataAssociationsTableReferences),
+          (
+            BudgetMetadataAssociationDataModel,
+            $$BudgetMetadataAssociationsTableReferences,
+          ),
           BudgetMetadataAssociationDataModel,
           PrefetchHooks Function({bool plan, bool metadata})
         > {
@@ -6419,7 +6431,10 @@ typedef $$BudgetMetadataAssociationsTableProcessedTableManager =
       $$BudgetMetadataAssociationsTableAnnotationComposer,
       $$BudgetMetadataAssociationsTableCreateCompanionBuilder,
       $$BudgetMetadataAssociationsTableUpdateCompanionBuilder,
-      (BudgetMetadataAssociationDataModel, $$BudgetMetadataAssociationsTableReferences),
+      (
+        BudgetMetadataAssociationDataModel,
+        $$BudgetMetadataAssociationsTableReferences,
+      ),
       BudgetMetadataAssociationDataModel,
       PrefetchHooks Function({bool plan, bool metadata})
     >;

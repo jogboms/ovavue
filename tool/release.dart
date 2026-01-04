@@ -33,15 +33,12 @@ void main(List<String> arguments) async {
   final skipTests = args['skipTests'] as bool;
   final gitPush = args['gitPush'] as bool;
 
-  final newVersion = await bumpPackageVersion(
-    VersionBumpType.fromName(versionBumpType),
-    workingDirectory: workingDirectory,
-  );
+  final newVersion = await bumpPackageVersion(.fromName(versionBumpType), workingDirectory: workingDirectory);
 
-  for (final action in [
-    if (!skipPubGet) const CmdAction('fvm flutter pub get'),
-    if (!skipAnalysisChecks) const CmdAction('fvm flutter analyze lib'),
-    if (!skipTests) const CmdAction('fvm flutter test --no-pub --coverage --test-randomize-ordering-seed random'),
+  for (final action in <CmdAction>[
+    if (!skipPubGet) const .new('fvm flutter pub get'),
+    if (!skipAnalysisChecks) const .new('fvm flutter analyze lib'),
+    if (!skipTests) const .new('fvm flutter test --no-pub --coverage --test-randomize-ordering-seed random'),
   ]) {
     await runCmdAction(action, environment: io.Platform.environment);
   }
@@ -49,21 +46,21 @@ void main(List<String> arguments) async {
   await [
     if (platform.contains(BuildPlatform.android.name))
       _runActions([
-        CmdAction('fvm flutter build appbundle --no-pub --flavor prod', workingDirectory),
-        CmdAction('fastlane android beta', workingDirectory),
+        .new('fvm flutter build appbundle --no-pub --flavor prod', workingDirectory),
+        .new('fastlane android beta', workingDirectory),
       ]),
     if (platform.contains(BuildPlatform.ios.name))
       _runActions([
-        CmdAction('fvm flutter build ipa --no-pub --flavor prod --no-codesign', workingDirectory),
-        CmdAction('fastlane ios beta', workingDirectory),
+        .new('fvm flutter build ipa --no-pub --flavor prod --no-codesign', workingDirectory),
+        .new('fastlane ios beta', workingDirectory),
       ]),
   ].wait;
 
   if (gitPush) {
     for (final action in <CmdAction>[
-      CmdAction('git add $workingDirectory/pubspec.yaml'),
-      CmdAction('git commit --message v$newVersion'),
-      const CmdAction('git push --force-with-lease'),
+      .new('git add $workingDirectory/pubspec.yaml'),
+      .new('git commit --message v$newVersion'),
+      const .new('git push --force-with-lease'),
     ]) {
       await runCmdAction(action, environment: io.Platform.environment);
     }

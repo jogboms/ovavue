@@ -10,12 +10,12 @@ part of 'selected_budget_category_by_budget_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(selectedBudgetCategoryByBudget)
-const selectedBudgetCategoryByBudgetProvider = SelectedBudgetCategoryByBudgetFamily._();
+final selectedBudgetCategoryByBudgetProvider = SelectedBudgetCategoryByBudgetFamily._();
 
 final class SelectedBudgetCategoryByBudgetProvider
     extends $FunctionalProvider<AsyncValue<BudgetCategoryState>, BudgetCategoryState, Stream<BudgetCategoryState>>
     with $FutureModifier<BudgetCategoryState>, $StreamProvider<BudgetCategoryState> {
-  const SelectedBudgetCategoryByBudgetProvider._({
+  SelectedBudgetCategoryByBudgetProvider._({
     required SelectedBudgetCategoryByBudgetFamily super.from,
     required ({String id, String budgetId}) super.argument,
   }) : super(
@@ -26,12 +26,12 @@ final class SelectedBudgetCategoryByBudgetProvider
          $allTransitiveDependencies: null,
        );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = userProvider;
-  static const $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
-  static const $allTransitiveDependencies3 = budgetsProvider;
-  static const $allTransitiveDependencies4 = budgetPlansProvider;
-  static const $allTransitiveDependencies5 = budgetCategoriesProvider;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = userProvider;
+  static final $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies3 = budgetsProvider;
+  static final $allTransitiveDependencies4 = budgetPlansProvider;
+  static final $allTransitiveDependencies5 = budgetCategoriesProvider;
 
   @override
   String debugGetCreateSourceHash() => _$selectedBudgetCategoryByBudgetHash();
@@ -70,22 +70,22 @@ final class SelectedBudgetCategoryByBudgetProvider
   }
 }
 
-String _$selectedBudgetCategoryByBudgetHash() => r'0c604052e84560a54fe98aefa39c9b99ba36a801';
+String _$selectedBudgetCategoryByBudgetHash() => r'747115c3774109c1d3dc1164b57bd7883cd6c262';
 
 final class SelectedBudgetCategoryByBudgetFamily extends $Family
     with $FunctionalFamilyOverride<Stream<BudgetCategoryState>, ({String id, String budgetId})> {
-  const SelectedBudgetCategoryByBudgetFamily._()
+  SelectedBudgetCategoryByBudgetFamily._()
     : super(
         retry: null,
         name: r'selectedBudgetCategoryByBudgetProvider',
-        dependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[
           registryProvider,
           userProvider,
           budgetsProvider,
           budgetPlansProvider,
           budgetCategoriesProvider,
         ],
-        $allTransitiveDependencies: const <ProviderOrFamily>{
+        $allTransitiveDependencies: <ProviderOrFamily>{
           SelectedBudgetCategoryByBudgetProvider.$allTransitiveDependencies0,
           SelectedBudgetCategoryByBudgetProvider.$allTransitiveDependencies1,
           SelectedBudgetCategoryByBudgetProvider.$allTransitiveDependencies2,

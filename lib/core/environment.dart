@@ -5,7 +5,8 @@ enum Environment {
   mock,
   dev,
   prod,
-  testing;
+  testing
+  ;
 
   static Environment _derive() {
     if (io.Platform.environment.containsKey('FLUTTER_TEST')) {

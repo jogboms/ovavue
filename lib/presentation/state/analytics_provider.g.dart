@@ -11,26 +11,26 @@ part of 'analytics_provider.dart';
 /// Should only be used from the UI
 
 @ProviderFor(analytics)
-const analyticsProvider = AnalyticsProvider._();
+final analyticsProvider = AnalyticsProvider._();
 
 /// Should only be used from the UI
 
 final class AnalyticsProvider extends $FunctionalProvider<Analytics, Analytics, Analytics> with $Provider<Analytics> {
   /// Should only be used from the UI
-  const AnalyticsProvider._()
+  AnalyticsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'analyticsProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[registryProvider],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           AnalyticsProvider.$allTransitiveDependencies0,
         ],
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies0 = registryProvider;
 
   @override
   String debugGetCreateSourceHash() => _$analyticsHash();

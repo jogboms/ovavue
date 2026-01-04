@@ -12,7 +12,7 @@ part of 'backup_client_controller_provider.dart';
 /// Should be overridden per [ProviderScope]
 
 @ProviderFor(backupClientController)
-const backupClientControllerProvider = BackupClientControllerProvider._();
+final backupClientControllerProvider = BackupClientControllerProvider._();
 
 /// Container for the backup client controller
 /// Should be overridden per [ProviderScope]
@@ -22,15 +22,15 @@ final class BackupClientControllerProvider
     with $Provider<BackupClientController> {
   /// Container for the backup client controller
   /// Should be overridden per [ProviderScope]
-  const BackupClientControllerProvider._()
+  BackupClientControllerProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'backupClientControllerProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[],
-        $allTransitiveDependencies: const <ProviderOrFamily>[],
+        dependencies: <ProviderOrFamily>[],
+        $allTransitiveDependencies: <ProviderOrFamily>[],
       );
 
   @override

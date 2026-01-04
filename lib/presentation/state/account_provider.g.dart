@@ -10,25 +10,25 @@ part of 'account_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(account)
-const accountProvider = AccountProvider._();
+final accountProvider = AccountProvider._();
 
 final class AccountProvider
     extends $FunctionalProvider<AsyncValue<AccountEntity>, AccountEntity, FutureOr<AccountEntity>>
     with $FutureModifier<AccountEntity>, $FutureProvider<AccountEntity> {
-  const AccountProvider._()
+  AccountProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'accountProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[registryProvider],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           AccountProvider.$allTransitiveDependencies0,
         ],
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies0 = registryProvider;
 
   @override
   String debugGetCreateSourceHash() => _$accountHash();

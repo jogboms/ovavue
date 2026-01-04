@@ -10,29 +10,26 @@ part of 'user_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(user)
-const userProvider = UserProvider._();
+final userProvider = UserProvider._();
 
 final class UserProvider extends $FunctionalProvider<AsyncValue<UserEntity>, UserEntity, FutureOr<UserEntity>>
     with $FutureModifier<UserEntity>, $FutureProvider<UserEntity> {
-  const UserProvider._()
+  UserProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'userProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[
-          registryProvider,
-          accountProvider,
-        ],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider, accountProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           UserProvider.$allTransitiveDependencies0,
           UserProvider.$allTransitiveDependencies1,
         ],
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = accountProvider;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = accountProvider;
 
   @override
   String debugGetCreateSourceHash() => _$userHash();

@@ -15,7 +15,8 @@ abstract class BackupClientProvider implements BackupClient {
 }
 
 enum BackupClientLocale {
-  en;
+  en
+  ;
 
   factory BackupClientLocale.from(Locale locale) => switch (locale.languageCode) {
     'en' => en,

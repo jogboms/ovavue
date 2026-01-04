@@ -12,7 +12,7 @@ part of 'registry_provider.dart';
 /// Should be overridden per [ProviderScope]
 
 @ProviderFor(registry)
-const registryProvider = RegistryProvider._();
+final registryProvider = RegistryProvider._();
 
 /// Container for Registry/Service locator
 /// Should be overridden per [ProviderScope]
@@ -20,15 +20,15 @@ const registryProvider = RegistryProvider._();
 final class RegistryProvider extends $FunctionalProvider<Registry, Registry, Registry> with $Provider<Registry> {
   /// Container for Registry/Service locator
   /// Should be overridden per [ProviderScope]
-  const RegistryProvider._()
+  RegistryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'registryProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[],
-        $allTransitiveDependencies: const <ProviderOrFamily>[],
+        dependencies: <ProviderOrFamily>[],
+        $allTransitiveDependencies: <ProviderOrFamily>[],
       );
 
   @override

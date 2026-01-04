@@ -10,7 +10,7 @@ part of 'filter_plans_by_budget_metadata.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(filterPlansByBudgetMetadata)
-const filterPlansByBudgetMetadataProvider = FilterPlansByBudgetMetadataFamily._();
+final filterPlansByBudgetMetadataProvider = FilterPlansByBudgetMetadataFamily._();
 
 final class FilterPlansByBudgetMetadataProvider
     extends
@@ -20,7 +20,7 @@ final class FilterPlansByBudgetMetadataProvider
           FutureOr<BaseBudgetPlansByMetadataState>
         >
     with $FutureModifier<BaseBudgetPlansByMetadataState>, $FutureProvider<BaseBudgetPlansByMetadataState> {
-  const FilterPlansByBudgetMetadataProvider._({
+  FilterPlansByBudgetMetadataProvider._({
     required FilterPlansByBudgetMetadataFamily super.from,
     required String super.argument,
   }) : super(
@@ -31,12 +31,12 @@ final class FilterPlansByBudgetMetadataProvider
          $allTransitiveDependencies: null,
        );
 
-  static const $allTransitiveDependencies0 = selectedBudgetPlansByMetadataProvider;
-  static const $allTransitiveDependencies1 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies0;
-  static const $allTransitiveDependencies2 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies1;
-  static const $allTransitiveDependencies3 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies2;
-  static const $allTransitiveDependencies4 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies3;
-  static const $allTransitiveDependencies5 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies4;
+  static final $allTransitiveDependencies0 = selectedBudgetPlansByMetadataProvider;
+  static final $allTransitiveDependencies1 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies0;
+  static final $allTransitiveDependencies2 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies3 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies2;
+  static final $allTransitiveDependencies4 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies3;
+  static final $allTransitiveDependencies5 = SelectedBudgetPlansByMetadataProvider.$allTransitiveDependencies4;
 
   @override
   String debugGetCreateSourceHash() => _$filterPlansByBudgetMetadataHash();
@@ -75,14 +75,12 @@ String _$filterPlansByBudgetMetadataHash() => r'2535a3941095b76ba97cb972b014aa82
 
 final class FilterPlansByBudgetMetadataFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<BaseBudgetPlansByMetadataState>, String> {
-  const FilterPlansByBudgetMetadataFamily._()
+  FilterPlansByBudgetMetadataFamily._()
     : super(
         retry: null,
         name: r'filterPlansByBudgetMetadataProvider',
-        dependencies: const <ProviderOrFamily>[
-          selectedBudgetPlansByMetadataProvider,
-        ],
-        $allTransitiveDependencies: const <ProviderOrFamily>{
+        dependencies: <ProviderOrFamily>[selectedBudgetPlansByMetadataProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>{
           FilterPlansByBudgetMetadataProvider.$allTransitiveDependencies0,
           FilterPlansByBudgetMetadataProvider.$allTransitiveDependencies1,
           FilterPlansByBudgetMetadataProvider.$allTransitiveDependencies2,
@@ -101,10 +99,10 @@ final class FilterPlansByBudgetMetadataFamily extends $Family
 }
 
 @ProviderFor(FilterMetadataId)
-const filterMetadataIdProvider = FilterMetadataIdProvider._();
+final filterMetadataIdProvider = FilterMetadataIdProvider._();
 
 final class FilterMetadataIdProvider extends $NotifierProvider<FilterMetadataId, String?> {
-  const FilterMetadataIdProvider._()
+  FilterMetadataIdProvider._()
     : super(
         from: null,
         argument: null,
@@ -138,9 +136,8 @@ abstract class _$FilterMetadataId extends $Notifier<String?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<String?, String?>;
     final element = ref.element as $ClassProviderElement<AnyNotifier<String?, String?>, String?, Object?, Object?>;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

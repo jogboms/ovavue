@@ -102,7 +102,8 @@ enum _BottomSheetChoice {
   plans(AppIcons.plans),
   categories(AppIcons.categories),
   metadata(AppIcons.metadata),
-  preferences(AppIcons.preferences);
+  preferences(AppIcons.preferences)
+  ;
 
   const _BottomSheetChoice(this._icon);
 

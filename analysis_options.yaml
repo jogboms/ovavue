@@ -20,7 +20,7 @@ analyzer:
     unused_result: error
     unused_shown_name: error
   plugins:
-    - custom_lint
+    - riverpod_lint
   language:
     strict-casts: true
     strict-raw-types: true
@@ -29,6 +29,9 @@ analyzer:
 formatter:
   page_width: 120
   trailing_commas: preserve
+
+plugins:
+  riverpod_lint: ^3.1.0
 
 linter:
   rules:

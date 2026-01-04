@@ -10,7 +10,7 @@ part of 'budget_categories_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(budgetCategories)
-const budgetCategoriesProvider = BudgetCategoriesProvider._();
+final budgetCategoriesProvider = BudgetCategoriesProvider._();
 
 final class BudgetCategoriesProvider
     extends
@@ -20,24 +20,24 @@ final class BudgetCategoriesProvider
           Stream<List<BudgetCategoryViewModel>>
         >
     with $FutureModifier<List<BudgetCategoryViewModel>>, $StreamProvider<List<BudgetCategoryViewModel>> {
-  const BudgetCategoriesProvider._()
+  BudgetCategoriesProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'budgetCategoriesProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[registryProvider, userProvider],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider, userProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           BudgetCategoriesProvider.$allTransitiveDependencies0,
           BudgetCategoriesProvider.$allTransitiveDependencies1,
           BudgetCategoriesProvider.$allTransitiveDependencies2,
         ],
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = userProvider;
-  static const $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = userProvider;
+  static final $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
 
   @override
   String debugGetCreateSourceHash() => _$budgetCategoriesHash();

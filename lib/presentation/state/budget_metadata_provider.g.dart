@@ -10,27 +10,27 @@ part of 'budget_metadata_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(BudgetMetadata)
-const budgetMetadataProvider = BudgetMetadataProvider._();
+final budgetMetadataProvider = BudgetMetadataProvider._();
 
 final class BudgetMetadataProvider extends $StreamNotifierProvider<BudgetMetadata, List<BudgetMetadataViewModel>> {
-  const BudgetMetadataProvider._()
+  BudgetMetadataProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'budgetMetadataProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[registryProvider, userProvider],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider, userProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           BudgetMetadataProvider.$allTransitiveDependencies0,
           BudgetMetadataProvider.$allTransitiveDependencies1,
           BudgetMetadataProvider.$allTransitiveDependencies2,
         ],
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = userProvider;
-  static const $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = userProvider;
+  static final $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
 
   @override
   String debugGetCreateSourceHash() => _$budgetMetadataHash();
@@ -47,7 +47,6 @@ abstract class _$BudgetMetadata extends $StreamNotifier<List<BudgetMetadataViewM
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<List<BudgetMetadataViewModel>>, List<BudgetMetadataViewModel>>;
     final element =
         ref.element
@@ -57,6 +56,6 @@ abstract class _$BudgetMetadata extends $StreamNotifier<List<BudgetMetadataViewM
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

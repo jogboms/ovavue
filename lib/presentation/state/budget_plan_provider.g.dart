@@ -10,29 +10,29 @@ part of 'budget_plan_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(budgetPlan)
-const budgetPlanProvider = BudgetPlanProvider._();
+final budgetPlanProvider = BudgetPlanProvider._();
 
 final class BudgetPlanProvider
     extends $FunctionalProvider<BudgetPlanProviderState, BudgetPlanProviderState, BudgetPlanProviderState>
     with $Provider<BudgetPlanProviderState> {
-  const BudgetPlanProvider._()
+  BudgetPlanProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'budgetPlanProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[registryProvider, userProvider],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider, userProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           BudgetPlanProvider.$allTransitiveDependencies0,
           BudgetPlanProvider.$allTransitiveDependencies1,
           BudgetPlanProvider.$allTransitiveDependencies2,
         ],
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = userProvider;
-  static const $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = userProvider;
+  static final $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
 
   @override
   String debugGetCreateSourceHash() => _$budgetPlanHash();

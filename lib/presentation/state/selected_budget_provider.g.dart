@@ -10,12 +10,12 @@ part of 'selected_budget_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(selectedBudget)
-const selectedBudgetProvider = SelectedBudgetFamily._();
+final selectedBudgetProvider = SelectedBudgetFamily._();
 
 final class SelectedBudgetProvider
     extends $FunctionalProvider<AsyncValue<BudgetState>, BudgetState, Stream<BudgetState>>
     with $FutureModifier<BudgetState>, $StreamProvider<BudgetState> {
-  const SelectedBudgetProvider._({
+  SelectedBudgetProvider._({
     required SelectedBudgetFamily super.from,
     required String super.argument,
   }) : super(
@@ -26,9 +26,9 @@ final class SelectedBudgetProvider
          $allTransitiveDependencies: null,
        );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = userProvider;
-  static const $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = userProvider;
+  static final $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
 
   @override
   String debugGetCreateSourceHash() => _$selectedBudgetHash();
@@ -66,12 +66,12 @@ final class SelectedBudgetProvider
 String _$selectedBudgetHash() => r'65bad1a17951f8df9675a28596835fd90f6493c9';
 
 final class SelectedBudgetFamily extends $Family with $FunctionalFamilyOverride<Stream<BudgetState>, String> {
-  const SelectedBudgetFamily._()
+  SelectedBudgetFamily._()
     : super(
         retry: null,
         name: r'selectedBudgetProvider',
-        dependencies: const <ProviderOrFamily>[registryProvider, userProvider],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider, userProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           SelectedBudgetProvider.$allTransitiveDependencies0,
           SelectedBudgetProvider.$allTransitiveDependencies1,
           SelectedBudgetProvider.$allTransitiveDependencies2,

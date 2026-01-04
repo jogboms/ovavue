@@ -10,23 +10,23 @@ part of 'active_budget_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(activeBudget)
-const activeBudgetProvider = ActiveBudgetProvider._();
+final activeBudgetProvider = ActiveBudgetProvider._();
 
 final class ActiveBudgetProvider
     extends $FunctionalProvider<AsyncValue<BaseBudgetState>, BaseBudgetState, Stream<BaseBudgetState>>
     with $FutureModifier<BaseBudgetState>, $StreamProvider<BaseBudgetState> {
-  const ActiveBudgetProvider._()
+  ActiveBudgetProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'activeBudgetProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[
           activeBudgetIdProvider,
           selectedBudgetProvider,
         ],
-        $allTransitiveDependencies: const <ProviderOrFamily>{
+        $allTransitiveDependencies: <ProviderOrFamily>{
           ActiveBudgetProvider.$allTransitiveDependencies0,
           ActiveBudgetProvider.$allTransitiveDependencies1,
           ActiveBudgetProvider.$allTransitiveDependencies2,
@@ -35,11 +35,11 @@ final class ActiveBudgetProvider
         },
       );
 
-  static const $allTransitiveDependencies0 = activeBudgetIdProvider;
-  static const $allTransitiveDependencies1 = ActiveBudgetIdProvider.$allTransitiveDependencies0;
-  static const $allTransitiveDependencies2 = ActiveBudgetIdProvider.$allTransitiveDependencies1;
-  static const $allTransitiveDependencies3 = ActiveBudgetIdProvider.$allTransitiveDependencies2;
-  static const $allTransitiveDependencies4 = selectedBudgetProvider;
+  static final $allTransitiveDependencies0 = activeBudgetIdProvider;
+  static final $allTransitiveDependencies1 = ActiveBudgetIdProvider.$allTransitiveDependencies0;
+  static final $allTransitiveDependencies2 = ActiveBudgetIdProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies3 = ActiveBudgetIdProvider.$allTransitiveDependencies2;
+  static final $allTransitiveDependencies4 = selectedBudgetProvider;
 
   @override
   String debugGetCreateSourceHash() => _$activeBudgetHash();

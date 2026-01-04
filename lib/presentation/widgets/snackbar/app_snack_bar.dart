@@ -150,7 +150,8 @@ class _RowBar extends StatelessWidget {
 enum SnackBarType {
   info,
   success,
-  error;
+  error
+  ;
 
   Color toForegroundColor(ThemeData theme) => switch (this) {
     SnackBarType.info => theme.colorScheme.onSurface,

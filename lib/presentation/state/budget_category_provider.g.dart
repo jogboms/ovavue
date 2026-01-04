@@ -10,29 +10,29 @@ part of 'budget_category_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(budgetCategory)
-const budgetCategoryProvider = BudgetCategoryProvider._();
+final budgetCategoryProvider = BudgetCategoryProvider._();
 
 final class BudgetCategoryProvider
     extends $FunctionalProvider<BudgetCategoryProviderState, BudgetCategoryProviderState, BudgetCategoryProviderState>
     with $Provider<BudgetCategoryProviderState> {
-  const BudgetCategoryProvider._()
+  BudgetCategoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'budgetCategoryProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[registryProvider, userProvider],
-        $allTransitiveDependencies: const <ProviderOrFamily>[
+        dependencies: <ProviderOrFamily>[registryProvider, userProvider],
+        $allTransitiveDependencies: <ProviderOrFamily>[
           BudgetCategoryProvider.$allTransitiveDependencies0,
           BudgetCategoryProvider.$allTransitiveDependencies1,
           BudgetCategoryProvider.$allTransitiveDependencies2,
         ],
       );
 
-  static const $allTransitiveDependencies0 = registryProvider;
-  static const $allTransitiveDependencies1 = userProvider;
-  static const $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
+  static final $allTransitiveDependencies0 = registryProvider;
+  static final $allTransitiveDependencies1 = userProvider;
+  static final $allTransitiveDependencies2 = UserProvider.$allTransitiveDependencies1;
 
   @override
   String debugGetCreateSourceHash() => _$budgetCategoryHash();

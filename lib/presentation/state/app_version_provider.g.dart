@@ -12,7 +12,7 @@ part of 'app_version_provider.dart';
 /// Should be overridden per [ProviderScope]
 
 @ProviderFor(appVersion)
-const appVersionProvider = AppVersionProvider._();
+final appVersionProvider = AppVersionProvider._();
 
 /// Container for the application's version
 /// Should be overridden per [ProviderScope]
@@ -20,15 +20,15 @@ const appVersionProvider = AppVersionProvider._();
 final class AppVersionProvider extends $FunctionalProvider<String, String, String> with $Provider<String> {
   /// Container for the application's version
   /// Should be overridden per [ProviderScope]
-  const AppVersionProvider._()
+  AppVersionProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'appVersionProvider',
         isAutoDispose: true,
-        dependencies: const <ProviderOrFamily>[],
-        $allTransitiveDependencies: const <ProviderOrFamily>[],
+        dependencies: <ProviderOrFamily>[],
+        $allTransitiveDependencies: <ProviderOrFamily>[],
       );
 
   @override

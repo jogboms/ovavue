@@ -94,11 +94,11 @@ class AppDeviceInformation implements DeviceInformation {
     'isPhysicalDevice': '$isPhysicalDevice',
     'packageName': packageName,
     'os': os,
-    if (deviceId != null) 'deviceId': deviceId!,
-    if (brand != null) 'brand': brand!,
-    if (model != null) 'model': model!,
-    if (deviceVersion != null) 'deviceVersion': deviceVersion!,
-    if (sdk != null) 'sdk': sdk!,
+    'deviceId': ?deviceId,
+    'brand': ?brand,
+    'model': ?model,
+    'deviceVersion': ?deviceVersion,
+    'sdk': ?sdk,
   };
 }
 

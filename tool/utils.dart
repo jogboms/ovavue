@@ -71,7 +71,8 @@ enum VersionBumpType {
   major,
   minor,
   patch,
-  build;
+  build
+  ;
 
   static VersionBumpType fromName(String? name) => values.asNameMap()[name] ?? VersionBumpType.patch;
 
