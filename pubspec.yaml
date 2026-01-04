@@ -1,7 +1,7 @@
 name: ovavue
 description: A tidy budget overview planner.
 publish_to: 'none'
-version: 0.5.3+1
+version: 0.5.3+2
 
 environment:
   sdk: ">=3.10.4 <4.0.0"
