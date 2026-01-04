@@ -11,7 +11,7 @@ on:
           - minor
           - patch
           - build
-        default: "patch"
+        default: "build"
         description: Version bump type
       skip_analysis_checks:
         type: boolean
@@ -36,23 +36,28 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Initialize environment variables from FVM config
+        if: ${{ !inputs.skip_analysis_checks || !inputs.skip_tests }}
         uses: kuhnroyal/flutter-fvm-config-action@v3
       - uses: subosito/flutter-action@v2
+        if: ${{ !inputs.skip_analysis_checks || !inputs.skip_tests }}
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
       - name: Install tools
+        if: ${{ !inputs.skip_analysis_checks || !inputs.skip_tests }}
         run: ./tool/install.sh
 
-      - run: flutter pub get
+      - if: ${{ !inputs.skip_analysis_checks || !inputs.skip_tests }}
+        run: flutter pub get
 
       - if: ${{ !inputs.skip_analysis_checks }}
         run: flutter format --set-exit-if-changed -l 120 lib
 
       - if: ${{ !inputs.skip_analysis_checks }}
         run: flutter analyze lib
+
       - if: ${{ !inputs.skip_tests }}
         run: flutter test --no-pub
 
@@ -78,20 +83,17 @@ jobs:
 
       - run: flutter pub get
 
-      # Bump version
       - name: Bump package version
         run: |
           TAG="v$(./tool/bump_package_version.dart --versionBumpType '${{ inputs.version_bump_type }}' | tail -n1)"
           echo "TAG=$TAG" >> $GITHUB_ENV
 
-      # Commit version changes
       - name: Commit Release Changes
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: '[BUILD] ${{ env.TAG }} [skip ci]'
           file_pattern: pubspec.yaml
 
-      # Create release entry & Trigger deployment
       - name: Create Release Entry
         id: create_release
         uses: ncipollo/release-action@v1
