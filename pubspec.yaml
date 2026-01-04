@@ -40,7 +40,7 @@ dependencies:
   riverpod_annotation: ^3.0.3
   rxdart: ">=0.27.0 <0.29.0"
   share_plus: ^12.0.1
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.5.4
   sliver_tools: ^0.2.12
   sqlite3_flutter_libs: ^0.5.40
   tabler_icons: ^2.5.0+1
