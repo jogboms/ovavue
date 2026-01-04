@@ -33,11 +33,9 @@ jobs:
       - name: Install tools
         run: ./tool/install.sh
 
-      # Flutter actions
       - run: flutter pub get
-      - run: flutter build ipa --flavor prod --release --no-codesign
+      - run: flutter build ipa --no-pub --flavor prod --no-codesign
 
-      # Fastlane deploy
       - name: Deploy via Fastlane
         uses: maierj/fastlane-action@v3.1.0
         with:
@@ -50,4 +48,10 @@ jobs:
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
-          PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+
+      - name: Upload IPA to artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: ovavue.ipa
+          path: ios/Runner.ipa
+          retention-days: 90

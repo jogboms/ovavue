@@ -13,7 +13,7 @@ platform :android do
         skip_upload_metadata: true,
         skip_upload_images: true,
         skip_upload_screenshots: true,
-        release_status: "draft",
+        release_status: "completed",
       )
     end
   end
@@ -26,11 +26,9 @@ platform :ios do
     keychain_password = ENV['keychain_password']
     ensure_temp_keychain(keychain_name, keychain_password)
 
-    identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
-
     github_token = ENV["GIT_AUTHORIZATION"]
     sync_code_signing(
-      app_identifier: identifier,
+      app_identifier: CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier),
       git_basic_authorization: github_token ? Base64.strict_encode64(github_token) : nil,
       readonly: true,
       keychain_name: keychain_name,
@@ -38,19 +36,13 @@ platform :ios do
     )
 
     developerAppId = ENV["DEVELOPER_APP_ID"]
-    provisioningProfileSpecifier = ENV["PROVISIONING_PROFILE_SPECIFIER"]
     build_app(
       skip_build_archive: true,
       archive_path: "build/ios/archive/Runner.xcarchive",
       export_team_id: CredentialsManager::AppfileConfig.try_fetch_value(:team_id),
       workspace: "ios/Runner.xcworkspace",
       configuration: "Prod-Release",
-      scheme: "Prod",
-      export_options: {
-        provisioningProfiles: {
-            developerAppId => provisioningProfileSpecifier
-        }
-      }
+      scheme: "Prod"
     )
 
     upload_to_testflight(

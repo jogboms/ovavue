@@ -41,17 +41,14 @@ jobs:
       - name: Install tools
         run: ./tool/install.sh
 
-      # Decrypt secrets
       - name: Decrypt secrets
         run: ./tool/decrypt_android_secrets.sh
         env:
           ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
 
-      # Flutter actions
       - run: flutter pub get
-      - run: flutter build appbundle --flavor prod
+      - run: flutter build appbundle --no-pub --flavor prod
 
-      # Fastlane deploy
       - name: Deploy via Fastlane
         uses: maierj/fastlane-action@v3.1.0
         with:
