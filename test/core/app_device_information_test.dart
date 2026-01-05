@@ -73,6 +73,11 @@ void main() {
             'xDpi': 0.0,
             'yDpi': 0.0,
           },
+          'freeDiskSize': 1,
+          'totalDiskSize': 1,
+          'systemFeatures': <String>[],
+          'physicalRamSize': 1,
+          'availableRamSize': 1,
         }),
       );
       final info = await AppDeviceInformation.initialize(
@@ -105,6 +110,13 @@ void main() {
             'version': 'version',
             'machine': 'machine',
           },
+          'modelName': 'iPhone XS Max',
+          'identifierForVendor': 'identifierForVendor',
+          'freeDiskSize': 1,
+          'totalDiskSize': 1,
+          'isiOSAppOnMac': false,
+          'physicalRamSize': 1,
+          'availableRamSize': 1,
         }),
       );
       final info = await AppDeviceInformation.initialize(

@@ -18,8 +18,7 @@ Future<void> main() async {
           userProvider.overrideWith((_) async => dummyUser),
         ],
       );
-      addTearDown(container.dispose);
-      return container.read(budgetCategoriesProvider.future);
+      return container.readAsync(budgetCategoriesProvider.future);
     }
 
     test('should initialize with empty state', () {

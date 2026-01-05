@@ -30,7 +30,6 @@ Future<void> main() async {
           ),
         ],
       );
-      addTearDown(container.dispose);
     });
 
     tearDown(mockUseCases.reset);
@@ -39,7 +38,7 @@ Future<void> main() async {
       container.read(filterMetadataIdProvider.notifier).setState(metadataId);
 
       expect(
-        container.read(filterPlansByBudgetMetadataProvider(budgetId: budgetId).future),
+        container.readAsync(filterPlansByBudgetMetadataProvider(budgetId: budgetId).future),
         completion(expectedState),
       );
     });

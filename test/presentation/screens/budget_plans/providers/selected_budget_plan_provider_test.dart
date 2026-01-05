@@ -36,8 +36,7 @@ Future<void> main() async {
         ],
       );
 
-      addTearDown(container.dispose);
-      return container.read(selectedBudgetPlanProvider(id: planId, budgetId: budgetId).future);
+      return container.readAsync(selectedBudgetPlanProvider(id: planId, budgetId: budgetId).future);
     }
 
     test('should show selected plan by id', () async {

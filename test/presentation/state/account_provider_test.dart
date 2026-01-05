@@ -15,7 +15,6 @@ Future<void> main() async {
       when(mockUseCases.fetchAccountUseCase.call).thenAnswer((_) async => dummyAccount);
 
       final container = createProviderContainer();
-      addTearDown(container.dispose);
 
       expect(
         container.read(accountProvider.future),

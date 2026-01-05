@@ -1,3 +1,5 @@
+// ignore_for_file: provider_dependencies
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ovavue/data.dart';
 import 'package:ovavue/presentation.dart';
@@ -31,8 +33,7 @@ Future<void> main() async {
         ],
       );
 
-      addTearDown(container.dispose);
-      return container.read(selectedBudgetCategoryProvider(categoryId).future);
+      return container.readAsync(selectedBudgetCategoryProvider(categoryId).future);
     }
 
     test('should show selected category by id', () async {

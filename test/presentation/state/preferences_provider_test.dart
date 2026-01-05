@@ -23,7 +23,6 @@ Future<void> main() async {
           accountProvider.overrideWith((_) async => dummyAccount),
         ],
       );
-      addTearDown(container.dispose);
 
       expect(
         container.read(preferencesProvider.future),
@@ -35,7 +34,6 @@ Future<void> main() async {
       when(() => mockUseCases.updateThemeModeUseCase.call(1)).thenAnswer((_) async => true);
 
       final container = createProviderContainer();
-      addTearDown(container.dispose);
 
       expect(
         container.read(preferencesProvider.notifier).updateThemeMode(ThemeMode.light),

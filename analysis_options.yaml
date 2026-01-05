@@ -19,8 +19,6 @@ analyzer:
     unused_label: error
     unused_result: error
     unused_shown_name: error
-  plugins:
-    - riverpod_lint
   language:
     strict-casts: true
     strict-raw-types: true
@@ -31,7 +29,7 @@ formatter:
   trailing_commas: preserve
 
 plugins:
-  riverpod_lint: ^3.1.0
+#  riverpod_lint: ^3.1.0 # Too many false positives currently with dependencies
 
 linter:
   rules:

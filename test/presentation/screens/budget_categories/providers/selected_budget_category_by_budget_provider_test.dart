@@ -43,8 +43,7 @@ Future<void> main() async {
         ],
       );
 
-      addTearDown(container.dispose);
-      return container.read(selectedBudgetCategoryByBudgetProvider(id: categoryId, budgetId: budgetId).future);
+      return container.readAsync(selectedBudgetCategoryByBudgetProvider(id: categoryId, budgetId: budgetId).future);
     }
 
     test('should show selected category by id', () async {

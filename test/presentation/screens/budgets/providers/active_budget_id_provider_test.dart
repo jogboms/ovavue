@@ -19,8 +19,7 @@ Future<void> main() async {
         ],
       );
 
-      addTearDown(container.dispose);
-      return container.read(activeBudgetIdProvider.future);
+      return container.readAsync(activeBudgetIdProvider.future);
     }
 
     test('should show active budget id', () async {

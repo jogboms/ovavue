@@ -32,9 +32,8 @@ Future<void> main() async {
 
     test('should create new instance when read', () {
       final container = createProviderContainer();
-      addTearDown(container.dispose);
 
-      expect(container.read(budgetCategoryProvider), isA<BudgetCategoryProvider>());
+      expect(container.read(budgetCategoryProvider), isA<BudgetCategoryProviderState>());
     });
 
     test('should create new budget plan for user from userProvider', () async {
@@ -50,7 +49,6 @@ Future<void> main() async {
           userProvider.overrideWith((_) async => dummyUser),
         ],
       );
-      addTearDown(container.dispose);
 
       final provider = container.read(budgetCategoryProvider);
 

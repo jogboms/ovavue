@@ -1,9 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ovavue/data.dart';
-import 'package:ovavue/domain.dart';
 import 'package:ovavue/presentation.dart';
 
 import '../../utils.dart';
@@ -38,29 +36,24 @@ Future<void> main() async {
               ),
             ),
           ),
-          budgetMetadataProvider.overrideWith(
-            () => MockBudgetMetadata(
+          budgetMetadataProvider.overrideWithBuild(
+            (_, _) => Stream.value(
               [
-                    expectedMetadata,
-                    BudgetMetadataMockImpl.generateMetadataValue(),
-                  ]
-                  .groupListsBy((BudgetMetadataValueEntity e) => e.key)
-                  .entries
-                  .map((MapEntry<BudgetMetadataKeyEntity, List<BudgetMetadataValueEntity>> e) => e.toEntity())
-                  .toList(growable: false),
+                expectedMetadata,
+                BudgetMetadataMockImpl.generateMetadataValue(),
+              ].groupListsBy((e) => e.key).entries.map((e) => e.toEntity()).toList(growable: false),
             ),
           ),
         ],
       );
 
-      addTearDown(container.dispose);
-      return container.read(selectedBudgetPlansByMetadataProvider(id: metadataId, budgetId: budgetId).future);
+      return container.readAsync(selectedBudgetPlansByMetadataProvider(id: metadataId, budgetId: budgetId).future);
     }
 
     test('should initialize with empty state', () {
       when(
         () => mockUseCases.fetchBudgetPlansByMetadataUseCase.call(userId: dummyUser.id, metadataId: metadataId),
-      ).thenAnswer((_) => Stream<BudgetPlanEntityList>.value([]));
+      ).thenAnswer((_) => Stream.value([]));
 
       expect(createProviderStream(), completes);
     });
@@ -68,12 +61,7 @@ Future<void> main() async {
     test('should emit fetched budget plans by metadata', () {
       when(
         () => mockUseCases.fetchBudgetPlansByMetadataUseCase.call(userId: dummyUser.id, metadataId: metadataId),
-      ).thenAnswer(
-        (_) => Stream<BudgetPlanEntityList>.value([
-          expectedPlan,
-          BudgetPlansMockImpl.generatePlan(),
-        ]),
-      );
+      ).thenAnswer((_) => Stream.value([expectedPlan, BudgetPlansMockImpl.generatePlan()]));
 
       expect(
         createProviderStream(),
@@ -89,15 +77,4 @@ Future<void> main() async {
       );
     });
   });
-}
-
-class MockBudgetMetadata extends AnyNotifier<AsyncValue<List<BudgetMetadataViewModel>>, List<BudgetMetadataViewModel>>
-    with Mock
-    implements BudgetMetadata {
-  MockBudgetMetadata([this._initialValue = const []]);
-
-  final List<BudgetMetadataViewModel> _initialValue;
-
-  @override
-  Stream<List<BudgetMetadataViewModel>> build() => Stream<List<BudgetMetadataViewModel>>.value(_initialValue);
 }

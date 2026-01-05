@@ -158,21 +158,17 @@ ProviderContainer createProviderContainer({
   Registry? registry,
   List<Override>? overrides,
   List<ProviderObserver>? observers,
-}) {
-  final container = ProviderContainer(
-    parent: parent,
-    overrides: [
-      registryProvider.overrideWithValue(
-        registry ?? createRegistry().withMockedUseCases(),
-      ),
-      appVersionProvider.overrideWithValue('0.0.0'),
-      ...?overrides,
-    ],
-    observers: observers,
-  );
-  addTearDown(container.dispose);
-  return container;
-}
+}) => ProviderContainer.test(
+  parent: parent,
+  overrides: [
+    registryProvider.overrideWithValue(
+      registry ?? createRegistry().withMockedUseCases(),
+    ),
+    appVersionProvider.overrideWithValue('0.0.0'),
+    ...?overrides,
+  ],
+  observers: observers,
+);
 
 Widget createApp({
   Widget? home,
@@ -288,4 +284,8 @@ extension WidgetTesterExtensions on WidgetTester {
 
 extension VerificationResultExtension on VerificationResult {
   T capturedType<T>() => captured.first as T;
+}
+
+extension AsyncProviderContainerReader on ProviderContainer {
+  Future<T> readAsync<T>(ProviderListenable<Future<T>> provider) async => listen<Future<T>>(provider, (_, _) {}).read();
 }

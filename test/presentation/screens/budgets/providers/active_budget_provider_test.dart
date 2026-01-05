@@ -30,8 +30,7 @@ Future<void> main() async {
         ],
       );
 
-      addTearDown(container.dispose);
-      return container.read(activeBudgetProvider.future);
+      return container.readAsync(activeBudgetProvider.future);
     }
 
     test('should show active budget', () async {

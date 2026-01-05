@@ -60,9 +60,8 @@ Future<void> main() async {
 
     test('should create new instance when read', () {
       final container = createProviderContainer();
-      addTearDown(container.dispose);
 
-      expect(container.read(budgetProvider), isA<BudgetProvider>());
+      expect(container.read(budgetProvider), isA<BudgetProviderState>());
     });
 
     test('should create new budget provider with expected dependencies', () async {
@@ -82,7 +81,6 @@ Future<void> main() async {
           selectedBudgetProvider('1').overrideWith((_) => Stream<BudgetState>.value(dummyBudgetState)),
         ],
       );
-      addTearDown(container.dispose);
 
       final provider = container.read(budgetProvider);
 

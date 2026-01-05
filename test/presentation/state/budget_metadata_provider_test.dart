@@ -55,7 +55,7 @@ Future<void> main() async {
         () => mockUseCases.fetchBudgetMetadataUseCase.call(any()),
       ).thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value([]));
 
-      expect(container.read(budgetMetadataProvider.future), completes);
+      expect(container.readAsync(budgetMetadataProvider.future), completes);
     });
 
     test('should emit fetched budget metadata', () {
@@ -68,7 +68,7 @@ Future<void> main() async {
       ).thenAnswer((_) => Stream<BudgetMetadataValueEntityList>.value(expectedBudgetMetadata));
 
       expect(
-        container.read(budgetMetadataProvider.future),
+        container.readAsync(budgetMetadataProvider.future),
         completion(
           expectedBudgetMetadata
               .groupListsBy((BudgetMetadataValueEntity e) => e.key)

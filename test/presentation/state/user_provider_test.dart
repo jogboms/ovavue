@@ -24,7 +24,6 @@ Future<void> main() async {
           accountProvider.overrideWith((_) async => dummyAccount),
         ],
       );
-      addTearDown(container.dispose);
       return container.read(userProvider.future);
     }
 
