@@ -46,6 +46,7 @@ void main(List<String> arguments) async {
   await [
     if (platform.contains(BuildPlatform.android.name))
       _runActions([
+        const .new('./tool/decrypt_android_secrets.sh'),
         .new('fvm flutter build appbundle --no-pub --flavor prod', workingDirectory),
         .new('fastlane android beta', workingDirectory),
       ]),
