@@ -34,7 +34,7 @@ jobs:
         run: ./tool/install.sh
 
       - run: flutter pub get
-      - run: flutter build ipa --no-pub --flavor prod --no-codesign
+      - run: flutter build ios --no-pub --flavor prod --no-codesign
 
       - name: Deploy via Fastlane
         uses: maierj/fastlane-action@v3.1.0

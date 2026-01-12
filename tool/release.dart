@@ -52,7 +52,7 @@ void main(List<String> arguments) async {
       ]),
     if (platform.contains(BuildPlatform.ios.name))
       _runActions([
-        .new('fvm flutter build ipa --no-pub --flavor prod --no-codesign', workingDirectory),
+        .new('fvm flutter build ios --no-pub --flavor prod --no-codesign', workingDirectory),
         .new('fastlane ios beta', workingDirectory),
       ]),
   ].wait;
