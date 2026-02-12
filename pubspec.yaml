@@ -51,7 +51,7 @@ dependencies:
 
 dev_dependencies:
   args: 2.7.0
-  build_runner: ^2.10.4
+  build_runner: ^2.11.0
   device_info_plus_platform_interface: ^7.0.3
   drift_dev: ^2.30.0
   fake_async: ^1.3.3
