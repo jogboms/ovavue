@@ -62,7 +62,7 @@ dev_dependencies:
   mocktail: ^1.0.4
   package_info_plus_platform_interface: ^3.2.1
   plugin_platform_interface: ^2.1.8
-  riverpod_generator: ^4.0.0+1
+  riverpod_generator: ^4.0.3
   test: ^1.26.3
 
 flutter:
