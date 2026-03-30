@@ -27,7 +27,7 @@ jobs:
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Initialize environment variables from FVM config
         uses: kuhnroyal/flutter-fvm-config-action@v3
